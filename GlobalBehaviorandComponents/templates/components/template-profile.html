@@ -1,0 +1,38 @@
+<section class="main-container">
+        <div class="container">
+            <div class="row">
+
+                <!-- main start -->
+                <!-- ================ -->
+                <div class="main col-12">
+
+                    <!-- page-title start -->
+                    <!-- ================ -->
+                    <h1 class="page-title">My Profile</h1>
+                    <div class="separator-2"></div>
+                    <!-- page-title end -->
+                    <p>Hello, <span>{{ user_info.email }}</span>.
+                    </p>
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Claim</th>
+                            <th>Value</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for key, claim in user_info.items() %}
+                        <tr>
+                            <td>{{ key }}</td>
+                            <td id="claim-{{ key }}">
+                                {{ claim }}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- main end -->
+            </div>
+        </div>
+    </section>

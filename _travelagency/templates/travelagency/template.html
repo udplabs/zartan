@@ -1,0 +1,22 @@
+<html lang="en">
+    {% include '//components/template-header-meta.html' %} 
+    <body>
+        <div id="layoutDefault">
+            <div id="layoutDefault_content">
+                <main>
+                    {% include '//components/template-navigation-white.html' %} 
+                    {% block header %}{% endblock %}
+                    {% block content %}{% endblock %}
+                </main>
+            </div>
+            <div id="layoutDefault_footer">
+                {% block footer %}{% endblock %}
+            </div>
+            {% with color="black" %}
+                {% include '//components/template-footer.html' %}
+            {% endwith %}
+        </div>
+        {% include '//components/template-footer-scripts.html' %}
+    </body>
+    Travel Agency
+</html>

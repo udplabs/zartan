@@ -1,0 +1,74 @@
+<nav class="navbar navbar-marketing navbar-expand-lg bg-white navbar-light fixed-top" style="padding-top: 10px; padding-bottom: 10px;">
+    <div class="container">
+        {% if config.settings.app_logo != "" %}
+             <a href="/index"><img src={{config.settings.app_logo}} border='0' height='100'></a>
+        {% else %}
+             <a class="navbar-brand text-primary" href="/index">{{config.settings.app_name}}</a><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><i data-feather="menu"></i></button>
+        {% endif %}
+        {% include config.settings.app_template + '/navitems.html' %}
+        {% if user_info is none or user_info is not defined %}
+             <form role="login" class="navbar-form navbar-left">
+                <div class="form-group" >
+                     <input type="text" id="login-un" name="username" placeholder="Username" class="form-control" autocomplete="off" style="height:30;">
+                     <input type="password" id="login-pw" name="password" placeholder="Password" class="form-control" autocomplete="off" style="height:30;">
+                </div>
+                <button type="button" id="login-button" onclick="do_login(this.form.username.value, this.form.password.value)" class="btn btn-primary" style="float: right;">Sign In</button></form>
+        {% else %}
+            {% if config.settings.app_template in request.path  %}
+                <a class="btn-primary btn rounded-pill px-4 ml-lg-4" href="profile">Hi {{ user_info.name }}<i class="fas fa-arrow-right ml-1"></i></a>
+            {% else %}
+                <a class="btn-primary btn rounded-pill px-4 ml-lg-4" href="{{ config.settings.app_template }}/profile">Hi {{ user_info.name }}<i class="fas fa-arrow-right ml-1"></i></a>
+            {% endif %}
+        {% endif %}
+    </div>
+</nav>
+<script src="https://ok1static.oktacdn.com/assets/js/sdk/okta-auth-js/1.17.0/okta-auth-js.min.js" type="text/javascript"></script>
+<script src="https://global.oktacdn.com/okta-signin-widget/3.8.2/js/okta-sign-in.min.js" type="text/javascript"></script>
+<link href="https://global.oktacdn.com/okta-signin-widget/3.8.2/css/okta-sign-in.min.css" type="text/css" rel="stylesheet"/>
+<script>
+var loginBar = document.getElementById('navbar-login-alt');
+if (loginBar) {
+	loginBar.style.display = 'block';
+}
+var defaultWidgetCodeLink = document.getElementById('show-code');
+if (defaultWidgetCodeLink) {
+	defaultWidgetCodeLink.style.display = 'none';
+}
+</script>
+<script id="theScript">
+function do_login(un, pw) {
+    var authClient = new OktaAuth({
+        url: '{{config.okta_org_name}}',
+        clientId: '{{config.client_id}}',
+        redirectUri: 'https://fda7d42e54574ac3859bcf5deedf973d.vfs.cloud9.us-east-1.amazonaws.com/authorization-code/callback',
+        issuer: '{{config.issuer}}'
+    });
+
+    authClient.signIn({
+        username: un,
+        password: pw
+    })
+    .then(function(transaction) {
+        if (transaction.status === 'SUCCESS') {
+            // Step #1: get sessionToken
+            console.log('sessionToken = ', transaction.sessionToken);
+
+            // Step #2: retrieving a session cookie via OpenID Connect Authorization Endpoint
+            // Requires the user be authenticated already (i.e. the transaction.sessionToken exists. See Step #1)
+            // Uses response_mode=form_post: This will POST authorization_code and state to the redirectUri
+            authClient.token.getWithRedirect({
+                responseType: 'code',
+                responseMode: 'query',
+                state: '{{state}}',
+                sessionToken: transaction.sessionToken,
+                scopes: ['openid', 'profile', 'email'],
+            });
+        } else {
+            throw 'We cannot handle the ' + transaction.status + ' status';
+        }
+    })
+    .fail(function(err) {
+        console.error(err);
+    });
+}
+</script>
