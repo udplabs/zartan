@@ -1,0 +1,19 @@
+<nav class="navbar navbar-marketing navbar-expand-lg bg-white navbar-light">
+    <div class="container">
+        {% if config.settings.app_logo != "" %}
+             <a href="/index"><img src={{config.settings.app_logo}} border='0' height='100'></a>
+        {% else %}
+             <a class="navbar-brand text-primary" href="/index">{{config.settings.app_name}}</a><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><i data-feather="menu"></i></button>
+        {% endif %}
+        {% include config.settings.app_template + '/navitems.html' %}
+        {% if user_info is none or user_info is not defined %}
+             <a class="btn-primary btn rounded-pill px-4 ml-lg-4" href="/login">Login<i class="fas fa-arrow-right ml-1"></i></a>
+        {% else %}
+            {% if config.settings.app_template in request.path  %}
+                <a class="btn-primary btn rounded-pill px-4 ml-lg-4" href="profile">Hi {{ user_info.name }}<i class="fas fa-arrow-right ml-1"></i></a>
+            {% else %}
+                <a class="btn-primary btn rounded-pill px-4 ml-lg-4" href="{{ config.settings.app_template }}/profile">Hi {{ user_info.name }}<i class="fas fa-arrow-right ml-1"></i></a>
+            {% endif %}
+        {% endif %}
+    </div>
+</nav>

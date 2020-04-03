@@ -1,0 +1,46 @@
+ <!-- Custom css -->
+    <script src="https://global.oktacdn.com/okta-signin-widget/3.8.2/js/okta-sign-in.min.js" type="text/javascript"></script>
+    <link href="https://global.oktacdn.com/okta-signin-widget/3.8.2/css/okta-sign-in.min.css" type="text/css" rel="stylesheet"/>
+
+    <section class="main-container">
+        <div class="container" >
+           <div class="row">
+            <div class="col-md-8 offset-md-2">
+            <!-- main start -->
+            <!-- ================ -->
+             <div class="main col-12">
+                <div class="form-block center-block p-30 light-gray-bg border-clear">
+                  <div id="sign-in-widget"></div>
+                  <script type="text/javascript">
+                    new OktaSignIn({
+                      baseUrl: "{{config.okta_org_name}}",
+                      logo: "{{config.settings.app_logo}}",
+                      clientId: "{{config.client_id}}",
+                      redirectUri: "{{config.redirect_uri}}",
+                      idpDisplay: "SECONDARY",
+                      i18n: {
+                        en: {
+                          'primaryauth.title': 'Sign in to {{config.settings.app_name}}'
+                        }
+                      },
+                      authParams: {
+                        issuer: "{{config.issuer}}",
+                        responseType: 'code',
+                        responseMode: 'query',
+                        state: '{{state}}',
+                        display: 'page',
+                        scopes: ['openid', 'profile', 'email']
+                      },
+                    }).renderEl(
+                      { el: '#sign-in-widget' },
+                      function (res) {}
+                    );
+                  </script>
+                  <p class="text-center">Don't have an account yet? <a href="/signup">Sign up</a> now.</p>
+                </div>
+              </div>
+            </div>
+            </div>
+        </div>
+    </section>
+    <!-- page-wrapper end -->
