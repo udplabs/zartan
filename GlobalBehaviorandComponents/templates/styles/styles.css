@@ -13995,7 +13995,7 @@ body {
   border-radius: 100%; }
 
 .dropdown-user .dropdown-menu {
-  min-width: 13rem; }
+  min-width: 20rem; }
   .dropdown-user .dropdown-menu .dropdown-header .dropdown-user-img {
     height: 2.5rem;
     width: 2.5rem;
@@ -14006,14 +14006,14 @@ body {
       color: #1f2d41;
       font-weight: 500;
       font-size: 0.9rem;
-      max-width: 10rem;
+      max-width: 20rem;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis; }
     .dropdown-user .dropdown-menu .dropdown-header .dropdown-user-details .dropdown-user-details-email {
       color: #687281;
       font-size: 0.75rem;
-      max-width: 10rem;
+      max-width: 20rem;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis; }

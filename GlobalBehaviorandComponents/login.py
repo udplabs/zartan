@@ -22,7 +22,6 @@ from app import oidc, templatename
 @gbac_bp.route("/")
 @gbac_bp.route("/index")
 def gbac_main():
-  
     user_info = get_user_info() 
     destination = default_settings["settings"]["app_base_url"] + "/" + templatename + "/profile"
     state = {
@@ -49,7 +48,7 @@ def gbac_signup():
 @gbac_bp.route("/logout")
 def gbac_logout():
     oidc.logout()
-    return redirect("index")
+    return redirect(url_for("gbac_bp.gbac_main", _external="True", _scheme="https"))
     
 @gbac_bp.route('/styles')
 def gbac_style():

@@ -1,0 +1,7 @@
+                    {% if config.settings.app_loginmethod == 'custom-widget' %}
+                        <!--custom header widget-->
+                        {% include '//components/template-navigation-white-login.html' %}
+                    {% else %}
+                        <!--standard widget-->
+                        {% include '//components/template-navigation-white.html' %}
+                    {% endif %}
