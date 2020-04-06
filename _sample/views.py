@@ -51,7 +51,7 @@ def is_token_valid_remote(token):
     return result
     
 
-#sample landing page
+#Required for Login Landing Page
 @sample_views_bp.route("/profile")
 @is_authenticated
 def sample_profile():
