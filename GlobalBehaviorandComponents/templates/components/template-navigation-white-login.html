@@ -7,12 +7,20 @@
         {% endif %}
         {% include config.settings.app_template + '/navitems.html' %}
         {% if user_info is none or user_info is not defined %}
-             <form role="login" class="navbar-form navbar-left">
-                <div class="form-group" style="margin-bottom: 5px;margin-top: 5px;">
-                     <input type="text" id="login-un" name="username" placeholder="Username" class="form-control" autocomplete="off" style="font-size: .85rem;height:25px;padding: 0.25;margin-bottom: 5px;">
-                     <input type="password" id="login-pw" name="password" placeholder="Password" class="form-control" autocomplete="off" style="font-size: .85rem;height: 25px; padding: 0.25">
-                </div>
-                <button type="button" id="login-button" onclick="do_login(this.form.username.value, this.form.password.value)" class="btn btn-primary" style="float: right;">Sign In</button></form>
+                <ul class="navbar-nav align-items-center ml-auto">
+                    <li class="nav-item dropdown no-caret mr-3 dropdown-user">
+                    <a class="btn-primary btn rounded-pill px-4 ml-lg-4 dropdown-toggle" href="javascript:void(0);" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Login</a>
+                    <div class="dropdown-menu dropdown-menu-right border-0 shadow animated--fade-in-up" aria-labelledby="navbarDropdownUserImage">
+                        <form role="login" class="navbar-form navbar-left" style="margin-bottom: 5px; margin-left: 10px; margin-right: 10px;">
+                            <div class="form-group" style="margin-bottom: 5px;margin-top: 5px;">
+                             <input type="text" id="login-un" name="username" placeholder="Username" class="form-control" autocomplete="off" style="padding: 0.25;margin-bottom:8px;">
+                             <input type="password" id="login-pw" name="password" placeholder="Password" class="form-control" autocomplete="off" style="padding: 0.25;margin-bottom:10px;">
+                            </div>
+                            <button type="button" id="login-button" onclick="do_login(this.form.username.value, this.form.password.value)" class="btn btn-primary" style="padding: 0.25;margin-bottom: 5px; margin-left: 5px; margin-right: 5px;float: right;">Sign In</button>
+                        </form>
+                    </div>
+                    </li>
+                </ul>
         {% else %}
                 <ul class="navbar-nav align-items-center ml-auto">
                     <li class="nav-item dropdown no-caret mr-3 dropdown-user">
