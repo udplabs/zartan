@@ -5,7 +5,7 @@
         {% else %}
              <a class="navbar-brand text-primary" href="/index">{{config.settings.app_name}}</a><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><i data-feather="menu"></i></button>
         {% endif %}
-        {% include config.settings.app_template + '/navitems.html' %}
+        {% include config.settings.app_template + '/'+ navitems %} 
         {% if user_info is none or user_info is not defined %}
              <a class="btn-primary btn rounded-pill px-4 ml-lg-4" href="/login">Login<i class="fas fa-arrow-right ml-1"></i></a>
         {% else %}

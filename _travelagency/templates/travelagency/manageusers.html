@@ -1,0 +1,51 @@
+{% extends "travelagency/templatelogin.html" %}
+
+{% block content %}
+        {% include '//components/template-modal.html' %}       
+        <div class="container">
+        <div class="row">
+        <div class="main col-12">
+              <!-- page-title start -->
+              <!-- ================ -->
+              <h1 class="page-title">User List</h1>
+              <button type="button" class="btn btn-secondary" onclick="window.location.href = 'manageusercreateupdate';">Create User</button><br/>
+              <br />
+              <div class="separator-2"></div>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th style="text-align:center">User Status</th>
+                        <th style="text-align:center">Update</th>
+                        <th style="text-align:center">Suspend</th>
+                        <th style="text-align:center">Reset Password</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for i in userlist %}
+                         <tr>
+                            <td>{{ i['profile']['firstName']}} {{ i['profile']['lastName']}}</td>
+                            <td>{{ i['profile']['email']}}</td>
+                            <td style="text-align:center">{{ i['status'] }}</td>
+                            <td style="text-align:center"><a href="manageusercreateupdate?user_id={{ i.id}}"><i class="fa fa-edit"></i></a></td>
+                            {% if i['status'] == 'ACTIVE' or i['status'] == 'RECOVERY'  %}
+                                   <td style="text-align:center"><a href="suspenduser?user_id={{ i.id}}"><i class="fa fa-toggle-on"></i></a></td>
+                            {% else %}
+                                   <td style="text-align:center"><a href="unsuspenduser?user_id={{ i.id}}"><i class="fa fa-toggle-off"></i></a></td>
+                            {% endif %}
+                            <td style="text-align:center"><a href="resetpassword?user_id={{ i.id}}"><i class="fa fa-key"></i></a></td>
+                              
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+
+
+                </table>
+        </div>
+        </div>
+        </div>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

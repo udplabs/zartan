@@ -4,21 +4,22 @@
     <body>
         <div id="layoutDefault">
             <div id="layoutDefault_content">
-                <main> 
-                    {% with mynavitems="navitems.html" %}
+                <main>
+                    {% with mynavitems="navitemslogin.html" %}
                         {% include '//components/template-navigation.html' %}
                     {% endwith %}
+                    {% block header %}{% endblock %}
                     {% block content %}{% endblock %}
                 </main>
             </div>
             <div id="layoutDefault_footer">
                 {% block footer %}{% endblock %}
             </div>
-            {% with color="white" %}
+            {% with color="black" %}
                 {% include '//components/template-footer.html' %}
             {% endwith %}
         </div>
         {% include '//components/template-footer-scripts.html' %}
     </body>
-    Sample
+    Travel Agency
 </html>

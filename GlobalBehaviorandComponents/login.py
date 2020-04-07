@@ -33,7 +33,8 @@ def gbac_main():
 
 @gbac_bp.route("/login")
 def gbac_login():
-    destination = default_settings["settings"]["app_base_url"] + "/" + templatename + "/profile"
+    #fix: Need to check URL issue for double slash
+    destination = default_settings["settings"]["app_base_url"] + "/" + templatename + "/profile" 
     state = {
         'csrf_token': session['oidc_csrf_token'],
         'destination': oidc.extra_data_serializer.dumps(destination).decode('utf-8')
