@@ -1,7 +1,6 @@
  <!-- Custom css -->
     <script src="https://global.oktacdn.com/okta-signin-widget/3.8.2/js/okta-sign-in.min.js" type="text/javascript"></script>
     <link href="https://global.oktacdn.com/okta-signin-widget/3.8.2/css/okta-sign-in.min.css" type="text/css" rel="stylesheet"/>
-
     <section class="main-container">
         <div class="container" >
            <div class="row">
@@ -17,11 +16,18 @@
                       logo: "{{config.settings.app_logo}}",
                       clientId: "{{config.client_id}}",
                       redirectUri: "{{config.redirect_uri}}",
-                      idpDisplay: "SECONDARY",
                       i18n: {
                         en: {
                           'primaryauth.title': 'Sign in to {{config.settings.app_name}}'
                         }
+                      },
+                      features: {
+                        registration: true,                 // Enable self-service registration flow
+                        rememberMe: true,                   // Setting to false will remove the checkbox to save username
+                        multiOptionalFactorEnroll: true,  // Allow users to enroll in multiple optional factors before finishing the authentication flow.
+                        selfServiceUnlock: true,          // Will enable unlock in addition to forgotten password
+                        smsRecovery: true,                // Enable SMS-based account recovery
+                        callRecovery: true,               // Enable voice call-based account recovery
                       },
                       authParams: {
                         issuer: "{{config.issuer}}",
@@ -36,7 +42,6 @@
                       function (res) {}
                     );
                   </script>
-                  <p class="text-center">Don't have an account yet? <a href="/signup">Sign up</a> now.</p>
                 </div>
               </div>
             </div>
