@@ -1,3 +1,4 @@
+
 <nav class="navbar navbar-marketing navbar-expand-lg bg-white navbar-light" id="sidenavAccordion" style="margin-bottom: 5px">
     <div class="container">
         {% if config.settings.app_logo != "" %}
@@ -45,53 +46,145 @@
         {% endif %}
     </div>
 </nav>
+
+
+
 <script src="https://ok1static.oktacdn.com/assets/js/sdk/okta-auth-js/1.17.0/okta-auth-js.min.js" type="text/javascript"></script>
 <script src="https://global.oktacdn.com/okta-signin-widget/3.8.2/js/okta-sign-in.min.js" type="text/javascript"></script>
 <link href="https://global.oktacdn.com/okta-signin-widget/3.8.2/css/okta-sign-in.min.css" type="text/css" rel="stylesheet"/>
-<script>
-var loginBar = document.getElementById('navbar-login-alt');
-if (loginBar) {
-	loginBar.style.display = 'block';
+
+
+<input type="hidden" id="state" name="state" value="">
+<!-- Modal -->
+<div class="modal fade" id="MFAModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Multi-Factor Check</h5><br>
+                </div>
+                <style>
+                #okta-sign-in.auth-container.main-container
+                {
+                    background-color: #fff;
+                    border-color: #fff #fff #fff;
+                    box-shadow: none;
+                }
+                #okta-sign-in .auth-header 
+                {
+                    border-bottom: none;
+                }
+                #okta-sign-in.auth-container.main-container
+                {
+                    margin-top: 0px;
+                }
+                </style>
+                <div class="modal-body" id="mfamodalbody">
+                    <div id="sign-in-widget-modal"></div>
+                </div>
+                <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" onclick="do_resetwidget()">Close</button>
+                </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+var oktamodalsigninmfa ="1";
+function showwidget()
+{
+    console.log("showwidget()");
+    var stateval = $("#state").val();
+    try
+    {
+        oktamodalsigninmfa = new OktaSignIn({
+          baseUrl: "{{config.okta_org_name}}",
+          clientId: "{{config.client_id}}",
+          redirectUri: "{{config.redirect_uri}}",
+          stateToken: stateval,
+          features: {
+            registration: true,                 // Enable self-service registration flow
+            rememberMe: true,                   // Setting to false will remove the checkbox to save username
+            multiOptionalFactorEnroll: true,  // Allow users to enroll in multiple optional factors before finishing the authentication flow.
+            selfServiceUnlock: true,          // Will enable unlock in addition to forgotten password
+            smsRecovery: true,                // Enable SMS-based account recovery
+            callRecovery: true,               // Enable voice call-based account recovery
+          },
+          authParams: {
+            issuer: "{{config.issuer}}",
+            responseType: 'code',
+            responseMode: 'query',
+            state: '{{state}}',
+            display: 'page',
+            scopes: ['openid', 'profile', 'email']
+          },
+        });
+        
+        oktamodalsigninmfa.renderEl(
+          { el: '#sign-in-widget-modal' },
+          function (res) {}
+        );
+
+    }
+    catch(err) {
+        console.log(err.message);
+    }
+    $("#MFAModalCenter").modal("show");
 }
-var defaultWidgetCodeLink = document.getElementById('show-code');
-if (defaultWidgetCodeLink) {
-	defaultWidgetCodeLink.style.display = 'none';
-}
-</script>
-<script id="theScript">
+                    
+                   
+
+function do_resetwidget() {
+                        console.log("resetwidget()");
+                        oktamodalsigninmfa.remove();
+                        $("#MFAModalCenter").modal("hide");
+                    }
+                    
 function do_login(un, pw) {
-    var authClient = new OktaAuth({
-        url: '{{config.okta_org_name}}',
-        clientId: '{{config.client_id}}',
-        redirectUri: '{{ config.redirect_uri}}',
-        issuer: '{{config.issuer}}'
-    });
+        console.log("dologin()");
 
-    authClient.signIn({
-        username: un,
-        password: pw
-    })
-    .then(function(transaction) {
-        if (transaction.status === 'SUCCESS') {
-            // Step #1: get sessionToken
-            console.log('sessionToken = ', transaction.sessionToken);
-
-            // Step #2: retrieving a session cookie via OpenID Connect Authorization Endpoint
-            // Requires the user be authenticated already (i.e. the transaction.sessionToken exists. See Step #1)
-            // Uses response_mode=form_post: This will POST authorization_code and state to the redirectUri
-            authClient.token.getWithRedirect({
-                responseType: 'code',
-                responseMode: 'query',
-                state: '{{state}}',
-                sessionToken: transaction.sessionToken,
-                scopes: ['openid', 'profile', 'email'],
-            });
-        } else {
-            throw 'We cannot handle the ' + transaction.status + ' status';
-        }
-    })
-    .fail(function(err) {
-        console.error(err);
-    });
+        var authClient = new OktaAuth({
+            url: '{{config.okta_org_name}}',
+            clientId: '{{config.client_id}}',
+            redirectUri: '{{ config.redirect_uri}}',
+            issuer: '{{config.issuer}}'
+        });
+    
+        authClient.signIn({
+            username: un,
+            password: pw
+        })
+        .then(function(transaction) {
+            console.log(transaction)
+            if (transaction.status === 'SUCCESS') {
+                // Step #1: get sessionToken
+                console.log('sessionToken = ', transaction.sessionToken);
+    
+                // Step #2: retrieving a session cookie via OpenID Connect Authorization Endpoint
+                // Requires the user be authenticated already (i.e. the transaction.sessionToken exists. See Step #1)
+                // Uses response_mode=form_post: This will POST authorization_code and state to the redirectUri
+                authClient.token.getWithRedirect({
+                    responseType: 'code',
+                    responseMode: 'query',
+                    state: '{{state}}',
+                    sessionToken: transaction.sessionToken,
+                    scopes: ['openid', 'profile', 'email'],
+                });
+            } 
+            if (transaction.status === 'MFA_REQUIRED') {
+               console.log("MFA_REQUIRED");
+               $("#state").val(transaction.data.stateToken); 
+               showwidget();
+              
+            }
+            else {
+                
+                throw 'We cannot handle the ' + transaction.status + ' status';
+            }
+        })
+        .fail(function(err) {
+            console.error(err);
+        });
 }
 </script>
