@@ -75,6 +75,9 @@ oidc = OpenIDConnect(app)
 from GlobalBehaviorandComponents.login import gbac_bp
 app.register_blueprint(gbac_bp, url_prefix='/')
 
+from GlobalBehaviorandComponents.manageusers import gbac_manageusers_bp
+app.register_blueprint(gbac_manageusers_bp, url_prefix='/')
+
 #sample theme
 from _sample.views import sample_views_bp
 app.register_blueprint(sample_views_bp, url_prefix='/sample')
@@ -87,9 +90,16 @@ app.register_blueprint(travelagency_views_bp, url_prefix='/travelagency')
 from _hospitality.views import hospitality_views_bp
 app.register_blueprint(hospitality_views_bp, url_prefix='/hospitality')
 
+
 #dealer theme
 from _dealer.views import dealer_views_bp
 app.register_blueprint(dealer_views_bp, url_prefix='/dealer')
+
+
+#streaming service theme
+from _streamingservice.views import streamingservice_views_bp
+app.register_blueprint(streamingservice_views_bp, url_prefix='/streamingservice')
+
 
 ##############################################
 # Main Shared Routes

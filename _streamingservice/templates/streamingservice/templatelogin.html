@@ -5,9 +5,10 @@
         <div id="layoutDefault">
             <div id="layoutDefault_content">
                 <main>
-                    {% with mynavitems="navitems.html" %}
+                    {% with mynavitems="navitemslogin.html" %}
                         {% include '//components/template-navigation.html' %}
                     {% endwith %}
+                    {% block header %}{% endblock %}
                     {% block content %}{% endblock %}
                 </main>
             </div>

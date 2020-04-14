@@ -15,7 +15,7 @@ from utils.okta import OktaAuth, OktaAdmin, TokenUtil
 from GlobalBehaviorandComponents import login
 
 #set blueprint
-travelagency_views_bp = Blueprint('travelagency_views_bp', __name__,template_folder='templates', static_folder='static', static_url_path='static')
+streamingservice_views_bp = Blueprint('streamingservice_views_bp', __name__,template_folder='templates', static_folder='static', static_url_path='static')
 
 #reference oidc
 from app import oidc, templatename
@@ -50,14 +50,13 @@ def is_token_valid_remote(token):
     
 
 #Required for Login Landing Page
-@travelagency_views_bp.route("/profile")
+@streamingservice_views_bp.route("/profile")
 @is_authenticated
-def travelagency_profile():
+def streamingservice_profile():
     print("Profile")
     user_info = login.get_user_info() 
     okta_admin = OktaAdmin(default_settings)
     print(user_info)
     user = okta_admin.get_user(user_info["sub"])
-    return render_template("travelagency/profile.html", oidc=oidc, user_info=user_info, config=default_settings)
-    
+    return render_template("streamingservice/profile.html", oidc=oidc, user_info=user_info, config=default_settings)
     
