@@ -90,6 +90,12 @@ app.register_blueprint(travelagency_views_bp, url_prefix='/travelagency')
 from _hospitality.views import hospitality_views_bp
 app.register_blueprint(hospitality_views_bp, url_prefix='/hospitality')
 
+
+#dealer theme
+from _dealer.views import dealer_views_bp
+app.register_blueprint(dealer_views_bp, url_prefix='/dealer')
+
+
 #streaming service theme
 from _streamingservice.views import streamingservice_views_bp
 app.register_blueprint(streamingservice_views_bp, url_prefix='/streamingservice')
@@ -103,6 +109,10 @@ app.register_blueprint(streamingservice_views_bp, url_prefix='/streamingservice'
 @app.before_request
 def before_request():
     print("before_request")
+    
+    #print( oidc.get_access_token())
+    print( oidc.user_loggedin)
+    #print( get_user_info())
     
     if oidc.user_loggedin:
         g.user = get_user_info()

@@ -6,7 +6,7 @@ default_settings = {
     "issuer": os.getenv("OKTA_ISSUER", ""),
     "app_config": os.getenv("SITE_APP_CONFIG", "./well-known/default-settings"),
     "okta_org_name": os.getenv("OKTA_ORG_URL", ""),
-    "redirect_uri": os.getenv("OKTA_OIDC_REDIRECT_URI", ""),
+    "redirect_uri": os.getenv("OKTA_OIDC_REDIRECT_URI", "http://yoursite/authorization-code/callback"),
     "settings": {
         "app_template": os.getenv("APP_TEMPLATE", "sample"),
         "app_base_url": os.getenv("APP_BASE_URL", ""),
@@ -17,12 +17,14 @@ default_settings = {
         "app_logo": os.getenv("APP_LOGO", ""),
         "app_favicon": os.getenv("APP_FAVICON", ""),
         "app_banner_img_1": os.getenv("APP_BANNER_1", ""),
-        "app_primary_color" : os.getenv("app_primary_color", "#0061f2"),
-        "app_secondary_color" : os.getenv("app_secondary_color", "#6900c7"),
-        "app_success_color" : os.getenv("app_success_color", "#00ac69"),
-        "app_info_color" : os.getenv("app_info_color", "#00cfd5"),
-        "app_warning_color" : os.getenv("app_warning_color", "#f4a100"),
-        "app_danger_color" : os.getenv("app_danger_color", "#e81500")
+        "app_primary_color" : os.getenv("APP_PRIMARY_COLOR", "#0061f2"),
+        "app_secondary_color" : os.getenv("APP_SECONDARY_COLOR", "#6900c7"),
+        "app_success_color" : os.getenv("APP_SUCCESS_COLOR", "#00ac69"),
+        "app_info_color" : os.getenv("APP_INFO_COLOR", "#00cfd5"),
+        "app_warning_color" : os.getenv("APP_WARNING_COLOR", "#f4a100"),
+        "app_danger_color" : os.getenv("APP_DANGER_COLOR", "#e81500"),
+        
+        "sparkpost_api_key" : os.getenv("SPARKPOST_API_KEY", ""),
     },
     "okta_api_token": os.getenv("OKTA_API_TOKEN", ""),
     "app_secret_key": os.getenv("SECRET_KEY", "")
