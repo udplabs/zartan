@@ -1,4 +1,10 @@
 <script>
-    var test_token = {{ test_token|tojson }};
-    parent.completedmfa(test_token.active);    
+   
+    // jsonStr = "{{ test_token|safe }}";
+    // jsonStr = jsonStr.replace(/True/gi,'true');        
+    // jsonStr = jsonStr.replace(/False/gi,'false');    
+    // jsonStr = jsonStr.replace(/\'/gi,'"');    
+    // var test_token = JSON.parse(jsonStr);
+    test_token = {{ test_token|tojson }};
+    parent.completedmfa(test_token);    
 </script>

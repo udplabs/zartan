@@ -31,15 +31,8 @@ function checkmfa(functioncall) {
 
 function completedmfa(test_token) {
         console.log("MFA_COMPLETED");   
-        if (test_token = 'True')
-        {
-            script_to_run();
-            $("#MFAModalCenter").modal("hide");
-        }
-        else
-        {
-            $("#MFAModalCenter").modal("hide");
-        }
+        script_to_run(test_token);
+        $("#MFAModalCenter").modal("hide");
         
 }
 </script>
