@@ -426,7 +426,16 @@ class OktaAdmin:
             name=name)
 
         return RestUtil.execute_get(url, okta_headers)
-
+    
+    def get_group(self, id):
+        print("OktaAdmin.get_group(id)")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/groups/{id}".format(
+            base_url=self.okta_config["okta_org_name"],
+            id=id)
+        
+        return RestUtil.execute_get(url, okta_headers)
+        
     def get_user_list_by_group_id(self, id):
         print("OktaAdmin.get_user_list_by_group_id(user_id)")
         okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
@@ -436,6 +445,16 @@ class OktaAdmin:
 
         return RestUtil.execute_get(url, okta_headers)
 
+    def get_user_list_by_search(self, search):
+        #/api/v1/users?search=profile.department eq "Engineering" 
+        print("OktaAdmin.get_user_list_by_search(search)")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/users?search={search}".format(
+            base_url=self.okta_config["okta_org_name"],
+            search=search)
+
+        return RestUtil.execute_get(url, okta_headers)
+        
     def assign_user_to_group(self, group_id, user_id):
         print("OktaAdmin.assign_user_to_group(user_id)")
         okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)

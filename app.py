@@ -128,4 +128,5 @@ def serve_static_html(filename):
     return send_from_directory(os.path.join(root_dir, 'static'), filename)
 
 if __name__ == '__main__':
+    #print("default_settings : {0}".format(json.dumps(default_settings, indent=4, sort_keys=True)))
     app.run(host=os.getenv("IP", "0.0.0.0"), port=int(os.getenv("PORT", 8080)), debug=True)
