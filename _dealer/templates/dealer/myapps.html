@@ -1,0 +1,39 @@
+{% extends templatename+"/template.html" %} {% block content %}
+<div class="container">
+    <div class="row">
+        <div class="main col-12">
+            <!-- page-title start -->
+            <!-- ================ -->
+            <div style="height: 50px; justify-content: center;text-align: center;">
+                <br/>
+                <br/>
+                <h1 class="page-title">{{location}}</h1>
+            </div>
+            <div class="separator-2"></div>
+        </div>
+    </div>
+</div>
+<br />
+<br />
+<section  style="border: solid; padding: 1em;">
+    <div class="container">
+        <div class="row">
+            {% for app in apps %}
+                <div class="col-md-6 col-xl-4 mb-5">
+                    <a class="card card-portfolio h-100"  href="{{app._links.appLinks[0].href}}">
+                        <img class="card-img-top" src="{{app._links.logo[0].href}}" alt="..." />
+                            <div class="card-body">
+                                <div class="card-title">{{app.label}}</div>
+                            </div>
+                    </a>
+                    <div>{{app.label}}</div>
+                </div>
+            {% endfor %}               
+        </div>
+    </div>
+</section>
+                    
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

@@ -53,14 +53,35 @@ def is_token_valid_remote(token):
 @dealer_views_bp.route("/profile")
 @is_authenticated
 def dealer_profile():
-    print("Profile")
     user_info = login.get_user_info() 
     okta_admin = OktaAdmin(default_settings)
-    print(user_info)
     user = okta_admin.get_user(user_info["sub"])
-    print(user)
     return render_template(templatename+"/profile.html", templatename=templatename, oidc=oidc, user_info=user_info, config=default_settings, _scheme="https")
 
+#dealer my applications
+@dealer_views_bp.route("/myapps",methods=["GET","POST"])
+@is_authenticated
+def dealer_myapps():
+    
+    print("dealer_myapps")
+    
+    user_info = login.get_user_info() 
+    okta_admin = OktaAdmin(default_settings)
+    user = okta_admin.get_user(user_info["sub"])
+    user_id = user["id"]
+    
+    location = ""
+    
+    #Find the groups the user belongs to and find the description of the _LOC_* group
+    get_user_groups_response = okta_admin.get_user_groups(user_id = user_id)
+    for item in get_user_groups_response:
+        if item["profile"]["name"].startswith("_LOC_"):
+            location =  item["profile"]["description"]
+    
+    get_apps_response = okta_admin.get_applications_by_user_id(user_id)
+
+    return render_template(templatename+"/myapps.html", templatename=templatename,config=default_settings,location=location, apps = get_apps_response,  _scheme="https") 
+    
 @dealer_views_bp.route("/registration", methods=["GET","POST"])
 def dealer_registration():
     
@@ -180,6 +201,8 @@ def workflow_approvals():
     #On a GET display the registration page with the defaults    
     if request.method == "GET":
         admin_groups = okta_admin.get_user_groups(user_id)
+        location_group_id=""
+        admin_group_id=""
         #User organization attribute contains workflow request
         #FOR DEALERSHIP ASSOCIATION request
         #FOR ADMIN REQUEST find users that match the admin's group_id
@@ -189,18 +212,14 @@ def workflow_approvals():
             if item["profile"]["name"].startswith("_LOC_"):
                 location_group_id = item["id"]
         
-        user_get_response = okta_admin.get_user_list_by_search('profile.organization eq "{location_group_id}" or profile.organization eq "{admin_group_id}" '
-        .format(location_group_id=location_group_id, admin_group_id=admin_group_id))
-        
-        print(user_get_response)
-        
-        for idx, list in enumerate(user_get_response,start=1):
-            group_get_response = okta_admin.get_group(id = list["profile"]["organization"])
-            print(group_get_response)
-            workflow_list.append({"id": idx, "requestor": list["profile"]["login"], 
-            "request": group_get_response["profile"]["description"], "usr_grp":{"user_id":list["id"],"group_id": list["profile"]["organization"] } })
-        
-        print(workflow_list)
+        if location_group_id and admin_group_id :
+            user_get_response = okta_admin.get_user_list_by_search('profile.organization eq "{location_group_id}" or profile.organization eq "{admin_group_id}" '
+            .format(location_group_id=location_group_id, admin_group_id=admin_group_id))
+            
+            for idx, list in enumerate(user_get_response,start=1):
+                group_get_response = okta_admin.get_group(id = list["profile"]["organization"])
+                workflow_list.append({"id": idx, "requestor": list["profile"]["login"], 
+                "request": group_get_response["profile"]["description"], "usr_grp":{"user_id":list["id"],"group_id": list["profile"]["organization"] } })
         
         return render_template(templatename+"/workflow-approvals.html", templatename=templatename,workflow_list=workflow_list, config=default_settings,_scheme="https")
     
