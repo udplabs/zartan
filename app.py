@@ -71,7 +71,7 @@ oidc = OpenIDConnect(app)
 # Add more themes and routes for themese here
 ##############################################
 
-#home and login 
+#home and login
 from GlobalBehaviorandComponents.login import gbac_bp
 app.register_blueprint(gbac_bp, url_prefix='/')
 
@@ -109,11 +109,11 @@ app.register_blueprint(streamingservice_views_bp, url_prefix='/streamingservice'
 @app.before_request
 def before_request():
     print("before_request")
-    
+
     #print( oidc.get_access_token())
     print( oidc.user_loggedin)
     #print( get_user_info())
-    
+
     if oidc.user_loggedin:
         g.user = get_user_info()
         g.token = oidc.get_access_token()
@@ -128,8 +128,8 @@ def get_user_info():
     except:
         print("User is not authenticated")
 
-    return user_info 
-    
+    return user_info
+
 @app.route('/<path:filename>')
 def serve_static_html(filename):
     # serve_static_html() generic route function to serve files in the 'static' folder
@@ -138,4 +138,5 @@ def serve_static_html(filename):
     return send_from_directory(os.path.join(root_dir, 'static'), filename)
 
 if __name__ == '__main__':
+    print("default_settings: {0}".format(json.dumps(default_settings, indent=4, sort_keys=True)))
     app.run(host=os.getenv("IP", "0.0.0.0"), port=int(os.getenv("PORT", 8080)), debug=True)
