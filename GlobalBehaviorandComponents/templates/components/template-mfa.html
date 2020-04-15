@@ -24,7 +24,7 @@ var script_to_run;
 function checkmfa(functioncall) {
         console.log("MFA_REQUIRED");   
         script_to_run=functioncall;
-        var site = "https://vodkta.oktapreview.com/home/oidc_client/0oaqy57vgqPo3ICRP0h7/aln5z7uhkbM6y7bMy0g7";
+        var site = {{config.settings.APP_STEPUP_AUTH_CLIENTURL}};
         document.getElementsByName('iFrameName')[0].src = site;
          $("#MFAModalCenter").modal("show");
 }
