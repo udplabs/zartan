@@ -1,0 +1,15 @@
+{% extends "finance/template.html" %}
+
+{% block content %}
+         <button type="button" id="mfa-button" onclick="checkmfa(runmyscript)" class="btn btn-primary">TEST MFA</button>
+         <script type="text/javascript">
+             function runmyscript() {
+                alert("good to go");
+             }
+             
+         </script>
+          {% include '//components/template-mfa.html' %} 
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
