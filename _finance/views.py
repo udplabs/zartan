@@ -5,12 +5,12 @@ import requests
 
 #import functions
 from functools import wraps
-from config import default_settings
 from flask import render_template, url_for, redirect, session,request
 from flask import send_from_directory, make_response
 from flask import Blueprint,g
 from flask import Flask, current_app as app
 from utils.okta import OktaAuth, OktaAdmin, TokenUtil
+from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical
 
 from GlobalBehaviorandComponents import login
 
@@ -18,7 +18,7 @@ from GlobalBehaviorandComponents import login
 finance_views_bp = Blueprint('finance_views_bp', __name__,template_folder='templates', static_folder='static', static_url_path='static')
 
 #reference oidc
-from app import oidc, templatename
+from app import oidc
 
 #needed for validating authentication
 def is_authenticated(f):
@@ -38,7 +38,7 @@ def is_authenticated(f):
 def is_token_valid_remote(token):
     print("is_token_valid_remote(token)")
     result = False
-    okta_auth = OktaAuth(default_settings)
+    okta_auth = OktaAuth(session[SESSION_INSTANCE_SETTINGS_KEY])
 
     instrospect_response = okta_auth.introspect(token=token)
     print("instrospect_response: {0}".format(instrospect_response))
@@ -47,28 +47,27 @@ def is_token_valid_remote(token):
         result = instrospect_response["active"]
 
     return result
-    
+
 
 #Required for Login Landing Page
 @finance_views_bp.route("/profile")
 @is_authenticated
 def finance_profile():
     print("Profile")
-    user_info = login.get_user_info() 
-    okta_admin = OktaAdmin(default_settings)
+    user_info = login.get_user_info()
+    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     print(user_info)
     user = okta_admin.get_user(user_info["sub"])
-    return render_template("finance/profile.html", oidc=oidc, user_info=user_info, config=default_settings)
+    return render_template("finance/profile.html", oidc=oidc, user_info=user_info, config=session[SESSION_INSTANCE_SETTINGS_KEY])
 
 #Account Page
 @finance_views_bp.route("/account")
 @is_authenticated
 def finance_account():
     print("Profile")
-    user_info = login.get_user_info() 
-    okta_admin = OktaAdmin(default_settings)
+    user_info = login.get_user_info()
+    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     print(user_info)
     user = okta_admin.get_user(user_info["sub"])
-    
-    return render_template("finance/account.html", oidc=oidc, user_info=user_info, config=default_settings)
-    
+
+    return render_template("finance/account.html", oidc=oidc, user_info=user_info, config=session[SESSION_INSTANCE_SETTINGS_KEY])

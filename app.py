@@ -2,6 +2,8 @@ import os
 import json
 import sys
 import jinja2
+import logging
+import logging.config
 
 from os.path import dirname, join
 from functools import wraps
@@ -16,6 +18,7 @@ from utils.okta import OktaAuth, OktaAdmin, TokenUtil
 # Also set app config
 # DO NOT TOUCH
 ##############################################
+logger = logging.getLogger(__name__)
 
 with open('client_secrets.json', 'w') as outfile:
     oidc_config = {
@@ -50,12 +53,6 @@ with open('client_secrets.json', 'w') as outfile:
     }
 
 ##############################################
-# Setting template to use
-##############################################
-templatename = default_settings["settings"]["app_template"]
-
-
-##############################################
 # Set App Config
 # Set OIDC
 # DO NOT TOUCH
@@ -71,7 +68,7 @@ oidc = OpenIDConnect(app)
 # Add more themes and routes for themese here
 ##############################################
 
-#home and login 
+#home and login
 from GlobalBehaviorandComponents.login import gbac_bp
 app.register_blueprint(gbac_bp, url_prefix='/')
 
@@ -115,12 +112,12 @@ app.register_blueprint(finance_views_bp, url_prefix='/finance')
 
 @app.before_request
 def before_request():
-    print("before_request")
-    
+    # print("before_request")
+
     #print( oidc.get_access_token())
-    print( oidc.user_loggedin)
+    #print( oidc.user_loggedin)
     #print( get_user_info())
-    
+
     if oidc.user_loggedin:
         g.user = get_user_info()
         g.token = oidc.get_access_token()
@@ -135,8 +132,8 @@ def get_user_info():
     except:
         print("User is not authenticated")
 
-    return user_info 
-    
+    return user_info
+
 @app.route('/<path:filename>')
 def serve_static_html(filename):
     # serve_static_html() generic route function to serve files in the 'static' folder
@@ -145,5 +142,8 @@ def serve_static_html(filename):
     return send_from_directory(os.path.join(root_dir, 'static'), filename)
 
 if __name__ == '__main__':
-    #print("default_settings : {0}".format(json.dumps(default_settings, indent=4, sort_keys=True)))
+    log_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.getenv("LOGGER_CONFIG", "DEV_logger.config"))
+    logging.config.fileConfig(fname=log_file_path, disable_existing_loggers=False)
+
+    logger.debug("default_settings: {0}".format(json.dumps(default_settings, indent=4, sort_keys=True)))
     app.run(host=os.getenv("IP", "0.0.0.0"), port=int(os.getenv("PORT", 8080)), debug=True)
