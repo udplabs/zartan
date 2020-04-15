@@ -1,0 +1,19 @@
+{% extends templatename+"/template.html" %} {% block content %}
+<div class="container">
+    <div class="row">
+        <div class="main col-12">
+            <!-- page-title start -->
+            <!-- ================ -->
+            <h1 class="page-title">New Employee Registration</h1>
+            
+                <div class="alert badge-success  fade show" role="alert">
+                  <strong>Success!</strong> 
+                       An email message was sent with an activation link to <span style="color:blue;font-weight:bold">{{email}}</span>.
+                       Please click on the registration link in your email to activate your account
+                </div>
+            
+                   
+            </form>
+        </div>
+    </div>
+</div><br /><br /> {% endblock %} {% block footer %} {% endblock %}

@@ -1,0 +1,59 @@
+{% extends templatename+"/template.html" %} {% block content %}
+<div class="container">
+    <div class="row">
+        <div class="main col-12">
+            <!-- page-title start -->
+            <!-- ================ -->
+            <h1 class="page-title">Account Registration </h1>
+            
+            <!-- Custom css -->
+    <script src="https://global.oktacdn.com/okta-signin-widget/3.8.2/js/okta-sign-in.min.js" type="text/javascript"></script>
+    <link href="https://global.oktacdn.com/okta-signin-widget/3.8.2/css/okta-sign-in.min.css" type="text/css" rel="stylesheet"/>
+
+   
+
+    <section class="main-container">
+        <div class="container" >
+           <div class="row">
+            <div class="col-md-8 offset-md-2">
+                
+            {% if error  %}
+            <div class="alert badge-warning alert-dismissible fade show" role="alert">
+              <strong>Holy guacamole!</strong> {{error}}
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            
+            {% else %}
+            
+            
+            <!-- main start -->
+            <!-- ================ -->
+             <div class="main col-12">
+                <div class="alert badge-success  fade show" role="alert">
+                  <strong>Success!</strong> 
+                       <p>You account was successfully activated. Click <span style="color:blue;font-weight:bold"> <a href="/login">here to login</span></a></p>
+                       
+                       <p> You will be redirected in 5 seconds</p>
+                </div>
+                   
+              </div>
+               <script>
+                    // redirect to google after 5 seconds
+                    window.setTimeout(function() {
+                        window.location.href = "/login";
+                    }, 5000);
+                </script>
+    
+            {% endif %}
+            </div>
+            </div>
+        </div>
+    </section>
+
+         
+        </div>
+    </div>
+</div><br /><br /> 
+{% endblock %} {% block footer %} {% endblock %}
