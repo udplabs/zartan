@@ -1,0 +1,141 @@
+{% extends "finance/template.html" %}
+
+{% block content %}
+<section class="bg-light py-5">
+    <div class="container">
+        <div class="d-flex align-items-center justify-content-between">
+            <h6 class="mb-0">Banking that fits your needs</h6>
+        </div>
+        <hr class="mb-4" />
+        <div class="card mb-4">
+            <div class="card-body p-0">
+                <div class="row no-gutters">
+                    <div class="col-lg-6 p-5">
+                        <a class="badge badge-marketing badge-primary-soft badge-pill text-primary mb-3" href="#!">Open an Account Today!</a><a class="text-dark" href="#!">
+                         <h1>{{ config.settings.app_slogan }}</h1></a>
+                        <p>{{ config.settings.app_subslogan }}</p>
+                        <a class="text-arrow-icon small" href="#!">Learn more<i data-feather="arrow-right"></i></a>
+                    </div>
+                    <div class="col-lg-6 align-self-stretch bg-img-cover d-none d-lg-flex" style='background-image: url("{{ config.settings.app_banner_img_1 }}")'></div>
+                </div>
+            </div>
+        </div>
+        <hr class="mb-4" />
+        <div class="row">
+            <div class="col-lg-7 col-xl-8">
+                <div class="media">
+                    <div class="icon-stack icon-stack-xl bg-gradient-primary-to-secondary text-white mb-4" style="margin-right: 20px;"><i data-feather="smartphone"></i></div>
+                    <div class="media-body">
+                        <h5 class="mt-0">Stay connected, enjoy peace of mind</h5>
+                        <p>Download Our Bank app and simplify your banking. Discover quick, simple and convenient way to take command of your bank account, on your mobile phone.</p>
+                        <a class="text-arrow-icon small" href="#!">Read more<i data-feather="arrow-right"> </i></a>
+                    </div>
+                </div>
+                <hr class="my-4" />
+                <div class="media">
+                    <div class="icon-stack icon-stack-xl bg-gradient-primary-to-secondary text-white mb-4" style="margin-right: 20px;"><i data-feather="trending-up"></i></div>
+                    <div class="media-body">
+                        <h5 class="mt-0">Nothing is impossible. We can help you achieve your goals!</h5>
+                        <p>The World's largest banking groups are required to comply with security regulations. Find out more about our approach and what it means for you</p>
+                        <a class="text-arrow-icon small" href="#!">Read more<i data-feather="arrow-right"> </i></a>
+                    </div>
+                    </div>
+                <hr class="my-4" />
+                <div class="media">
+                    <div class="icon-stack icon-stack-xl bg-gradient-primary-to-secondary text-white mb-4" style="margin-right: 20px;"><i data-feather="credit-card"></i></div>
+                    <div class="media-body">
+                        <h5 class="mt-0">Find the card that’s right for you. Explore the benefits.</h5>
+                        <p>Get the financial freedom you deserve. Credit cards offer exceptional benefits, rewards, services and spending power that can help make your financial and personal dreams come true.</p>
+                        <a class="text-arrow-icon small" href="#!">Read more<i data-feather="arrow-right"> </i></a>
+                    </div>
+                </div>
+                <hr class="my-4 d-lg-none" />
+            </div>
+            <div class="col-lg-5 col-xl-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h6>Opinion</h6>
+                        <hr />
+                        <div class="d-flex mb-4">
+                            <div class="avatar avatar-lg"><img class="avatar-img" src="https://source.unsplash.com/MTZTGvDsHFY/64x64" /></div>
+                            <div class="ml-3">
+                                <a class="text-dark" href="#!"><h6 class="mb-1">Best Bank Ever!</h6></a>
+                                <div class="small text-gray-500">by <a class="text-gray-500" href="#!">William Cole</a></div>
+                            </div>
+                        </div>
+                        <div class="d-flex mb-4">
+                            <div class="avatar avatar-lg"><img class="avatar-img" src="https://source.unsplash.com/KBv5dEN3QtY/64x64" /></div>
+                            <div class="ml-3">
+                                <a class="text-dark" href="#!"><h6 class="mb-1">Easy to use App. Loging in was a breeze.</h6></a>
+                                <div class="small text-gray-500">by <a class="text-gray-500" href="#!">Ewan Rogers</a></div>
+                            </div>
+                        </div>
+                        <div class="d-flex mb-4">
+                            <div class="avatar avatar-lg"><img class="avatar-img" src="https://source.unsplash.com/QAB-WJcbgJk/64x64" /></div>
+                            <div class="ml-3">
+                                <a class="text-dark" href="#!"><h6 class="mb-1">Customer service answered my quetions quickly.</h6></a>
+                                <div class="small text-gray-500">by <a class="text-gray-500" href="#!">Alicia Allen</a></div>
+                            </div>
+                        </div>
+                        <div class="d-flex mb-4">
+                            <div class="avatar avatar-lg"><img class="avatar-img" src="https://source.unsplash.com/jIM8kVsFKlM/64x64" /></div>
+                            <div class="ml-3">
+                                <a class="text-dark" href="#!"><h6 class="mb-1">I feel super secure when I login.</h6></a>
+                                <div class="small text-gray-500">by <a class="text-gray-500" href="#!">Kolby Brock</a></div>
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                            <div class="avatar avatar-lg"><img class="avatar-img" src="https://source.unsplash.com/4ytMf8MgJlY/64x64" /></div>
+                            <div class="ml-3">
+                                <a class="text-dark" href="#!"><h6 class="mb-1">Banking has never been easier for me and my family.</h6></a>
+                                <div class="small text-gray-500">by <a class="text-gray-500" href="#!">Sara Gray</a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="my-4" />
+        <div class="row mb-5">
+            <div class="col-lg-4">
+                <h6>Online Business</h6>
+                <hr class="my-4" />
+                <p class="text-gray-600 small mb-4">Explore the power of simpler and smarter banking. Bank online with over 250 services.</p>
+                <a class="text-dark mb-4" href="#!"><h5>Apply Online</h5></a>
+            </div>
+           <div class="col-lg-4">
+                <h6>Buy with Apple Pay</h6>
+                <hr class="my-4" />
+                <p class="text-gray-600 small mb-4">Download the Alister Bank app and simplify your banking. Discover quick, simple and convenient way to take command of your bank account, on your mobile phone.</p>
+                <a class="text-dark mb-4" href="#!"><h5>Download Now</h5></a>
+            </div>
+          <div class="col-lg-4">
+                <h6>Brand New Experience</h6>
+                <hr class="my-4" />
+                <p class="text-gray-600 small mb-4">Online banking can save you a lot of time and effort, you can undertake most transactions from the comforts of your home.</p>
+                <a class="text-dark mb-4" href="#!"><h5>Check it out</h5></a>
+            </div>
+        </div>
+        <div class="card mb-n5 z-1">
+            <div class="card-body p-5">
+                <div class="row align-items-center">
+                    <div class="col-lg-6">
+                        <h4>Get the latest news</h4>
+                        <p class="lead text-gray-500 mb-0">Stay in the loop with the latest stories and breaking headlines!</p>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="input-group mb-2">
+                            <input class="form-control form-control-solid" type="text" placeholder="youremail@example.com" aria-label="Recipient's username" aria-describedby="button-addon2" />
+                            <div class="input-group-append"><button class="btn btn-primary" id="button-addon2" type="button">Sign up</button></div>
+                        </div>
+                        <div class="small text-gray-500">You can unsubscribe at any time.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

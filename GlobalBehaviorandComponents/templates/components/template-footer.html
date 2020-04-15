@@ -1,7 +1,7 @@
-    <section>
+ 
+    <section id="footersection">
         <br /><br />
         {% if color=="white" %}
-        {{ color }}
         <div class="svg-border-rounded text-white">
         {% else %}
         <div class="svg-border-rounded text-black">
@@ -38,3 +38,17 @@
                 </div>
             </div>
         </footer>
+     <script type="text/javascript">
+        // Made this script to inherit the background color of the section above
+        try 
+        {
+            var parentclass = $('section').first().attr('class');
+            var regex = /bg[^\s]+/;
+            var bgclass = parentclass.match(regex);
+            $("#footersection").addClass(bgclass[0]);
+        }
+        catch(err) 
+        {
+            console.log("no section defined");
+        }
+    </script>

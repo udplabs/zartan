@@ -5,7 +5,12 @@
         <div id="layoutDefault">
             <div id="layoutDefault_content">
                 <main>
-                    {% with mynavitems="navitems.html" %}
+                    {% if not "login" in request.path and not "index" in request.path %} 
+                        {% set navitems ="navitemslogin.html" %}
+                    {% else %}
+                        {% set navitems ="navitems.html" %}
+                    {% endif %}
+                    {% with mynavitems = navitems %}
                         {% include '//components/template-navigation.html' %}
                     {% endwith %}
                     {% block content %}{% endblock %}

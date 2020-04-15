@@ -1,0 +1,63 @@
+{% extends templatename+"/template.html" %} {% block content %}
+<div class="container">
+    <div class="row">
+        <div class="main col-12">
+            <div class="separator-2"></div>
+             
+            {% if error  %}
+            <div class="alert badge-warning alert-dismissible fade show" role="alert">
+              <strong>Holy guacamole!</strong> {{error}}
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            {% endif %}
+            
+            {%if not workflow_list %}
+                <h1 class="page-title">Workflow Requests</h1>
+                <div class="separator-2"></div>
+                <div class="alert badge-secondary  fade show" role="alert">
+                      <strong>Message!</strong> 
+                          Your workflow request queue is now empty
+                </div>
+            {% else %}    
+            
+            <form class="form-horizontal" method="POST">
+               <section class="bg-white py-10">
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-10">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <h2 class="mb-0">Access Requests</h2>
+                                    <div class="badge badge-primary-soft text-primary badge-marketing">Count {{workflow_list|length}} </div>
+                                </div>
+                                <hr class="mb-0" />
+                                <ul class="list-group list-group-flush list-group-careers">
+                                </ul>    
+                                <ul class="list-group list-group-flush list-group-careers">
+                                    <li class="list-group-item">
+                                            <div class="small" style="font-weight: bold;">#</div>
+                                            <div class="small" style="font-weight: bold;"> Access </div>
+                                            <div class="small" style="font-weight: bold;"> Action </div>
+                                    </li>
+                                        
+                                    {% for workflow in workflow_list %}
+                                        <li class="list-group-item">
+                                            <div class="small">{{ loop.index }}</div>
+                                            <div class="small">{{workflow.description}}</div>
+                                            <div class="small">
+                                                <button type="submit" name="request_access" class="btn btn-primary" value="{{workflow.id}}"> Request </button>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>                                                
+                </section>
+            </form>
+            {% endif %}
+            
+        </div>
+    </div>
+</div><br /><br /> {% endblock %} {% block footer %} {% endblock %}
