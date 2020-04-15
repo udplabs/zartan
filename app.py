@@ -94,6 +94,10 @@ app.register_blueprint(hospitality_views_bp, url_prefix='/hospitality')
 from _streamingservice.views import streamingservice_views_bp
 app.register_blueprint(streamingservice_views_bp, url_prefix='/streamingservice')
 
+#finance theme
+from _finance.views import finance_views_bp
+app.register_blueprint(finance_views_bp, url_prefix='/finance')
+
 
 ##############################################
 # Main Shared Routes

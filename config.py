@@ -10,7 +10,6 @@ default_settings = {
     "settings": {
         "app_template": os.getenv("APP_TEMPLATE", "sample"),
         "app_base_url": os.getenv("APP_BASE_URL", ""),
-        "app_loginmethod": os.getenv("APP_LOGINMETHOD", "standard-widget"),
         "app_name": os.getenv("APP_NAME", "Sample App"),
         "app_slogan": os.getenv("APP_SLOGAN", ""),
         "app_subslogan": os.getenv("APP_SUBSLOGAN", ""),
@@ -22,7 +21,9 @@ default_settings = {
         "app_success_color" : os.getenv("app_success_color", "#00ac69"),
         "app_info_color" : os.getenv("app_info_color", "#00cfd5"),
         "app_warning_color" : os.getenv("app_warning_color", "#f4a100"),
-        "app_danger_color" : os.getenv("app_danger_color", "#e81500")
+        "app_danger_color" : os.getenv("app_danger_color", "#e81500"),
+        "app_stepup_auth_clientid" : os.getenv("APP_STEPUP_AUTH_CLIENTID", ""),
+        "app_stepup_auth_clienturl" : os.getenv("APP_STEPUP_AUTH_CLIENTURL", "")
     },
     "okta_api_token": os.getenv("OKTA_API_TOKEN", ""),
     "app_secret_key": os.getenv("SECRET_KEY", "")
