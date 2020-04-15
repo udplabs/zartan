@@ -1,4 +1,4 @@
 <script>
-    var test_token = {{ test_token|tojson }};
-    parent.completedmfa(test_token.active);    
+    test_token = {{ test_token|tojson }};
+    parent.completedmfa(test_token);    
 </script>

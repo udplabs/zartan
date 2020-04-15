@@ -47,6 +47,7 @@
 </nav>
 
 
+{% if user_info is none or user_info is not defined %}
 
 <script src="https://ok1static.oktacdn.com/assets/js/sdk/okta-auth-js/1.17.0/okta-auth-js.min.js" type="text/javascript"></script>
 <script src="https://global.oktacdn.com/okta-signin-widget/3.8.2/js/okta-sign-in.min.js" type="text/javascript"></script>
@@ -185,3 +186,4 @@ function do_login(un, pw) {
         });
 }
 </script>
+{% endif %}

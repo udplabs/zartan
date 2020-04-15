@@ -23,7 +23,7 @@ from app import oidc, templatename
 def gbac_stepupauth_mfa():
     idtoken = request.form['id_token']
     okta_auth = OktaAuth(default_settings)
-    test_token = okta_auth.introspect_mfa(idtoken,'0oaqy57vgqPo3ICRP0h7')
+    test_token = okta_auth.introspect_mfa(idtoken,default_settings["settings"]["APP_STEPUP_AUTH_CLIENTID"])
     print(test_token)
     return render_template("/mfa.html", templatename=templatename, config=default_settings, oidc=oidc, idtoken=idtoken,test_token=test_token)
 
