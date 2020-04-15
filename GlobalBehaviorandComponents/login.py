@@ -12,18 +12,20 @@ from flask import send_from_directory, make_response
 from flask import Blueprint,g
 from flask import Flask, current_app as app
 from utils.okta import OktaAuth, OktaAdmin, TokenUtil
+from utils.udp import apply_remote_config
 
 #set blueprint
 gbac_bp = Blueprint('gbac_bp', __name__,template_folder='templates', static_folder='static', static_url_path='static')
 
-#reference oidc 
+#reference oidc
 from app import oidc, templatename
 
 #main route
 @gbac_bp.route("/")
 @gbac_bp.route("/index")
+@apply_remote_config
 def gbac_main():
-    user_info = get_user_info() 
+    user_info = get_user_info()
     destination = default_settings["settings"]["app_base_url"] + "/" + templatename + "/profile"
     try:
         state = {
@@ -33,14 +35,14 @@ def gbac_main():
     except:
         state = ''
         print('No Session')
-        
-    return render_template(templatename+"/index.html", templatename=templatename, oidc=oidc, user_info=user_info, config=default_settings,state=base64.b64encode(bytes(json.dumps(state),'utf-8')).decode('utf-8')) 
+
+    return render_template(templatename+"/index.html", templatename=templatename, oidc=oidc, user_info=user_info, config=default_settings,state=base64.b64encode(bytes(json.dumps(state),'utf-8')).decode('utf-8'))
 
 
 @gbac_bp.route("/login")
 def gbac_login():
     #fix: Need to check URL issue for double slash
-    destination = default_settings["settings"]["app_base_url"] + "/" + templatename + "/profile" 
+    destination = default_settings["settings"]["app_base_url"] + "/" + templatename + "/profile"
     state = {
         'csrf_token': session['oidc_csrf_token'],
         'destination': oidc.extra_data_serializer.dumps(destination).decode('utf-8')
@@ -56,7 +58,7 @@ def gbac_signup():
 def gbac_logout():
     oidc.logout()
     return redirect(url_for("gbac_bp.gbac_main", _external="True", _scheme="https"))
-    
+
 @gbac_bp.route('/styles')
 def gbac_style():
     return render_template("styles/styles.css", config=default_settings),  200, {'Content-Type': 'text/css'}
@@ -69,8 +71,8 @@ def get_user_info():
     except:
         print("User is not authenticated")
 
-    return user_info 
-    
+    return user_info
+
 
 
 """
@@ -115,10 +117,10 @@ def gbac_send_push_admin():
 
 
     response = okta_admin.send_otp_admin(factor_id, user_id)
-    
+
     return json.dumps(response)
-    
-    
+
+
 @gbac_bp.route("/verify_answer_admin", methods=["POST"])
 def gbac_verify_answer_admin():
     print("verify_answer_admin()")
@@ -134,7 +136,7 @@ def gbac_verify_answer_admin():
     return json.dumps(response)
 
 
-    
+
 @gbac_bp.route("/resend_push", methods=["POST"])
 def gbac_resend_push():
     print("resend_push()")
@@ -164,7 +166,7 @@ def gbac_verify_answer():
     answer = body["answer"]
 
     response = okta_auth.verify_answer(factor_id, state_token, answer)
-    
+
     return json.dumps(response)
 
 @gbac_bp.route("/get_authorize_url", methods=["POST"])
@@ -176,38 +178,38 @@ def gbac_get_authorize_url():
 
     session_token = body["session_token"]
     session["state"] = str(uuid.uuid4())
-    
+
     oauth_authorize_url = get_oauth_authorize_url(session_token)
-    
+
     response = {
         "authorize_url": oauth_authorize_url
     }
     return json.dumps(response)
-    
+
 
 @gbac_bp.route("/verify_totp", methods=["POST"])
 def gbac_verify_totp():
     print("verify_totp()")
     print(session);
     okta_auth = OktaAuth(default_settings)
-    
+
     body = request.get_json()
     pass_code = None
     factor_id = body["factor_id"]
     state_token = body["state_token"]
     # get state with token
-    
+
     if "pass_code" in body:
         pass_code = body["pass_code"]
 
     print("verifying factor ID {0} with code {1} ({2})".format(factor_id, pass_code, state_token))
     response = okta_auth.verify_totp(factor_id, state_token, pass_code)
-    
-    
+
+
     print(response)
     return json.dumps(response)
-    
-    
+
+
 def get_oauth_authorize_url(okta_session_token=None):
     print("get_oauth_authorize_url()")
     okta_auth = OktaAuth(default_settings)
