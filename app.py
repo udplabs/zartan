@@ -53,12 +53,6 @@ with open('client_secrets.json', 'w') as outfile:
     }
 
 ##############################################
-# Setting template to use
-##############################################
-templatename = default_settings["settings"]["app_template"]
-
-
-##############################################
 # Set App Config
 # Set OIDC
 # DO NOT TOUCH
