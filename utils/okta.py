@@ -128,6 +128,15 @@ class OktaAuth:
         body = {}
 
         return RestUtil.execute_post(url, body, okta_headers)
+    
+    def introspect_mfa(self, token, client_id):
+        print("OktaAuth.introspect_mfa()")
+        okta_headers = OktaUtil.get_introspect_mfa_okta_headers()
+        url = "{baseurl}/oauth2/v1/introspect".format(baseurl=self.okta_config["okta_org_name"])
+        print(url)
+        body = "&token="+token +"&client_id="+client_id+"&token_type_hint=id_token"
+        print(body)
+        return RestUtil.execute_post(url=url, body=body, headers=okta_headers)
 
     def userinfo(self, token, headers=None):
         print("OktaAuth.userinfo()")
@@ -137,7 +146,6 @@ class OktaAuth:
             issuer=self.okta_config["issuer"],
             token=token)
         body = {}
-
         return RestUtil.execute_post(url, body, okta_headers)
 
     """
@@ -669,6 +677,15 @@ class OktaUtil:
         okta_default_headers = {
             "Accept": "application/json",
             "Content-Type": "application/json"
+        }
+
+        return okta_default_headers
+    
+    @staticmethod
+    def get_introspect_mfa_okta_headers():
+        okta_default_headers = {
+            "Accept": "application/json",
+            "Content-Type": "application/x-www-form-urlencoded"
         }
 
         return okta_default_headers

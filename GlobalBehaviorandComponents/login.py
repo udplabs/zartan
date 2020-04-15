@@ -25,10 +25,15 @@ from app import oidc, templatename
 def gbac_main():
     user_info = get_user_info() 
     destination = default_settings["settings"]["app_base_url"] + "/" + templatename + "/profile"
-    state = {
-        'csrf_token': session['oidc_csrf_token'],
-        'destination': oidc.extra_data_serializer.dumps(destination).decode('utf-8')
-    }
+    try:
+        state = {
+            'csrf_token': session['oidc_csrf_token'],
+            'destination': oidc.extra_data_serializer.dumps(destination).decode('utf-8')
+        }
+    except:
+        state = ''
+        print('No Session')
+        
     return render_template(templatename+"/index.html", templatename=templatename, oidc=oidc, user_info=user_info, config=default_settings,state=base64.b64encode(bytes(json.dumps(state),'utf-8')).decode('utf-8')) 
 
 
@@ -230,4 +235,3 @@ def get_oauth_authorize_url(okta_session_token=None):
 """
 end MFA verification routes
 """
-

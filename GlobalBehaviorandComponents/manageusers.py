@@ -59,7 +59,7 @@ def gbac_users():
     print(user_group)
     group_id = user_group["id"]
     group_user_list = okta_admin.get_user_list_by_group_id(group_id)
-    return render_template("/manageusers.html", user_info=user_info, oidc=oidc, userlist= group_user_list, config=default_settings, user_group=user_group)
+    return render_template("/manageusers.html",templatename=templatename, user_info=user_info, oidc=oidc, userlist= group_user_list, config=default_settings, user_group=user_group)
 
 
 def gbac_get_group_by_name(group_name):
@@ -135,7 +135,7 @@ def gbac_create_update_page():
     user_id = request.args.get('user_id')
     user_info2 = okta_admin.get_user(user_id)
 
-    return render_template("/manageusercreateupdate.html", user_info=user_info, oidc=oidc, user_info2=user_info2, config=default_settings)
+    return render_template("/manageusercreateupdate.html", templatename=templatename,user_info=user_info, oidc=oidc, user_info2=user_info2, config=default_settings)
   
 
 @gbac_manageusers_bp.route("/createuserinfo", methods=["POST"])

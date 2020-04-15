@@ -23,8 +23,9 @@ default_settings = {
         "app_info_color" : os.getenv("APP_INFO_COLOR", "#00cfd5"),
         "app_warning_color" : os.getenv("APP_WARNING_COLOR", "#f4a100"),
         "app_danger_color" : os.getenv("APP_DANGER_COLOR", "#e81500"),
-        
         "sparkpost_api_key" : os.getenv("SPARKPOST_API_KEY", ""),
+        "app_stepup_auth_clientid" : os.getenv("APP_STEPUP_AUTH_CLIENTID", ""),
+        "app_stepup_auth_clienturl" : os.getenv("APP_STEPUP_AUTH_CLIENTURL", "")
     },
     "okta_api_token": os.getenv("OKTA_API_TOKEN", ""),
     "app_secret_key": os.getenv("SECRET_KEY", "")
