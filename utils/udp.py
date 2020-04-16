@@ -140,9 +140,16 @@ def clear_session_setting():
 
 
 def get_app_vertical():
-    app_vertical_template_name = get_domain_parts_from_request()["udp_app_name"]
+    app_vertical_template_name = None
+    domain_parts = get_domain_parts_from_request()
+
+    if "udp_app_name" in domain_parts:
+        app_vertical_template_name = domain_parts["udp_app_name"]
+
     if app_vertical_template_name == "" or app_vertical_template_name is None:
         app_vertical_template_name = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_template"]
+
+    print("app_vertical_template_name: {0}".format(app_vertical_template_name))
 
     return app_vertical_template_name
 
