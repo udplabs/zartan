@@ -54,6 +54,7 @@ def is_token_valid_remote(token):
 @is_authenticated
 def finance_profile():
     print("Profile")
+    
     user_info = login.get_user_info()
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     print(user_info)
@@ -64,7 +65,8 @@ def finance_profile():
 @finance_views_bp.route("/account")
 @is_authenticated
 def finance_account():
-    print("Profile")
+    print("Account")
+    
     user_info = login.get_user_info()
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     print(user_info)

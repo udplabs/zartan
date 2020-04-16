@@ -29,14 +29,10 @@
         Object.defineProperty(e, "__esModule", {
             value: !0
         }), e.default = e.gtag = e.install = void 0, e.install = function(n) {
-            if (!document.getElementById("ga-gtag")) {
-                var e = document.head,
-                    t = document.createElement("script");
-                t.id = "ga-gtag", t.type = "text/javascript", t.async = !0, t.src = "https://www.googletagmanager.com/gtag/js?id=".concat(n), e.insertBefore(t, e.firstChild), window.dataLayer = window.dataLayer || [], o("js", new Date), o("config", n)
-            }
+            
         };
         var o = function() {
-            window.dataLayer.push(arguments)
+            //window.dataLayer.push(arguments)
         };
         e.gtag = o, e.default = o
     },
@@ -8695,7 +8691,7 @@
                     o.setAttribute("id", "StyleGenerator"), t.appendChild(o), o.appendChild(document.createTextNode(n))
                 }
                 _generateVariablesCustomizerSCSS(n) {
-                    let e = `${function(n){switch(n){case"sb-admin-pro":return"// This file was generated for Start Bootstrap Admin Pro\n// https://shop.startbootstrap.com/product/sb-admin-pro/\n// Place this file in src/scss/_variables-colors-overrides.scss\n\n";case"sb-admin-pro-angular":return"// This file was generated for Start Bootstrap Admin Pro Angular\n// https://themes.startbootstrap.com/sb-admin-pro-angular/\n// Place this file in src/styles/sb-admin-pro/_variables-colors-overrides.scss\n\n";case"sb-ui-kit-pro":return"// This file was generated for Start Bootstrap UI Kit Pro\n// https://shop.startbootstrap.com/product/sb-ui-kit-pro/\n// Place this file in src/scss/_variables-colors-overrides.scss\n\n";case"sb-ui-kit-pro-angular":return"// This file was generated for Start Bootstrap UI Kit Pro Angular\n// https://themes.startbootstrap.com/sb-ui-kit-pro-angular/\n// Place this file in src/styles/sb-ui-kit-pro/_variables-colors-overrides.scss\n\n"}return""}(n.project)}`;
+                    let e = `${function(n){switch(n){case"sb-admin-pro":return"// This file was generated for Start Bootstrap Admin Pro\n// https://shop.startbootstrap.com/product/sb-admin-pro/\n// Place this file in src/scss/_variables-colors-overrides.scss\n\n";case"sb-admin-pro-angular":return"// This file was generated for Start Bootstrap Admin Pro Angular\n// https://themes.startbootstrap.com/sb-admin-pro-angular/\n// Place this file in src/styles/sb-admin-pro/_variables-colors-overrides.scss\n\n";case"sb-ui-kit-pro":return"// Here are your colors. Please place them in UDP under the correct name. Enjoy!\n\n";case"sb-ui-kit-pro-angular":return"//Here are your colors. Please place them in UDP under the correct name. Enjoy!\n\n"}return""}(n.project)}`;
                     for (const t in n.colors) n.colors[t] && (e += `$${t}: ${n.colors[t]};\n`);
                     return e
                 }
@@ -11159,7 +11155,7 @@
                                 type: "text/plain"
                             }),
                             t = document.createElement("a");
-                        t.download = "variables-colors-overrides.scss", t.href = window.URL.createObjectURL(e), t.click(), ku()("event", "Export Overrides", {
+                        t.download = "udp_colors.txt", t.href = window.URL.createObjectURL(e), t.click(), ku()("event", "Export Overrides", {
                             event_category: "Customizer",
                             event_label: this.project
                         })
@@ -11210,7 +11206,7 @@
                         return e.toggle()
                     })), Ma(2, "fa-icon", 2), Ta(), Pa(3, "div", 3), qa(4, "Theme Customizer"), Ta(), Pa(5, "div", 4), Pa(6, "h6", 5), qa(7, "Try a pre-built swatch!"), Ta(), Pa(8, "div", 6), ma(9, lf, 5, 5, "div", 7), Ta(), Pa(10, "h6", 5), qa(11, "Or choose your own colors..."), Ta(), Pa(12, "div", 8), ma(13, uf, 10, 11, "button", 9), Ta(), Pa(14, "h6", 5), qa(15, "Need ideas? Randomize!"), Ta(), Pa(16, "button", 10), Da("click", (function(n) {
                         return e.randomPalette()
-                    })), qa(17, "Randomize Colors"), Ma(18, "fa-icon", 11), Ta(), Ma(19, "hr"), Pa(20, "h6", 5), qa(21, "Finished? Export your color palette file with install instructions!"), Ta(), Pa(22, "button", 12), Da("click", (function(n) {
+                    })), qa(17, "Randomize Colors"), Ma(18, "fa-icon", 11), Ta(), Ma(19, "hr"), Pa(20, "h6", 5), qa(21, "Finished? Export your color palette file!"), Ta(), Pa(22, "button", 12), Da("click", (function(n) {
                         return e.exportOverrides()
                     })), qa(23, "Export"), Ma(24, "fa-icon", 11), Ta(), Ta(), Ta()), 2 & n && (Ba("ngClass", (t = 7, o = pf, r = e.closed, i = !e.closed, function(n, e, t, o, r, i, s) {
                         const a = e + t;
@@ -11225,7 +11221,7 @@
                 styles: [".btn-customizer[_ngcontent-%COMP%]{display:-webkit-box;display:flex;width:100%;-webkit-box-pack:justify;justify-content:space-between;-webkit-box-align:center;align-items:center;border-radius:.35rem;font-size:.85rem;padding:1rem;outline:0;margin-bottom:.5rem}.btn-customizer[_ngcontent-%COMP%]   svg[_ngcontent-%COMP%]{visibility:hidden}.btn-customizer[_ngcontent-%COMP%]:focus{font-weight:700;box-shadow:0 0 0 .125rem #d7dce3}.btn-customizer[_ngcontent-%COMP%]:focus   svg[_ngcontent-%COMP%]{visibility:visible}.sb-customizer-btn-export[_ngcontent-%COMP%]{font-size:.85rem;padding:1rem}.sb-customizer-btn-export[_ngcontent-%COMP%]   .ng-fa-icon[_ngcontent-%COMP%]{margin-right:.25rem}.sb-customizer[_ngcontent-%COMP%]{z-index:9999;position:fixed;top:0;width:20rem;height:100vh;text-align:left;background:#fff;-webkit-transition:right .5s;transition:right .5s;box-shadow:-.15rem 0 1.75rem 0 rgba(34,39,46,.15)}.sb-customizer[_ngcontent-%COMP%]   .sb-customizer-heading[_ngcontent-%COMP%]{padding:1.5rem;font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#a7aeb8}.sb-customizer[_ngcontent-%COMP%]   .sb-customizer-subheading[_ngcontent-%COMP%]{font-size:.8rem;font-style:italic;color:#6c737d;margin-bottom:.75rem}.sb-customizer[_ngcontent-%COMP%]   .sb-customizer-toggler[_ngcontent-%COMP%]{position:absolute;top:4.625rem;display:-webkit-box;display:flex;-webkit-box-align:center;align-items:center;-webkit-box-pack:center;justify-content:center;left:-3rem;width:3rem;height:3rem;border:0;box-shadow:0 .15rem 1.75rem 0 rgba(34,39,46,.15);color:#001500;background-color:#fff;border-radius:.35rem 0 0 .35rem}.sb-customizer[_ngcontent-%COMP%]   .sb-customizer-toggler[_ngcontent-%COMP%]:focus{outline:0}.sb-customizer[_ngcontent-%COMP%]   .sb-customizer-content[_ngcontent-%COMP%]{position:relative;height:calc(100% - 64px);overflow-y:auto;padding:1.5rem}.sb-customizer[_ngcontent-%COMP%]   .sb-customizer-content[_ngcontent-%COMP%]::-webkit-scrollbar{display:block;width:.5rem}.sb-customizer[_ngcontent-%COMP%]   .sb-customizer-content[_ngcontent-%COMP%]::-webkit-scrollbar-thumb{background-color:#c7cdd6;border-radius:10rem;height:3em;background-clip:padding-box;border:.1rem solid transparent}.sb-customizer[_ngcontent-%COMP%]   .sb-customizer-content[_ngcontent-%COMP%]::-webkit-scrollbar-track{background-color:rgba(34,39,46,.05)}.sb-customizer[_ngcontent-%COMP%]   .sb-customizer-content[_ngcontent-%COMP%]::-webkit-scrollbar-button{width:0;height:0;display:none}.sb-customizer[_ngcontent-%COMP%]   .sb-customizer-content[_ngcontent-%COMP%]::-webkit-scrollbar-corner{background-color:transparent}.sb-customizer[_ngcontent-%COMP%]   .sb-customizer-content[_ngcontent-%COMP%]:hover::-webkit-scrollbar{display:block}.sb-customizer.sb-customizer-closed[_ngcontent-%COMP%]{right:-20rem}.sb-customizer.sb-customizer-open[_ngcontent-%COMP%]{right:0}.swatch[_ngcontent-%COMP%]{border:0}#swatch1[_ngcontent-%COMP%]   .swatch[_ngcontent-%COMP%]{color:#fff;background-color:#0061f2;background-image:linear-gradient(45deg,#0061f2,#6900c7)}#swatch2[_ngcontent-%COMP%]   .swatch[_ngcontent-%COMP%]{color:#fff;background-color:#1da1f5;background-image:linear-gradient(45deg,#1da1f5,#8039da)}#swatch3[_ngcontent-%COMP%]   .swatch[_ngcontent-%COMP%]{color:#fff;background-color:#f53b57;background-image:linear-gradient(45deg,#f53b57,#ff793f)}#swatch4[_ngcontent-%COMP%]   .swatch[_ngcontent-%COMP%]{color:#fff;background-color:#6eabc2;background-image:linear-gradient(45deg,#6eabc2,#506c6a)}#swatch5[_ngcontent-%COMP%]   .swatch[_ngcontent-%COMP%]{color:#fff;background-color:#06794f;background-image:linear-gradient(45deg,#06794f,#0fa28b)}"],
                 changeDetection: 0
             }), n
-        })(),
+        })(), 
         ff = (() => {
             class n {
                 constructor(n) {
