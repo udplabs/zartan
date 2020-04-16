@@ -4,8 +4,8 @@
     <body>
         <div id="layoutDefault">
             <div id="layoutDefault_content">
-                <main>
-                    {% if not "login" in request.path and not "index" in request.path and not "registration" in request.path %} 
+                <main> 
+                    {% if not "login" in request.path and not "/" == request.path and not "index" in request.path and not "registration" in request.path %} 
                         {% set navitems ="navitemslogin.html" %}
                     {% else %}
                         {% set navitems ="navitems.html" %}
