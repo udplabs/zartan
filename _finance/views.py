@@ -69,5 +69,6 @@ def finance_account():
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     print(user_info)
     user = okta_admin.get_user(user_info["sub"])
-
+    
     return render_template("finance/account.html", oidc=oidc, user_info=user_info, config=session[SESSION_INSTANCE_SETTINGS_KEY])
+    

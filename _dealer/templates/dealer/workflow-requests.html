@@ -14,7 +14,7 @@
             {% endif %}
             
             {%if not workflow_list %}
-                <h1 class="page-title">Workflow Requests</h1>
+                <h1 class="page-title">Account Access Requests</h1>
                 <div class="separator-2"></div>
                 <div class="alert badge-secondary  fade show" role="alert">
                       <strong>Message!</strong> 
@@ -23,38 +23,45 @@
             {% else %}    
             
             <form class="form-horizontal" method="POST">
-               <section class="bg-white py-10">
-                    <div class="container">
-                        <div class="row justify-content-center">
-                            <div class="col-lg-10">
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <h2 class="mb-0">Access Requests</h2>
-                                    <div class="badge badge-primary-soft text-primary badge-marketing">Count {{workflow_list|length}} </div>
-                                </div>
-                                <hr class="mb-0" />
-                                <ul class="list-group list-group-flush list-group-careers">
-                                </ul>    
-                                <ul class="list-group list-group-flush list-group-careers">
-                                    <li class="list-group-item">
-                                            <div class="small" style="font-weight: bold;">#</div>
-                                            <div class="small" style="font-weight: bold;"> Access </div>
-                                            <div class="small" style="font-weight: bold;"> Action </div>
-                                    </li>
-                                        
-                                    {% for workflow in workflow_list %}
-                                        <li class="list-group-item">
-                                            <div class="small">{{ loop.index }}</div>
-                                            <div class="small">{{workflow.description}}</div>
+            <section class="bg-light py-5">
+            <div class="container">
+                <div class="d-flex align-items-center mb-5">
+                    <div class="icon-stack icon-stack-lg bg-primary text-white"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
+                    <div class="ml-3">
+                        <h2 class="mb-0">Account</h2>
+                        <p class="lead mb-0">Access Requests</p>
+                    </div>
+                </div>
+                <div class="card border-bottom">
+                    <div class="card-body">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th style="text-align:center">Access</th>
+                                    <th style="text-align:center">Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                 {% for workflow in workflow_list %}
+                                 <tr>
+                                        <td>{{ loop.index }}</td>
+                                        <td style="text-align:center">{{workflow.description}}</td>
+                                        <td style="text-align:center">
                                             <div class="small">
                                                 <button type="submit" name="request_access" class="btn btn-primary" value="{{workflow.id}}"> Request </button>
                                             </div>
-                                        </li>
+                                        </td>
+                                    </tr>    
                                     {% endfor %}
-                                </ul>
-                            </div>
-                        </div>
-                    </div>                                                
-                </section>
+                            
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>    
+                
             </form>
             {% endif %}
             

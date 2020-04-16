@@ -2,10 +2,7 @@
 <div class="container">
     <div class="row">
         <div class="main col-12">
-            <!-- page-title start -->
-            <!-- ================ -->
-            <h1 class="page-title">New Employee Registration</h1>
-            <div class="separator-2"></div>
+
             {% if error  %}
             <div class="alert badge-warning alert-dismissible fade show" role="alert">
               <strong>Holy guacamole!</strong> {{error}}
@@ -16,89 +13,106 @@
             {% endif %}
 
             <form class="form-horizontal" method="POST">
-                
-                <div class="form-group input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"> <i class="fa fa-user"></i> </span>
-                    </div>
-                    <input name="firstname" class="form-control" placeholder="First Name" type="text" value="{{user_data.profile.firstName}}" required>
-                </div>
-                
-                <div class="form-group input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"> <i class="fa fa-user"></i> </span>
-                    </div>
-                    <input name="lastname" class="form-control" placeholder="Last Name" type="text" value="{{user_data.profile.lastName}}" required>
-                </div>
-
-                <div class="form-group input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
-                    </div>
-                    <input name="email" class="form-control" placeholder="Email address" type="email" value="{{user_data.profile.email}}" required>
-                </div>
-
-                <div class="form-group input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"> <i class="fa fa-phone"></i> </span>
-                    </div>
-                    <input name="phonenumber" class="form-control" placeholder="Phone number" type="text" value="{{user_data.profile.mobilePhone}}"required>
-                </div>
-                
-                 <div class="form-group input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"> <i class="fa fa-fw fa-user"></i> </span>
-                    </div>
-                    <select name="role" id="role" class="form-control" required>
-                        <option value="">Choose the role for {{config.settings.app_name}} portal</option>
-                         {% for type_user in setup_options['type_users'] %}
-                          <option value="{{type_user.id}}" {% if setup_options.type_user_selected==type_user.id %}selected{% endif %}>
-                              {{type_user.description}}</option>
-                          {% endfor %}   
-                    </select>
-                </div>
-                
-                 <div class="form-group input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"> <i class="fa fa-fw fa-car"></i> </span>
-                    </div>
-                    <select name="location" id="role" class="form-control" required>
-                        <option value="">Choose the {{ config.settings.app_name }} dealership location </option>
-                         {% for dealer in setup_options['dealerships'] %}
-                          <option value="{{dealer.id}}" {% if setup_options.dealership_selected==dealer.id %}selected{% endif %}>
-                              {{dealer.description}}</option>
-                          {% endfor %}   
-                    </select>
-                    <!--
-                    <input id="partner_search" name="partner_search" placeholder="{{ config.settings.app_name }} - Zipcode" value="{{user_data.profile.mobilePhone}}" class="form-control" required>
-                    -->
-                </div>
-                
-                <div class="form-group input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"> <i class="fa fa-key fa-fw"></i> </span>
-                    </div>
-                    <input name="password" class="form-control" placeholder="Password" type="password" required>
-                </div>
-                
-                <div class="form-group input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"> <i class="fa fa-key fa-fw"></i> </span>
-                    </div>
-                    <input name="password_repeat" class="form-control" placeholder="Re-enter Password" type="password" required>
-                </div>
-
-                <div class="form-group input-group" style="font-weight:bold;">
-                    <label class="checkbox-inline"><input  placeholder="Accept Terms" name="terms" type="checkbox" value="" required> &nbsp;&nbsp;By clicking here I agree to the terms and conditions </label>
-                </div>
-
-
-                <div class="col text-center">
-                    <button type="submit" class="btn btn-primary"> Create Account</button>
-                </div>
-
-                <input name="user_id" type="hidden">
+                 <section class="bg-light py-5">
+                    <div class="container">
+                        <div class="d-flex align-items-center mb-5">
+                            <div class="icon-stack icon-stack-lg bg-primary text-white"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
+                            <div class="ml-3">
+                                <h2 class="mb-0">Employee</h2>
+                                <p class="lead mb-0">Registration</p>
+                            </div>
+                        </div>
+                        <div class="card border-bottom">
+                            <div class="card-body">
+                        
+                        
+                        <div class="form-group input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                            </div>
+                            <input name="firstname" class="form-control" placeholder="First Name" type="text" value="{{user_data.profile.firstName}}" required>
+                        </div>
+                        
+                        <div class="form-group input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                            </div>
+                            <input name="lastname" class="form-control" placeholder="Last Name" type="text" value="{{user_data.profile.lastName}}" required>
+                        </div>
+        
+                        <div class="form-group input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
+                            </div>
+                            <input name="email" class="form-control" placeholder="Email address" type="email" value="{{user_data.profile.email}}" required>
+                        </div>
+        
+                        <div class="form-group input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"> <i class="fa fa-phone"></i> </span>
+                            </div>
+                            <input name="phonenumber" class="form-control" placeholder="Phone number" type="text" value="{{user_data.profile.mobilePhone}}"required>
+                        </div>
+                        
+                         <div class="form-group input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"> <i class="fa fa-fw fa-user"></i> </span>
+                            </div>
+                            <select name="role" id="role" class="form-control" required>
+                                <option value="">Choose the role for {{config.settings.app_name}} portal</option>
+                                 {% for type_user in setup_options['type_users'] %}
+                                  <option value="{{type_user.id}}" {% if setup_options.type_user_selected==type_user.id %}selected{% endif %}>
+                                      {{type_user.description}}</option>
+                                  {% endfor %}   
+                            </select>
+                        </div>
+                        
+                         <div class="form-group input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"> <i class="fa fa-fw fa-car"></i> </span>
+                            </div>
+                            <select name="location" id="role" class="form-control" required>
+                                <option value="">Choose the {{ config.settings.app_name }} dealership location </option>
+                                 {% for dealer in setup_options['dealerships'] %}
+                                  <option value="{{dealer.id}}" {% if setup_options.dealership_selected==dealer.id %}selected{% endif %}>
+                                      {{dealer.description}}</option>
+                                  {% endfor %}   
+                            </select>
+                            <!--
+                            <input id="partner_search" name="partner_search" placeholder="{{ config.settings.app_name }} - Zipcode" value="{{user_data.profile.mobilePhone}}" class="form-control" required>
+                            -->
+                        </div>
+                        
+                        <div class="form-group input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"> <i class="fa fa-key fa-fw"></i> </span>
+                            </div>
+                            <input name="password" class="form-control" placeholder="Password" type="password" required>
+                        </div>
+                        
+                        <div class="form-group input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"> <i class="fa fa-key fa-fw"></i> </span>
+                            </div>
+                            <input name="password_repeat" class="form-control" placeholder="Re-enter Password" type="password" required>
+                        </div>
+        
+                        <div class="form-group input-group" style="font-weight:bold;">
+                            <label class="checkbox-inline"><input  placeholder="Accept Terms" name="terms" type="checkbox" value="" required> &nbsp;&nbsp;By clicking here I agree to the terms and conditions </label>
+                        </div>
+        
+        
+                        <div class="col text-center">
+                            <button type="submit" class="btn btn-primary"> Create Account</button>
+                        </div>
+        
+                        <input name="user_id" type="hidden">
             </form>
+            </div>
+                </div>
+            </div>
+        </section>    
+        
         </div>
     </div>
 </div><br /><br /> {% endblock %} {% block footer %} {% endblock %}
