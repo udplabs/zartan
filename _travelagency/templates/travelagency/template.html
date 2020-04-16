@@ -5,6 +5,16 @@
         <div id="layoutDefault">
             <div id="layoutDefault_content">
                 <main>
+                    {% if "login" in request.path %}
+                        {% set navitems ="navitems.html" %}
+                    {% elif "index" in request.path %} 
+                        {% set navitems ="navitems.html" %}
+                    {% elif "/" == request.path %} 
+                        {% set navitems ="navitems.html" %}
+                    {% else %}
+                        {% set navitems ="navitemslogin.html" %}
+                    {% endif %}
+                    
                     {% with mynavitems="navitems.html" %}
                         {% include '//components/template-navigation.html' %}
                     {% endwith %}
