@@ -5,12 +5,12 @@ import requests
 
 #import functions
 from functools import wraps
-from config import default_settings
 from flask import render_template, url_for, redirect, session,request
 from flask import send_from_directory, make_response
 from flask import Blueprint,g
 from flask import Flask, current_app as app
 from utils.okta import OktaAuth, OktaAdmin, TokenUtil
+from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical
 
 from GlobalBehaviorandComponents import login
 
@@ -18,7 +18,7 @@ from GlobalBehaviorandComponents import login
 gbac_manageusers_bp = Blueprint('gbac_manageusers_bp', __name__,template_folder='templates', static_folder='static', static_url_path='static')
 
 #reference oidc
-from app import oidc, templatename
+from app import oidc
 
 #needed for validating authentication
 def is_authenticated(f):
@@ -38,7 +38,7 @@ def is_authenticated(f):
 def is_token_valid_remote(token):
     print("is_token_valid_remote(token)")
     result = False
-    okta_auth = OktaAuth(default_settings)
+    okta_auth = OktaAuth(session[SESSION_INSTANCE_SETTINGS_KEY])
 
     instrospect_response = okta_auth.introspect(token=token)
     print("instrospect_response: {0}".format(instrospect_response))
@@ -47,19 +47,19 @@ def is_token_valid_remote(token):
         result = instrospect_response["active"]
 
     return result
-    
+
 @gbac_manageusers_bp.route("/manageusers")
 @is_authenticated
 def gbac_users():
-    user_info = login.get_user_info() 
-    okta_admin = OktaAdmin(default_settings)
+    user_info = login.get_user_info()
+    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
 
     token = oidc.get_access_token()
     user_group = gbac_get_group_by_name("everyone")
     print(user_group)
     group_id = user_group["id"]
     group_user_list = okta_admin.get_user_list_by_group_id(group_id)
-    return render_template("/manageusers.html",templatename=templatename, user_info=user_info, oidc=oidc, userlist= group_user_list, config=default_settings, user_group=user_group)
+    return render_template("/manageusers.html",templatename=get_app_vertical(), user_info=user_info, oidc=oidc, userlist= group_user_list, config=session[SESSION_INSTANCE_SETTINGS_KEY], user_group=user_group)
 
 
 def gbac_get_group_by_name(group_name):
@@ -67,7 +67,7 @@ def gbac_get_group_by_name(group_name):
     user_group = None
 
     if group_name:
-        okta_admin = OktaAdmin(default_settings)
+        okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
         user_groups = okta_admin.get_groups_by_name(group_name)
         # print("user_groups: {0}".format(user_groups))
         if len(user_groups) > 0:
@@ -77,12 +77,12 @@ def gbac_get_group_by_name(group_name):
 
 
     return user_group
-    
+
 @gbac_manageusers_bp.route("/suspenduser")
 @is_authenticated
 def gbac_user_suspend():
-    user_info = login.get_user_info() 
-    okta_admin = OktaAdmin(default_settings)
+    user_info = login.get_user_info()
+    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     user_id = request.args.get('user_id')
     suspend_user = okta_admin.suspend_user(user_id)
     user_info2 = okta_admin.get_user(user_id)
@@ -97,8 +97,8 @@ def gbac_user_suspend():
 @gbac_manageusers_bp.route("/unsuspenduser")
 @is_authenticated
 def gbac_user_unsuspend():
-    user_info = login.get_user_info() 
-    okta_admin = OktaAdmin(default_settings)
+    user_info = login.get_user_info()
+    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     user_id = request.args.get('user_id')
     unsuspend_user = okta_admin.unsuspend_user(user_id)
     user_info2 = okta_admin.get_user(user_id)
@@ -113,8 +113,8 @@ def gbac_user_unsuspend():
 @gbac_manageusers_bp.route("/resetpassword")
 @is_authenticated
 def gbac_user_resetpassword():
-    user_info = login.get_user_info() 
-    okta_admin = OktaAdmin(default_settings)
+    user_info = login.get_user_info()
+    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     user_id = request.args.get('user_id')
     reset_password = okta_admin.reset_password_for_user(user_id)
     user_info2 = okta_admin.get_user(user_id)
@@ -125,24 +125,24 @@ def gbac_user_resetpassword():
         message = "Error During Password Reset"
 
     return redirect(url_for("gbac_manageusers_bp.gbac_users", _external="True", _scheme="https",message=message))
-    
-    
+
+
 @gbac_manageusers_bp.route("/manageusercreateupdate")
 @is_authenticated
 def gbac_create_update_page():
-    user_info = login.get_user_info() 
-    okta_admin = OktaAdmin(default_settings)
+    user_info = login.get_user_info()
+    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     user_id = request.args.get('user_id')
     user_info2 = okta_admin.get_user(user_id)
 
-    return render_template("/manageusercreateupdate.html", templatename=templatename,user_info=user_info, oidc=oidc, user_info2=user_info2, config=default_settings)
-  
+    return render_template("/manageusercreateupdate.html", templatename=get_app_vertical(),user_info=user_info, oidc=oidc, user_info2=user_info2, config=session[SESSION_INSTANCE_SETTINGS_KEY])
+
 
 @gbac_manageusers_bp.route("/createuserinfo", methods=["POST"])
 def gbac_user_create():
     print("Admin Create User()")
 
-    okta_admin = OktaAdmin(default_settings)
+    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     first_name = request.form.get('firstname')
     last_name = request.form.get('lastname')
     email = request.form.get('email')
@@ -173,13 +173,13 @@ def gbac_user_create():
 
 
     return redirect(url_for("gbac_manageusers_bp.gbac_users", _external="True", _scheme="https",message=message))
-    
-    
+
+
 @gbac_manageusers_bp.route("/updateuserinfo", methods=["POST"])
 @is_authenticated
 def gbac_user_update():
     user_info = login.get_user_info()
-    okta_admin = OktaAdmin(default_settings)
+    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     user_id = request.form.get('user_id')
     first_name = request.form.get('firstname')
     last_name = request.form.get('lastname')

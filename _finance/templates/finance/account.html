@@ -1,14 +1,102 @@
 {% extends "finance/template.html" %}
 
 {% block content %}
-         <button type="button" id="mfa-button" onclick="checkmfa(runmyscript)" class="btn btn-primary">TEST MFA</button>
-         <script type="text/javascript">
-             function runmyscript() {
-                alert("good to go");
+        <div class="container">
+            <div class="card mb-1">
+                <div class="card-header">Account History - 800000 Corporate</div>
+                <div class="card-body">
+                    <div class="datatable">
+                        <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="dataTables_length" id="dataTable_length">
+
+                                        </div></div><div class="col-sm-12 col-md-6"></div></div></div><div class="row"><div class="col-sm-12">
+                                            <table class="table table-bordered table-hover dataTable" id="dataTable" width="100%" cellspacing="0" role="grid" aria-describedby="dataTable_info" style="width: 100%;">
+                            <thead>
+                               <tr><th rowspan="1" colspan="1">Balance Details</th><th rowspan="1" colspan="1">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                              <tr role="row" class="odd">
+                                    <td class="sorting_1">Ending balance as of <script> document.write("<strong>" + (new Date()).toString() + "</strong>");</script></td>
+                                    <td>$5689.00</td>
+                                </tr><tr role="row" class="even">
+                                    <td class="sorting_1">Available balance</td>
+                                    <td>$5129.00</td>
+                                </tr></tbody>
+                        </table></div></div><div class="row"><div class="col-sm-12 col-md-5"></div></div>
+                    </div>
+                </div>
+            </div>
+            <br /><br />
+            <div class="card mb-1">
+                <div class="card-header">Transfer Money</div>
+                <div class="card-body">
+                <table cellspacing="0" cellpadding="1" width="100%" border="0">
+                        		  <tbody><tr>
+                        		    <td><h5><b>From Account:</h5></b>
+                        		    </td>
+                        		    <td>
+                        			  <select size="1" id="fromAccount" name="fromAccount">
+                        				<option value="800000">800000 Corporate</option>
+                                        <option value="800001">800001 Checking</option>
+                        			  </select>
+                        		    </td>
+                        		  </tr>
+                        		  <tr>
+                        		    <td><h5><b>To Account:</h5></b></td>
+                        		    <td>
+                        			  <select size="1" id="toAccount" name="toAccount">
+                        				<option value="800000">800000 Corporate</option>
+                                        <option value="800001" selected>800001 Checking</option>
+                        			  </select>
+                        		    </td>
+                        		  </tr>
+                        		  <tr>
+                        		    <td><h5><b>Amount to Transfer:</h5></b>
+                        		    </td>
+                        		    <td><input type="text" id="transferAmount" name="transferAmount"></td>
+                        		  </tr>
+                        		  <tr>
+                        		    <td></td><td colspan="2">  <button type="button" id="mfa-button" onclick="checkmfa(runmyscript)" class="btn btn-primary"> Submit Transfer</button>
+                                    </button></td>
+                        		  </tr>
+                    		    </tbody>
+                    	    </table>
+                </div>
+            </div>
+            <div class="alert alert-primary alert-dismissible fade show" role="alert" id="TransferAlertBox" >
+                <h5 class="alert-heading">Transfer Complete</h5>
+                <div id="Alertmsg"></div>
+                <button class="close" type="button" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+        </div>
+        <style>
+            #TransferAlertBox{
+                display:none;
+            }
+        </style>
+        <script type="text/javascript">
+             function runmyscript(mfachecked) {
+                 console.log(mfachecked.active);
+                 if (mfachecked.active) 
+                 {
+                    $("#TransferAlertBox").fadeIn();
+                    $("#Alertmsg").text("$"+ $("#transferAmount").val() + " has been Transfered to Account: " + $("#toAccount").children("option:selected").val());
+                 }
+                 else
+                 {
+                    $("#TransferAlertBox").fadeIn();
+                    $("#Alertmsg").text("Error during Transfer");
+                
+                 }
+                 
              }
-             
-         </script>
-          {% include '//components/template-mfa.html' %} 
+        </script>
+        {% include '//components/template-mfa.html' %} 
 {% endblock %}
 
 {% block footer %}
