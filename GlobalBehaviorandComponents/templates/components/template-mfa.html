@@ -19,12 +19,12 @@
 </div>
  
 <script>
-
+ 
 var script_to_run;
 function checkmfa(functioncall) {
         console.log("MFA_REQUIRED");   
         script_to_run=functioncall;
-        var site = {{config.settings.APP_STEPUP_AUTH_CLIENTURL}};
+        var site = "{{config.settings.app_stepup_auth_clienturl}}";
         document.getElementsByName('iFrameName')[0].src = site;
          $("#MFAModalCenter").modal("show");
 }
