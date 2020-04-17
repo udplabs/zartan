@@ -1,0 +1,22 @@
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Value</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        
+                        {% for i in applist %}
+                          {% set isHidden = i['visibility']['hide']['web'] %}
+                          {% if 'False' == isHidden|string %}
+                             <tr>
+                                <td>{{ i['label'] }}</td>
+                                <td id="id{{ loop.index }}">
+                                    <a href="{{ i["_links"]["appLinks"][0]["href"] }}"><img src="{{ i["_links"]["logo"][0]["href"]}}"></a>
+                                </td>
+                            </tr>
+                          {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
