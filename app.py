@@ -78,6 +78,9 @@ app.register_blueprint(gbac_manageusers_bp, url_prefix='/')
 from GlobalBehaviorandComponents.stupupauth import gbac_stepupauth_bp
 app.register_blueprint(gbac_stepupauth_bp, url_prefix='/')
 
+from GlobalBehaviorandComponents.userapps import gbac_userapps_bp
+app.register_blueprint(gbac_userapps_bp, url_prefix='/')
+
 #sample theme
 from _sample.views import sample_views_bp
 app.register_blueprint(sample_views_bp, url_prefix='/sample')
@@ -113,11 +116,7 @@ app.register_blueprint(finance_views_bp, url_prefix='/finance')
 @app.before_request
 def before_request():
     # print("before_request")
-
-    #print( oidc.get_access_token())
-    #print( oidc.user_loggedin)
-    #print( get_user_info())
-
+    
     if oidc.user_loggedin:
         g.user = get_user_info()
         g.token = oidc.get_access_token()
