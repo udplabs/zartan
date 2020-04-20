@@ -1,5 +1,6 @@
 # zartan
 ![Zartan Logo][logo]
+
 Zartan is a master of make-up and disguise and so is this demo platform
 
 ## Requirements
