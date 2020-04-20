@@ -14,8 +14,7 @@
                     {% else %}
                         {% set navitems ="navitemslogin.html" %}
                     {% endif %}
-                    
-                    {% with mynavitems="navitems.html" %}
+                    {% with mynavitems=navitems %}
                         {% include '//components/template-navigation.html' %}
                     {% endwith %}
                     {% block content %}{% endblock %}
