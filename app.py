@@ -57,6 +57,9 @@ app.register_blueprint(gbac_userapps_bp, url_prefix='/')
 from GlobalBehaviorandComponents.profile import gbac_profile_bp
 app.register_blueprint(gbac_profile_bp, url_prefix='/')
 
+from GlobalBehaviorandComponents.registration import gbac_registration_bp
+app.register_blueprint(gbac_registration_bp, url_prefix='/')
+
 #sample theme
 from _sample.views import sample_views_bp
 app.register_blueprint(sample_views_bp, url_prefix='/sample')
