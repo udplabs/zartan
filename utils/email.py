@@ -15,7 +15,7 @@ class Email:
         print("send_mail()")
         url = "https://api.sparkpost.com/api/v1/transmissions"
         headers = {
-            "Authorization": session[SESSION_INSTANCE_SETTINGS_KEY]["SPARKPOST_API_KEY"],
+            "Authorization": session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["sparkpost_api_key"],
             "Content-Type": "application/json"
         }
         body = {

@@ -3,7 +3,6 @@
     <div class="row">
         <div class="main col-12">
             <div class="separator-2"></div>
-             
             {% if error  %}
             <div class="alert badge-warning alert-dismissible fade show" role="alert">
               <strong>Holy guacamole!</strong> {{error}}
@@ -39,6 +38,7 @@
                                 <tr>
                                     <th>#</th>
                                     <th style="text-align:center">Access</th>
+                                    <th style="text-align:center">Status</th>
                                     <th style="text-align:center">Action</th>
                                 </tr>
                                 </thead>
@@ -47,6 +47,7 @@
                                  <tr>
                                         <td>{{ loop.index }}</td>
                                         <td style="text-align:center">{{workflow.description}}</td>
+                                        <td style="text-align:center">{{workflow.status}}</td>
                                         <td style="text-align:center">
                                             <div class="small">
                                                 <button type="submit" name="request_access" class="btn btn-primary" value="{{workflow.id}}"> Request </button>
