@@ -17,8 +17,6 @@ from GlobalBehaviorandComponents import login
 #set blueprint
 gbac_manageusers_bp = Blueprint('gbac_manageusers_bp', __name__,template_folder='templates', static_folder='static', static_url_path='static')
 
-#reference oidc
-from app import oidc
 
 #needed for validating authentication
 def is_authenticated(f):
@@ -54,12 +52,12 @@ def gbac_users():
     user_info = login.get_user_info()
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
 
-    token = oidc.get_access_token()
+    token = TokenUtil.get_access_token(session, SESSION_INSTANCE_SETTINGS_KEY)
     user_group = gbac_get_group_by_name("everyone")
     print(user_group)
     group_id = user_group["id"]
     group_user_list = okta_admin.get_user_list_by_group_id(group_id)
-    return render_template("/manageusers.html",templatename=get_app_vertical(), user_info=user_info, oidc=oidc, userlist= group_user_list, config=session[SESSION_INSTANCE_SETTINGS_KEY], user_group=user_group)
+    return render_template("/manageusers.html",templatename=get_app_vertical(), user_info=user_info, userlist= group_user_list, config=session[SESSION_INSTANCE_SETTINGS_KEY], user_group=user_group)
 
 
 def gbac_get_group_by_name(group_name):
@@ -135,7 +133,7 @@ def gbac_create_update_page():
     user_id = request.args.get('user_id')
     user_info2 = okta_admin.get_user(user_id)
 
-    return render_template("/manageusercreateupdate.html", templatename=get_app_vertical(),user_info=user_info, oidc=oidc, user_info2=user_info2, config=session[SESSION_INSTANCE_SETTINGS_KEY])
+    return render_template("/manageusercreateupdate.html", templatename=get_app_vertical(),user_info=user_info, user_info2=user_info2, config=session[SESSION_INSTANCE_SETTINGS_KEY])
 
 
 @gbac_manageusers_bp.route("/createuserinfo", methods=["POST"])
@@ -150,7 +148,7 @@ def gbac_user_create():
     mobile_phone = request.form.get('phonenumber')
 
     #  Group and find a Group
-    token = oidc.get_access_token()
+    token = TokenUtil.get_access_token(session, SESSION_INSTANCE_SETTINGS_KEY)
     group_name = TokenUtil.get_single_claim_from_token(token,"userGroup")
 
 

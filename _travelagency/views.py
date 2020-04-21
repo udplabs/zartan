@@ -17,8 +17,6 @@ from GlobalBehaviorandComponents import login
 #set blueprint
 travelagency_views_bp = Blueprint('travelagency_views_bp', __name__,template_folder='templates', static_folder='static', static_url_path='static')
 
-#reference oidc
-from app import oidc
 
 #needed for validating authentication
 def is_authenticated(f):
@@ -58,6 +56,6 @@ def travelagency_profile():
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     print(user_info)
     user = okta_admin.get_user(user_info["sub"])
-    return render_template("travelagency/profile.html", oidc=oidc, user_info=user_info, config=session[SESSION_INSTANCE_SETTINGS_KEY])
+    return render_template("travelagency/profile.html", user_info=user_info, config=session[SESSION_INSTANCE_SETTINGS_KEY])
 
 

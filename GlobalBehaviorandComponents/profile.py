@@ -17,8 +17,6 @@ from GlobalBehaviorandComponents import login
 #set blueprint
 gbac_profile_bp = Blueprint('gbac_profile_bp', __name__,template_folder='templates', static_folder='static', static_url_path='static')
 
-#reference oidc
-from app import oidc
 
 #needed for validating authentication
 def is_authenticated(f):
@@ -26,7 +24,7 @@ def is_authenticated(f):
     def decorated_function(*args, **kws):
         print("authenticated()")
         token = g.token
-
+        print("token: {0}".format(token))
         if is_token_valid_remote(token):
             return f(*args, **kws)
         else:
@@ -59,5 +57,5 @@ def profile_bp():
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     print(user_info)
     user = okta_admin.get_user(user_info["sub"])
-    return render_template(get_app_vertical()+"/profile.html", templatename=get_app_vertical(), oidc=oidc, user_info=user_info, config=session[SESSION_INSTANCE_SETTINGS_KEY])
+    return render_template(get_app_vertical()+"/profile.html", templatename=get_app_vertical(), user_info=user_info, config=session[SESSION_INSTANCE_SETTINGS_KEY])
 

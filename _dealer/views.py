@@ -18,8 +18,6 @@ from utils.email import Email
 #set blueprint
 dealer_views_bp = Blueprint('dealer_views_bp', __name__,template_folder='templates', static_folder='static', static_url_path='static')
 
-#reference oidc
-from app import oidc
 
 #needed for validating authentication
 def is_authenticated(f):
@@ -52,40 +50,40 @@ def is_token_valid_remote(token):
 @dealer_views_bp.route("/profile")
 @is_authenticated
 def dealer_profile():
-    
-    user_info = login.get_user_info() 
-    
+
+    user_info = login.get_user_info()
+
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     user = okta_admin.get_user(user_info["sub"])
-    return render_template(get_app_vertical()+"/profile.html", templatename=get_app_vertical(), oidc=oidc, user_info=user_info, config=session[SESSION_INSTANCE_SETTINGS_KEY], _scheme="https")
+    return render_template(get_app_vertical()+"/profile.html", templatename=get_app_vertical(), user_info=user_info, config=session[SESSION_INSTANCE_SETTINGS_KEY], _scheme="https")
 
 #dealer my applications
 @dealer_views_bp.route("/myapps",methods=["GET","POST"])
 @is_authenticated
 def dealer_myapps():
-    
+
     print("dealer_myapps")
-    
-    user_info = login.get_user_info() 
+
+    user_info = login.get_user_info()
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     user = okta_admin.get_user(user_info["sub"])
     user_id = user["id"]
-    
+
     location = ""
-    
+
     #Find the groups the user belongs to and find the description of the _LOC_* group
     get_user_groups_response = okta_admin.get_user_groups(user_id = user_id)
     for item in get_user_groups_response:
         if item["profile"]["name"].startswith("_LOC_"):
             location =  item["profile"]["description"]
-    
+
     get_apps_response = okta_admin.get_applications_by_user_id(user_id)
 
-    return render_template(get_app_vertical()+"/myapps.html", templatename=get_app_vertical(),user_info=user_info, oidc=oidc, config=session[SESSION_INSTANCE_SETTINGS_KEY],location=location, apps = get_apps_response,  _scheme="https") 
-    
+    return render_template(get_app_vertical()+"/myapps.html", templatename=get_app_vertical(),user_info=user_info, config=session[SESSION_INSTANCE_SETTINGS_KEY],location=location, apps = get_apps_response,  _scheme="https")
+
 @dealer_views_bp.route("/registration", methods=["GET","POST"])
 def dealer_registration():
-    
+
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
 
     setup_options = {
@@ -209,17 +207,17 @@ def workflow_approvals():
                 admin_group_id=item["id"]
             if item["profile"]["name"].startswith("_LOC_"):
                 location_group_id = item["id"]
-        
+
         if location_group_id and admin_group_id :
             user_get_response = okta_admin.get_user_list_by_search('profile.organization eq "{location_group_id}" or profile.organization eq "{admin_group_id}" '
             .format(location_group_id=location_group_id, admin_group_id=admin_group_id))
-            
+
             for idx, list in enumerate(user_get_response,start=1):
                 group_get_response = okta_admin.get_group(id = list["profile"]["organization"])
-                workflow_list.append({"id": idx, "requestor": list["profile"]["login"], 
+                workflow_list.append({"id": idx, "requestor": list["profile"]["login"],
                 "request": group_get_response["profile"]["description"], "usr_grp":{"user_id":list["id"],"group_id": list["profile"]["organization"] } })
-        
-        return render_template(get_app_vertical()+"/workflow-approvals.html", templatename=get_app_vertical(),workflow_list=workflow_list, user_info=user_info, oidc=oidc,config=session[SESSION_INSTANCE_SETTINGS_KEY],_scheme="https")
+
+        return render_template(get_app_vertical()+"/workflow-approvals.html", templatename=get_app_vertical(),workflow_list=workflow_list, user_info=user_info, config=session[SESSION_INSTANCE_SETTINGS_KEY],_scheme="https")
 
     if request.method == "POST":
         if request.form.get("reject"):
@@ -256,10 +254,10 @@ def workflow_approvals():
                 }
             }
             okta_admin.update_user(user_id=user_id, user=user_data)
-             
-        return render_template(get_app_vertical()+"/workflow-approvals.html", templatename=get_app_vertical(),workflow_list=workflow_list, user_info=user_info, oidc=oidc,config=session[SESSION_INSTANCE_SETTINGS_KEY],_scheme="https")
 
-      
+        return render_template(get_app_vertical()+"/workflow-approvals.html", templatename=get_app_vertical(),workflow_list=workflow_list, user_info=user_info, config=session[SESSION_INSTANCE_SETTINGS_KEY],_scheme="https")
+
+
 @is_authenticated
 @dealer_views_bp.route("/workflow-requests", methods=["GET","POST"])
 def workflow_requests():
@@ -296,10 +294,10 @@ def workflow_requests():
         set_difference = set_list1 - set_list2
         for tuple_element in set_difference:
             workflow_list.append(dict((x, y) for x, y in tuple_element))
-     
-        return render_template(get_app_vertical()+"/workflow-requests.html", templatename=get_app_vertical(),user_info=user_info,oidc=oidc,workflow_list=workflow_list, config=session[SESSION_INSTANCE_SETTINGS_KEY],_scheme="https")
 
-    
+        return render_template(get_app_vertical()+"/workflow-requests.html", templatename=get_app_vertical(),user_info=user_info,workflow_list=workflow_list, config=session[SESSION_INSTANCE_SETTINGS_KEY],_scheme="https")
+
+
     if request.method == "POST":
         if request.form.get("request_access"):
             print("request_access " + request.form.get("request_access"))
@@ -319,8 +317,8 @@ def workflow_requests():
                       "<a href='{activation_link}'>{activation_link}</a> to review the request").format(
                 activation_link=url_for( "dealer_views_bp.workflow_approvals",_external=True, _scheme="https"))
         send_email_response_admin = emailAllMembersOfGroup(group_id="00g3jy1jatm7h3CI7357", subject=subject_admin, message=message_admin)
-            
-        return render_template(get_app_vertical()+"/workflow-requests.html", templatename=get_app_vertical(),workflow_list=workflow_list, oidc=oidc, user_info=user_info, config=session[SESSION_INSTANCE_SETTINGS_KEY],_scheme="https")
+
+        return render_template(get_app_vertical()+"/workflow-requests.html", templatename=get_app_vertical(),workflow_list=workflow_list, user_info=user_info, config=session[SESSION_INSTANCE_SETTINGS_KEY],_scheme="https")
 
 
 #Email recipients who are member of a group
