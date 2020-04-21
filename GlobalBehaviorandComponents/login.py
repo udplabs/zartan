@@ -14,20 +14,19 @@ from flask import Flask, current_app as app
 from utils.okta import OktaAuth, OktaAdmin, TokenUtil
 from utils.udp import apply_remote_config, clear_session_setting, SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical
 
-logger = logging.getLogger(__name__)
+from GlobalBehaviorandComponents.validation import is_authenticated, get_userinfo
 
-OKTA_TOKEN_COOKIE_KEY = "okta-token-storage"
+logger = logging.getLogger(__name__)
 
 #set blueprint
 gbac_bp = Blueprint('gbac_bp', __name__,template_folder='templates', static_folder='static', static_url_path='static')
-
 
 #main route
 @gbac_bp.route("/")
 @gbac_bp.route("/index")
 @apply_remote_config
 def gbac_main():
-    user_info = get_user_info()
+    user_info = get_userinfo()
     destination = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_base_url"] + "/" + get_app_vertical() + "/profile"
     # session["state"] = str(uuid.uuid4())
     return render_template(get_app_vertical()+"/index.html", templatename=get_app_vertical(), user_info=user_info, config=session[SESSION_INSTANCE_SETTINGS_KEY])
@@ -56,21 +55,12 @@ def gbac_signup():
 @gbac_bp.route("/logout")
 def gbac_logout():
     response = make_response(redirect(url_for("gbac_bp.gbac_main", _external="True", _scheme="https")))
-    response.set_cookie(OKTA_TOKEN_COOKIE_KEY, "")
+    response.set_cookie(TokenUtil.OKTA_TOKEN_COOKIE_KEY, "")
     return response
 
 @gbac_bp.route('/styles')
 def gbac_style():
     return render_template("styles/styles.css", config=session[SESSION_INSTANCE_SETTINGS_KEY]),  200, {'Content-Type': 'text/css'}
-
-# Get User Information from OIDC
-def get_user_info():
-    logger.debug("get_user_info()")
-    user_info = TokenUtil.get_claims_from_token(
-        TokenUtil.get_id_token(request.cookies, OKTA_TOKEN_COOKIE_KEY))
-
-    return user_info
-
 
 
 """

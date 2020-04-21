@@ -221,7 +221,8 @@ tags
 .~c9*
 
 ### FLASK OIDC ###
-client_secrets.json
+*.json
+
 dansconfig.py
 
 # End of https://www.gitignore.io/api/git,vim,macos,python,terraform,visualstudiocode

@@ -755,6 +755,7 @@ class OktaUtil:
 class TokenUtil:
     ID_TOKEN_KEY = "idToken"
     ACCESS_TOKEN_KEY = "accessToken"
+    OKTA_TOKEN_COOKIE_KEY = "okta-token-storage"
 
     logger = logging.getLogger(__name__)
 
@@ -844,26 +845,41 @@ class TokenUtil:
         return result
 
     @staticmethod
-    def get_access_token(collection, okta_token_cookie_key):
+    def get_access_token(collection):
         # TokenUtil.logger.debug("get_access_token()")
-        return TokenUtil.get_jwt_token(collection, okta_token_cookie_key, TokenUtil.ACCESS_TOKEN_KEY)
+        return TokenUtil.get_jwt_token(collection, TokenUtil.ACCESS_TOKEN_KEY)
 
     @staticmethod
-    def get_id_token(collection, okta_token_cookie_key):
+    def get_id_token(collection):
         # TokenUtil.logger.debug("get_id_token()")
-        return TokenUtil.get_jwt_token(collection, okta_token_cookie_key, TokenUtil.ID_TOKEN_KEY)
+        return TokenUtil.get_jwt_token(collection, TokenUtil.ID_TOKEN_KEY)
 
     @staticmethod
-    def get_jwt_token(collection, okta_token_cookie_key, key):
+    def get_jwt_token(collection, key):
         # TokenUtil.logger.debug("get_jwt_token('{0}')".format(key))
         token = None
-        if okta_token_cookie_key in collection:
-            if collection[okta_token_cookie_key]:
+        if TokenUtil.OKTA_TOKEN_COOKIE_KEY in collection:
+            if collection[TokenUtil.OKTA_TOKEN_COOKIE_KEY]:
                 token_cookie = TokenUtil.parse_encoded_okta_token_cookie(
-                    collection[okta_token_cookie_key])
+                    collection[TokenUtil.OKTA_TOKEN_COOKIE_KEY])
                 # TokenUtil.logger.debug("token_cookie: {0}".format(token_cookie))
                 parsed_token_cookie = json.loads(token_cookie)
                 if key in parsed_token_cookie:
                     token = parsed_token_cookie[key][key]
 
         return token
+
+    @staticmethod
+    def is_valid_remote(token, app_config):
+        TokenUtil.logger.debug("is_valid_remote")
+        result = False
+
+        if token:
+            okta_auth = OktaAuth(app_config)
+            introspect_result = okta_auth.introspect(token)
+
+            if introspect_result:
+                if "active" in introspect_result:
+                    result = introspect_result["active"]
+
+        return result

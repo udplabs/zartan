@@ -27,8 +27,6 @@ app_config = {
     'SECRET_KEY': default_settings["app_secret_key"],
 }
 
-OKTA_TOKEN_COOKIE_KEY = "okta-token-storage"
-
 ##############################################
 # Set App Config
 # DO NOT TOUCH
@@ -91,26 +89,6 @@ app.register_blueprint(finance_views_bp, url_prefix='/finance')
 # DO NOT TOUCH
 ##############################################
 
-@app.before_request
-def before_request():
-    # logger.debug("before_request()")
-    access_token = TokenUtil.get_access_token(request.cookies, OKTA_TOKEN_COOKIE_KEY)
-    logger.debug("access_token: {0}".format(access_token))
-    if access_token:
-            g.user = get_user_info()
-            g.token = access_token
-    else:
-        g.user = None
-        g.token = None
-
-def get_user_info():
-    logger.debug("get_user_info()")
-    user_info = TokenUtil.get_claims_from_token(
-        TokenUtil.get_id_token(request.cookies, OKTA_TOKEN_COOKIE_KEY))
-
-    return user_info
-
-
 @app.route('/<path:filename>')
 def serve_static_html(filename):
     # serve_static_html() generic route function to serve files in the 'static' folder
@@ -159,7 +137,7 @@ def oidc_callback_handler():
 
         logger.debug("okta_token_cookie: {0}".format(okta_token_cookie))
 
-        response.set_cookie(OKTA_TOKEN_COOKIE_KEY, okta_token_cookie)
+        response.set_cookie(TokenUtil.OKTA_TOKEN_COOKIE_KEY, okta_token_cookie)
     elif "error" in request.form:
         # Error occured with Accessing the app instance
         if has_app_level_mfa_policy:
