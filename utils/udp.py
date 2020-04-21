@@ -140,9 +140,10 @@ def clear_session_setting():
 
 
 def get_app_vertical():
+    logger.debug("get_app_vertical()")
     app_vertical_template_name = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_template"]
 
-    print("app_vertical_template_name: {0}".format(app_vertical_template_name))
+    logger.debug("app_vertical_template_name: {0}".format(app_vertical_template_name))
 
     return app_vertical_template_name
 

@@ -69,7 +69,7 @@
                     border-color: #fff #fff #fff;
                     box-shadow: none;
                 }
-                #okta-sign-in .auth-header 
+                #okta-sign-in .auth-header
                 {
                     border-bottom: none;
                 }
@@ -114,13 +114,13 @@ function showwidget()
           authParams: {
             issuer: "{{config.issuer}}",
             responseType: 'code',
-            responseMode: 'query',
+            responseMode: 'form_post',
             state: '{{state}}',
             display: 'page',
             scopes: ['openid', 'profile', 'email']
           },
         });
-        
+
         oktamodalsigninmfa.renderEl(
           { el: '#sign-in-widget-modal' },
           function (res) {}
@@ -132,15 +132,15 @@ function showwidget()
     }
     $("#MFAModalCenter").modal("show");
 }
-                    
-                   
+
+
 
 function do_resetwidget() {
                         console.log("resetwidget()");
                         oktamodalsigninmfa.remove();
                         $("#MFAModalCenter").modal("hide");
                     }
-                    
+
 function do_login(un, pw) {
         console.log("dologin()");
 
@@ -150,7 +150,7 @@ function do_login(un, pw) {
             redirectUri: '{{ config.redirect_uri}}',
             issuer: '{{config.issuer}}'
         });
-    
+
         authClient.signIn({
             username: un,
             password: pw
@@ -159,25 +159,25 @@ function do_login(un, pw) {
             if (transaction.status === 'SUCCESS') {
                 // Step #1: get sessionToken
                 console.log('sessionToken = ', transaction.sessionToken);
-    
+
                 // Step #2: retrieving a session cookie via OpenID Connect Authorization Endpoint
                 // Requires the user be authenticated already (i.e. the transaction.sessionToken exists. See Step #1)
                 // Uses response_mode=form_post: This will POST authorization_code and state to the redirectUri
                 authClient.token.getWithRedirect({
                     responseType: 'code',
-                    responseMode: 'query',
+                    responseMode: 'form_post',
                     state: '{{state}}',
                     sessionToken: transaction.sessionToken,
                     scopes: ['openid', 'profile', 'email'],
                 });
-            } 
+            }
             if (transaction.status === 'MFA_REQUIRED') {
                console.log("MFA_REQUIRED");
-               $("#state").val(transaction.data.stateToken); 
+               $("#state").val(transaction.data.stateToken);
                showwidget();
             }
             else {
-                
+
                 throw 'We cannot handle the ' + transaction.status + ' status';
             }
         })

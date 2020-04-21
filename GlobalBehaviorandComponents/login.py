@@ -7,38 +7,29 @@ import logging
 
 #import functions
 from functools import wraps
-from flask import render_template, url_for, redirect, session,request
+from flask import render_template, url_for, redirect, session, request
 from flask import send_from_directory, make_response
 from flask import Blueprint,g
 from flask import Flask, current_app as app
 from utils.okta import OktaAuth, OktaAdmin, TokenUtil
 from utils.udp import apply_remote_config, clear_session_setting, SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical
 
+from GlobalBehaviorandComponents.validation import is_authenticated, get_userinfo
+
 logger = logging.getLogger(__name__)
 
 #set blueprint
 gbac_bp = Blueprint('gbac_bp', __name__,template_folder='templates', static_folder='static', static_url_path='static')
-
-#reference oidc
-from app import oidc
 
 #main route
 @gbac_bp.route("/")
 @gbac_bp.route("/index")
 @apply_remote_config
 def gbac_main():
-    user_info = get_user_info()
+    user_info = get_userinfo()
     destination = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_base_url"] + "/" + get_app_vertical() + "/profile"
-    try:
-        state = {
-            'csrf_token': session['oidc_csrf_token'],
-            'destination': oidc.extra_data_serializer.dumps(destination).decode('utf-8')
-        }
-    except:
-        state = ''
-        print('No Session')
-
-    return render_template(get_app_vertical()+"/index.html", templatename=get_app_vertical(), oidc=oidc, user_info=user_info, config=session[SESSION_INSTANCE_SETTINGS_KEY],state=base64.b64encode(bytes(json.dumps(state),'utf-8')).decode('utf-8'))
+    # session["state"] = str(uuid.uuid4())
+    return render_template(get_app_vertical()+"/index.html", templatename=get_app_vertical(), user_info=user_info, config=session[SESSION_INSTANCE_SETTINGS_KEY])
 
 
 @gbac_bp.route("/clear_session")
@@ -53,36 +44,23 @@ def clear_session():
 def gbac_login():
     #fix: Need to check URL issue for double slash
     destination = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_base_url"] + "/" + get_app_vertical() + "/profile"
-    state = {
-        'csrf_token': session['oidc_csrf_token'],
-        'destination': oidc.extra_data_serializer.dumps(destination).decode('utf-8')
-    }
-    return render_template("/login.html", templatename=get_app_vertical(), config=session[SESSION_INSTANCE_SETTINGS_KEY], oidc=oidc, state=base64.b64encode(bytes(json.dumps(state),'utf-8')).decode('utf-8'))
+    session["oidc_state"] = str(uuid.uuid4())
+    return render_template("/login.html", templatename=get_app_vertical(), config=session[SESSION_INSTANCE_SETTINGS_KEY], state=session["oidc_state"])
 
 @gbac_bp.route("/signup")
 def gbac_signup():
-    return render_template("/signup.html", templatename=get_app_vertical(), config=session[SESSION_INSTANCE_SETTINGS_KEY], oidc=oidc)
+    return render_template("/signup.html", templatename=get_app_vertical(), config=session[SESSION_INSTANCE_SETTINGS_KEY])
 
 
 @gbac_bp.route("/logout")
 def gbac_logout():
-    oidc.logout()
-    return redirect(url_for("gbac_bp.gbac_main", _external="True", _scheme="https"))
+    response = make_response(redirect(url_for("gbac_bp.gbac_main", _external="True", _scheme="https")))
+    response.set_cookie(TokenUtil.OKTA_TOKEN_COOKIE_KEY, "")
+    return response
 
 @gbac_bp.route('/styles')
 def gbac_style():
     return render_template("styles/styles.css", config=session[SESSION_INSTANCE_SETTINGS_KEY]),  200, {'Content-Type': 'text/css'}
-
-# Get User Information from OIDC
-def get_user_info():
-    user_info = None
-    try:
-        user_info = oidc.user_getinfo(["sub", "name", "email", "locale"])
-    except:
-        print("User is not authenticated")
-
-    return user_info
-
 
 
 """
@@ -225,20 +203,20 @@ def get_oauth_authorize_url(okta_session_token=None):
     okta_auth = OktaAuth(session[SESSION_INSTANCE_SETTINGS_KEY])
 
     auth_options = {
-        "response_mode": "query",
+        "response_mode": "form_post",
         "prompt": "none",
         "scope": "openid profile email"
     }
 
     if "state" not in session:
-        session["state"] = str(uuid.uuid4())
+        session["oidc_state"] = str(uuid.uuid4())
 
     if okta_session_token:
         auth_options["sessionToken"] = okta_session_token
 
     oauth_authorize_url = okta_auth.create_oauth_authorize_url(
             response_type="code",
-            state=session["state"],
+            state=session["oidc_state"],
             auth_options=auth_options
         )
 
