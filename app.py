@@ -138,7 +138,7 @@ def oidc_callback_handler():
             oauth_token["access_token"],
             oauth_token["id_token"])
 
-        logger.debug("okta_token_cookie: {0}".format(okta_token_cookie))
+        # logger.debug("okta_token_cookie: {0}".format(okta_token_cookie))
 
         response.set_cookie(TokenUtil.OKTA_TOKEN_COOKIE_KEY, okta_token_cookie)
     elif "error" in request.form:

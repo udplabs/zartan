@@ -15,7 +15,7 @@ def is_authenticated(f):
     def decorated_function(*args, **kws):
         logger.debug("authenticated()")
         token = TokenUtil.get_access_token(request.cookies)
-        logger.debug("token: {0}".format(token))
+        # logger.debug("token: {0}".format(token))
 
         if TokenUtil.is_valid_remote(token, session[SESSION_INSTANCE_SETTINGS_KEY]):
             return f(*args, **kws)
