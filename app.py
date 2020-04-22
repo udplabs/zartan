@@ -1,19 +1,13 @@
 import os
 import json
-import sys
-import jinja2
 import logging
 import logging.config
 
-from os.path import dirname, join
-
-from functools import wraps
-from flask import Flask, Blueprint, g
 from flask import Flask, send_from_directory, render_template
 from flask import request, session, make_response, redirect, url_for
 from config import default_settings
 
-from utils.okta import OktaAuth, OktaAdmin, TokenUtil
+from utils.okta import OktaAuth, TokenUtil
 from utils.udp import SESSION_INSTANCE_SETTINGS_KEY
 
 ##############################################
@@ -41,7 +35,7 @@ app.config.update(app_config)
 # Add more themes and routes for themese here
 ##############################################
 
-#home and login
+# home and login
 from GlobalBehaviorandComponents.login import gbac_bp
 app.register_blueprint(gbac_bp, url_prefix='/')
 
@@ -60,29 +54,29 @@ app.register_blueprint(gbac_profile_bp, url_prefix='/')
 from GlobalBehaviorandComponents.registration import gbac_registration_bp
 app.register_blueprint(gbac_registration_bp, url_prefix='/')
 
-#sample theme
+# sample theme
 from _sample.views import sample_views_bp
 app.register_blueprint(sample_views_bp, url_prefix='/sample')
 
-#travel agency theme
+# travel agency theme
 from _travelagency.views import travelagency_views_bp
 app.register_blueprint(travelagency_views_bp, url_prefix='/travelagency')
 
-#hospitality  theme
+# hospitality  theme
 from _hospitality.views import hospitality_views_bp
 app.register_blueprint(hospitality_views_bp, url_prefix='/hospitality')
 
 
-#dealer theme
+# dealer theme
 from _dealer.views import dealer_views_bp
 app.register_blueprint(dealer_views_bp, url_prefix='/dealer')
 
 
-#streaming service theme
+# streaming service theme
 from _streamingservice.views import streamingservice_views_bp
 app.register_blueprint(streamingservice_views_bp, url_prefix='/streamingservice')
 
-#finance theme
+# finance theme
 from _finance.views import finance_views_bp
 app.register_blueprint(finance_views_bp, url_prefix='/finance')
 
@@ -151,7 +145,7 @@ def oidc_callback_handler():
                     error_message="Failed to Authenticate.  Please remove App Level MFA Policy and use a Global MFA Policy. Error: {0} - {1}".format(
                         request.form["error"],
                         request.form["error_description"]
-                        )
+                    )
                 )
             )
         else:
@@ -162,7 +156,7 @@ def oidc_callback_handler():
                     error_message="Failed to Authenticate.  Check to make sure the user has patient access to the application. Error: {0} - {1}".format(
                         request.form["error"],
                         request.form["error_description"]
-                        )
+                    )
                 )
             )
     else:

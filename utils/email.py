@@ -1,12 +1,8 @@
-import os
-import base64
-import json
-import requests
 from flask import session
 from utils.udp import SESSION_INSTANCE_SETTINGS_KEY
 
-
 from utils.rest import RestUtil
+
 
 class Email:
 
@@ -30,4 +26,3 @@ class Email:
             "recipients": recipients
         }
         return RestUtil.execute_post(url, body, headers=headers)
-        #return self.execute_post(url, body, headers=headers)

@@ -2,8 +2,6 @@ import base64
 import json
 import logging
 
-from urllib.parse import unquote, quote
-
 from utils.rest import RestUtil
 
 
@@ -134,12 +132,15 @@ class OktaAuth:
         return RestUtil.execute_post(url, body, okta_headers)
 
     def introspect_mfa(self, token, client_id):
-        print("OktaAuth.introspect_mfa()")
+        self.logger.debug("OktaAuth.introspect_mfa()")
         okta_headers = OktaUtil.get_introspect_mfa_okta_headers()
-        url = "{baseurl}/oauth2/v1/introspect".format(baseurl=self.okta_config["okta_org_name"])
-        print(url)
-        body = "&token="+token +"&client_id="+client_id+"&token_type_hint=id_token"
-        print(body)
+        url = "{baseurl}/oauth2/v1/introspect".format(
+            baseurl=self.okta_config["okta_org_name"]
+        )
+        body = "&token={token}&client_id={client_id}&token_type_hint=id_token".format(
+            token=token,
+            client_id=client_id
+        )
         return RestUtil.execute_post(url=url, body=body, headers=okta_headers)
 
     def userinfo(self, token, headers=None):
@@ -336,15 +337,12 @@ class OktaAdmin:
 
     okta_config = None
 
-
     def __init__(self, okta_config):
         print("OktaAdmin init()")
         if okta_config:
             self.okta_config = okta_config
         else:
             raise Exception("Requires okta_config")
-
-
 
     def get_user(self, user_id):
         print("OktaAdmin.get_user(user_id)")
@@ -355,7 +353,6 @@ class OktaAdmin:
 
         return RestUtil.execute_get(url, okta_headers)
 
-
     def get_user_groups(self, user_id):
         print("OktaAdmin.get_user_groups(user_id)")
         okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
@@ -364,8 +361,6 @@ class OktaAdmin:
             user_id=user_id)
 
         return RestUtil.execute_get(url, okta_headers)
-
-
 
     def create_user(self, user, activate_user=False):
         print("OktaAdmin.create_user(user)")
@@ -456,7 +451,7 @@ class OktaAdmin:
         return RestUtil.execute_get(url, okta_headers)
 
     def get_user_list_by_search(self, search):
-        #/api/v1/users?search=profile.department eq "Engineering"
+        # /api/v1/users?search=profile.department eq "Engineering"
         print("OktaAdmin.get_user_list_by_search(search)")
         okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
         url = "{base_url}/api/v1/users?search={search}".format(
@@ -760,14 +755,14 @@ class TokenUtil:
     logger = logging.getLogger(__name__)
 
     @staticmethod
-    def get_single_claim_from_token(token,claim_name):
+    def get_single_claim_from_token(token, claim_name):
 
         ("get_single_claim_from_token")
         claims = TokenUtil.get_claims_from_token(token)
-        try:
+        if claim_name in claims:
             TokenUtil.logger.debug("claim found")
             found_claim = claims[claim_name]
-        except:
+        else:
             TokenUtil.logger.debug("claim not found")
             found_claim = ""
         return found_claim
@@ -795,7 +790,6 @@ class TokenUtil:
             data += "=" * (4 - missing_padding)
         return base64.urlsafe_b64decode(data)
 
-
     @staticmethod
     def create_okta_token_cookie(access_token, id_token):
         TokenUtil.logger.debug("create_okta_token_cookie()")
@@ -817,10 +811,10 @@ class TokenUtil:
             TokenUtil.ID_TOKEN_KEY: id_token,
             "claims": id_token_claims,
             "expiresAt": id_token_claims["exp"],
-            "scopes": access_token_claims["scp"], # Grab scopes from the access token
+            "scopes": access_token_claims["scp"],  # Grab scopes from the access token
             "authorizeUrl": "{iss}/v1/authorize".format(iss=id_token_claims["iss"]),
             "issuer": id_token_claims["iss"],
-            "clientId": access_token_claims["cid"] # Grab ClientId from access token
+            "clientId": access_token_claims["cid"]  # Grab ClientId from access token
         }
 
         return okta_token_cookie
