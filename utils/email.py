@@ -1,4 +1,3 @@
-import os
 from flask import session
 from utils.udp import SESSION_INSTANCE_SETTINGS_KEY
 
