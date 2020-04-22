@@ -2,12 +2,14 @@ import logging
 
 from functools import wraps
 
-from flask import redirect, request, url_for, session
+from flask import redirect, request, url_for, session, Blueprint, render_template
 
-from utils.udp import SESSION_INSTANCE_SETTINGS_KEY
+from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical
 from utils.okta import TokenUtil
 
 logger = logging.getLogger(__name__)
+
+gvalidation_bp = Blueprint('gvalidation_bp', __name__, template_folder='templates', static_folder='static', static_url_path='static')
 
 
 def is_authenticated(f):
@@ -35,3 +37,14 @@ def get_userinfo():
         TokenUtil.get_id_token(request.cookies))
 
     return user_info
+
+
+@gvalidation_bp.route("/error")
+def gvalidation_bp_error(error_message=""):
+    logger.debug("gvalidation_bp_error()")
+
+    return render_template(
+        "/error.html",
+        templatename=get_app_vertical(),
+        config=session[SESSION_INSTANCE_SETTINGS_KEY],
+        error_message=error_message)
