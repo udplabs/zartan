@@ -2,3 +2,7 @@
 ignore = E266, E402
 exclude = .c9/*, .git/*, .~c9*
 max-line-length = 160
+max-complexity = 10
+statistics = True
+count = True
+exit-zero = True
