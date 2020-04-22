@@ -1,7 +1,7 @@
 import json
 import uuid
 import logging
-import request
+import requests
 
 # import functions
 from flask import render_template, url_for, redirect, session
