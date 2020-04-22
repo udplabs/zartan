@@ -14,6 +14,7 @@ def is_authenticated(f):
     @wraps(f)
     def decorated_function(*args, **kws):
         logger.debug("authenticated()")
+
         token = TokenUtil.get_access_token(request.cookies)
         # logger.debug("token: {0}".format(token))
 
@@ -29,6 +30,7 @@ def is_authenticated(f):
 # Get User Information from OIDC
 def get_userinfo():
     logger.debug("get_userinfo()")
+
     user_info = TokenUtil.get_claims_from_token(
         TokenUtil.get_id_token(request.cookies))
 

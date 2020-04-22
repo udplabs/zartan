@@ -89,7 +89,7 @@ app.register_blueprint(finance_views_bp, url_prefix='/finance')
 @app.route('/<path:filename>')
 def serve_static_html(filename):
     # serve_static_html() generic route function to serve files in the 'static' folder
-    print("serve_static_html('{0}')".format(filename))
+    logger.debug("serve_static_html('{0}')".format(filename))
     root_dir = os.path.dirname(os.path.realpath(__file__))
     return send_from_directory(os.path.join(root_dir, 'static'), filename)
 
