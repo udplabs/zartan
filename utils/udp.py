@@ -59,25 +59,28 @@ def is_configured_remotley():
 def map_config_to_default_settings(config):
     logger.debug("map_config_to_default_settings()")
 
-    if "settings" in config:
-        logger.debug("Applying Remote Config")
-        instance_settings = session[SESSION_INSTANCE_SETTINGS_KEY]
+    if config:
+        if "settings" in config:
+            logger.debug("Applying Remote Config")
+            instance_settings = session[SESSION_INSTANCE_SETTINGS_KEY]
 
-        # logger.debug("Before Config: {0}".format(
-        #    json.dumps(instance_settings, indent=4, sort_keys=True)))
+            # logger.debug("Before Config: {0}".format(
+            #    json.dumps(instance_settings, indent=4, sort_keys=True)))
 
-        for key, value in instance_settings.items():
-            safe_assign_config_item(key, config, instance_settings)
+            for key, value in instance_settings.items():
+                safe_assign_config_item(key, config, instance_settings)
 
-        # logger.debug("After Config: {0}".format(
-        #    json.dumps(instance_settings, indent=4, sort_keys=True)))
+            # logger.debug("After Config: {0}".format(
+            #    json.dumps(instance_settings, indent=4, sort_keys=True)))
 
-        session[SESSION_INSTANCE_SETTINGS_KEY] = instance_settings
-        session[SESSION_IS_CONFIGURED_KEY] = True
-        logger.debug("Remote Config completed!")
+            session[SESSION_INSTANCE_SETTINGS_KEY] = instance_settings
+            session[SESSION_IS_CONFIGURED_KEY] = True
+            logger.debug("Remote Config completed!")
+        else:
+            logger.warn("Remote Config is Invalid: {0}".format(
+                json.dumps(config, indent=4, sort_keys=True)))
     else:
-        logger.warn("Remote Config is Invalid: {0}".format(
-            json.dumps(config, indent=4, sort_keys=True)))
+        logger.info("No remote config, using default_settings and ENV")
 
 
 def get_remote_config(udp_subdomain, udp_app_name):
@@ -88,10 +91,11 @@ def get_remote_config(udp_subdomain, udp_app_name):
         udp_subdomain=udp_subdomain,
         udp_app_name=udp_app_name)
 
-    logger.debug("Pulling remote config from: {0}".format(remote_config_url))
+    if remote_config:
+        logger.debug("Pulling remote config from: {0}".format(remote_config_url))
 
-    remote_config = RestUtil.execute_get(remote_config_url, json_headers)
-    # logger.debug("config_json: {0}".format(json.dumps(remote_config, indent=4, sort_keys=True)))
+        remote_config = RestUtil.execute_get(remote_config_url, json_headers)
+        # logger.debug("config_json: {0}".format(json.dumps(remote_config, indent=4, sort_keys=True)))
 
     return remote_config
 
