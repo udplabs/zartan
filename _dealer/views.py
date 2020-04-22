@@ -250,8 +250,8 @@ def workflow_approvals():
                 _scheme="https")
 
     if request.method == "POST":
-        if request.form.get("reject"):
-            req = request.form.get("reject")
+        if request.form.get("action") == "reject":
+            req = request.form.get("action_value")
             req = req.replace("\'", "\"")
             req = json.loads(req)
             user_id = req["user_id"]
@@ -269,8 +269,8 @@ def workflow_approvals():
             }
             okta_admin.update_user(user_id=user_id, user=user_data)
 
-        if request.form.get("approve"):
-            req = request.form.get("approve")
+        if request.form.get("action") == "approve":
+            req = request.form.get("action_value")
             req = req.replace("\'", "\"")
             req = json.loads(req)
             user_id = req["user_id"]
@@ -296,9 +296,8 @@ def workflow_approvals():
 
 
 @is_authenticated
-@dealer_views_bp.route("/workflow-requests", methods=["GET", "POST"])
-def workflow_requests():
-
+@dealer_views_bp.route("/workflow-requests", methods=["GET"])
+def workflow_requests_get():
     user_info = get_userinfo()
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     user = okta_admin.get_user(user_info["sub"])
@@ -311,76 +310,86 @@ def workflow_requests():
     workflow_list = []
 
     # On a GET display the registration page with the defaults
-    if request.method == "GET":
+    list_group_user = []
+    list_group_full = []
 
-        list_group_user = []
-        list_group_full = []
+    is_user_dealership = False
 
-        is_user_dealership = False
+    # Find the groups the user belongs to
+    get_user_groups_response = okta_admin.get_user_groups(user_id=user_id)
+    for item in get_user_groups_response:
+        if item["profile"]["name"].startswith(CONFIG_GROUP_LOCATION_STARTSWITH):
+            is_user_dealership = True
 
-        # Find the groups the user belongs to
-        get_user_groups_response = okta_admin.get_user_groups(user_id=user_id)
-        for item in get_user_groups_response:
-            if item["profile"]["name"].startswith(CONFIG_GROUP_LOCATION_STARTSWITH):
-                is_user_dealership = True
+        if item["profile"]["name"] != "Everyone":  # Ignore the Everyone group
+            group_id = "{id}".format(id=item["id"])
+            list_group_user.append({"id": item["id"],
+                                    "name": item["profile"]["name"],
+                                    "description": item["profile"]["description"],
+                                    "status": "Pending" if group_id in pendingRequest else "Not Requested"})
+    # If not a user of a dealership, cannot request access to applications
+    if is_user_dealership:
+        # Find the groups for this portal that start with name "DEALER_"
+        get_groups = okta_admin.get_groups_by_name(CONFIG_GROUP)
+        for item in get_groups:
+            group_id = "{id}".format(id=item["id"])
+            list_group_full.append({"id": item["id"],
+                                    "name": item["profile"]["name"],
+                                    "description": item["profile"]["description"],
+                                    "status": "Pending" if group_id in pendingRequest else "Not Requested"})
 
-            if item["profile"]["name"] != "Everyone":  # Ignore the Everyone group
-                group_id = "{id}".format(id=item["id"])
-                list_group_user.append({"id": item["id"],
-                                        "name": item["profile"]["name"],
-                                        "description": item["profile"]["description"],
-                                        "status": "Pending" if group_id in pendingRequest else "Not Requested"})
-        # If not a user of a dealership, cannot request access to applications
-        if is_user_dealership:
-            # Find the groups for this portal that start with name "DEALER_"
-            get_groups = okta_admin.get_groups_by_name(CONFIG_GROUP)
-            for item in get_groups:
-                group_id = "{id}".format(id=item["id"])
-                list_group_full.append({"id": item["id"],
-                                        "name": item["profile"]["name"],
-                                        "description": item["profile"]["description"],
-                                        "status": "Pending" if group_id in pendingRequest else "Not Requested"})
+        # Populate the workflow list with groups that the user is absent in
+        set_list1 = set(tuple(sorted(d.items())) for d in list_group_full)
+        set_list2 = set(tuple(sorted(d.items())) for d in list_group_user)
+        set_difference = set_list1 - set_list2
+        for tuple_element in set_difference:
+            workflow_list.append(dict((x, y) for x, y in tuple_element))
 
-            # Populate the workflow list with groups that the user is absent in
-            set_list1 = set(tuple(sorted(d.items())) for d in list_group_full)
-            set_list2 = set(tuple(sorted(d.items())) for d in list_group_user)
-            set_difference = set_list1 - set_list2
-            for tuple_element in set_difference:
-                workflow_list.append(dict((x, y) for x, y in tuple_element))
+        return render_template(
+            "{0}/workflow-requests.html".format(get_app_vertical()),
+            templatename=get_app_vertical(),
+            user_info=user_info,
+            workflow_list=workflow_list,
+            config=session[SESSION_INSTANCE_SETTINGS_KEY],
+            _scheme="https")
+    else:  # If not a user of a dealership, cannot request access to applications
+        return render_template(
+            "{0}/workflow-requests.html".format(get_app_vertical()),
+            templatename=get_app_vertical(),
+            user_info=user_info,
+            error="You have not been assigned to a dealership. Only users of a dealership can request access to applications",
+            config=session[SESSION_INSTANCE_SETTINGS_KEY],
+            _scheme="https")
 
-            return render_template(
-                "{0}/workflow-requests.html".format(get_app_vertical()),
-                templatename=get_app_vertical(),
-                user_info=user_info,
-                workflow_list=workflow_list,
-                config=session[SESSION_INSTANCE_SETTINGS_KEY],
-                _scheme="https")
-        else:  # If not a user of a dealership, cannot request access to applications
-            return render_template(
-                "{0}/workflow-requests.html".format(get_app_vertical()),
-                templatename=get_app_vertical(),
-                user_info=user_info,
-                error="You have not been assigned to a dealership. Only users of a dealership can request access to applications",
-                config=session[SESSION_INSTANCE_SETTINGS_KEY],
-                _scheme="https")
 
-    if request.method == "POST":
-        if request.form.get("request_access"):
-            group_id = request.form.get("request_access")
+@is_authenticated
+@dealer_views_bp.route("/workflow-requests", methods=["POST"])
+def workflow_requests_post():
+    user_info = get_userinfo()
+    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
+    user = okta_admin.get_user(user_info["sub"])
+    user_id = user["id"]
+    if "_dealer_access_requests" in user["profile"]:
+        pendingRequest = user["profile"]["_dealer_access_requests"]
+    else:
+        pendingRequest = []
 
-            pendingRequest.append(group_id)
+    if request.form.get("request_access"):
+        group_id = request.form.get("request_access")
 
-            # Remove user attribute organization ( as the request has been rejected)
-            # organization": "[ '{id}' ]".format(id=request.form.get('location'))
-            user_data = {
-                "profile": {
-                    "_dealer_access_requests": pendingRequest
-                }
+        pendingRequest.append(group_id)
+
+        # Remove user attribute organization ( as the request has been rejected)
+        # organization": "[ '{id}' ]".format(id=request.form.get('location'))
+        user_data = {
+            "profile": {
+                "_dealer_access_requests": pendingRequest
             }
-            okta_admin.update_user(user_id=user_id, user=user_data)
-            EmailServices().emailWorkFlowRequest()
+        }
+        okta_admin.update_user(user_id=user_id, user=user_data)
+        EmailServices().emailWorkFlowRequest()
 
-        return redirect(url_for("dealer_views_bp.workflow_requests", _external=True, _scheme="https"))
+    return redirect(url_for("dealer_views_bp.workflow_requests", _external=True, _scheme="https"))
 
 
 # Class containing email services and formats
