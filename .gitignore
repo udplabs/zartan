@@ -223,6 +223,4 @@ tags
 ### FLASK OIDC ###
 *.json
 
-dansconfig.py
-
 # End of https://www.gitignore.io/api/git,vim,macos,python,terraform,visualstudiocode
