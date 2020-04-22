@@ -9,6 +9,7 @@ from config import default_settings
 
 from utils.okta import OktaAuth, TokenUtil
 from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical
+from GlobalBehaviorandComponents.validation import gvalidation_bp_error
 
 ##############################################
 # Get default settings and generate client_secrets.json
@@ -53,6 +54,9 @@ app.register_blueprint(gbac_profile_bp, url_prefix='/')
 
 from GlobalBehaviorandComponents.registration import gbac_registration_bp
 app.register_blueprint(gbac_registration_bp, url_prefix='/')
+
+from GlobalBehaviorandComponents.validation import gvalidation_bp
+app.register_blueprint(gvalidation_bp, url_prefix='/')
 
 # sample theme
 from _sample.views import sample_views_bp
@@ -110,12 +114,6 @@ def oidc_callback_handler():
     logger.debug(request.form)
     has_app_level_mfa_policy = False
 
-    # This is in the case there is an Okta App level MFA policy
-    if "error" in request.form:
-        logger.error("ERROR: {0}, MESSAGE: {1}".format(request.form["error"], request.form["error_description"]))
-        if ("The client specified not to prompt, but the client app requires re-authentication or MFA." == request.form["error_description"]):
-            has_app_level_mfa_policy = True
-
     if "code" in request.form:
         oidc_code = request.form["code"]
         okta_auth = OktaAuth(session[SESSION_INSTANCE_SETTINGS_KEY])
@@ -136,43 +134,32 @@ def oidc_callback_handler():
         okta_token_cookie = TokenUtil.create_encoded_okta_token_cookie(
             oauth_token["access_token"],
             oauth_token["id_token"])
-
         # logger.debug("okta_token_cookie: {0}".format(okta_token_cookie))
 
         response.set_cookie(TokenUtil.OKTA_TOKEN_COOKIE_KEY, okta_token_cookie)
     elif "error" in request.form:
+        # This is in the case there is an Okta App level MFA policy
+        logger.error("ERROR: {0}, MESSAGE: {1}".format(request.form["error"], request.form["error_description"]))
+        if ("The client specified not to prompt, but the client app requires re-authentication or MFA." == request.form["error_description"]):
+            has_app_level_mfa_policy = True
+
         # Error occured with Accessing the app instance
         if has_app_level_mfa_policy:
-            response = make_response(
-                render_template(
-                    "error.html",
-                    config=session[SESSION_INSTANCE_SETTINGS_KEY],
-                    error_message="Failed to Authenticate.  Please remove App Level MFA Policy and use a Global MFA Policy. Error: {0} - {1}".format(
-                        request.form["error"],
-                        request.form["error_description"]
-                    )
-                )
+            error_message = "Failed to Authenticate.  Please remove App Level MFA Policy and use a Global MFA Policy. Error: {0} - {1}".format(
+                request.form["error"],
+                request.form["error_description"]
             )
+            response = gvalidation_bp_error(error_message)
         else:
-            response = make_response(
-                render_template(
-                    "error.html",
-                    config=session[SESSION_INSTANCE_SETTINGS_KEY],
-                    error_message="Failed to Authenticate.  Check to make sure the user has patient access to the application. Error: {0} - {1}".format(
-                        request.form["error"],
-                        request.form["error_description"]
-                    )
-                )
+            error_message = "Failed to Authenticate.  Check to make sure the user has access to the application. Error: {0} - {1}".format(
+                request.form["error"],
+                request.form["error_description"]
             )
+
+            response = gvalidation_bp_error(error_message)
     else:
         # catch all error
-        response = make_response(
-            render_template(
-                "error.html",
-                config=session[SESSION_INSTANCE_SETTINGS_KEY],
-                error_message="Failed to Authenticate.  Check to make sure the user has access to the application."
-            )
-        )
+        response = gvalidation_bp_error("Failed to Authenticate.  Check to make sure the user has access to the application.")
 
     return response
 

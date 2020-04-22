@@ -1,0 +1,20 @@
+{% extends templatename+"/template.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="main col-12">
+            <!-- page-title start -->
+            <!-- ================ -->
+            <h1 class="page-title">There was a problem</h1>
+                <div class="alert badge-danger  fade show" role="alert">
+                  <strong>Error</strong>
+                       {{error_message}}
+                </div>
+            </form>
+        </div>
+    </div>
+</div><br /><br />
+{% endblock %}
+
+{% block footer %}{% endblock %}
