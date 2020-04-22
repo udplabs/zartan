@@ -17,6 +17,7 @@ json_headers = {
     # "Authorization": "Bearer {0}".format(os.getenv("UDP_SECRET_KEY", ""))
 }
 
+
 def apply_remote_config(f):
     @wraps(f)
     def decorated_function(*args, **kws):
@@ -150,4 +151,3 @@ def get_app_vertical():
     logger.debug("app_vertical_template_name: {0}".format(app_vertical_template_name))
 
     return app_vertical_template_name
-
