@@ -21,7 +21,7 @@ def is_authenticated(f):
             return f(*args, **kws)
         else:
             logger.debug("Access Denied")
-            #change to different main
+            # change to different main
             return redirect(url_for("gbac_bp.gbac_login", _external="True", _scheme="https"))
     return decorated_function
 

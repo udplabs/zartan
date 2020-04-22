@@ -1,35 +1,33 @@
-import os
-import base64
 import json
-import requests
 import uuid
 import logging
+import request
 
-#import functions
-from functools import wraps
-from flask import render_template, url_for, redirect, session, request
-from flask import send_from_directory, make_response
-from flask import Blueprint,g
-from flask import Flask, current_app as app
+# import functions
+from flask import render_template, url_for, redirect, session
+from flask import make_response
+from flask import Blueprint
 from utils.okta import OktaAuth, OktaAdmin, TokenUtil
 from utils.udp import apply_remote_config, clear_session_setting, SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical
 
-from GlobalBehaviorandComponents.validation import is_authenticated, get_userinfo
+from GlobalBehaviorandComponents.validation import get_userinfo
 
 logger = logging.getLogger(__name__)
 
-#set blueprint
-gbac_bp = Blueprint('gbac_bp', __name__,template_folder='templates', static_folder='static', static_url_path='static')
+# set blueprint
+gbac_bp = Blueprint('gbac_bp', __name__, template_folder='templates', static_folder='static', static_url_path='static')
 
-#main route
+# main route
 @gbac_bp.route("/")
 @gbac_bp.route("/index")
 @apply_remote_config
 def gbac_main():
     user_info = get_userinfo()
-    destination = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_base_url"] + "/" + get_app_vertical() + "/profile"
-    # session["state"] = str(uuid.uuid4())
-    return render_template(get_app_vertical()+"/index.html", templatename=get_app_vertical(), user_info=user_info, config=session[SESSION_INSTANCE_SETTINGS_KEY])
+    return render_template(
+        "{0}/index.html".format(get_app_vertical()),
+        templatename=get_app_vertical(),
+        user_info=user_info,
+        config=session[SESSION_INSTANCE_SETTINGS_KEY])
 
 
 @gbac_bp.route("/clear_session")
@@ -42,10 +40,9 @@ def clear_session():
 
 @gbac_bp.route("/login")
 def gbac_login():
-    #fix: Need to check URL issue for double slash
-    destination = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_base_url"] + "/" + get_app_vertical() + "/profile"
     session["oidc_state"] = str(uuid.uuid4())
     return render_template("/login.html", templatename=get_app_vertical(), config=session[SESSION_INSTANCE_SETTINGS_KEY], state=session["oidc_state"])
+
 
 @gbac_bp.route("/signup")
 def gbac_signup():
@@ -58,14 +55,16 @@ def gbac_logout():
     response.set_cookie(TokenUtil.OKTA_TOKEN_COOKIE_KEY, "")
     return response
 
+
 @gbac_bp.route('/styles')
 def gbac_style():
-    return render_template("styles/styles.css", config=session[SESSION_INSTANCE_SETTINGS_KEY]),  200, {'Content-Type': 'text/css'}
+    return render_template("styles/styles.css", config=session[SESSION_INSTANCE_SETTINGS_KEY]), 200, {'Content-Type': 'text/css'}
 
 
 """
 routes for MFA verification
 """
+
 
 @gbac_bp.route("/send_push", methods=["POST"])
 def gbac_send_push():
@@ -78,6 +77,7 @@ def gbac_send_push():
 
     response = okta_auth.send_push(factor_id, state_token)
     return json.dumps(response)
+
 
 @gbac_bp.route("/poll_for_push_verification", methods=["POST"])
 def gbac_poll_for_push_verification():
@@ -95,14 +95,11 @@ def gbac_poll_for_push_verification():
 @gbac_bp.route("/send_otp_admin", methods=["POST"])
 def gbac_send_push_admin():
     print("send_otp_admin()")
-    okta_auth = OktaAuth(session[SESSION_INSTANCE_SETTINGS_KEY])
-
     body = request.get_json()
     print(body)
     factor_id = body["factor_id"]
     user_id = body["user_id"]
     okta_admin = OktaAdmin(session)
-
 
     response = okta_admin.send_otp_admin(factor_id, user_id)
 
@@ -112,7 +109,6 @@ def gbac_send_push_admin():
 @gbac_bp.route("/verify_answer_admin", methods=["POST"])
 def gbac_verify_answer_admin():
     print("verify_answer_admin()")
-    okta_auth = OktaAuth(session[SESSION_INSTANCE_SETTINGS_KEY])
 
     body = request.get_json()
     factor_id = body["factor_id"]
@@ -122,7 +118,6 @@ def gbac_verify_answer_admin():
     response = okta_admin.verify_totp_admin(factor_id, user_id, pass_code)
     print(response)
     return json.dumps(response)
-
 
 
 @gbac_bp.route("/resend_push", methods=["POST"])
@@ -143,6 +138,7 @@ def gbac_resend_push():
 
     return json.dumps(response)
 
+
 @gbac_bp.route("/verify_answer", methods=["POST"])
 def gbac_verify_answer():
     print("verify_answer()")
@@ -157,11 +153,10 @@ def gbac_verify_answer():
 
     return json.dumps(response)
 
+
 @gbac_bp.route("/get_authorize_url", methods=["POST"])
 def gbac_get_authorize_url():
     print("get_authorize_url()")
-    okta_auth = OktaAuth(session[SESSION_INSTANCE_SETTINGS_KEY])
-
     body = request.get_json()
 
     session_token = body["session_token"]
@@ -178,7 +173,6 @@ def gbac_get_authorize_url():
 @gbac_bp.route("/verify_totp", methods=["POST"])
 def gbac_verify_totp():
     print("verify_totp()")
-    print(session);
     okta_auth = OktaAuth(session[SESSION_INSTANCE_SETTINGS_KEY])
 
     body = request.get_json()
@@ -192,9 +186,6 @@ def gbac_verify_totp():
 
     print("verifying factor ID {0} with code {1} ({2})".format(factor_id, pass_code, state_token))
     response = okta_auth.verify_totp(factor_id, state_token, pass_code)
-
-
-    print(response)
     return json.dumps(response)
 
 
@@ -215,12 +206,13 @@ def get_oauth_authorize_url(okta_session_token=None):
         auth_options["sessionToken"] = okta_session_token
 
     oauth_authorize_url = okta_auth.create_oauth_authorize_url(
-            response_type="code",
-            state=session["oidc_state"],
-            auth_options=auth_options
-        )
+        response_type="code",
+        state=session["oidc_state"],
+        auth_options=auth_options
+    )
 
     return oauth_authorize_url
+
 
 """
 end MFA verification routes
