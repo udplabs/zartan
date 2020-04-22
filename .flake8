@@ -1,0 +1,4 @@
+[flake8]
+ignore = E266, E402
+exclude = .c9/*, .git/*
+max-line-length = 160
