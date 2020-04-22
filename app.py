@@ -8,7 +8,7 @@ from flask import request, session, make_response, redirect, url_for
 from config import default_settings
 
 from utils.okta import OktaAuth, TokenUtil
-from utils.udp import SESSION_INSTANCE_SETTINGS_KEY
+from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical
 
 ##############################################
 # Get default settings and generate client_secrets.json
@@ -176,10 +176,13 @@ def oidc_callback_handler():
 
     return response
 
+def page_not_found(e):
+  return render_template('404.html', templatename=get_app_vertical(), config=session[SESSION_INSTANCE_SETTINGS_KEY]), 404
 
+app.register_error_handler(404, page_not_found)
+ 
 if __name__ == '__main__':
     log_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.getenv("LOGGER_CONFIG", "DEV_logger.config"))
     logging.config.fileConfig(fname=log_file_path, disable_existing_loggers=False)
-
     logger.debug("default_settings: {0}".format(json.dumps(default_settings, indent=4, sort_keys=True)))
     app.run(host=os.getenv("IP", "0.0.0.0"), port=int(os.getenv("PORT", 8080)), debug=True)
