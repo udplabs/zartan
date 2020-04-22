@@ -94,6 +94,11 @@ def serve_static_html(filename):
     return send_from_directory(os.path.join(root_dir, 'static'), filename)
 
 
+@app.route('/healthcheck')
+def healthcheck():
+    return "OK"
+
+
 """
    Set path to '/authorization-code/callback' because of backward compatibility with flask-oidc legacy config
 """
