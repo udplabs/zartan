@@ -249,9 +249,9 @@ def workflow_approvals():
                 config=session[SESSION_INSTANCE_SETTINGS_KEY],
                 _scheme="https")
 
-    if request.method == "POST":
-        if request.form.get("reject"):
-            req = request.form.get("reject")
+    if request.method == "POST": 
+        if request.form.get("action") == "reject":
+            req = request.form.get("action_value")
             req = req.replace("\'", "\"")
             req = json.loads(req)
             user_id = req["user_id"]
@@ -269,8 +269,8 @@ def workflow_approvals():
             }
             okta_admin.update_user(user_id=user_id, user=user_data)
 
-        if request.form.get("approve"):
-            req = request.form.get("approve")
+        if request.form.get("action") == "approve":
+            req = request.form.get("action_value")
             req = req.replace("\'", "\"")
             req = json.loads(req)
             user_id = req["user_id"]

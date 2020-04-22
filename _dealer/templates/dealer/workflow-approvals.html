@@ -21,7 +21,7 @@
                           Your queue is empty. There aren't any new items to approve. 
                 </div>
             {% else %}    
-            <form class="form-horizontal" method="POST" id="form_id" onsubmit="return checkmfa(runmyscript)">
+            <form class="form-horizontal" method="POST" id="form_id">
                 
             <section class="bg-light py-5">
             <div class="container">
@@ -53,8 +53,10 @@
                                         <td style="text-align:center">{{workflow.requestor}}</td>
                                         <td style="text-align:center">
                                             <div class="small">
-                                                <button type="submit" name="approve" class="btn btn-primary"  value="{{workflow.usr_grp}}"> Approve :: </button>
-                                                <button type="submit" name="reject"class="btn btn-primary"  value="{{workflow.usr_grp}}"> Reject ::</button>
+                                                <input type="hidden" id = "action_id" name="action" value="">
+                                                <input type="hidden" name="action_value" value="{{workflow.usr_grp}}">
+                                                <button type="button" onClick = "document.getElementById('action_id').value='approve'; checkmfa(runmyscript)" name="approve" class="btn btn-primary"  value="{{workflow.usr_grp}}"> Approve :: </button>
+                                                <button type="button" onClick = "document.getElementById('action_id').value='reject'; checkmfa(runmyscript)" name="reject" class="btn btn-primary"  value="{{workflow.usr_grp}}"> Reject ::</button>
                                             </div>
                                         </td>
                                     </tr>    
@@ -69,7 +71,9 @@
         <script type="text/javascript">
              function runmyscript(mfachecked) {
                  console.log(mfachecked.active);
-                 return mfachecked.active
+                 if (mfachecked.active){ 
+                    document.getElementById('form_id').submit();
+                 }
              }
         </script>
          {% include '//components/template-mfa.html' %} 
