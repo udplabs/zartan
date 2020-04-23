@@ -5,7 +5,7 @@ import logging.config
 
 from flask import Flask, send_from_directory, render_template
 from flask import request, session, make_response, redirect
-from config import default_settings
+from config.app_config import default_settings
 
 from utils.okta import OktaAuth, TokenUtil
 from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical
