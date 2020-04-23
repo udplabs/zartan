@@ -4,12 +4,12 @@ import logging
 import logging.config
 
 from flask import Flask, send_from_directory, render_template
-from flask import request, session, make_response, redirect, url_for
+from flask import request, session, make_response, redirect
 from config import default_settings
 
 from utils.okta import OktaAuth, TokenUtil
 from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical
-from GlobalBehaviorandComponents.validation import gvalidation_bp_error
+from GlobalBehaviorandComponents.validation import gvalidation_bp_error, FROM_URI_KEY
 
 ##############################################
 # Get default settings and generate client_secrets.json
@@ -128,8 +128,7 @@ def oidc_callback_handler():
             }
         )
         logger.debug("oauth_token: {0}".format(json.dumps(oauth_token, indent=4, sort_keys=True)))
-        app_landing_page_url = url_for("gbac_bp.gbac_main", _external="True", _scheme="https")
-        logger.debug("app landing page {0}".format(app_landing_page_url))
+        app_landing_page_url = get_post_login_landing_page_url()
 
         response = make_response(redirect(app_landing_page_url))
 
@@ -164,6 +163,31 @@ def oidc_callback_handler():
         response = gvalidation_bp_error("Failed to Authenticate.  Check to make sure the user has access to the application.")
 
     return response
+
+
+def get_post_login_landing_page_url():
+    app_landing_page_url = ""
+
+    # Pull from Confg
+    if not session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_base_url"]:
+        session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_base_url"] = request.url_root.replace("http:", "https:")
+        logger.debug("app_base_url: {0}".format(session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_base_url"]))
+
+    app_landing_page_url = "{app_base_url}{app_template}/{landing_page}".format(
+        app_base_url=session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_base_url"],
+        app_template=session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_template"],
+        landing_page=session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_post_login_landing_url"],
+    )
+
+    # Check for from from_uri... this always overrides the config
+    if FROM_URI_KEY in session:
+        if session[FROM_URI_KEY]:
+            app_landing_page_url = session[FROM_URI_KEY]
+            session[FROM_URI_KEY] = ""
+
+    logger.debug("app landing page {0}".format(app_landing_page_url))
+
+    return app_landing_page_url
 
 
 def page_not_found(e):
