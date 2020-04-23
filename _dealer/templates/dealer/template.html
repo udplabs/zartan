@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-    {% include '//components/template-header-meta.html' %} 
+    {% include '//components/template-header-meta.html' %}
     <body>
         <div id="layoutDefault">
             <div id="layoutDefault_content">
-                <main> 
-                    {% if not "login" in request.path and not "/" == request.path and not "index" in request.path and not "registration" in request.path %} 
-                        {% set navitems ="navitemslogin.html" %}
-                    {% else %}
+                <main>
+                    {% if user_info is none or user_info is not defined %}
                         {% set navitems ="navitems.html" %}
+                    {% else %}
+                         {% set navitems ="navitemslogin.html" %}
                     {% endif %}
+
                     {% with mynavitems = navitems %}
                         {% include '//components/template-navigation.html' %}
                     {% endwith %}
