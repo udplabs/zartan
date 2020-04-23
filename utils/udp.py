@@ -2,13 +2,16 @@ import os
 import json
 import logging
 
-from config import default_settings
+from config.app_config import default_settings
 from flask import session, request
 from functools import wraps
 from utils.rest import RestUtil
 
 SESSION_INSTANCE_SETTINGS_KEY = "instance_settings"
 SESSION_IS_CONFIGURED_KEY = "is_configured_remotley"
+SESSION_IS_APITOKEN_VALID_KEY = "is_apitoken_valid"
+SESSION_IS_CONFIG_VALID_KEY = "is_config_valid"
+
 logger = logging.getLogger(__name__)
 
 json_headers = {
@@ -55,6 +58,24 @@ def is_configured_remotley():
         session[SESSION_INSTANCE_SETTINGS_KEY] = default_settings
 
     return session[SESSION_IS_CONFIGURED_KEY]
+
+
+def is_apitoken_valid():
+    logger.debug("is_apitoken_valid()")
+    # Allways assume false unless explicitly set
+    if SESSION_IS_APITOKEN_VALID_KEY not in session:
+        session[SESSION_IS_APITOKEN_VALID_KEY] = False
+
+    return session[SESSION_IS_APITOKEN_VALID_KEY]
+
+
+def is_config_valid():
+    logger.debug("is_config_valid()")
+    # Allways assume false unless explicitly set
+    if SESSION_IS_CONFIG_VALID_KEY not in session:
+        session[SESSION_IS_CONFIG_VALID_KEY] = False
+
+    return session[SESSION_IS_CONFIG_VALID_KEY]
 
 
 def map_config_to_default_settings(config):
@@ -140,6 +161,8 @@ def safe_assign_config_item(key, source_collection, target_collection):
 def clear_session_setting():
     logger.debug("clear_session_setting()")
 
+    session[SESSION_IS_APITOKEN_VALID_KEY] = False
+    session[SESSION_IS_CONFIG_VALID_KEY] = False
     session[SESSION_IS_CONFIGURED_KEY] = False
     session[SESSION_INSTANCE_SETTINGS_KEY] = default_settings
 
