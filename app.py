@@ -4,11 +4,12 @@ import logging
 import logging.config
 
 from flask import Flask, send_from_directory, render_template
-from flask import request, session, make_response, redirect, url_for
+from flask import request, session, make_response, redirect
 from config import default_settings
 
 from utils.okta import OktaAuth, TokenUtil
 from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical
+from GlobalBehaviorandComponents.validation import gvalidation_bp_error, FROM_URI_KEY
 
 ##############################################
 # Get default settings and generate client_secrets.json
@@ -54,6 +55,9 @@ app.register_blueprint(gbac_profile_bp, url_prefix='/')
 from GlobalBehaviorandComponents.registration import gbac_registration_bp
 app.register_blueprint(gbac_registration_bp, url_prefix='/')
 
+from GlobalBehaviorandComponents.validation import gvalidation_bp, get_userinfo
+app.register_blueprint(gvalidation_bp, url_prefix='/')
+
 # sample theme
 from _sample.views import sample_views_bp
 app.register_blueprint(sample_views_bp, url_prefix='/sample')
@@ -66,11 +70,9 @@ app.register_blueprint(travelagency_views_bp, url_prefix='/travelagency')
 from _hospitality.views import hospitality_views_bp
 app.register_blueprint(hospitality_views_bp, url_prefix='/hospitality')
 
-
 # dealer theme
 from _dealer.views import dealer_views_bp
 app.register_blueprint(dealer_views_bp, url_prefix='/dealer')
-
 
 # streaming service theme
 from _streamingservice.views import streamingservice_views_bp
@@ -79,6 +81,10 @@ app.register_blueprint(streamingservice_views_bp, url_prefix='/streamingservice'
 # finance theme
 from _finance.views import finance_views_bp
 app.register_blueprint(finance_views_bp, url_prefix='/finance')
+
+# finance theme
+from _admin.views import admin_views_bp
+app.register_blueprint(admin_views_bp, url_prefix='/admin')
 
 
 ##############################################
@@ -110,12 +116,6 @@ def oidc_callback_handler():
     logger.debug(request.form)
     has_app_level_mfa_policy = False
 
-    # This is in the case there is an Okta App level MFA policy
-    if "error" in request.form:
-        logger.error("ERROR: {0}, MESSAGE: {1}".format(request.form["error"], request.form["error_description"]))
-        if ("The client specified not to prompt, but the client app requires re-authentication or MFA." == request.form["error_description"]):
-            has_app_level_mfa_policy = True
-
     if "code" in request.form:
         oidc_code = request.form["code"]
         okta_auth = OktaAuth(session[SESSION_INSTANCE_SETTINGS_KEY])
@@ -128,57 +128,70 @@ def oidc_callback_handler():
             }
         )
         logger.debug("oauth_token: {0}".format(json.dumps(oauth_token, indent=4, sort_keys=True)))
-        app_landing_page_url = url_for("gbac_bp.gbac_main", _external="True", _scheme="https")
-        logger.debug("app landing page {0}".format(app_landing_page_url))
+        app_landing_page_url = get_post_login_landing_page_url()
 
         response = make_response(redirect(app_landing_page_url))
 
         okta_token_cookie = TokenUtil.create_encoded_okta_token_cookie(
             oauth_token["access_token"],
             oauth_token["id_token"])
-
         # logger.debug("okta_token_cookie: {0}".format(okta_token_cookie))
 
         response.set_cookie(TokenUtil.OKTA_TOKEN_COOKIE_KEY, okta_token_cookie)
     elif "error" in request.form:
+        # This is in the case there is an Okta App level MFA policy
+        logger.error("ERROR: {0}, MESSAGE: {1}".format(request.form["error"], request.form["error_description"]))
+        if ("The client specified not to prompt, but the client app requires re-authentication or MFA." == request.form["error_description"]):
+            has_app_level_mfa_policy = True
+
         # Error occured with Accessing the app instance
         if has_app_level_mfa_policy:
-            response = make_response(
-                render_template(
-                    "error.html",
-                    config=session[SESSION_INSTANCE_SETTINGS_KEY],
-                    error_message="Failed to Authenticate.  Please remove App Level MFA Policy and use a Global MFA Policy. Error: {0} - {1}".format(
-                        request.form["error"],
-                        request.form["error_description"]
-                    )
-                )
+            error_message = "Failed to Authenticate.  Please remove App Level MFA Policy and use a Global MFA Policy. Error: {0} - {1}".format(
+                request.form["error"],
+                request.form["error_description"]
             )
+            response = gvalidation_bp_error(error_message)
         else:
-            response = make_response(
-                render_template(
-                    "error.html",
-                    config=session[SESSION_INSTANCE_SETTINGS_KEY],
-                    error_message="Failed to Authenticate.  Check to make sure the user has patient access to the application. Error: {0} - {1}".format(
-                        request.form["error"],
-                        request.form["error_description"]
-                    )
-                )
+            error_message = "Failed to Authenticate.  Check to make sure the user has access to the application. Error: {0} - {1}".format(
+                request.form["error"],
+                request.form["error_description"]
             )
+
+            response = gvalidation_bp_error(error_message)
     else:
         # catch all error
-        response = make_response(
-            render_template(
-                "error.html",
-                config=session[SESSION_INSTANCE_SETTINGS_KEY],
-                error_message="Failed to Authenticate.  Check to make sure the user has access to the application."
-            )
-        )
+        response = gvalidation_bp_error("Failed to Authenticate.  Check to make sure the user has access to the application.")
 
     return response
 
 
+def get_post_login_landing_page_url():
+    app_landing_page_url = ""
+
+    # Pull from Confg
+    if not session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_base_url"]:
+        session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_base_url"] = request.url_root.replace("http:", "https:")
+        logger.debug("app_base_url: {0}".format(session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_base_url"]))
+
+    app_landing_page_url = "{app_base_url}{app_template}/{landing_page}".format(
+        app_base_url=session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_base_url"],
+        app_template=session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_template"],
+        landing_page=session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_post_login_landing_url"],
+    )
+
+    # Check for from from_uri... this always overrides the config
+    if FROM_URI_KEY in session:
+        if session[FROM_URI_KEY]:
+            app_landing_page_url = session[FROM_URI_KEY]
+            session[FROM_URI_KEY] = ""
+
+    logger.debug("app landing page {0}".format(app_landing_page_url))
+
+    return app_landing_page_url
+
+
 def page_not_found(e):
-    return render_template('404.html', templatename=get_app_vertical(), config=session[SESSION_INSTANCE_SETTINGS_KEY]), 404
+    return render_template('404.html', user_info=get_userinfo(), templatename=get_app_vertical(), config=session[SESSION_INSTANCE_SETTINGS_KEY]), 404
 
 
 app.register_error_handler(404, page_not_found)

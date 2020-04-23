@@ -9,7 +9,7 @@ from flask import Blueprint
 from utils.okta import OktaAuth, OktaAdmin, TokenUtil
 from utils.udp import apply_remote_config, clear_session_setting, SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical
 
-from GlobalBehaviorandComponents.validation import get_userinfo
+from GlobalBehaviorandComponents.validation import get_userinfo, check_okta_api_token
 
 logger = logging.getLogger(__name__)
 
@@ -20,13 +20,14 @@ gbac_bp = Blueprint('gbac_bp', __name__, template_folder='templates', static_fol
 @gbac_bp.route("/")
 @gbac_bp.route("/index")
 @apply_remote_config
+@check_okta_api_token
 def gbac_main():
     logger.debug("gbac_main()")
     return render_template(
         "{0}/index.html".format(get_app_vertical()),
         templatename=get_app_vertical(),
         user_info=get_userinfo(),
-        config=session[SESSION_INSTANCE_SETTINGS_KEY])
+        config=session[SESSION_INSTANCE_SETTINGS_KEY], state=str(uuid.uuid4()))
 
 
 @gbac_bp.route("/clear_session")
@@ -39,8 +40,7 @@ def clear_session():
 @gbac_bp.route("/login")
 def gbac_login():
     logger.debug("gbac_login()")
-    session["oidc_state"] = str(uuid.uuid4())
-    return render_template("/login.html", templatename=get_app_vertical(), config=session[SESSION_INSTANCE_SETTINGS_KEY], state=session["oidc_state"])
+    return render_template("/login.html", templatename=get_app_vertical(), config=session[SESSION_INSTANCE_SETTINGS_KEY], state=str(uuid.uuid4()))
 
 
 @gbac_bp.route("/signup")
