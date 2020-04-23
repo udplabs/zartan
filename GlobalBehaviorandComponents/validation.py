@@ -58,6 +58,33 @@ def check_okta_api_token(f):
     return decorated_function
 
 
+def check_zartan_config(f):
+    @wraps(f)
+    def decorated_function(*args, **kws):
+        logger.debug("check_zartan_config()")
+        has_error = False
+        error_message = "The following configuration issue were found:<br/><ul>\r\n"
+
+        zartan_config = session[SESSION_INSTANCE_SETTINGS_KEY]
+        logger.debug("zartan_config: {0}".format(zartan_config))
+
+        if zartan_config:
+            if not zartan_config:
+                error_message = error_message.join("<br/>\r\n")
+        else:
+            response = gvalidation_bp_error("Zartan Config is not set!")
+
+        error_message = error_message.join("</ul>")
+
+        if has_error:
+
+            return gvalidation_bp_error("Zartan Config is not set!")
+
+        return f(*args, **kws)
+
+    return decorated_function
+
+
 # Get User Information from OIDC
 def get_userinfo():
     logger.debug("get_userinfo()")
