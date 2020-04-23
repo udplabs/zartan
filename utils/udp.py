@@ -2,7 +2,7 @@ import os
 import json
 import logging
 
-from config import default_settings
+from config.app_config import default_settings
 from flask import session, request
 from functools import wraps
 from utils.rest import RestUtil
