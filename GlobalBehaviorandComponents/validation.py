@@ -7,6 +7,8 @@ from flask import redirect, request, url_for, session, Blueprint, render_templat
 from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical
 from utils.okta import TokenUtil, OktaAdmin
 
+
+FROM_URI_KEY = "from_uri"
 logger = logging.getLogger(__name__)
 
 gvalidation_bp = Blueprint('gvalidation_bp', __name__, template_folder='templates', static_folder='static', static_url_path='static')
@@ -24,6 +26,7 @@ def is_authenticated(f):
             return f(*args, **kws)
         else:
             logger.debug("Access Denied")
+            session[FROM_URI_KEY] = request.url
             # change to different main
             return redirect(url_for("gbac_bp.gbac_login", _external="True", _scheme="https"))
     return decorated_function
