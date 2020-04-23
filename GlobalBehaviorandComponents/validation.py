@@ -5,7 +5,7 @@ from functools import wraps
 from flask import redirect, request, url_for, session, Blueprint, render_template
 
 from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical
-from utils.okta import TokenUtil
+from utils.okta import TokenUtil, OktaAdmin
 
 logger = logging.getLogger(__name__)
 
@@ -26,6 +26,32 @@ def is_authenticated(f):
             logger.debug("Access Denied")
             # change to different main
             return redirect(url_for("gbac_bp.gbac_login", _external="True", _scheme="https"))
+    return decorated_function
+
+
+def check_okta_api_token(f):
+    @wraps(f)
+    def decorated_function(*args, **kws):
+        logger.debug("check_okta_api_token()")
+        response = None
+
+        okta_api_token = session[SESSION_INSTANCE_SETTINGS_KEY]["okta_api_token"]
+        logger.debug("okta_api_token: {0}".format(okta_api_token))
+
+        if okta_api_token:
+            okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
+            groups = okta_admin.get_groups_by_name("Everyone")
+            if "errorSummary" in groups:
+                if "Invalid token provided" == groups["errorSummary"]:
+                    response = gvalidation_bp_error("Okta API Token is invalid!")
+        else:
+            response = gvalidation_bp_error("Okta API Token is not set!")
+
+        if response:
+            return response
+
+        return f(*args, **kws)
+
     return decorated_function
 
 
