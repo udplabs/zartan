@@ -74,26 +74,20 @@ def check_zartan_config(f):
             # logger.debug("zartan_config: {0}".format(zartan_config))
 
             if zartan_config:
-                for key, value in zartan_config.items():
-                    if key in zartan_config:
-                        if not value:
-                            error_message_list.append("<li>'{attribute}' is not set in the config.</li>".format(attribute=key))
-                    else:
-                        error_message_list.append("<li>'{attribute}' is not set in the config.</li>".format(attribute=key))
+                check_if_set_in_config(zartan_config, error_message_list)
 
-                    if "settings" == key:
-                        for settings_key, settings_value in zartan_config.items():
-                            if "app_template" == settings_key:
-                                if not value:
-                                    error_message_list.append("'{attribute}' is not set in the config.<br />".format(settings_key))
+                if "settings" in zartan_config:
+                    if "app_template" in zartan_config["settings"]:
+                        if not zartan_config["settings"]["app_template"]:
+                            error_message_list.append("'app_template' is not set in the config.<br />")
 
             else:
-                response = gvalidation_bp_error("Zartan Config is not set!")
+                error_message_list.append("Zartan Config is not set!")
 
             error_message_list.append("</ul>Please correct the issues and clear the app session to try again")
             error_message = "".join(error_message_list)
 
-            if len(error_message_list) > 2: # the first two items are just prep text for the errors any more are actuall errors
+            if len(error_message_list) > 2:  # the first two items are just prep text for the errors any more are actuall errors
                 return gvalidation_bp_error(error_message)
             else:
                 session[SESSION_IS_CONFIG_VALID_KEY] = True
@@ -101,6 +95,17 @@ def check_zartan_config(f):
         return f(*args, **kws)
 
     return decorated_function
+
+
+def check_if_set_in_config(config_settings, error_message_list):
+    logger.debug("check_if_set_in_config()")
+
+    for key, value in config_settings.items():
+        if key in config_settings:
+            if not value:
+                error_message_list.append("<li>'{attribute}' is not set in the config.</li>".format(attribute=key))
+        else:
+            error_message_list.append("<li>'{attribute}' is not set in the config.</li>".format(attribute=key))
 
 
 # Get User Information from OIDC
