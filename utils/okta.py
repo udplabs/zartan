@@ -584,6 +584,40 @@ class OktaAdmin:
 
         return RestUtil.execute_post(url, body, okta_headers)
 
+    # Okta Verify Enroll Security Question
+    def enroll_securityquestion(self, user_id, question, answer, headers=None):
+        print("enroll_securityquestion()")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+
+        url = "{0}/api/v1/users/{1}/factors".format(
+            self.okta_config["okta_org_name"],
+            user_id
+        )
+        body = {
+            "factorType": "question",
+            "provider": "OKTA",
+            "profile":
+                {
+                    "question": question,
+                    "answer": answer
+                }
+        }
+
+        return RestUtil.execute_post(url, body, okta_headers)
+
+    # Okta Verify Enroll Security Question
+    def delete_securityquestion(self, user_id, factor_id, headers=None):
+        print("delete_securityquestion()")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+
+        url = "{0}/api/v1/users/{1}/factors/{2}".format(
+            self.okta_config["okta_org_name"],
+            user_id,
+            factor_id
+        )
+
+        return RestUtil.execute_delete(url=url, headers=okta_headers)
+
     # SMS and voice call
     def enroll_sms_voice(self, user_id, factor_type, provider, phone_number, headers=None):
         print("enroll_sms_voice()")
