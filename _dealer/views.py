@@ -241,13 +241,14 @@ def workflow_approvals():
                 config=session[SESSION_INSTANCE_SETTINGS_KEY],
                 _scheme="https")
         else:
-            return render_template(
-                "{0}/workflow-approvals.html".format(get_app_vertical()),
-                templatename=get_app_vertical(),
-                error="Must be an Administrator of a dealership to approve requests",
-                user_info=user_info,
-                config=session[SESSION_INSTANCE_SETTINGS_KEY],
-                _scheme="https")
+            return "ERROR: Unauthorized", 401
+            # return render_template(
+            #    "{0}/workflow-approvals.html".format(get_app_vertical()),
+            #    templatename=get_app_vertical(),
+            #    error="Must be an Administrator of a dealership to approve requests",
+            #    user_info=user_info,
+            #    config=session[SESSION_INSTANCE_SETTINGS_KEY],
+            #    _scheme="https")
 
     if request.method == "POST":
         if request.form.get("action") == "reject":
