@@ -55,7 +55,7 @@ app.register_blueprint(gbac_profile_bp, url_prefix='/')
 from GlobalBehaviorandComponents.registration import gbac_registration_bp
 app.register_blueprint(gbac_registration_bp, url_prefix='/')
 
-from GlobalBehaviorandComponents.validation import gvalidation_bp
+from GlobalBehaviorandComponents.validation import gvalidation_bp, get_userinfo
 app.register_blueprint(gvalidation_bp, url_prefix='/')
 
 # sample theme
@@ -70,11 +70,9 @@ app.register_blueprint(travelagency_views_bp, url_prefix='/travelagency')
 from _hospitality.views import hospitality_views_bp
 app.register_blueprint(hospitality_views_bp, url_prefix='/hospitality')
 
-
 # dealer theme
 from _dealer.views import dealer_views_bp
 app.register_blueprint(dealer_views_bp, url_prefix='/dealer')
-
 
 # streaming service theme
 from _streamingservice.views import streamingservice_views_bp
@@ -83,6 +81,10 @@ app.register_blueprint(streamingservice_views_bp, url_prefix='/streamingservice'
 # finance theme
 from _finance.views import finance_views_bp
 app.register_blueprint(finance_views_bp, url_prefix='/finance')
+
+# finance theme
+from _admin.views import admin_views_bp
+app.register_blueprint(admin_views_bp, url_prefix='/admin')
 
 
 ##############################################
@@ -189,7 +191,7 @@ def get_post_login_landing_page_url():
 
 
 def page_not_found(e):
-    return render_template('404.html', templatename=get_app_vertical(), config=session[SESSION_INSTANCE_SETTINGS_KEY]), 404
+    return render_template('404.html', user_info=get_userinfo(), templatename=get_app_vertical(), config=session[SESSION_INSTANCE_SETTINGS_KEY]), 404
 
 
 app.register_error_handler(404, page_not_found)
