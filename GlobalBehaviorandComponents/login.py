@@ -27,7 +27,7 @@ def gbac_main():
         "{0}/index.html".format(get_app_vertical()),
         templatename=get_app_vertical(),
         user_info=get_userinfo(),
-        config=session[SESSION_INSTANCE_SETTINGS_KEY])
+        config=session[SESSION_INSTANCE_SETTINGS_KEY], state=str(uuid.uuid4()))
 
 
 @gbac_bp.route("/clear_session")
@@ -40,8 +40,7 @@ def clear_session():
 @gbac_bp.route("/login")
 def gbac_login():
     logger.debug("gbac_login()")
-    session["oidc_state"] = str(uuid.uuid4())
-    return render_template("/login.html", templatename=get_app_vertical(), config=session[SESSION_INSTANCE_SETTINGS_KEY], state=session["oidc_state"])
+    return render_template("/login.html", templatename=get_app_vertical(), config=session[SESSION_INSTANCE_SETTINGS_KEY], state=str(uuid.uuid4()))
 
 
 @gbac_bp.route("/signup")

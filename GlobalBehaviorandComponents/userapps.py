@@ -24,4 +24,9 @@ def gbac_userapps_mfa():
     user = okta_admin.get_user(user_info["sub"])
     app_info = okta_admin.get_applications_by_user_id(user["id"])
 
-    return render_template("/userapps.html", templatename=get_app_vertical(), config=session[SESSION_INSTANCE_SETTINGS_KEY], applist=app_info)
+    return render_template(
+        "/userapps.html",
+        user_info=get_userinfo(),
+        templatename=get_app_vertical(),
+        config=session[SESSION_INSTANCE_SETTINGS_KEY],
+        applist=app_info)
