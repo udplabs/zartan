@@ -1,5 +1,8 @@
 import os
 
+from dotenv import load_dotenv, find_dotenv
+load_dotenv(find_dotenv())
+
 default_settings = {
     "client_id": os.getenv("OKTA_CLIENT_ID", ""),
     "client_secret": os.getenv("OKTA_CLIENT_SECRET", ""),
