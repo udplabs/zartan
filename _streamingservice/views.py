@@ -1,9 +1,10 @@
 import logging
 
 # import functions
-from flask import render_template, session
+from flask import render_template, session, request
 from flask import Blueprint
 from utils.udp import SESSION_INSTANCE_SETTINGS_KEY
+from utils.okta import TokenUtil
 
 from GlobalBehaviorandComponents.validation import is_authenticated, get_userinfo
 
@@ -17,4 +18,9 @@ streamingservice_views_bp = Blueprint('streamingservice_views_bp', __name__, tem
 @is_authenticated
 def streamingservice_profile():
     logger.debug("streamingservice_profile()")
-    return render_template("streamingservice/profile.html", user_info=get_userinfo(), config=session[SESSION_INSTANCE_SETTINGS_KEY])
+    return render_template(
+        "streamingservice/profile.html",
+        user_info=get_userinfo(),
+        id_token=TokenUtil.get_id_token(request.cookies),
+        access_token=TokenUtil.get_access_token(request.cookies),
+        config=session[SESSION_INSTANCE_SETTINGS_KEY])
