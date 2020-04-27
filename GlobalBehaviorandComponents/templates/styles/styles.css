@@ -151,6 +151,17 @@ sub {
 sup {
   top: -.5em; }
 
+.sidenav-light .sidenav-menu .nav-link:hover {
+  color: {{ config.settings.app_primary_color }};
+}
+.sidenav-light .sidenav-menu .nav-link.active {
+  color:{{ config.settings.app_primary_color }};
+}
+.sidenav-light .sidenav-menu .nav-link.active .nav-link-icon {
+  color: {{ config.settings.app_primary_color }};
+}
+
+
 a {
   color: {{ config.settings.app_primary_color }};
   text-decoration: none;

@@ -173,7 +173,7 @@ def get_post_login_landing_page_url():
         session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_base_url"] = request.url_root.replace("http:", "https:")
         logger.debug("app_base_url: {0}".format(session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_base_url"]))
 
-    app_landing_page_url = "{app_base_url}{app_template}/{landing_page}".format(
+    app_landing_page_url = "{app_base_url}/{app_template}/{landing_page}".format(
         app_base_url=session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_base_url"],
         app_template=session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_template"],
         landing_page=session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_post_login_landing_url"],

@@ -25,4 +25,4 @@ def finance_profile():
 @is_authenticated
 def finance_account():
     logger.debug("finance_account()")
-    return render_template("finance/account.html", user_info=get_userinfo, config=session[SESSION_INSTANCE_SETTINGS_KEY])
+    return render_template("finance/account.html", user_info=get_userinfo(), config=session[SESSION_INSTANCE_SETTINGS_KEY])

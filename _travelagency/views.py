@@ -16,4 +16,4 @@ travelagency_views_bp = Blueprint('travelagency_views_bp', __name__, template_fo
 @travelagency_views_bp.route("/profile")
 @is_authenticated
 def travelagency_profile():
-    return render_template("travelagency/profile.html", user_info=get_userinfo, config=session[SESSION_INSTANCE_SETTINGS_KEY])
+    return render_template("travelagency/profile.html", user_info=get_userinfo(), config=session[SESSION_INSTANCE_SETTINGS_KEY])
