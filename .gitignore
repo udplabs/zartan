@@ -2,16 +2,22 @@
 
 ### FLASK OIDC ###
 *.json
+.~c9*
+.env.*
 
 # End Zartan ignore rules
 
-# Created by https://www.gitignore.io/api/git,vim,macos,python,cloud9,terraform,visualstudiocode
-# Edit at https://www.gitignore.io/?templates=git,vim,macos,python,cloud9,terraform,visualstudiocode
+
+# Created by https://www.gitignore.io/api/git,vim,macos,dotenv,python,cloud9,terraform,visualstudiocode
+# Edit at https://www.gitignore.io/?templates=git,vim,macos,dotenv,python,cloud9,terraform,visualstudiocode
 
 ### Cloud9 ###
 # Cloud9 IDE - http://c9.io
 .c9revisions
 .c9
+
+### dotenv ###
+.env
 
 ### Git ###
 # Created by git for backups. To disable backups in Git:
@@ -227,4 +233,4 @@ tags
 # Ignore all local history of files
 .history
 
-# End of https://www.gitignore.io/api/git,vim,macos,python,cloud9,terraform,visualstudiocode
+# End of https://www.gitignore.io/api/git,vim,macos,dotenv,python,cloud9,terraform,visualstudiocode
