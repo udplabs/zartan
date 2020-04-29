@@ -31,6 +31,7 @@ dealer_views_bp = Blueprint('dealer_views_bp', __name__, template_folder='templa
 @dealer_views_bp.route("/profile")
 @is_authenticated
 def dealer_profile():
+    logger.debug("dealer_profile()")
     return render_template(
         "{0}/profile.html".format(get_app_vertical()),
         templatename=get_app_vertical(),
@@ -71,7 +72,7 @@ def dealer_myapps():
 
 @dealer_views_bp.route("/registration", methods=["GET", "POST"])
 def dealer_registration():
-
+    logger.debug("dealer_registration()")
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
 
     setup_options = {
@@ -169,6 +170,7 @@ def dealer_registration():
 
 @dealer_views_bp.route("/registration-state/<stateToken>", methods=["GET"])
 def dealer_registration_state(stateToken):
+    logger.debug("dealer_registration_state()")
     user_id = stateToken
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     user_activate_response = okta_admin.activate_user(user_id, send_email=False)
@@ -186,6 +188,7 @@ def dealer_registration_state(stateToken):
 
 @dealer_views_bp.route("/registration-completion", methods=["GET"])
 def dealer_registration_completion():
+    logger.debug("dealer_registration_completion()")
     return render_template(
         "{0}/registration-completion.html".format(get_app_vertical()),
         templatename=get_app_vertical(),
@@ -196,6 +199,7 @@ def dealer_registration_completion():
 @dealer_views_bp.route("/workflow-approvals", methods=["GET", "POST"])
 @is_authenticated
 def workflow_approvals():
+    logger.debug("workflow_approvals()")
     workflow_list = []
     user_info = get_userinfo()
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
@@ -299,6 +303,7 @@ def workflow_approvals():
 @is_authenticated
 @dealer_views_bp.route("/workflow-requests", methods=["GET"])
 def workflow_requests_get():
+    logger.debug("workflow_requests_get()")
     user_info = get_userinfo()
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     user = okta_admin.get_user(user_info["sub"])
@@ -366,6 +371,7 @@ def workflow_requests_get():
 @is_authenticated
 @dealer_views_bp.route("/workflow-requests", methods=["POST"])
 def workflow_requests_post():
+    logger.debug("workflow_requests_post()")
     user_info = get_userinfo()
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     user = okta_admin.get_user(user_info["sub"])
@@ -398,6 +404,7 @@ class EmailServices:
 
     # Email all members that belong to the group such as the Admin
     def emailAllMembersOfGroup(self, group_name, subject, message):
+        logger.debug("emailAllMembersOfGroup()")
         okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
 
         # Find the Admin Group
@@ -418,6 +425,7 @@ class EmailServices:
 
     # EMail workflow Request to the Admin
     def emailWorkFlowRequest(self):
+        logger.debug("emailWorkFlowRequest()")
         activation_link = url_for("dealer_views_bp.workflow_approvals", _external=True, _scheme="https")
         # Send Activation Email to the Admin
         subject_admin = "A workflow request was received"
@@ -430,6 +438,7 @@ class EmailServices:
 
     # EMail user and admin when a new user registers successfully
     def emailRegistration(self, recipient, token):
+        logger.debug("emailRegistration()")
         app_title = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_name"]
         activation_link = url_for("dealer_views_bp.dealer_registration_state", stateToken=token, _external=True, _scheme="https")
         subject = "Welcome to the {app_title}".format(app_title=session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_name"])
