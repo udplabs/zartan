@@ -1,9 +1,10 @@
 import logging
 
 # import functions
-from flask import render_template, session
+from flask import render_template, session, request
 from flask import Blueprint
 from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical
+from utils.okta import TokenUtil
 
 from GlobalBehaviorandComponents.validation import is_authenticated, get_userinfo
 
@@ -26,5 +27,7 @@ def sample_profile():
     return render_template(
         "{0}/profile.html".format(get_app_vertical()),
         templatename=get_app_vertical(),
+        id_token=TokenUtil.get_id_token(request.cookies),
+        access_token=TokenUtil.get_access_token(request.cookies),
         user_info=get_userinfo(),
         config=session[SESSION_INSTANCE_SETTINGS_KEY])

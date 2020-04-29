@@ -19707,6 +19707,12 @@ body {
   left: 0;
 }
 
+.page-header {
+    position: relative;
+    padding-top: 0rem !important;
+    padding-bottom: 8rem;
+}
+
 .page-header .page-header-content {
   padding-top: 4rem;
   padding-bottom: 4rem;

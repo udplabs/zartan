@@ -2,13 +2,17 @@
 <html lang="en">
     {% include '//components/template-header-meta-admin.html' %} 
     <body class="nav-fixed">
-        {% include '//components/template-navigation-admin.html' %}
+        {% if user_info is defined %}
+            {% include '//components/template-navigation-admin.html' %}
+        {% endif %}
             <div id="layoutSidenav_content">
                 <main style="height: 100%;">
                     {% block content %}{% endblock %}
                 </main>
             </div>
         </div>
-        {% include '//components/template-footer-scripts-admin.html' %}
+        {% if user_info is defined %}
+            {% include '//components/template-footer-scripts-admin.html' %}
+        {% endif %}
     </body>
 </html>

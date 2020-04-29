@@ -1,9 +1,10 @@
 import logging
 
 # import functions
-from flask import render_template, session
+from flask import render_template, session, request
 from flask import Blueprint
 from utils.udp import SESSION_INSTANCE_SETTINGS_KEY
+from utils.okta import TokenUtil
 
 from GlobalBehaviorandComponents.validation import is_authenticated, get_userinfo
 
@@ -18,4 +19,9 @@ hospitality_views_bp = Blueprint('hospitality_views_bp', __name__, template_fold
 @is_authenticated
 def hospitality_profile():
     logger.debug("hospitality_profile()")
-    return render_template("hospitality/profile.html", user_info=get_userinfo(), config=session[SESSION_INSTANCE_SETTINGS_KEY])
+    return render_template(
+        "hospitality/profile.html",
+        id_token=TokenUtil.get_id_token(request.cookies),
+        access_token=TokenUtil.get_access_token(request.cookies),
+        user_info=get_userinfo(),
+        config=session[SESSION_INSTANCE_SETTINGS_KEY])

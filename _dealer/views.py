@@ -5,7 +5,7 @@ import logging.config
 # import functions
 from flask import render_template, url_for, redirect, session, request
 from flask import Blueprint
-from utils.okta import OktaAdmin
+from utils.okta import OktaAdmin, TokenUtil
 from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical
 from utils.email import Email
 
@@ -35,6 +35,8 @@ def dealer_profile():
     return render_template(
         "{0}/profile.html".format(get_app_vertical()),
         templatename=get_app_vertical(),
+        id_token=TokenUtil.get_id_token(request.cookies),
+        access_token=TokenUtil.get_access_token(request.cookies),
         user_info=get_userinfo(),
         config=session[SESSION_INSTANCE_SETTINGS_KEY],
         _scheme="https")

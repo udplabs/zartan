@@ -605,8 +605,29 @@ class OktaAdmin:
 
         return RestUtil.execute_post(url, body, okta_headers)
 
-    # Okta Verify Enroll Security Question
-    def delete_securityquestion(self, user_id, factor_id, headers=None):
+    # Okta Verify Enroll Hard Token
+    def enroll_hardtoken(self, user_id, factorProfileId, sharedSecret, headers=None):
+        print("enroll_hardtoken()")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+
+        url = "{0}/api/v1/users/{1}/factors?activate=true".format(
+            self.okta_config["okta_org_name"],
+            user_id
+        )
+        body = {
+            "factorType": "token:hotp",
+            "provider": "CUSTOM",
+            "factorProfileId": factorProfileId,
+            "profile":
+                {
+                    "sharedSecret": sharedSecret
+                }
+        }
+
+        return RestUtil.execute_post(url, body, okta_headers)
+
+    # Okta Delete Factor
+    def delete_factor(self, user_id, factor_id, headers=None):
         print("delete_securityquestion()")
         okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
 
@@ -705,19 +726,6 @@ class OktaAdmin:
         )
 
         return RestUtil.execute_get(url, okta_headers)
-
-    def delete_factor(self, user_id, factor_id):
-        print("delete_factor()")
-        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
-
-        url = "{0}/api/v1/users/{1}/factors/{2}".format(
-            self.okta_config["okta_org_name"],
-            user_id,
-            factor_id
-        )
-        body = {}
-
-        return RestUtil.execute_delete(url, body, okta_headers)
 
 
 class OktaUtil:

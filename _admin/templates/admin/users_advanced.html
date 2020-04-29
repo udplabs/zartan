@@ -21,7 +21,6 @@
                                     <th>Email</th>
                                     <th style="text-align:center">User Status</th>
                                     <th style="text-align:center">Temporary Passcode</th>
-                                    <th style="text-align:center">Reset Password</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -31,8 +30,6 @@
                                         <td>{{ i['profile']['email']}}</td>
                                         <td style="text-align:center">{{ i['status'] }}</td>
                                         <td style="text-align:center"><a href="temporarypasscode?user_id={{ i.id}}"><i class="fa fa-clock"></i></a></td>
-                                        <td style="text-align:center"><a href="addkey?user_id={{ i.id}}"><i class="fa fa-key"></i></a></td>
-                                          
                                     </tr>
                                 {% endfor %}
                             </tbody>
