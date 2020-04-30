@@ -53,7 +53,11 @@ def gbac_signup():
 @gbac_bp.route("/logout")
 def gbac_logout():
     logger.debug("gbac_logout()")
-    response = make_response(redirect(url_for("gbac_bp.gbac_main", _external="True", _scheme="https")))
+    redirect_url = "{host}/login/signout?fromURI={redirect_path}".format(
+        host=session[SESSION_INSTANCE_SETTINGS_KEY]["okta_org_name"],
+        redirect_path=url_for("gbac_bp.gbac_main", _external="True", _scheme="https"))
+
+    response = make_response(redirect(redirect_url))
     response.set_cookie(TokenUtil.OKTA_TOKEN_COOKIE_KEY, "")
     return response
 
