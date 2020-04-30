@@ -1,4 +1,5 @@
 import logging
+import uuid
 
 from functools import wraps
 
@@ -6,10 +7,11 @@ from flask import redirect, request, url_for, session, Blueprint, render_templat
 
 from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical, is_apitoken_valid, is_config_valid
 from utils.udp import SESSION_IS_APITOKEN_VALID_KEY, SESSION_IS_CONFIG_VALID_KEY
-from utils.okta import TokenUtil, OktaAdmin
+from utils.okta import TokenUtil, OktaAdmin, OktaAuth
 
 
 FROM_URI_KEY = "from_uri"
+GET_NEW_TOKEN_URL = "get_new_token_url"
 logger = logging.getLogger(__name__)
 
 gvalidation_bp = Blueprint('gvalidation_bp', __name__, template_folder='templates', static_folder='static', static_url_path='static')
@@ -111,10 +113,16 @@ def check_if_set_in_config(config_settings, error_message_list):
 # Get User Information from OIDC
 def get_userinfo():
     logger.debug("get_userinfo()")
+    user_info = None
+    session[SESSION_INSTANCE_SETTINGS_KEY][GET_NEW_TOKEN_URL] = ""
 
-    user_info = TokenUtil.get_claims_from_token(
-        TokenUtil.get_id_token(request.cookies))
-
+    if TokenUtil.is_valid_remote(TokenUtil.get_access_token(request.cookies), session[SESSION_INSTANCE_SETTINGS_KEY]):
+        logger.debug("valid")
+        user_info = TokenUtil.get_claims_from_token(
+            TokenUtil.get_id_token(request.cookies))
+    else:
+        logger.debug("notvalid")
+        session[SESSION_INSTANCE_SETTINGS_KEY][GET_NEW_TOKEN_URL] = get_oauth_authorize_url()
     return user_info
 
 
@@ -127,3 +135,28 @@ def gvalidation_bp_error(error_message=""):
         templatename=get_app_vertical(),
         config=session[SESSION_INSTANCE_SETTINGS_KEY],
         error_message=Markup(error_message))
+
+
+def get_oauth_authorize_url(okta_session_token=None):
+    logger.debug("get_oauth_authorize_url()")
+    okta_auth = OktaAuth(session[SESSION_INSTANCE_SETTINGS_KEY])
+
+    auth_options = {
+        "response_mode": "form_post",
+        "prompt": "none",
+        "scope": "openid profile email"
+    }
+
+    if "state" not in session:
+        session["state"] = str(uuid.uuid4())
+
+    if okta_session_token:
+        auth_options["sessionToken"] = okta_session_token
+
+    oauth_authorize_url = okta_auth.create_oauth_authorize_url(
+        response_type="code",
+        state=session["state"],
+        auth_options=auth_options
+    )
+
+    return oauth_authorize_url
