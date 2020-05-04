@@ -124,17 +124,17 @@ def admin_addkeytouser():
 
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     listfactors = okta_admin.list_enrolled_factors(user_id)
-    print(listfactors)
+    logger.debug(listfactors)
     for factor_info in listfactors:
         if "token:hotp" in factor_info['factorType']:
             factor_id = factor_info['id']
             okta_admin.delete_factor(user_id=user_id, factor_id=factor_id)
             response = okta_admin.enroll_hardtoken(user_id, factor_profile_id, shared_secret)
-            print(response)
+            logger.debug(response)
             break
         else:
             response = okta_admin.enroll_hardtoken(user_id, factor_profile_id, shared_secret)
-            print(response)
+            logger.debug(response)
             break
 
     message = "Your Key is Setup"
