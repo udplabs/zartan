@@ -393,7 +393,7 @@ class OktaAdmin:
         return RestUtil.execute_post(url, body, okta_headers)
 
     def suspend_user(self, user_id):
-        self.logger.debugprint("OktaAdmin.suspend_user(user_id)")
+        self.logger.debug("OktaAdmin.suspend_user(user_id)")
         okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
         url = "{base_url}/api/v1/users/{user_id}/lifecycle/suspend".format(
             base_url=self.okta_config["okta_org_name"],
