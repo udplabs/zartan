@@ -60,4 +60,7 @@ $ python app.py
 
 Navigate to http://127.0.0.1:5000.
 
+## Authors
+* Shawn Recinto
+
 [logo]: README/img/zartan.png "Zartan is a master of make-up and disguise and so is this demo platform"
