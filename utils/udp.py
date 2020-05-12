@@ -6,6 +6,7 @@ from config.app_config import default_settings
 from flask import session, request
 from functools import wraps
 from utils.rest import RestUtil
+from utils.okta import OktaUtil
 
 SESSION_INSTANCE_SETTINGS_KEY = "instance_settings"
 SESSION_IS_CONFIGURED_KEY = "is_configured_remotley"
@@ -86,14 +87,14 @@ def map_config_to_default_settings(config):
             logger.debug("Applying Remote Config")
             instance_settings = session[SESSION_INSTANCE_SETTINGS_KEY]
 
-            # logger.debug("Before Config: {0}".format(
-            #    json.dumps(instance_settings, indent=4, sort_keys=True)))
+            logger.debug("Before Config: {0}".format(
+                json.dumps(instance_settings, indent=4, sort_keys=True)))
 
             for key, value in instance_settings.items():
                 safe_assign_config_item(key, config, instance_settings)
 
-            # logger.debug("After Config: {0}".format(
-            #    json.dumps(instance_settings, indent=4, sort_keys=True)))
+            logger.debug("After Config: {0}".format(
+                json.dumps(instance_settings, indent=4, sort_keys=True)))
 
             session[SESSION_INSTANCE_SETTINGS_KEY] = instance_settings
             session[SESSION_IS_CONFIGURED_KEY] = True
@@ -108,16 +109,33 @@ def map_config_to_default_settings(config):
 def get_remote_config(udp_subdomain, udp_app_name):
     logger.debug("get_remote_config()")
     remote_config = None
-    # TODO: Make the call to UDP Here
-    remote_config_url = os.getenv("UDP_CONFIG_URL", "").format(
+    json_headers["Authorization"] = "Bearer {0}".format(get_udp_oauth_access_token())
+
+    remote_config_url = "{udp_config_url}/api/configs/{udp_subdomain}/{udp_app_name}".format(
+        udp_config_url=os.getenv("UDP_CONFIG_URL", ""),
         udp_subdomain=udp_subdomain,
         udp_app_name=udp_app_name)
 
-    if remote_config:
+    remote_api_token_url = "{udp_config_url}/api/subdomains/{udp_subdomain}".format(
+        udp_config_url=os.getenv("UDP_CONFIG_URL", ""),
+        udp_subdomain=udp_subdomain)
+
+    if "http" in remote_config_url:
         logger.debug("Pulling remote config from: {0}".format(remote_config_url))
 
         remote_config = RestUtil.execute_get(remote_config_url, json_headers)
         # logger.debug("config_json: {0}".format(json.dumps(remote_config, indent=4, sort_keys=True)))
+
+    if "http" in remote_api_token_url:
+        logger.debug("Pulling remote config from: {0}".format(remote_api_token_url))
+        api_token_config = RestUtil.execute_get(remote_api_token_url, json_headers)
+        # logger.debug("config_json: {0}".format(json.dumps(api_token_config, indent=4, sort_keys=True)))
+
+        if remote_config:
+            if "okta_api_token" in api_token_config:
+                remote_config["okta_api_token"] = api_token_config["okta_api_token"]
+
+    logger.debug("config_json: {0}".format(json.dumps(remote_config, indent=4, sort_keys=True)))
 
     return remote_config
 
@@ -174,3 +192,34 @@ def get_app_vertical():
     logger.debug("app_vertical_template_name: {0}".format(app_vertical_template_name))
 
     return app_vertical_template_name
+
+
+def get_udp_oauth_access_token():
+    logger.debug("get_app_vertical()")
+    results = None
+
+    udp_issuer = os.getenv("UDP_ISSUER", "https://udp.okta.com/oauth2/default")
+    udp_token_endpoint = "{issuer}/v1/token".format(issuer=udp_issuer)
+    udp_oauth_client_id = os.getenv("UDP_CLIENT_ID", "")
+    udp_oauth_client_secret = os.getenv("UDP_CLIENT_SECRET", "")
+    basic_auth_encoded = OktaUtil.get_encoded_auth(udp_oauth_client_id, udp_oauth_client_secret)
+
+    oauth2_headers = {
+        "Accept": "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Authorization": "Basic {0}".format(basic_auth_encoded)
+    }
+
+    # logger.debug(oauth2_headers)
+
+    url = "{0}?grant_type=client_credentials&scope=secrets:read".format(udp_token_endpoint)
+
+    responseData = RestUtil.execute_post(url, headers=oauth2_headers)
+    # logger.debug(responseData)
+
+    if "access_token" in responseData:
+        results = responseData["access_token"]
+    else:
+        logger.warn("Failed to get UDP Service OAuth token: {message}".format(message=responseData))
+
+    return results
