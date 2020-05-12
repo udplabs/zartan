@@ -6,6 +6,7 @@ from config.app_config import default_settings
 from flask import session, request
 from functools import wraps
 from utils.rest import RestUtil
+from utils.okta import OktaUtil
 
 SESSION_INSTANCE_SETTINGS_KEY = "instance_settings"
 SESSION_IS_CONFIGURED_KEY = "is_configured_remotley"
@@ -174,3 +175,37 @@ def get_app_vertical():
     logger.debug("app_vertical_template_name: {0}".format(app_vertical_template_name))
 
     return app_vertical_template_name
+
+
+def get_udp_oauth_access_token():
+    logger.debug("get_app_vertical()")
+    results = None
+
+    udp_issuer = os.getenv("UDP_ISSUER", "")
+    udp_token_endpoint = "{issuer}/v1/token".format(issuer=udp_issuer)
+    udp_oauth_client_id = os.getenv("UDP_CLIENT_ID", "")
+    udp_oauth_client_secret = os.getenv("UDP_CLIENT_SECRET", "")
+    basic_auth_encoded = OktaUtil.get_encoded_auth(udp_oauth_client_id, udp_oauth_client_secret)
+
+    oauth2_headers = {
+        "Accept": "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Authorization": "Basic {0}".format(basic_auth_encoded)
+    }
+
+    # logger.debug(oauth2_headers)
+
+    url = "{0}?grant_type=client_credentials&scope=secrets:read".format(udp_token_endpoint)
+
+    responseData = RestUtil.execute_post(url, headers=oauth2_headers)
+    # logger.debug(responseData)
+
+    if "access_token" in responseData:
+        results = responseData["access_token"]
+    else:
+        logger.warn("Failed to get UDP Service OAuth token: {message}".format(message=responseData))
+
+    return results
+
+
+
