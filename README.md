@@ -14,7 +14,7 @@ Zartan is a master of make-up and disguise and so is this demo platform
 
 * TODO
 
-### Setup Spackpost account.
+### Setup Sparkpost account.
 
 * TODO
 
