@@ -1,22 +1,70 @@
 # Zartan Usage Guide <!-- omit in toc -->
 
-- [Setup Okta Org](#setup-okta-org)
+>> WIP: Just placeholder for now and will convert this content into vuepress for readability
+
+- [Setup Okta Org for each Vertical](#setup-okta-org-for-each-vertical)
 - [How to demo](#how-to-demo)
-- [Use Cases or Secenarios](#use-cases-or-secenarios)
-- [Toubleshooting Your Demo](#toubleshooting-your-demo)
+  - [Use Cases or Scenarios: Dealer](#use-cases-or-scenarios-dealer)
+  - [Use Cases or Scenarios: Travel Agency](#use-cases-or-scenarios-travel-agency)
+  - [Use Cases or Scenarios: Hospitality](#use-cases-or-scenarios-hospitality)
+  - [Use Cases or Scenarios: Streaming Services](#use-cases-or-scenarios-streaming-services)
+  - [Use Cases or Scenarios: Finance](#use-cases-or-scenarios-finance)
+- [Troubleshooting: FAQs](#troubleshooting-faqs)
 
-## Setup Okta Org
+## Setup Okta Org for each Vertical
 
-REPLACE ME
+>> WIP: Needs further details, just assuming. Plus attached terraform script could be reference.
+
+* Feature Flags to enable
+* Attributes to create in UD
+* SignOn Policy
+* Authorization Servers
+* Access Policy
+* Scope and Claims
+* Multi-factor
+* Inline and Event Hooks
 
 ## How to demo
 
-REPLACE ME
+Talking points and Steps Matrix
 
-## Use Cases or Secenarios
+### Use Cases or Scenarios: Dealer
 
-REPLACE ME
+| Use Case | Demoing Steps |
+| ---      | ---           |
+| Self Registration | 1. etc |
+| Progressive Profiling | 1. etc |
+| Inline Hooks | 1. etc |
 
-## Toubleshooting Your Demo
+### Use Cases or Scenarios: Travel Agency
 
-REPLACE ME
+| Use Case | Demoing Steps |
+| ---      | ---           |
+| Self Registration | 1. etc |
+| Progressive Profiling | 1. etc |
+
+### Use Cases or Scenarios: Hospitality
+
+| Use Case | Demoing Steps |
+| ---      | ---           |
+| Self Registration | 1. etc |
+| Progressive Profiling | 1. etc |
+| Consent Management | 1. etc |
+
+### Use Cases or Scenarios: Streaming Services
+
+| Use Case | Demoing Steps |
+| ---      | ---           |
+| Self Registration | 1. etc |
+| Progressive Profiling | 1. etc |
+
+### Use Cases or Scenarios: Finance
+
+| Use Case | Demoing Steps |
+| ---      | ---           |
+| Step Authentication | 1. etc |
+| Progressive Profiling | 1. etc |
+
+## Troubleshooting: FAQs
+
+* Question: The applications broke!
