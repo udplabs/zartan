@@ -16,6 +16,7 @@ logger = logging.getLogger(__name__)
 # set blueprint
 gbac_bp = Blueprint('gbac_bp', __name__, template_folder='templates', static_folder='static', static_url_path='static')
 
+
 # main route
 @gbac_bp.route("/")
 @gbac_bp.route("/index")
