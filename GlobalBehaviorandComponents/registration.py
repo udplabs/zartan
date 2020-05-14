@@ -12,6 +12,7 @@ logger = logging.getLogger(__name__)
 # set blueprint
 gbac_registration_bp = Blueprint('gbac_registration_bp', __name__, template_folder='templates', static_folder='static', static_url_path='static')
 
+
 # Required for Registration Page
 @gbac_registration_bp.route("/registration")
 def registration_bp():

@@ -41,6 +41,7 @@ def dealer_profile():
         config=session[SESSION_INSTANCE_SETTINGS_KEY],
         _scheme="https")
 
+
 # dealer my applications
 @dealer_views_bp.route("/myapps", methods=["GET", "POST"])
 @is_authenticated
@@ -211,7 +212,7 @@ def workflow_approvals():
     # On a GET display the registration page with the defaults
     if request.method == "GET":
         admin_groups = okta_admin.get_user_groups(user_id)
-        location_group_id = ""
+        # location_group_id = ""
         admin_group_id = ""
 
         # User organization attribute contains workflow request
@@ -226,8 +227,9 @@ def workflow_approvals():
         if admin_group_id:
 
             # 'profile._dealer_access_requests  eq pr"
-            user_get_response = okta_admin.get_user_list_by_search(
-                'profile._dealer_access_requests pr'.format(location_group_id=location_group_id, admin_group_id=admin_group_id))
+            # user_get_response = okta_admin.get_user_list_by_search(
+            #    'profile._dealer_access_requests pr'.format(location_group_id=location_group_id, admin_group_id=admin_group_id))
+            user_get_response = okta_admin.get_user_list_by_search("profile._dealer_access_requests pr")
 
             for list in user_get_response:
                 for grp in list["profile"]["_dealer_access_requests"]:

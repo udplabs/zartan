@@ -26,6 +26,7 @@ def finance_profile():
         user_info=get_userinfo(),
         config=session[SESSION_INSTANCE_SETTINGS_KEY])
 
+
 # Account Page
 @finance_views_bp.route("/account")
 @is_authenticated
