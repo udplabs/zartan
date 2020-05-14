@@ -1,6 +1,6 @@
 [flake8]
 ignore = E266, E402
-exclude = .c9/*, .git/*, .~c9*
+exclude = .c9/*, .git/*, .~c9*, venv/*
 max-line-length = 160
 max-complexity = 10
 statistics = True

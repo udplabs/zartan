@@ -1,0 +1,55 @@
+{
+  "projectName": "zartan",
+  "projectOwner": "noinarisak",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": true,
+  "commitConvention": "gitmoji",
+  "contributors": [
+    {
+      "login": "bhanchand",
+      "name": "bhanchand",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/18057642?v=4",
+      "profile": "https://github.com/bhanchand",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "noinarisak",
+      "name": "Noi Narisak",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/341437?v=4",
+      "profile": "https://github.com/noinarisak",
+      "contributions": [
+        "code",
+        "doc",
+        "infra"
+      ]
+    },
+    {
+      "login": "srecinto",
+      "name": "Shawn Recinto",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/2954123?v=4",
+      "profile": "https://github.com/srecinto",
+      "contributions": [
+        "code",
+        "projectManagement",
+        "test"
+      ]
+    },
+    {
+      "login": "dzadikdev",
+      "name": "dzadikdev",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/57756515?v=4",
+      "profile": "https://github.com/dzadikdev",
+      "contributions": [
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7
+}
