@@ -108,6 +108,8 @@ def healthcheck():
 """
    Set path to '/authorization-code/callback' because of backward compatibility with flask-oidc legacy config
 """
+
+
 @app.route('/authorization-code/callback', methods=["POST"])
 def oidc_callback_handler():
     """ handler for the oidc call back of the app """

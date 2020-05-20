@@ -1,0 +1,33 @@
+<script type="text/javascript">
+//<![CDATA[
+
+    var authClient = new OktaAuth({
+        url: "{{config.okta_org_name}}",
+        clientId: "{{config.client_id}}",
+        redirectUri: "{{config.redirect_uri}}",
+    });
+
+    $(document).ready(function() {
+        authClient.session.get()
+        .then(function (res) {
+            console.log(res);
+            // Session exists, show logged in state.
+            if (res.status === 'ACTIVE') {
+            console.log("Session Active");
+
+            $("#sessionId").val(res.id);
+
+            var getNewTokenUrl = "{{config.get_new_token_url|safe}}";
+
+            if (getNewTokenUrl != "") {
+                location.href=getNewTokenUrl;
+            }
+            }
+        })
+        .catch(function(err) {
+            console.log("FAIL");
+            console.log(err);
+        });
+    });
+//]]>
+</script>

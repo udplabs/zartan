@@ -1,0 +1,33 @@
+client_id=${client_id}
+client_secret=${client_secret}
+issuer=https://${domain}/oauth2/${auth_server_id}
+okta_app_oauth_id=${okta_app_oauth_id}
+
+
+# Okta Setting
+OKTA_CLIENT_ID="${client_id}"
+OKTA_CLIENT_SECRET="${client_secret}"
+OKTA_ISSUER="https://${domain}/oauth2/${auth_server_id}"
+OKTA_ORG_URL="https://${domain}"
+OKTA_OIDC_REDIRECT_URI="${redirect_uri}"
+OKTA_API_TOKEN=""
+
+# Zartan Setting
+APP_TEMPLATE="travelagency"
+APP_BASE_URL="/"
+APP_LOGINMETHOD="standard-widget"
+APP_NAME=""
+APP_SLOGAN=""
+APP_SUBSLOGAN=""
+APP_LOGO=""
+APP_FAVICON=""
+APP_BANNER_1=""
+APP_PRIMARY_COLOR="#0061f2"
+APP_SECONDARY_COLOR="#6900c7"
+APP_SUCCESS_COLOR="#00ac69"
+APP_INFO_COLOR="#00cfd5"
+APP_WARNING_COLOR="#f4a100"
+APP_DANGER_COLOR="#e81500"
+
+# Flask Setting
+SECRET_KEY=""

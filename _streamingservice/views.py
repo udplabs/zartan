@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 # set blueprint
 streamingservice_views_bp = Blueprint('streamingservice_views_bp', __name__, template_folder='templates', static_folder='static', static_url_path='static')
 
+
 # Required for Login Landing Page
 @streamingservice_views_bp.route("/profile")
 @is_authenticated
