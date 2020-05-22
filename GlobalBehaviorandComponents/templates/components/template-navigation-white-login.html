@@ -76,6 +76,14 @@
                 {
                     margin-top: 0px;
                 }
+                #okta-sign-in.no-beacon .auth-header 
+                {
+                    padding-bottom: 0px;
+                }
+                #okta-sign-in .auth-header 
+                {
+                     padding: 0px 0px 0px;
+                }
                 </style>
                 <div class="modal-body" id="mfamodalbody">
                     <div id="sign-in-widget-modal"></div>
@@ -90,14 +98,15 @@
 
 
 <script type="text/javascript">
-var oktamodalsigninmfa ="1";
+var oktamodalsignin ="1";
+var resetpw = false;
 function showwidget()
 {
     console.log("showwidget()");
     var stateval = $("#state").val();
     try
     {
-        oktamodalsigninmfa = new OktaSignIn({
+        oktamodalsignin = new OktaSignIn({
           baseUrl: "{{config.okta_org_name}}",
           clientId: "{{config.client_id}}",
           redirectUri: "{{config.redirect_uri}}",
@@ -120,50 +129,45 @@ function showwidget()
           },
         });
 
-        oktamodalsigninmfa.renderEl(
+        oktamodalsignin.renderEl(
           { el: '#sign-in-widget-modal' },
           function (res) {}
         );
+        
+        oktamodalsignin.on('afterRender', function (context) {
+           if (resetpw)
+           {
+            clickreset = $('[class="link js-forgot-password"]');
+            console.log(clickreset);
+            clickreset[0].click();
+            resetpw = false;
+           }
+        });
 
     }
     catch(err) {
         console.log(err.message);
     }
+
     $("#MFAModalCenter").modal("show");
+
 }
 
 
 
 function do_resetwidget() {
                         console.log("resetwidget()");
-                        oktamodalsigninmfa.remove();
+                        oktamodalsignin.remove();
                         $("#MFAModalCenter").modal("hide");
                     }
                     
 function reset_password() {
         console.log("reset_password()");
-        username1 = $("#login-un").val();
+        resetpw = true;
+        showwidget();
+        $("#exampleModalCenterTitle").text('Reset Password');
         
-        console.log()
-        var authClient = new OktaAuth({
-            url: '{{config.okta_org_name}}',
-            clientId: '{{config.client_id}}',
-            redirectUri: '{{ config.redirect_uri}}',
-            issuer: '{{config.issuer}}'
-        });
-
-        authClient.forgotPassword({
-              username: username1,
-              factorType: 'SMS',
-            })
-            .then(function(transaction) {
-              if (transaction.status === 'RECOVERY_CHALLENGE') {
-               console.log("RECOVERY_CHALLENGE");
-               $("#state").val(transaction.data.stateToken);
-               showwidget();
-               $("#exampleModalCenterTitle").text('Reset Password');
-              }
-            });
+        
     }
 
 function do_login(un, pw) {
@@ -200,7 +204,7 @@ function do_login(un, pw) {
                console.log("MFA_REQUIRED");
                $("#state").val(transaction.data.stateToken);
                showwidget();
-                $("#exampleModalCenterTitle").text('Multi-Factor Validation');
+               $("#exampleModalCenterTitle").text('Multi-Factor Validation');
             }
             else {
 
