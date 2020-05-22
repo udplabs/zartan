@@ -16,6 +16,7 @@
                              <input type="text" id="login-un" name="username" placeholder="Username" class="form-control" autocomplete="off" style="padding: 5px;margin-bottom:8px;">
                              <input type="password" id="login-pw" name="password" placeholder="Password" class="form-control" autocomplete="off" style="padding: 5px;margin-bottom:10px;">
                             </div>
+                            <a href="#" onclick="reset_password()">Reset Password</a>
                             <button type="button" id="login-button" onclick="do_login(this.form.username.value, this.form.password.value)" class="btn btn-primary" style="margin-bottom: 5px; margin-left: 5px; margin-right: 5px;float: right;">Sign In</button>
                         </form>
                     </div>
@@ -58,7 +59,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
                 <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalCenterTitle">Multi-Factor Check</h5><br>
+                <h5 class="modal-title" id="exampleModalCenterTitle">Validation</h5><br>
                 </div>
                 <style>
                 #okta-sign-in.auth-container.main-container
@@ -138,6 +139,32 @@ function do_resetwidget() {
                         oktamodalsigninmfa.remove();
                         $("#MFAModalCenter").modal("hide");
                     }
+                    
+function reset_password() {
+        console.log("reset_password()");
+        username1 = $("#login-un").val();
+        
+        console.log()
+        var authClient = new OktaAuth({
+            url: '{{config.okta_org_name}}',
+            clientId: '{{config.client_id}}',
+            redirectUri: '{{ config.redirect_uri}}',
+            issuer: '{{config.issuer}}'
+        });
+
+        authClient.forgotPassword({
+              username: username1,
+              factorType: 'SMS',
+            })
+            .then(function(transaction) {
+              if (transaction.status === 'RECOVERY_CHALLENGE') {
+               console.log("RECOVERY_CHALLENGE");
+               $("#state").val(transaction.data.stateToken);
+               showwidget();
+               $("#exampleModalCenterTitle").text('Reset Password');
+              }
+            });
+    }
 
 function do_login(un, pw) {
         console.log("dologin()");
@@ -173,6 +200,7 @@ function do_login(un, pw) {
                console.log("MFA_REQUIRED");
                $("#state").val(transaction.data.stateToken);
                showwidget();
+                $("#exampleModalCenterTitle").text('Multi-Factor Validation');
             }
             else {
 
