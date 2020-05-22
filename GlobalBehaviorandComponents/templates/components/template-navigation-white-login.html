@@ -16,6 +16,7 @@
                              <input type="text" id="login-un" name="username" placeholder="Username" class="form-control" autocomplete="off" style="padding: 5px;margin-bottom:8px;">
                              <input type="password" id="login-pw" name="password" placeholder="Password" class="form-control" autocomplete="off" style="padding: 5px;margin-bottom:10px;">
                             </div>
+                            <a href="#" onclick="reset_password()">Reset Password</a>
                             <button type="button" id="login-button" onclick="do_login(this.form.username.value, this.form.password.value)" class="btn btn-primary" style="margin-bottom: 5px; margin-left: 5px; margin-right: 5px;float: right;">Sign In</button>
                         </form>
                     </div>
@@ -58,7 +59,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
                 <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalCenterTitle">Multi-Factor Check</h5><br>
+                <h5 class="modal-title" id="exampleModalCenterTitle">Validation</h5><br>
                 </div>
                 <style>
                 #okta-sign-in.auth-container.main-container
@@ -75,6 +76,10 @@
                 {
                     margin-top: 0px;
                 }
+                #okta-sign-in.no-beacon .auth-header 
+                {
+                    padding-bottom: 0px;
+                }
                 </style>
                 <div class="modal-body" id="mfamodalbody">
                     <div id="sign-in-widget-modal"></div>
@@ -89,14 +94,15 @@
 
 
 <script type="text/javascript">
-var oktamodalsigninmfa ="1";
+var oktamodalsignin ="1";
+var resetpw = false;
 function showwidget()
 {
     console.log("showwidget()");
     var stateval = $("#state").val();
     try
     {
-        oktamodalsigninmfa = new OktaSignIn({
+        oktamodalsignin = new OktaSignIn({
           baseUrl: "{{config.okta_org_name}}",
           clientId: "{{config.client_id}}",
           redirectUri: "{{config.redirect_uri}}",
@@ -119,25 +125,46 @@ function showwidget()
           },
         });
 
-        oktamodalsigninmfa.renderEl(
+        oktamodalsignin.renderEl(
           { el: '#sign-in-widget-modal' },
           function (res) {}
         );
+        
+        oktamodalsignin.on('afterRender', function (context) {
+           if (resetpw)
+           {
+            clickreset = $('[class="link js-forgot-password"]');
+            console.log(clickreset);
+            clickreset[0].click();
+            resetpw = false;
+           }
+        });
 
     }
     catch(err) {
         console.log(err.message);
     }
+
     $("#MFAModalCenter").modal("show");
+
 }
 
 
 
 function do_resetwidget() {
                         console.log("resetwidget()");
-                        oktamodalsigninmfa.remove();
+                        oktamodalsignin.remove();
                         $("#MFAModalCenter").modal("hide");
                     }
+                    
+function reset_password() {
+        console.log("reset_password()");
+        resetpw = true;
+        showwidget();
+        $("#exampleModalCenterTitle").text('Reset Password');
+        
+        
+    }
 
 function do_login(un, pw) {
         console.log("dologin()");
@@ -173,6 +200,7 @@ function do_login(un, pw) {
                console.log("MFA_REQUIRED");
                $("#state").val(transaction.data.stateToken);
                showwidget();
+               $("#exampleModalCenterTitle").text('Multi-Factor Validation');
             }
             else {
 
