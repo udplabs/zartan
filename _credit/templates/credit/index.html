@@ -1,0 +1,66 @@
+{% extends "credit/template.html" %}
+
+{% block content %}
+<section class="bg-light py-5">
+    <div class="container">
+        <div class="d-flex align-items-center justify-content-between">
+            <h6 class="mb-0">Get the most out of your Credit Card</h6>
+        </div>
+        <hr class="mb-4" />
+        <div class="card mb-4">
+            <div class="card-body p-0">
+                <div class="row no-gutters">
+                    <div class="col-lg-6 p-5">
+                        <a class="badge badge-marketing badge-primary-soft badge-pill text-primary mb-3" href="#!">Open an Account Today!</a><a class="text-dark" href="#!">
+                         <h1>{{ config.settings.app_slogan }}</h1></a>
+                        <p>{{ config.settings.app_subslogan|safe }}</p>
+                        <a class="text-arrow-icon small" href="#!">Learn more<i data-feather="arrow-right"></i></a>
+                    </div>
+                    <div class="col-lg-6 align-self-stretch bg-img-cover d-none d-lg-flex" style='background-image: url("{{ config.settings.app_banner_img_1 }}")'></div>
+                </div>
+            </div>
+        </div>
+        <hr class="my-4" />
+        <div class="row mb-5">
+            <div class="col-lg-4">
+                <h6>Earn Rewards</h6>
+                <hr class="my-4" />
+                <p class="text-gray-600 small mb-4">Here's how to get awesome extras, bonuses and exclusives.</p>
+                <a class="text-dark mb-4" href="#!"><h5>See Cardmember Benefits</h5></a>
+            </div>
+           <div class="col-lg-4">
+                <h6>Brand New Experience</h6>
+                <hr class="my-4" />
+                <p class="text-gray-600 small mb-4">Keep track of your credit card account anywhere, anytime.</p>
+                <a class="text-dark mb-4" href="#!"><h5>Not Registered? Register Now</h5></a>
+            </div>
+          <div class="col-lg-4">
+                <h6>Use Your Card Now</h6>
+                <hr class="my-4" />
+                <p class="text-gray-600 small mb-4">Start shopping, earning and saving right away.</p>
+                <a class="text-dark mb-4" href="#!"><h5>Activate Now</h5></a>
+            </div>
+        </div>
+        <div class="card mb-n5 z-1">
+            <div class="card-body p-5">
+                <div class="row align-items-center">
+                    <div class="col-lg-6">
+                        <h4>Get the latest news</h4>
+                        <p class="lead text-gray-500 mb-0">Stay in the loop with the latest stories and breaking headlines!</p>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="input-group mb-2">
+                            <input class="form-control form-control-solid" type="text" placeholder="youremail@example.com" aria-label="Recipient's username" aria-describedby="button-addon2" />
+                            <div class="input-group-append"><button class="btn btn-primary" id="button-addon2" type="button">Sign up</button></div>
+                        </div>
+                        <div class="small text-gray-500">You can unsubscribe at any time.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
