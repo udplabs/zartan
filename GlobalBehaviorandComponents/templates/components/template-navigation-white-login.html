@@ -55,7 +55,7 @@
 
 <input type="hidden" id="state" name="state" value="">
 <!-- Modal -->
-<div class="modal fade" id="MFAModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="MFAModalCenter" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
                 <div class="modal-header">
@@ -99,6 +99,7 @@ var resetpw = false;
 function showwidget()
 {
     console.log("showwidget()");
+    
     var stateval = $("#state").val();
     try
     {
@@ -162,8 +163,6 @@ function reset_password() {
         resetpw = true;
         showwidget();
         $("#exampleModalCenterTitle").text('Reset Password');
-        
-        
     }
 
 function do_login(un, pw) {
