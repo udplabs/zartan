@@ -29,7 +29,8 @@ def completeregistration_bp():
             "lastName": request.form.get('lastname'),
             "email": request.form.get('email'),
             "login": request.form.get('email'),
-            "organization": request.form.get('organization')
+            "primaryPhone": request.form.get('phone'),
+            "mobilePhone": request.form.get('phone')
         }
     }
     logger.debug(user_data)
