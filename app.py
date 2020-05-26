@@ -82,9 +82,13 @@ app.register_blueprint(streamingservice_views_bp, url_prefix='/streamingservice'
 from _finance.views import finance_views_bp
 app.register_blueprint(finance_views_bp, url_prefix='/finance')
 
-# finance theme
+# admin theme
 from _admin.views import admin_views_bp
 app.register_blueprint(admin_views_bp, url_prefix='/admin')
+
+# credit theme
+from _credit.views import credit_views_bp
+app.register_blueprint(credit_views_bp, url_prefix='/credit')
 
 
 ##############################################
