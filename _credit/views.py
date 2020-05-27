@@ -66,6 +66,6 @@ def credit_getmorecredit(app_id):
     group_id = group_info[0]["id"]
     user_id = user["id"]
     okta_admin.assign_user_to_group(group_id, user_id)
-    app_url = app_info["_links"]["appLinks"][0]["href"]
+    app_url = app_info["settings"]["oauthClient"]["initiate_login_uri"]
 
     return redirect(app_url)
