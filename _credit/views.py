@@ -50,9 +50,8 @@ def credit_mycredit():
         user_info=get_userinfo(),
         templatename=get_app_vertical(),
         config=session[SESSION_INSTANCE_SETTINGS_KEY],
-        applist=app_info, 
+        applist=app_info,
         applistall=app_all_info)
-        
 
 
 @credit_views_bp.route("/getmorecredit/<app_id>")
@@ -61,16 +60,12 @@ def credit_getmorecredit(app_id):
     logger.debug("credit_getmorecredit()")
     user_info = get_userinfo()
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
-
     user = okta_admin.get_user(user_info["sub"])
     app_info = okta_admin.get_applications_by_id(app_id)
     group_info = okta_admin.get_application_groups(app_id)
-
     group_id = group_info[0]["id"]
     user_id = user["id"]
-    okta_admin.assign_user_to_group(group_id,user_id)
-
+    okta_admin.assign_user_to_group(group_id, user_id)
     app_url = app_info["_links"]["appLinks"][0]["href"]
 
     return redirect(app_url)
-    
