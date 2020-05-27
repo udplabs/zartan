@@ -2,9 +2,9 @@ import logging
 
 # import functions
 from flask import render_template, session, request
-from flask import Blueprint
-from utils.udp import SESSION_INSTANCE_SETTINGS_KEY
-from utils.okta import TokenUtil
+from flask import Blueprint, redirect
+from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical
+from utils.okta import TokenUtil, OktaAdmin
 
 from GlobalBehaviorandComponents.validation import is_authenticated, get_userinfo
 
@@ -33,3 +33,39 @@ def credit_profile():
 def credit_account():
     logger.debug("credit_account()")
     return render_template("credit/account.html", user_info=get_userinfo(), config=session[SESSION_INSTANCE_SETTINGS_KEY])
+
+
+@credit_views_bp.route("/mycredit")
+@is_authenticated
+def credit_mycredit():
+    logger.debug("credit_mycredit()")
+    user_info = get_userinfo()
+    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
+    user = okta_admin.get_user(user_info["sub"])
+    app_all_info = okta_admin.get_applications_all()
+    app_info = okta_admin.get_applications_by_user_id(user["id"])
+
+    return render_template(
+        "credit/mycredit.html",
+        user_info=get_userinfo(),
+        templatename=get_app_vertical(),
+        config=session[SESSION_INSTANCE_SETTINGS_KEY],
+        applist=app_info,
+        applistall=app_all_info)
+
+
+@credit_views_bp.route("/getmorecredit/<app_id>")
+@is_authenticated
+def credit_getmorecredit(app_id):
+    logger.debug("credit_getmorecredit()")
+    user_info = get_userinfo()
+    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
+    user = okta_admin.get_user(user_info["sub"])
+    app_info = okta_admin.get_applications_by_id(app_id)
+    group_info = okta_admin.get_application_groups(app_id)
+    group_id = group_info[0]["id"]
+    user_id = user["id"]
+    okta_admin.assign_user_to_group(group_id, user_id)
+    app_url = app_info["_links"]["appLinks"][0]["href"]
+
+    return redirect(app_url)

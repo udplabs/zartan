@@ -471,12 +471,37 @@ class OktaAdmin:
 
         return RestUtil.execute_put(url, body, okta_headers)
 
+    def get_applications_by_id(self, app_id):
+        self.logger.debug("OktaAdmin.get_applications_by_id(app_id)")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/apps/{applicationId}".format(
+            base_url=self.okta_config["okta_org_name"],
+            applicationId=app_id)
+
+        return RestUtil.execute_get(url, okta_headers)
+
     def get_applications_by_user_id(self, user_id):
         self.logger.debug("OktaAdmin.get_applications_by_user_id(user_id)")
         okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
         url = "{base_url}/api/v1/apps/?filter=user.id+eq+\"{user_id}\"".format(
             base_url=self.okta_config["okta_org_name"],
             user_id=user_id)
+
+        return RestUtil.execute_get(url, okta_headers)
+
+    def get_applications_all(self):
+        self.logger.debug("OktaAdmin.get_applications_all(user_id)")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/apps/".format(
+            base_url=self.okta_config["okta_org_name"])
+
+        return RestUtil.execute_get(url, okta_headers)
+
+    def get_application_groups(self, appid):
+        self.logger.debug("OktaAdmin.get_application_groups(appid)")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/apps/{app_id}/groups".format(
+            base_url=self.okta_config["okta_org_name"], app_id=appid)
 
         return RestUtil.execute_get(url, okta_headers)
 
