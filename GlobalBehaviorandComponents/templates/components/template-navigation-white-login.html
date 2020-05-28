@@ -76,8 +76,9 @@
                 {
                     margin-top: 0px;
                 }
-                #okta-sign-in.no-beacon .auth-header 
+                #okta-sign-in.no-beacon .auth-header
                 {
+                    padding-top: 0px;
                     padding-bottom: 0px;
                 }
                 </style>
@@ -99,7 +100,7 @@ var resetpw = false;
 function showwidget()
 {
     console.log("showwidget()");
-    
+
     var stateval = $("#state").val();
     try
     {
@@ -115,6 +116,7 @@ function showwidget()
             selfServiceUnlock: true,          // Will enable unlock in addition to forgotten password
             smsRecovery: true,                // Enable SMS-based account recovery
             callRecovery: true,               // Enable voice call-based account recovery
+            webauthn: true
           },
           authParams: {
             issuer: "{{config.issuer}}",
@@ -131,7 +133,7 @@ function showwidget()
           function (res) {
           }
         );
-        
+
         oktamodalsignin.on('afterRender', function (context) {
             if (context.controller == 'forgot-password') {
                 backtosignint = $('[class="link help js-back"]');
@@ -146,7 +148,7 @@ function showwidget()
                     console.log(resetpw);
                     console.log(clickreset);
                     clickreset[0].click();
-                   
+
                 }
             }
         });
@@ -167,7 +169,7 @@ function do_resetwidget() {
     oktamodalsignin.remove();
     $("#MFAModalCenter").modal("hide");
 }
-                    
+
 function reset_password() {
     console.log("reset_password()");
     resetpw = true;
@@ -210,6 +212,12 @@ function do_login(un, pw) {
                $("#state").val(transaction.data.stateToken);
                showwidget();
                $("#exampleModalCenterTitle").text('Multi-Factor Validation');
+            }
+            else if (transaction.status === 'MFA_ENROLL') {
+               console.log("MFA_ENROLLMENT");
+               $("#state").val(transaction.data.stateToken);
+               showwidget();
+               $("#exampleModalCenterTitle").text('Multi-Factor Enrollment');
             }
             else {
 
