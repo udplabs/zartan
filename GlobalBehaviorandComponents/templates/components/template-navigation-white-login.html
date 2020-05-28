@@ -109,7 +109,7 @@ function showwidget()
           redirectUri: "{{config.redirect_uri}}",
           stateToken: stateval,
           features: {
-            registration: true,                 // Enable self-service registration flow
+            registration: false,                 // Enable self-service registration flow
             rememberMe: true,                   // Setting to false will remove the checkbox to save username
             multiOptionalFactorEnroll: true,  // Allow users to enroll in multiple optional factors before finishing the authentication flow.
             selfServiceUnlock: true,          // Will enable unlock in addition to forgotten password
@@ -128,19 +128,28 @@ function showwidget()
 
         oktamodalsignin.renderEl(
           { el: '#sign-in-widget-modal' },
-          function (res) {}
+          function (res) {
+          }
         );
         
         oktamodalsignin.on('afterRender', function (context) {
-           if (resetpw)
-           {
-            clickreset = $('[class="link js-forgot-password"]');
-            console.log(clickreset);
-            clickreset[0].click();
-            resetpw = false;
-           }
+            if (context.controller == 'forgot-password') {
+                backtosignint = $('[class="link help js-back"]');
+                backtosignint.text('');
+            }
+            else
+            {
+                if (resetpw)
+                {
+                    console.log(context)
+                    clickreset = $('[class="link js-forgot-password"]');
+                    console.log(resetpw);
+                    console.log(clickreset);
+                    clickreset[0].click();
+                   
+                }
+            }
         });
-
     }
     catch(err) {
         console.log(err.message);
@@ -153,17 +162,18 @@ function showwidget()
 
 
 function do_resetwidget() {
-                        console.log("resetwidget()");
-                        oktamodalsignin.remove();
-                        $("#MFAModalCenter").modal("hide");
-                    }
+    console.log("resetwidget()");
+    resetpw = false;
+    oktamodalsignin.remove();
+    $("#MFAModalCenter").modal("hide");
+}
                     
 function reset_password() {
-        console.log("reset_password()");
-        resetpw = true;
-        showwidget();
-        $("#exampleModalCenterTitle").text('Reset Password');
-    }
+    console.log("reset_password()");
+    resetpw = true;
+    showwidget();
+    $("#exampleModalCenterTitle").text('Reset Password');
+}
 
 function do_login(un, pw) {
         console.log("dologin()");
