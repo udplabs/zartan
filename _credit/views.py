@@ -158,7 +158,7 @@ def emailRegistration(recipient, token):
     app_title = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_name"]
     activation_link = url_for("credit_views_bp.credit_registration_state_get", stateToken=token, _external=True, _scheme="https")
     subject = "Welcome to the {app_title}".format(app_title=session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_name"])
-    # Send Activation Email to the user
+
     message = """
         Thank you for Applying for {app_title}! Click this link to activate your account <br />
         <a href='{activation_link}'>{activation_link}</a>).
