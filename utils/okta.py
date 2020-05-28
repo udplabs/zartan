@@ -134,8 +134,8 @@ class OktaAuth:
     def introspect_mfa(self, token, client_id):
         self.logger.debug("OktaAuth.introspect_mfa()")
         okta_headers = OktaUtil.get_introspect_mfa_okta_headers()
-        url = "{baseurl}/oauth2/v1/introspect".format(
-            baseurl=self.okta_config["okta_org_name"]
+        url = "{issuer}/oauth2/v1/introspect".format(
+            issuer=self.okta_config["issuer"]
         )
         body = "&token={token}&client_id={client_id}&token_type_hint=id_token".format(
             token=token,
