@@ -105,8 +105,8 @@ def credit_registration_state_post(stateToken):
         "credentials": {
             "password": {"value": request.form.get('password')},
             "recovery_question": {
-              "question": "Company Name?",
-              "answer": "Okta"
+                "question": "Company Name?",
+                "answer": "Okta"
             }
         }
     }
