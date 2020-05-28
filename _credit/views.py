@@ -103,7 +103,11 @@ def credit_registration_state_post(stateToken):
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     user_data = {
         "credentials": {
-            "password": {"value": request.form.get('password')}
+            "password": {"value": request.form.get('password')},
+            "recovery_question": {
+              "question": "Company Name?",
+              "answer": "Okta"
+            }
         }
     }
     user_update_response = okta_admin.update_user(user_id=user_id, user=user_data)
