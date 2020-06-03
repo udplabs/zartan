@@ -1,4 +1,4 @@
-{% extends templatename+"/template.html" %} 
+{% extends templatename+"/template.html" %}
 
 {% block content %}
 <section class="bg-light py-5">
@@ -20,7 +20,7 @@
             {% endif %}
                 <div class="row">
                     <div class="main col-12">
-                        <form action="/credit/registration-state/{{userid}}"  method="POST">
+                        <form action="/registration-state/{{userid}}"  method="POST">
                           <label class="small mb-1" for="fname">Password</label><br>
                           <input type="password" class="form-control py-4" id="password" name="password"><br>
                           <label class="small mb-1" for="lname">Confirm Password</label><br>
@@ -33,7 +33,7 @@
                           <!--</select>-->
                           <!--<input type="text" class="form-control py-4" id="securityAnswer" name="securityAnswer" ><br><br>-->
                           <input class="btn btn-primary" type="submit" value="Submit">
-                        </form> 
+                        </form>
                     </div>
                 </div>
 </div>
