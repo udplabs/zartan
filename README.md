@@ -68,7 +68,7 @@ Navigate to http://127.0.0.1:5000.
 * [Dan Zadik](https://github.com/dzadikdev)
 * [Bhanchand Prasad](https://github.com/bhanchand)
 
-[logo]: README/img/zartan.png "Zartan is a master of make-up and disguise and so is this demo platform"
+[logo]: https://cdn-zartan.s3.us-east-2.amazonaws.com/static/img/zartan.png "Zartan is a master of make-up and disguise and so is this demo platform"
 
 ## Contributors ✨
 
