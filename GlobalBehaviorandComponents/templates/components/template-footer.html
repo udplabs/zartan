@@ -54,3 +54,17 @@
             console.log("no section defined");
         }
     </script>
+     <script type="text/javascript">
+        // Made this script to inherit the background color of the section above
+        try 
+        {
+            var parentclass = $('section').first().attr('class');
+            var regex = /bg[^\s]+/;
+            var bgclass = parentclass.match(regex);
+            $("#layoutDefault_content").addClass(bgclass[0]);
+        }
+        catch(err) 
+        {
+            console.log("no section defined");
+        }
+    </script>

@@ -33,7 +33,7 @@ def credit_profile():
 @is_authenticated
 def credit_account():
     logger.debug("credit_account()")
-    return render_template("credit/account.html", user_info=get_userinfo(), config=session[SESSION_INSTANCE_SETTINGS_KEY])
+    return render_template("credit/account.html", user_info=get_userinfo(), config=session[SESSION_INSTANCE_SETTINGS_KEY], _scheme="https")
 
 
 @credit_views_bp.route("/mycredit")
@@ -52,7 +52,7 @@ def credit_mycredit():
         templatename=get_app_vertical(),
         config=session[SESSION_INSTANCE_SETTINGS_KEY],
         applist=app_info,
-        applistall=app_all_info)
+        applistall=app_all_info, _scheme="https")
 
 
 @credit_views_bp.route("/getmorecredit/<app_id>")
@@ -164,7 +164,7 @@ def emailRegistration(recipient, token):
     subject = "Welcome to the {app_title}".format(app_title=session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_name"])
 
     message = """
-        Thank you for Applying for {app_title}! Click this link to activate your account <br />
+        Thank you for Applying for {app_title}! <br>Click this link to activate your account <br />
         <a href='{activation_link}'>{activation_link}</a>).
         """.format(app_title=app_title, activation_link=activation_link)
     test = Email.send_mail(subject=subject, message=message, recipients=[recipient])

@@ -1,0 +1,41 @@
+{% extends templatename+"/template.html" %} 
+
+{% block content %}
+<section class="bg-light py-5">
+            <div class="container">
+            <div class="d-flex align-items-center mb-5">
+                    <div class="icon-stack icon-stack-lg bg-primary text-white"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
+                    <div class="ml-3">
+                        <h2 class="mb-0">Set Your Password</h2>
+                        <p class="lead mb-0"></p>
+                    </div>
+            </div>
+            {% if error  %}
+                <div class="alert badge-warning alert-dismissible fade show" role="alert">
+                  <strong>Issue During Registration!</strong> {{error}}
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+            {% endif %}
+                <div class="row">
+                    <div class="main col-12">
+                        <form action="/credit/registration-state/{{userid}}"  method="POST">
+                          <label class="small mb-1" for="fname">Password</label><br>
+                          <input type="password" class="form-control py-4" id="password" name="password"><br>
+                          <label class="small mb-1" for="lname">Confirm Password</label><br>
+                          <input type="password" class="form-control py-4" id="confirmpassword" name="confirmpassword" ><br><br>
+                          <!--<label for="securityQuestion" class="small mb-1">Choose a forgot password question</label><br>-->
+                          <!--<select id="securityQuestion" name="securityQuestion" class="x-created">-->
+                          <!--<optgroup label="Stock questions">-->
+                          <!--<option value="disliked_food">What is the food you least liked as a child?</option><option value="name_of_first_plush_toy">What is the name of your first stuffed animal?</option><option value="first_award">What did you earn your first medal or award for?</option><option value="favorite_security_question">What is your favorite security question?</option><option value="favorite_toy">What is the toy/stuffed animal you liked the most as a kid?</option><option value="first_computer_game">What was the first computer game you played?</option><option value="favorite_movie_quote">What is your favorite movie quote?</option><option value="first_sports_team_mascot">What was the mascot of the first sports team you played on?</option><option value="first_music_purchase">What music album or song did you first purchase?</option><option value="favorite_art_piece">What is your favorite piece of art?</option><option value="grandmother_favorite_desert">What was your grandmother's favorite dessert?</option><option value="first_thing_cooked">What was the first thing you learned to cook?</option><option value="childhood_dream_job">What was your dream job as a child?</option><option value="place_where_significant_other_was_met">Where did you meet your spouse/significant other?</option><option value="favorite_vacation_location">Where did you go for your favorite vacation?</option><option value="new_years_two_thousand">Where were you on New Year's Eve in the year 2000?</option><option value="favorite_speaker_actor">Who is your favorite speaker/orator?</option><option value="favorite_book_movie_character">Who is your favorite book/movie character?</option><option value="favorite_sports_player">Who is your favorite sports player?</option>-->
+                          <!--</optgroup>-->
+                          <!--</select>-->
+                          <!--<input type="text" class="form-control py-4" id="securityAnswer" name="securityAnswer" ><br><br>-->
+                          <input class="btn btn-primary" type="submit" value="Submit">
+                        </form> 
+                    </div>
+                </div>
+</div>
+</section>
+{% endblock %} {% block footer %} {% endblock %}
