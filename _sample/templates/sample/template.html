@@ -5,7 +5,19 @@
         <div id="layoutDefault">
             <div id="layoutDefault_content">
                 <main> 
-                    {% with mynavitems="navitems.html" %}
+                    {% if "login" in request.path %}
+                        {% set navitems ="navitems.html" %}
+                    {% elif "index" in request.path %} 
+                        {% set navitems ="navitems.html" %}
+                    {% elif "registration" in request.path %} 
+                        {% set navitems ="navitems.html" %}
+                    {% elif "/" == request.path %} 
+                        {% set navitems ="navitems.html" %}
+                    {% else %}
+                        {% set navitems ="navitemslogin.html" %}
+                    {% endif %}
+                    
+                    {% with mynavitems = navitems %}
                         {% include '//components/template-navigation.html' %}
                     {% endwith %}
                     {% block content %}{% endblock %}
@@ -14,7 +26,7 @@
             <div id="layoutDefault_footer">
                 {% block footer %}{% endblock %}
             </div>
-            {% with color="white" %}
+            {% with color="black" %}
                 {% include '//components/template-footer.html' %}
             {% endwith %}
         </div>
