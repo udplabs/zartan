@@ -12242,109 +12242,109 @@ body {
 
 @font-face {
   font-family: 'Metropolis';
-  src: url("/static/fonts/metropolis/Metropolis-Thin.otf");
+  src: url("https://cdn-zartan.s3.us-east-2.amazonaws.com/static/fonts/metropolis/Metropolis-Thin.otf");
   font-weight: 100;
   font-style: normal; }
 
 @font-face {
   font-family: 'Metropolis';
-  src: url("/static/fonts/metropolis/Metropolis-ThinItalic.otf");
+  src: url("https://cdn-zartan.s3.us-east-2.amazonaws.com/static/fonts/metropolis/Metropolis-ThinItalic.otf");
   font-weight: 100;
   font-style: italic; }
 
 @font-face {
   font-family: 'Metropolis';
-  src: url("/static/fonts/metropolis/Metropolis-ExtraLight.otf");
+  src: url("https://cdn-zartan.s3.us-east-2.amazonaws.com/static/fonts/metropolis/Metropolis-ExtraLight.otf");
   font-weight: 200;
   font-style: normal; }
 
 @font-face {
   font-family: 'Metropolis';
-  src: url("/static/fonts/metropolis/Metropolis-ExtraLightItalic.otf");
+  src: url("https://cdn-zartan.s3.us-east-2.amazonaws.com/static/fonts/metropolis/Metropolis-ExtraLightItalic.otf");
   font-weight: 200;
   font-style: italic; }
 
 @font-face {
   font-family: 'Metropolis';
-  src: url("/static/fonts/metropolis/Metropolis-Light.otf");
+  src: url("https://cdn-zartan.s3.us-east-2.amazonaws.com/static/fonts/metropolis/Metropolis-Light.otf");
   font-weight: 300;
   font-style: normal; }
 
 @font-face {
   font-family: 'Metropolis';
-  src: url("/static/fonts/metropolis/Metropolis-LightItalic.otf");
+  src: url("https://cdn-zartan.s3.us-east-2.amazonaws.com/static/fonts/metropolis/Metropolis-LightItalic.otf");
   font-weight: 300;
   font-style: italic; }
 
 @font-face {
   font-family: 'Metropolis';
-  src: url("/static/fonts/metropolis/Metropolis-Regular.otf");
+  src: url("https://cdn-zartan.s3.us-east-2.amazonaws.com/static/fonts/metropolis/Metropolis-Regular.otf");
   font-weight: 400;
   font-style: normal; }
 
 @font-face {
   font-family: 'Metropolis';
-  src: url("/static/fonts/metropolis/Metropolis-RegularItalic.otf");
+  src: url("https://cdn-zartan.s3.us-east-2.amazonaws.com/static/fonts/metropolis/Metropolis-RegularItalic.otf");
   font-weight: 400;
   font-style: italic; }
 
 @font-face {
   font-family: 'Metropolis';
-  src: url("/static/fonts/metropolis/Metropolis-Medium.otf");
+  src: url("https://cdn-zartan.s3.us-east-2.amazonaws.com/static/fonts/metropolis/Metropolis-Medium.otf");
   font-weight: 500;
   font-style: normal; }
 
 @font-face {
   font-family: 'Metropolis';
-  src: url("/static/fonts/metropolis/Metropolis-MediumItalic.otf");
+  src: url("https://cdn-zartan.s3.us-east-2.amazonaws.com/static/fonts/metropolis/Metropolis-MediumItalic.otf");
   font-weight: 500;
   font-style: italic; }
 
 @font-face {
   font-family: 'Metropolis';
-  src: url("/static/fonts/metropolis/Metropolis-SemiBold.otf");
+  src: url("https://cdn-zartan.s3.us-east-2.amazonaws.com/static/fonts/metropolis/Metropolis-SemiBold.otf");
   font-weight: 600;
   font-style: normal; }
 
 @font-face {
   font-family: 'Metropolis';
-  src: url("/static/fonts/metropolis/Metropolis-SemiBoldItalic.otf");
+  src: url("https://cdn-zartan.s3.us-east-2.amazonaws.com/static/fonts/metropolis/Metropolis-SemiBoldItalic.otf");
   font-weight: 600;
   font-style: italic; }
 
 @font-face {
   font-family: 'Metropolis';
-  src: url("/static/fonts/metropolis/Metropolis-Bold.otf");
+  src: url("https://cdn-zartan.s3.us-east-2.amazonaws.com/static/fonts/metropolis/Metropolis-Bold.otf");
   font-weight: 700;
   font-style: normal; }
 
 @font-face {
   font-family: 'Metropolis';
-  src: url("/static/fonts/metropolis/Metropolis-BoldItalic.otf");
+  src: url("https://cdn-zartan.s3.us-east-2.amazonaws.com/static/fonts/metropolis/Metropolis-BoldItalic.otf");
   font-weight: 700;
   font-style: italic; }
 
 @font-face {
   font-family: 'Metropolis';
-  src: url("/static/fonts/metropolis/Metropolis-ExtraBold.otf");
+  src: url("https://cdn-zartan.s3.us-east-2.amazonaws.com/static/fonts/metropolis/Metropolis-ExtraBold.otf");
   font-weight: 800;
   font-style: normal; }
 
 @font-face {
   font-family: 'Metropolis';
-  src: url("/static/fonts/metropolis/Metropolis-ExtraBoldItalic.otf");
+  src: url("https://cdn-zartan.s3.us-east-2.amazonaws.com/static/fonts/metropolis/Metropolis-ExtraBoldItalic.otf");
   font-weight: 800;
   font-style: italic; }
 
 @font-face {
   font-family: 'Metropolis';
-  src: url("/static/fonts/metropolis/Metropolis-Black.otf");
+  src: url("https://cdn-zartan.s3.us-east-2.amazonaws.com/static/fonts/metropolis/Metropolis-Black.otf");
   font-weight: 800;
   font-style: normal; }
 
 @font-face {
   font-family: 'Metropolis';
-  src: url("/static/fonts/metropolis/Metropolis-BlackItalic.otf");
+  src: url("https://cdn-zartan.s3.us-east-2.amazonaws.com/static/fonts/metropolis/Metropolis-BlackItalic.otf");
   font-weight: 800;
   font-style: italic; }
 
@@ -14429,7 +14429,7 @@ section {
 
 .device[data-device="iPhoneX"][data-orientation="portrait"][data-color="black"] {
   padding-bottom: 198.89807163%;
-  background-image: url(../static/img/device-mockups/iPhoneX/portrait.png);
+  background-image: url(https://cdn-zartan.s3.us-east-2.amazonaws.com/static/img/portrait.png);
   z-index: initial; }
 
 .device[data-device="iPhoneX"][data-orientation="portrait"][data-color="black"] .screen {
@@ -14442,7 +14442,7 @@ section {
 
 .device[data-device="iPhoneX"][data-orientation="landscape"][data-color="black"] {
   padding-bottom: 50.27700831%;
-  background-image: url(../static/img/device-mockups/iPhoneX/landscape.png);
+  background-image: url(https://cdn-zartan.s3.us-east-2.amazonaws.com/static/img/landscape.png);
   z-index: initial; }
 
 .device[data-device="iPhoneX"][data-orientation="landscape"][data-color="black"] .screen {
@@ -14464,7 +14464,7 @@ section {
 
 .device[data-device="iPhoneX"][data-orientation="portrait"][data-color="black"]::after {
   content: '';
-  background-image: url(../static/img/device-mockups/iPhoneX/portrait_black.png); }
+  background-image: url(https://cdn-zartan.s3.us-east-2.amazonaws.com/static/img/portrait_black.png); }
 
 .device[data-device="iPhoneX"][data-orientation="portrait"][data-color="black"] .button {
   display: none;
@@ -14484,7 +14484,7 @@ section {
 
 .device[data-device="iPhoneX"][data-orientation="landscape"][data-color="black"]::after {
   content: '';
-  background-image: url(../static/img/device-mockups/iPhoneX/landscape_black.png); }
+  background-image: url(https://cdn-zartan.s3.us-east-2.amazonaws.com/static/img/landscape_black.png); }
 
 .device[data-device="iPhoneX"][data-orientation="landscape"][data-color="black"] .button {
   display: none;
