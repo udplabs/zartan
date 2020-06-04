@@ -14,14 +14,18 @@
             // Session exists, show logged in state.
             if (res.status === 'ACTIVE') {
             console.log("Session Active");
-
+            
             $("#sessionId").val(res.id);
 
             var getNewTokenUrl = "{{config.get_new_token_url|safe}}";
-
-            if (getNewTokenUrl != "") {
-                location.href=getNewTokenUrl;
-            }
+            var error = "{{error_message}}"
+            console.log(error);
+            if (error == "" )
+                {
+                if (getNewTokenUrl != "" ) {
+                    location.href=getNewTokenUrl;
+                    }
+                }
             }
         })
         .catch(function(err) {
