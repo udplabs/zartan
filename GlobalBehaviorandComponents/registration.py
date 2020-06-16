@@ -43,7 +43,7 @@ def gbac_registration_state_post(stateToken):
         "credentials": {
             "password": {"value": request.form.get('password')},
             "recovery_question": {
-                "question": "Company Name?",
+                "question": "Company Name? (hint: It's \"Okta\")",
                 "answer": "Okta"
             }
         }
