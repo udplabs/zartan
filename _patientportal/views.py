@@ -101,7 +101,14 @@ def patientportal_schedule():
         config=session[SESSION_INSTANCE_SETTINGS_KEY])
 
 
-@patientportal_views_bp.route("/addschedule", methods=["POST"])  # noqa: C901
+def safe_get_dict(mydict, key):
+    myval = ""
+    if mydict.get(key).strip() != "":
+        myval = mydict.get(key).strip()
+    return myval
+
+
+@patientportal_views_bp.route("/addschedule", methods=["POST"])
 @is_authenticated
 def patientportal_add_schedule():
     logger.debug("patientportal_add_schedule")
@@ -109,77 +116,18 @@ def patientportal_add_schedule():
     user_id = request.form.get('user_id')
     logging.debug(request.form.to_dict())
 
-    first_name = ""
-    last_name = ""
-    email = ""
-    address = ""
-    city = ""
-    state = ""
-    zip_code = ""
-    country = ""
-    dob = ""
-    hasvisited = ""
-    mobile_phone = ""
-    gender = ""
-
-    if request.form.get('firstname') == "":
-        first_name = ""
-    else:
-        first_name = request.form.get('firstname')
-
-    if request.form.get('lastname') == "":
-        last_name = ""
-    else:
-        last_name = request.form.get('lastname')
-
-    if request.form.get('email') == "":
-        email = ""
-    else:
-        email = request.form.get('email')
-
-    if request.form.get('address') == "":
-        address = ""
-    else:
-        address = request.form.get('address')
-
-    if request.form.get('city') == "":
-        city = ""
-    else:
-        city = request.form.get('city')
-
-    if request.form.get('state') == "":
-        state = ""
-    else:
-        state = request.form.get('state')
-
-    if request.form.get('zipCode') == "":
-        zip_code = ""
-    else:
-        zip_code = request.form.get('zipCode')
-
-    if request.form.get('country') == "":
-        country = ""
-    else:
-        country = request.form.get('country')
-    if request.form.get('dob') == "":
-        dob = ""
-    else:
-        dob = request.form.get('dob')
-
-    if request.form.get('gender') == "":
-        gender = ""
-    else:
-        gender = request.form.get('gender')
-
-    if request.form.get('hasvisited') == "":
-        hasvisited = "false"
-    else:
-        hasvisited = request.form.get('hasvisited')
-
-    if request.form.get('mobilePhone') == "":
-        mobile_phone = ""
-    else:
-        mobile_phone = request.form.get('mobilePhone')
+    first_name = safe_get_dict(request.form, 'first_name')
+    last_name = safe_get_dict(request.form, 'last_name')
+    email = safe_get_dict(request.form, 'email')
+    address = safe_get_dict(request.form, 'address')
+    city = safe_get_dict(request.form, 'city')
+    state = safe_get_dict(request.form, 'state')
+    zip_code = safe_get_dict(request.form, 'zipCode')
+    country = safe_get_dict(request.form, 'country')
+    dob = safe_get_dict(request.form, 'dob')
+    hasvisited = safe_get_dict(request.form, 'hasvisited')
+    mobile_phone = safe_get_dict(request.form, 'mobilePhone')
+    gender = safe_get_dict(request.form, 'gender')
 
     if request.form.get('datepicker'):
         session['appointment'] = "Appointment set for " + request.form.get('datepicker') + " between the hours of " + request.form.get('timepicker')
