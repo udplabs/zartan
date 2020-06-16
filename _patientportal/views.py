@@ -103,8 +103,10 @@ def patientportal_schedule():
 
 def safe_get_dict(mydict, key):
     myval = ""
-    if mydict.get(key).strip() != "":
-        myval = mydict.get(key).strip()
+    mydictval = mydict.get(key)
+    if mydictval:
+        if mydictval.strip() != "":
+            myval = mydictval.strip()
     return myval
 
 
@@ -165,36 +167,11 @@ def patientportal_user_update():
     user_id = request.form.get('user_id')
     logging.debug(request.form.to_dict())
 
-    first_name = ""
-    last_name = ""
-    email = ""
-    mobile_phone = ""
-    consent = ""
-
-    if request.form.get('firstname') == "":
-        first_name = ""
-    else:
-        first_name = request.form.get('firstname')
-
-    if request.form.get('lastname') == "":
-        last_name = ""
-    else:
-        last_name = request.form.get('lastname')
-
-    if request.form.get('email') == "":
-        email = ""
-    else:
-        email = request.form.get('email')
-
-    if request.form.get('mobilePhone') == "":
-        mobile_phone = ""
-    else:
-        mobile_phone = request.form.get('mobilePhone')
-
-    if request.form.get('consent') == "":
-        consent = ""
-    else:
-        consent = request.form.get('consent')
+    first_name = safe_get_dict(request.form, 'first_name')
+    last_name = safe_get_dict(request.form, 'last_name')
+    email = safe_get_dict(request.form, 'email')
+    mobile_phone = safe_get_dict(request.form, 'mobilePhone')
+    consent = safe_get_dict(request.form, 'nconsent')
 
     user_data = {"profile": {
         "firstName": first_name,

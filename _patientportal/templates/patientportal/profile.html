@@ -58,7 +58,7 @@
                           			<input name="consent" id="consent" class="form-control" type="text" value="{{ user_info2['profile']['consent']  }}" disabled>&nbsp;&nbsp;
                           			<button type="button" onclick="resetconsent()" class="btn btn-primary">Reset Consent</button>
                               </div>
-
+                              <input name="nconsent" id="nconsent" class="form-control" type="hidden" value="{{ user_info2['profile']['consent']  }}">
                               <input id="user_id" name="user_id" class="form-control" type="hidden" value="{{ user_info2['id'] }}">
                               <div class="form-group">
                               <button type="submit" class="btn btn-primary btn-block">Update Account</button>
