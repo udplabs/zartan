@@ -48,20 +48,20 @@ def gbac_login():
     google = ""
     linkedin = ""
     microsoft = ""
+    idp = ""
     for idp in idplist:
-        logging.debug(idp["type"])
         if idp["type"] == "FACEBOOK":
             facebook = idp["id"]
-            logging.debug(idp["type"])
+            idp = "true"
         elif idp["type"] == "GOOGLE":
             google = idp["id"]
-            logging.debug(idp["type"])
+            idp = "true"
         elif idp["type"] == "LINKEDIN":
             linkedin = idp["id"]
-            logging.debug(idp["type"])
+            idp = "true"
         elif idp["type"] == "MICROSOFT":
             microsoft = idp["id"]
-            logging.debug(idp["type"])
+            idp = "true"
     return render_template(
         "/login.html",
         templatename=get_app_vertical(),
@@ -70,7 +70,8 @@ def gbac_login():
         facebook=facebook,
         google=google,
         linkedin=linkedin,
-        microsoft=microsoft)
+        microsoft=microsoft,
+        idp=idp)
 
 
 @gbac_bp.route("/signup")
