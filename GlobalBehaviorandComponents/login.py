@@ -52,16 +52,16 @@ def gbac_login():
     for idp in idplist:
         if idp["type"] == "FACEBOOK":
             facebook = idp["id"]
-            idp="true"
+            idp = "true"
         elif idp["type"] == "GOOGLE":
             google = idp["id"]
-            idp="true"
+            idp = "true"
         elif idp["type"] == "LINKEDIN":
             linkedin = idp["id"]
-            idp="true"
+            idp = "true"
         elif idp["type"] == "MICROSOFT":
             microsoft = idp["id"]
-            idp="true"
+            idp = "true"
     return render_template(
         "/login.html",
         templatename=get_app_vertical(),
