@@ -2,7 +2,7 @@
             <ul class="navbar-nav ml-auto mr-lg-5">
                 <li class="nav-item"><a class="nav-link" href="../index">Home</a></li>
                 <li class="nav-item dropdown dropdown-xl no-caret">
-                    <a class="nav-link dropdown-toggle" id="navbarDropdownDemos" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin Menu<i class="fas fa-chevron-right dropdown-arrow"></i></a>
+                    <a class="nav-link dropdown-toggle" id="navbarDropdownDemos" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Your Account<i class="fas fa-chevron-right dropdown-arrow"></i></a>
                     <div class="dropdown-menu dropdown-menu-right animated--fade-in-up mr-lg-n15" aria-labelledby="navbarDropdownDemos">
                         <div class="row no-gutters">
                             <div class="col-lg-5 p-lg-3 bg-img-cover overlay overlay-primary overlay-70 d-none d-lg-block">
@@ -15,16 +15,18 @@
                             <div class="col-lg-7 p-lg-5">
                                 <div class="row">
                                     <div class="col-lg-6">
-                                        <h6 class="dropdown-header text-primary">User Management</h6>
-                                        <a class="dropdown-item" href="/manageusers">Manage Users</a>
-                                        <div class="dropdown-divider border-0"></div>
-                                        <h6 class="dropdown-header text-primary">Your Apps</h6>
-                                        <a class="dropdown-item" href="">Coming Soon</a>
+                                        <h6 class="dropdown-header text-primary">Account</h6>
+                                        <a class="dropdown-item" href="/patientportal/profile">Your Profile</a>
+                                        <a class="dropdown-item" href="/profile">Your Tokens</a>
+                                        <a class="dropdown-item" href="/patientportal/account">Pay Your Bill</a>
                                     </div>
                               </div>
                             </div>
                         </div>
                     </div>
+                </li>
+                <li class="nav-item dropdown dropdown-xl no-caret">
+                    <a class="nav-link" id="navbarDropdownDemos" href="/patientportal/schedule" role="button" aria-haspopup="true">Schedule an Appointment</a>
                 </li>
             </ul>
         </div>

@@ -7,6 +7,8 @@
 {% block content %}
         {% if config.settings.app_loginmethod == 'passwordless-widget' %}
                 {% include '/components/template-login-widget-pwless.html' %}
+        {% elif config.settings.app_loginmethod == 'social-widget' %}
+                {% include '/components/template-login-widget-social.html' %}
         {% else %}
                 {% include '/components/template-login-widget.html' %}
         {% endif %}

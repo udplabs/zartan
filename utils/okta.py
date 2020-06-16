@@ -532,6 +532,13 @@ class OktaAdmin:
 
         return RestUtil.execute_post(url, body, okta_headers)
 
+    def get_idps(self):
+        self.logger.debug("OktaAdmin.get_idps()")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/idps".format(base_url=self.okta_config["okta_org_name"])
+
+        return RestUtil.execute_get(url, okta_headers)
+
     def close_session(self, session_id):
         self.logger.debug("OktaAdmin.close_session(session_id)")
         okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)

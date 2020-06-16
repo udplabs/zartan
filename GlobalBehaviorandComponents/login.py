@@ -42,7 +42,35 @@ def clear_session():
 @gbac_bp.route("/login")
 def gbac_login():
     logger.debug("gbac_login()")
-    return render_template("/login.html", templatename=get_app_vertical(), config=session[SESSION_INSTANCE_SETTINGS_KEY], state=str(uuid.uuid4()))
+    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
+    idplist = okta_admin.get_idps()
+    facebook = ""
+    google = ""
+    linkedin = ""
+    microsoft = ""
+    for idp in idplist:
+        logging.debug(idp["type"])
+        if idp["type"] == "FACEBOOK":
+            facebook = idp["id"]
+            logging.debug(idp["type"])
+        elif idp["type"] == "GOOGLE":
+            google = idp["id"]
+            logging.debug(idp["type"])
+        elif idp["type"] == "LINKEDIN":
+            linkedin = idp["id"]
+            logging.debug(idp["type"])
+        elif idp["type"] == "MICROSOFT":
+            microsoft = idp["id"]
+            logging.debug(idp["type"])
+    return render_template(
+        "/login.html",
+        templatename=get_app_vertical(),
+        config=session[SESSION_INSTANCE_SETTINGS_KEY],
+        state=str(uuid.uuid4()),
+        facebook=facebook,
+        google=google,
+        linkedin=linkedin,
+        microsoft=microsoft)
 
 
 @gbac_bp.route("/signup")
@@ -159,6 +187,17 @@ def gbac_verify_answer():
     response = okta_auth.verify_answer(factor_id, state_token, answer)
 
     return json.dumps(response)
+
+
+@gbac_bp.route("/get_username/<altid>")
+def gbac_get_username(altid):
+    logger.debug("gbac_get_username()")
+
+    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
+    user = okta_admin.get_user_list_by_search("profile.mobilePhone eq \"" + altid + "\" or profile.primaryPhone eq \"" + altid + "\"")
+    logger.debug(user)
+
+    return user[0]["profile"]["login"]
 
 
 @gbac_bp.route("/get_authorize_url", methods=["POST"])

@@ -11,7 +11,8 @@ It takes the value of 'message=' and outputs it in modal
 <script type="text/javascript">
 $(window).on('load',function(){
     var message = getUrlParameter('message');
-    console.log(message);
+    //console.log(message);
+    window.history.replaceState(null, null, window.location.pathname); 
     if (!message)
     {
       //do nothing
@@ -20,6 +21,7 @@ $(window).on('load',function(){
     {
       $('#basicExampleModal').modal('show');
     }
+   
 });
 
 var getUrlParameter = function getUrlParameter(sParam) {

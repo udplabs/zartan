@@ -1,6 +1,7 @@
-{% extends "credit/template.html" %}
+{% extends "finance/template.html" %}
 
 {% block content %}
+<section class="bg-light py-5">
         <div class="container">
             <div class="alert alert-primary alert-dismissible fade show" role="alert" id="TransferAlertBox" >
                 <h5 class="alert-heading">Payment Complete</h5>
@@ -10,7 +11,7 @@
                 </button>
             </div>
             <div class="card mb-1">
-                <div class="card-header">Account History - 800000 Corporate</div>
+                <div class="card-header">Patient Account</div>
                 <div class="card-body">
                     <div class="datatable">
                         <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
@@ -26,11 +27,11 @@
                             </thead>
                             <tbody>
                               <tr role="row" class="odd">
-                                    <td class="sorting_1">Ending balance as of <script> document.write("<strong>" + (new Date()).toString() + "</strong>");</script></td>
-                                    <td>$4010.00</td>
+                                    <td class="sorting_1">Co-Pay for Recent Visit on <script> document.write("<strong>" + (new Date()).toString() + "</strong>");</script></td>
+                                    <td>$50.00</td>
                                 </tr><tr role="row" class="even">
-                                    <td class="sorting_1">Available Credit</td>
-                                    <td>$5990.00</td>
+                                    <td class="sorting_1">Balance</td>
+                                    <td>$50.00</td>
                                 </tr></tbody>
                         </table></div></div><div class="row"><div class="col-sm-12 col-md-5"></div></div>
                     </div>
@@ -38,33 +39,34 @@
             </div>
             <br /><br />
             <div class="card mb-1">
-                <div class="card-header">Make Payment</div>
+                <div class="card-header">Pay Bill</div>
                 <div class="card-body">
-                <table cellspacing="0" cellpadding="1" width="100%" border="0">
-                        		  <tbody><tr>
-                        		    <td><h5><b>To Account:</h5></b>
-                        		    </td>
-                        		    <td>
-                        			  <select size="1" id="fromAccount" name="fromAccount">
-                        				<option value="800000">800000 Corporate</option>
-                                        <option value="800001">800001 Personal</option>
-                        			  </select>
-                        		    </td>
-                        		  </tr>
-                        		  <tr>
-                        		    <td><h5><b>Amount to Pay:</h5></b>
-                        		    </td>
-                        		    <td><input type="text" id="transferAmount" name="transferAmount"></td>
-                        		  </tr>
-                        		  <tr>
-                        		    <td></td><td colspan="2">  <button type="button" id="mfa-button" onclick="checkmfa(runmyscript)" class="btn btn-primary"> Submit Payment</button>
-                                    </button></td>
-                        		  </tr>
+                    <table cellspacing="0" cellpadding="1" width="100%" border="0">
+                        		  <tbody>
+                        		    <tr>
+                        		        <td>
+                        		            <h5><b>From Account:</b></h5>
+                        		        </td>
+                        		        <td>
+                        			        <select size="1" id="fromAccount" name="fromAccount">
+                                                <option value="800001">800001 Checking</option>
+                        			        </select>
+                        		        </td>
+                        		     </tr>
+                            		 <tr>
+                            		    <td>
+                        		            <h5><b>Amount to Pay:</b></h5>
+                        		        </td>
+                        		        <td><input type="text" id="transferAmount" name="transferAmount"></td>
+                        		     </tr>
+                        		     <tr>
+                        		        <td colspan="2"><button type="button" id="mfa-button" onclick="checkmfa(runmyscript)" class="btn btn-primary">Submit Payment</button>
+                        		        </td>
+                        		     </tr>
                     		    </tbody>
                     	    </table>
                 </div>
             </div>
-           
         </div>
         <style>
             #TransferAlertBox{
@@ -77,7 +79,7 @@
                  if (mfachecked.active)
                  {
                     $("#TransferAlertBox").fadeIn();
-                    $("#Alertmsg").text("$"+ $("#transferAmount").val() + " has submitted as payment to Account: " + $("#fromAccount").children("option:selected").val());
+                    $("#Alertmsg").text("$"+ $("#transferAmount").val() + " has been submitted for payment");
                  }
                  else
                  {
@@ -89,6 +91,8 @@
              }
         </script>
         {% include '//components/template-mfa.html' %}
+
+</section>
 {% endblock %}
 
 {% block footer %}
