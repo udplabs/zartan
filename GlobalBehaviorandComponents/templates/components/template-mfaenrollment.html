@@ -1,0 +1,108 @@
+<div class="card border-bottom">
+    <div class="card-header">Enrolled Factors</div>
+    <div class="card-body">
+       <table class="table table-hover dataTable" id="dataTable" width="100%" cellspacing="0" role="grid" aria-describedby="dataTable_info" style="width: 100%;">
+          {% for factor in factors %}
+          <tr role="row">
+                <td>{{ factor.name }}</td>
+                <td>{{ factor.profile }}</td>
+                <td><a href="#" class="clickable deleteable" class="btn btn-primary btn-sm" data-id="{{ factor['id'] }}">Remove</a></td>
+          </tr>
+          {% endfor %}
+       
+        </table>
+    </div>
+    <div class="card-footer">
+      <button type="button" id="_mfaAddFactorButton" class="btn btn-primary mr-2 my-1">
+        Add a new factor
+      </button>
+    </div>
+</div>
+
+
+<!-- MFA Enrollment -->
+<input type="hidden" id="_mfaFactorID">
+<input type="hidden" id="_mfaFactorType">
+<input type="hidden" id="_mfaProvider">
+<input type="hidden" id="_mfaFactorName">
+<input type="hidden" id="userId" value="{{ user_info['sub']  }}">
+
+<div class="modal fade" id="_mfaEnrollmentModal" tabindex="-1" role="dialog" aria-labelledby="_mfaEnrollLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+
+        <h4 class="modal-title" id="_mfaEnrollLabel">Enroll your Factor</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+      </div>
+      <div class="modal-body">
+
+        <div class="form-group">
+          <label  for="_factorEnrollList">Choose a factor:</label>
+          <select class="form-control" id="_factorEnrollList"></select>
+        </div>
+
+        <!-- sub-form for Okta Verify Push -->
+        <div class="form-group" id="_mfaEnrollPushForm">
+
+        </div>
+
+        <!-- sub-form for SMS and voice call factors -->
+        <div class="form-group" id="_mfaEnrollOTPForm">
+          <label for="_mfaEnrollRecipient">Enter your phone number:</label>
+          <input class="form-control" type="tel" id="_mfaEnrollRecipient"><br>
+          <button type="button" id="_sendEnrollOTPButton" class="btn btn-primary mr-2 my-1">
+            Send SMS
+          </button>
+        </div>
+
+        <!-- this holds the QR code for Okta Verify and Google Authenticator enrollment -->
+        <div class="form-group text-center" id="_mfaEnrollQRCodeForm">
+          <div class="overlay-container">
+            <img id="_mfaEnrollQRCode" class="overlay-image">
+            <div class="overlay-effect hidden">
+              <div class="overlay-icon">
+              </div>
+            </div>
+          </div>
+          <div class="justify-content-center">Scan this QR code with your smartphone to complete enrollment.</div>
+        </div>
+
+        <!-- TOTP, SMS, email and voice all use this field -->
+        <div class="form-group" id="_mfaEnrollVerifyCodeForm">
+          <label for="_mfaEnrollPassCode">Enter your code:</label>
+          <input class="form-control" type="text" id="_mfaEnrollPassCode"><br>
+          <button type="button" id="_mfaEnrollVerifyButton" class="btn btn-primary mr-2 my-1">
+            Submit
+          </button>
+        </div>
+
+        <!-- security question -->
+        <div class="form-group" id="_mfaEnrollQuestionForm">
+          <label for="mfaEnrollQuestion">Question:</label>
+          <select class="form-control" id="_mfaEnrollQuestion"></select>
+          <br>
+          <label for="mfaAnswer">Answer:</label>
+          <input class="form-control" type="text" id="_mfaEnrollAnswer" size="40"><br>
+          <button type="button" id="_mfaEnrollQuestionButton" class="btn btn-primary mr-2 my-1">
+            Submit
+          </button>
+        </div>
+
+        <div class="form-group" id="_mfaEnrollStatusForm">
+          <span id="_mfaEnrollStatusMessage"></span>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" id="_mfaFinishEnrollButton" class="btn btn-sm btn-default">
+          Done
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript" src="https://cdn-zartan.s3.us-east-2.amazonaws.com/static/js/mfa_enrollment.js"></script>
+

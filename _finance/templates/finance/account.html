@@ -2,6 +2,13 @@
 
 {% block content %}
         <div class="container">
+            <div class="alert alert-primary alert-dismissible fade show" role="alert" id="TransferAlertBox" >
+                <h5 class="alert-heading">Transfer Complete</h5>
+                <div id="Alertmsg"></div>
+                <button class="close" type="button" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
             <div class="card mb-1">
                 <div class="card-header">Account History - 800000 Corporate</div>
                 <div class="card-body">
@@ -65,13 +72,6 @@
                     		    </tbody>
                     	    </table>
                 </div>
-            </div>
-            <div class="alert alert-primary alert-dismissible fade show" role="alert" id="TransferAlertBox" >
-                <h5 class="alert-heading">Transfer Complete</h5>
-                <div id="Alertmsg"></div>
-                <button class="close" type="button" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
             </div>
         </div>
         <style>

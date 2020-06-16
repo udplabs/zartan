@@ -1,0 +1,127 @@
+ <!-- Custom css -->
+    <section class="main-container">
+        <div class="container" >
+           <div class="row">
+            <div class="col-md-8 offset-md-2">
+            <!-- main start -->
+            <!-- ================ -->
+             <div class="main col-12">
+                <div class="form-block center-block p-30 light-gray-bg border-clear">
+                  <style type="text/css">
+                    #okta-sign-in.auth-container .button-primary
+                    {
+                      background-color: {{config.settings.app_primary_color}};
+                      background: -webkit-gradient(linear,left top,left bottom,from({{config.settings.app_secondary_color}}),to({{config.settings.app_primary_color}}));
+                      background: -webkit-linear-gradient({{config.settings.app_secondary_color}},{{config.settings.app_primary_color}});
+                      background: linear-gradient({{config.settings.app_secondary_color}},{{config.settings.app_primary_color}});
+                      border-color: {{config.settings.app_primary_color}} {{config.settings.app_primary_color}} {{config.settings.app_primary_color}};
+                    }
+
+                    #okta-sign-in.auth-container .button-primary:active, #okta-sign-in.auth-container .button-primary:focus, #okta-sign-in.auth-container .button-primary:hover
+                    {
+                      background-color: {{config.settings.app_primary_color}};
+                      background: -webkit-gradient(linear,left top,left bottom,from({{config.settings.app_primary_color}}),to({{config.settings.app_secondary_color}}));
+                      background: -webkit-linear-gradient({{config.settings.app_primary_color}},{{config.settings.app_secondary_color}});
+                      background: linear-gradient({{config.settings.app_primary_color}},{{config.settings.app_secondary_color}});
+                      border-color: {{config.settings.app_primary_color}} {{config.settings.app_primary_color}} {{config.settings.app_primary_color}};
+                    }
+
+                    #okta-sign-in.auth-container .okta-form-input-field.focused-input
+                    {
+                      border-color: {{config.settings.app_primary_color}};
+                    }
+
+                    #okta-sign-in .focused-input, #okta-sign-in .link.help:focus
+                    {
+                      box-shadow: 0 0 8px {{config.settings.app_secondary_color}};
+                    }
+
+                    #okta-sign-in .registration-container .registration-link
+                    {
+                      margin-left: 10px;
+                      color: {{config.settings.app_primary_color}};
+                    }
+
+                    #okta-sign-in.auth-container .button.button-primary.link-button-disabled
+                    {
+                        color: #fff;
+                        background-color: {{config.settings.app_secondary_color}};
+                        border-color: {{config.settings.app_primary_color}};
+                        background-image: none;
+                        box-shadow: none
+                    }
+
+                  </style>
+                  <div id="sign-in-widget"></div>
+                  <script type="text/javascript">
+                    new OktaSignIn({
+                      baseUrl: "{{config.okta_org_name}}",
+                      logo: "{{config.settings.app_logo}}",
+                      clientId: "{{config.client_id}}",
+                      redirectUri: "{{config.redirect_uri}}",
+                      i18n: {
+                        en: {
+                          'primaryauth.title': 'Sign in to {{config.settings.app_name}}'
+                        }
+                      },
+                      features: {
+                        registration: true,                 // Enable self-service registration flow
+                        rememberMe: true,                   // Setting to false will remove the checkbox to save username
+                        multiOptionalFactorEnroll: true,  // Allow users to enroll in multiple optional factors before finishing the authentication flow.
+                        selfServiceUnlock: true,          // Will enable unlock in addition to forgotten password
+                        smsRecovery: true,                // Enable SMS-based account recovery
+                        callRecovery: true               // Enable voice call-based account recovery
+                      },
+                      idps: [
+                        {% if google %} 
+                        {type: 'GOOGLE', id: '{{google}}'},
+                        {% endif %}
+                        {% if facebook %} 
+                        {type: 'FACEBOOK', id: '{{facebook}}'},
+                        {% endif %}
+                        {% if microsoft %} 
+                        {type: 'MICROSOFT', id: '{{microsoft}}'},
+                        {% endif %}
+                        {% if linkedin %} 
+                        {type: 'LINKEDIN', id: '{{linkedin}}'}
+                        {% endif %}
+                      ],
+                      authParams: {
+                        issuer: "{{config.issuer}}",
+                        responseType: 'code',
+                        responseMode: 'form_post',
+                        state: '{{state}}',
+                        display: 'page',
+                        scopes: ['openid', 'profile', 'email'] },
+                     transformUsername: function (username, operation) {
+                        if (isNaN(username))
+                         {
+                           return username;
+                         }
+                         else
+                         {
+                          nname = "";
+                          $.ajax({
+                              'async': false,
+                              'type': "GET",
+                              'url': "/get_username/"+username,
+                              'success': function (data) {
+                                 nname = data;
+                              }
+                            });
+                            console.log(nname);
+                            return nname;
+                          }
+                      },
+                    }).renderEl(
+                      { el: '#sign-in-widget' },
+                      function (res) {}
+                    );
+                  </script>
+                </div>
+              </div>
+            </div>
+            </div>
+        </div>
+    </section>
+    <!-- page-wrapper end -->

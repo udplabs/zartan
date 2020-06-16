@@ -58,6 +58,9 @@ app.register_blueprint(gbac_registration_bp, url_prefix='/')
 from GlobalBehaviorandComponents.validation import gvalidation_bp, get_userinfo
 app.register_blueprint(gvalidation_bp, url_prefix='/')
 
+from GlobalBehaviorandComponents.mfaenrollment import gbac_mfaenrollment_bp
+app.register_blueprint(gbac_mfaenrollment_bp, url_prefix='/')
+
 # sample theme
 from _sample.views import sample_views_bp
 app.register_blueprint(sample_views_bp, url_prefix='/sample')
@@ -89,6 +92,10 @@ app.register_blueprint(admin_views_bp, url_prefix='/admin')
 # credit theme
 from _credit.views import credit_views_bp
 app.register_blueprint(credit_views_bp, url_prefix='/credit')
+
+# patientportal theme
+from _patientportal.views import patientportal_views_bp
+app.register_blueprint(patientportal_views_bp, url_prefix='/patientportal')
 
 
 ##############################################
