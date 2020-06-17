@@ -117,7 +117,6 @@ def patientportal_add_schedule():
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     user_id = request.form.get('user_id')
 
-
     first_name = safe_get_dict(request.form, 'firstname')
     last_name = safe_get_dict(request.form, 'lastname')
     email = safe_get_dict(request.form, 'email')
@@ -245,6 +244,7 @@ def patientportal_getverificationcode():
     okta_admin.update_user(user["id"], user_data)
 
     return evidenttoken
+
 
 @patientportal_views_bp.route("/healthrecord")
 @is_authenticated
