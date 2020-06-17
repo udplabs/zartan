@@ -116,10 +116,10 @@ def patientportal_add_schedule():
     logger.debug("patientportal_add_schedule")
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     user_id = request.form.get('user_id')
-    logging.debug(request.form.to_dict())
 
-    first_name = safe_get_dict(request.form, 'first_name')
-    last_name = safe_get_dict(request.form, 'last_name')
+
+    first_name = safe_get_dict(request.form, 'firstname')
+    last_name = safe_get_dict(request.form, 'lastname')
     email = safe_get_dict(request.form, 'email')
     address = safe_get_dict(request.form, 'address')
     city = safe_get_dict(request.form, 'city')
@@ -167,8 +167,8 @@ def patientportal_user_update():
     user_id = request.form.get('user_id')
     logging.debug(request.form.to_dict())
 
-    first_name = safe_get_dict(request.form, 'first_name')
-    last_name = safe_get_dict(request.form, 'last_name')
+    first_name = safe_get_dict(request.form, 'firstname')
+    last_name = safe_get_dict(request.form, 'lastname')
     email = safe_get_dict(request.form, 'email')
     mobile_phone = safe_get_dict(request.form, 'mobilePhone')
     consent = safe_get_dict(request.form, 'nconsent')
@@ -245,3 +245,12 @@ def patientportal_getverificationcode():
     okta_admin.update_user(user["id"], user_data)
 
     return evidenttoken
+
+@patientportal_views_bp.route("/healthrecord")
+@is_authenticated
+def patientportal_healthrecord():
+    logger.debug("patientportal_healthrecord")
+    return render_template(
+        "patientportal/healthrecord.html",
+        user_info=get_userinfo(),
+        config=session[SESSION_INSTANCE_SETTINGS_KEY])
