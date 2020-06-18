@@ -248,3 +248,12 @@ def get_udp_oauth_access_token(udp_config):
         logger.warning("Failed to get UDP Service OAuth token: {message}".format(message=responseData))
 
     return results
+
+
+def get_udp_ns_fieldname(fieldname):
+    parts = get_domain_parts_from_request()
+    udp_subdomain = parts["udp_subdomain"]
+    udp_app_name = parts["udp_app_name"]
+    field = "{subdomain}_{appname}_{fieldname}".format(subdomain=udp_subdomain, appname=udp_app_name, fieldname=fieldname)
+
+    return field

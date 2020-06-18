@@ -348,7 +348,7 @@
                               	<div class="input-group-prepend">
                           		    <span class="input-group-text"> <i class="fa fa-calendar"></i> </span>
                           		  </div>
-                          		  <input type="text" class="form-control" name="dob" id="dateofbirth" value="{{ user_info2['profile']['dob']  }}" required="true">
+                          		  <input type="text" class="form-control" name="dob" id="dateofbirth" value="{{ dob }}" required="true">
                               </div>
 
                               <label for="exampleFormControlInput1">Gender</label>
@@ -358,10 +358,10 @@
                           		  </div>
                                  <select class="form-control" id="gender" name="gender" required="true">
                                     <option selected disabled value="">Select</option>
-                                    <option {% if user_info2['profile']['gender']=="Male" %} selected="selected"{% endif %} value="Male">Male</option>
-                                    <option {% if user_info2['profile']['gender']=="Female" %} selected="selected"{% endif %} value="Female">Female</option>
-                                    <option {% if user_info2['profile']['gender']=="Neutral" %} selected="selected"{% endif %} value="Neutral">Neutral</option>
-                                    <option {% if user_info2['profile']['gender']=="Rather not say" %} selected="selected"{% endif %} value="Rather not say">Rather not say</option>
+                                    <option {% if gender=="Male" %} selected="selected"{% endif %} value="Male">Male</option>
+                                    <option {% if gender=="Female" %} selected="selected"{% endif %} value="Female">Female</option>
+                                    <option {% if gender=="Neutral" %} selected="selected"{% endif %} value="Neutral">Neutral</option>
+                                    <option {% if gender=="Rather not say" %} selected="selected"{% endif %} value="Rather not say">Rather not say</option>
                                 </select>
                               </div>
                                <label for="exampleFormControlInput1">Have you previously attended our facility?</label>

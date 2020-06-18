@@ -4,7 +4,7 @@ import time
 
 from flask import render_template, session, request, redirect, url_for
 from flask import Blueprint
-from utils.udp import SESSION_INSTANCE_SETTINGS_KEY
+from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_udp_ns_fieldname
 from utils.okta import TokenUtil, OktaAdmin, OktaUtil
 from utils.rest import RestUtil
 from GlobalBehaviorandComponents.mfaenrollment import get_enrolled_factors
@@ -25,18 +25,25 @@ def patientportal_profile():
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     user = okta_admin.get_user(user_info["sub"])
 
-    if "consent" in user["profile"]:
-        consent = user["profile"]["consent"]
+    if get_udp_ns_fieldname("consent") in user["profile"]:
+        logging.debug(user)
+        consent = user["profile"][get_udp_ns_fieldname("consent")]
+        logging.debug(consent)
         if consent.strip() == "":
             consent = ''
             session['appointment'] = "No Appointments Currently Set."
     else:
         consent = ''
+    logging.debug(consent)
 
     factors = get_enrolled_factors(user["id"])
 
     id_token = TokenUtil.get_id_token(request.cookies)
     patientid = TokenUtil.get_single_claim_from_token(id_token, "extPatientId")
+
+    is_evident_validated = ""
+    if get_udp_ns_fieldname("is_evident_validated") in user["profile"]:
+        is_evident_validated = user["profile"][get_udp_ns_fieldname("is_evident_validated")]
 
     return render_template(
         "patientportal/profile.html",
@@ -47,7 +54,8 @@ def patientportal_profile():
         config=session[SESSION_INSTANCE_SETTINGS_KEY],
         consent=consent,
         factors=factors,
-        patientid=patientid)
+        patientid=patientid,
+        is_evident_validated=is_evident_validated)
 
 
 @patientportal_views_bp.route("/acceptterms")
@@ -63,7 +71,7 @@ def patientportal_accept_terms():
     # dd/mm/YY H:M:S
     consent = now.strftime("%d/%m/%Y %H:%M:%S")
 
-    user_data = {"profile": {"consent": consent}}
+    user_data = {"profile": {get_udp_ns_fieldname("consent"): consent}}
     user_update_response = okta_admin.update_user(user_id, user_data)
 
     if user_update_response:
@@ -91,6 +99,12 @@ def patientportal_schedule():
     user_info = get_userinfo()
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     user = okta_admin.get_user(user_info["sub"])
+    dob = ""
+    gender = ""
+    if get_udp_ns_fieldname("dob") in user["profile"]:
+        dob = user["profile"][get_udp_ns_fieldname("dob")]
+    if get_udp_ns_fieldname("gender") in user["profile"]:
+        gender = user["profile"][get_udp_ns_fieldname("gender")]
 
     return render_template(
         "patientportal/schedule.html",
@@ -98,7 +112,9 @@ def patientportal_schedule():
         access_token=TokenUtil.get_access_token(request.cookies),
         user_info=get_userinfo(),
         user_info2=user,
-        config=session[SESSION_INSTANCE_SETTINGS_KEY])
+        config=session[SESSION_INSTANCE_SETTINGS_KEY],
+        dob=dob,
+        gender=gender)
 
 
 def safe_get_dict(mydict, key):
@@ -143,9 +159,9 @@ def patientportal_add_schedule():
         "state": state,
         "zipCode": zip_code,
         "countryCode": country,
-        "dob": dob,
-        "hasvisited": hasvisited,
-        "gender": gender,
+        get_udp_ns_fieldname("dob"): dob,
+        get_udp_ns_fieldname("hasvisited"): hasvisited,
+        get_udp_ns_fieldname("gender"): gender,
     }}
 
     user_update_response = okta_admin.update_user(user_id, user_data)
@@ -177,7 +193,7 @@ def patientportal_user_update():
         "lastName": last_name,
         "email": email,
         "mobilePhone": mobile_phone,
-        "consent": consent,
+        get_udp_ns_fieldname("consent"): consent,
     }}
 
     logging.debug(user_data)
@@ -199,7 +215,7 @@ def patientportal_clear_consent(userid):
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
 
     user_data = {"profile": {
-        "consent": "",
+        get_udp_ns_fieldname("consent"): "",
     }}
 
     user_update_response = okta_admin.update_user(userid, user_data)
@@ -240,7 +256,7 @@ def patientportal_getverificationcode():
 
     response = RestUtil.execute_post(" https://verify.api.demo.evidentid.com/api/v1/verify/requests", headers=headers, body=body)
     evidenttoken = response["userIdentityToken"]
-    user_data = {"profile": {"evident_id": response["id"]}}
+    user_data = {"profile": {get_udp_ns_fieldname("evident_id"): response["id"]}}
     okta_admin.update_user(user["id"], user_data)
 
     return evidenttoken
