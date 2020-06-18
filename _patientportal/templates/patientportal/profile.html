@@ -48,17 +48,18 @@
                               	<div class="input-group-prepend">
                           		    <span class="input-group-text"> <i class="fa fa-id-card"></i> </span>
                           		  </div>
-                          			<input name="patientid" id="patientid" class="form-control" type="text" value="{{ patientid  }}" disabled>
+                          			<input name="patientid" id="patientid" class="form-control" type="text" value="{{ patientid  }}" disabled>&nbsp;&nbsp;
+                          			<button type="button" onclick="showidcard()" class="btn btn-primary">&nbsp;Show ID Card&nbsp;</button>
                               </div>
 
                               <div class="form-group input-group">
                                     <div class="input-group-prepend">
                           		        <span class="input-group-text"> <i class="fa fa-check"></i> </span>
                                     </div>
-                          			<input name="consent" id="consent" class="form-control" type="text" value="{{ user_info2['profile']['consent']  }}" disabled>&nbsp;&nbsp;
+                          			<input name="consent" id="consent" class="form-control" type="text" value="{{ consent }}" disabled>&nbsp;&nbsp;
                           			<button type="button" onclick="resetconsent()" class="btn btn-primary">Reset Consent</button>
                               </div>
-                              <input name="nconsent" id="nconsent" class="form-control" type="hidden" value="{{ user_info2['profile']['consent']  }}">
+                              <input name="nconsent" id="nconsent" class="form-control" type="hidden" value="{{ consent }}">
                               <input id="user_id" name="user_id" class="form-control" type="hidden" value="{{ user_info2['id'] }}">
                               <div class="form-group">
                               <button type="submit" class="btn btn-primary btn-block">Update Account</button>
@@ -71,7 +72,7 @@
                 <div class="card border-bottom">
                     <div class="card-header">Identity Verification</div>
                     <div class="card-body">
-                        {% if user_info2['profile']['is_evident_validated']|trim == 'True' %}
+                        {% if is_evident_validated|trim == 'True' %}
                             You are Validated!<br><br>
                             <button type="button" onclick="openverification()" class="btn btn-primary">Re-validate</button>
                         {% else %}
@@ -94,10 +95,48 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                     <div class="modal-header">
+                        <a href="https://cdn-zartan.s3.us-east-2.amazonaws.com/static/img/michael-motorist-front.jpg" download="michael-motorist-front.jpg">sample front license</a>&nbsp;&nbsp;&nbsp;
+                        <a href="https://cdn-zartan.s3.us-east-2.amazonaws.com/static/img/michael-motorist-back.jpg" download="michael-motorist-back.jpg">sample back license</a>
                         <button class="close" type="button" onclick="closeverification()" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                     </div>
                     <div class="modal-body" id="mfamodalbody">
                           <iframe name="iframeEvident" id="iframeEvident" width="100%" height="700" frameBorder="0" src=""></iframe>
+                    </div>
+            </div>
+        </div>
+        </div>
+
+        <div class="modal fade" id="healthcard" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                    <div class="modal-header">
+                        Your Health Insurance Card ID<button class="close" type="button" onclick="closeidcard" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    </div>
+                    <div class="modal-body" id="mfamodalbody" style="text-align: center;">
+                        <table border="0" style="border-collapse: collapse; width: 100%;">
+                            <tbody>
+                                <tr>
+                                    <td style="width: 50%;"><img src="https://cdn-zartan.s3.us-east-2.amazonaws.com/static/img/health-insurance.png" alt="" width="300" height="166" /></td>
+                                    <td style="width: 50%;">
+                                        <p>Name: {{ user_info2['profile']['firstName'] }} {{ user_info2['profile']['lastName'] }} <br />ID: {{ patientid  }}</p>
+                                        <hr>
+                                        <p>Group#: GP10334<br />Effective Date: 1/1/2020</p>
+                                        <p>Plan: Family PPO</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 50%;">
+                                        <hr>
+                                        <p>RX: Yes<br />RXBin: 156456<br />RXPCN: 01945610000<br><br><br></p>
+                                    </td>
+                                    <td style="width: 50%;">
+                                        <hr>
+                                        <p><b>Copayment</b></p>
+                                        <p>Primary Care: $15<br />Urgent Care: $15<br />Emergency Room: $100</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
             </div>
         </div>
@@ -135,6 +174,15 @@
         </div>
 
     <script type="text/javascript">
+
+        function showidcard(){
+            console.log("showidcard()");
+            $("#healthcard").modal("show");
+        }
+        function closeidcard() {
+            console.log("closeidcard()");
+            $("#healthcard").modal("hide");
+        }
 
         function openverification(){
             console.log("openverification()");

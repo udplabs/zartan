@@ -1,0 +1,219 @@
+{% extends "finance/template.html" %}
+
+{% block content %}
+<section class="bg-light py-5">
+        <div class="container">
+            <div class="card mb-1">
+                <div class="card-header">Your Health Report</div>
+                <div class="card-body">
+                    <div class="datatable">
+                        <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="dataTables_length" id="dataTable_length">
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-md-6"></div>
+                            </div>
+                        </div>
+                        <div class="row" id="healthinfo">
+                            <div class="col-sm-12">
+                                <div class="card mb-4">
+                                    <div class="card-header">Your Weight</div>
+                                    <div class="card-body">
+                                        <div class="chart-area"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div><canvas id="myAreaChart" width="1516" height="240" style="display: block; width: 1516px; height: 240px;" class="chartjs-render-monitor"></canvas></div>
+                                    </div>
+                                    <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+                                </div>
+                                <div class="card mb-4">
+                                    <div class="card-header">Your Medication</div>
+                                    <div class="card-body">
+                                    <table class="table table-bordered table-hover dataTable" id="dataTable" width="100%" cellspacing="0" role="grid" aria-describedby="dataTable_info" style="width: 100%;">
+                                        <thead>
+                                           <tr><th rowspan="1" colspan="1">Medication Details</th><th rowspan="1" colspan="1">Notes</th><th rowspan="1" colspan="1">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr role="row" class="odd">
+                                                <td class="sorting_1">amoxicillin (Amoxil), 500 mg capsule</td>
+                                                <td>Take 1 by mouth every 8 hours</td>
+                                                <td><div class="badge badge-primary badge-pill">No Refill</div></td>
+                                            </tr>
+                                            <tr role="row" class="even">
+                                                <td class="sorting_1">esomeprazole (Nexium), 20 mg capsule</td>
+                                                <td>Take 2 by mouth daily with food</td>
+                                                <td><div class="badge badge-warning badge-pill">Refill needed soon</div></td>
+                                            </tr>
+                                             <tr role="row" class="even">
+                                                <td class="sorting_1">lisinopril 20 mg tablets</td>
+                                                <td>Take 1 by mouth daily</td>
+                                                <td><div class="badge badge-danger badge-pill">Refill Required</div></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    </div>
+                                    <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 col-md-5"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <style>
+            #TransferAlertBox{
+                display:none;
+            }
+        </style>
+
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+        <script type="text/javascript">
+
+            function runmyscript(mfachecked) {
+                 console.log(mfachecked.active);
+                 if (mfachecked.active)
+                 {
+                     $("#healthinfo").show();
+
+                        (Chart.defaults.global.defaultFontFamily = "Metropolis"),
+                        Chart.defaults.global.defaultFontColor = "#858796";
+
+                        // Area Chart Example
+                        var ctx = document.getElementById("myAreaChart");
+                        var myLineChart = new Chart(ctx, {
+                            type: "line",
+                            data: {
+                                labels: [
+                                    "Jan",
+                                    "Feb",
+                                    "Mar",
+                                    "Apr",
+                                    "May",
+                                    "Jun",
+                                    "Jul",
+                                    "Aug",
+                                    "Sep",
+                                    "Oct",
+                                    "Nov",
+                                    "Dec"
+                                ],
+                                datasets: [{
+                                    label: "Weight",
+                                    lineTension: 0.3,
+                                    backgroundColor: "rgba(0, 97, 242, 0.05)",
+                                    borderColor: "rgba(0, 97, 242, 1)",
+                                    pointRadius: 3,
+                                    pointBackgroundColor: "rgba(0, 97, 242, 1)",
+                                    pointBorderColor: "rgba(0, 97, 242, 1)",
+                                    pointHoverRadius: 3,
+                                    pointHoverBackgroundColor: "rgba(0, 97, 242, 1)",
+                                    pointHoverBorderColor: "rgba(0, 97, 242, 1)",
+                                    pointHitRadius: 10,
+                                    pointBorderWidth: 2,
+                                    data: [
+                                        110,
+                                        100,
+                                        105,
+                                        110,
+                                        105,
+                                        110,
+                                        125,
+                                        115,
+                                        125,
+                                        130,
+                                        135,
+                                        128
+                                    ]
+                                }]
+                            },
+                            options: {
+                                maintainAspectRatio: false,
+                                layout: {
+                                    padding: {
+                                        left: 10,
+                                        right: 25,
+                                        top: 25,
+                                        bottom: 0
+                                    }
+                                },
+                                scales: {
+                                    xAxes: [{
+                                        time: {
+                                            unit: "date"
+                                        },
+                                        gridLines: {
+                                            display: false,
+                                            drawBorder: false
+                                        },
+                                        ticks: {
+                                            maxTicksLimit: 7
+                                        }
+                                    }],
+                                    yAxes: [{
+                                        ticks: {
+                                            maxTicksLimit: 5,
+                                            padding: 10,
+                                        },
+                                        gridLines: {
+                                            color: "rgb(234, 236, 244)",
+                                            zeroLineColor: "rgb(234, 236, 244)",
+                                            drawBorder: false,
+                                            borderDash: [2],
+                                            zeroLineBorderDash: [2]
+                                        }
+                                    }]
+                                },
+                                legend: {
+                                    display: false
+                                },
+                                tooltips: {
+                                    backgroundColor: "rgb(255,255,255)",
+                                    bodyFontColor: "#858796",
+                                    titleMarginBottom: 10,
+                                    titleFontColor: "#6e707e",
+                                    titleFontSize: 14,
+                                    borderColor: "#dddfeb",
+                                    borderWidth: 1,
+                                    xPadding: 15,
+                                    yPadding: 15,
+                                    displayColors: false,
+                                    intersect: false,
+                                    mode: "index",
+                                    caretPadding: 10,
+                                    callbacks: {
+                                        label: function(tooltipItem, chart) {
+                                            var datasetLabel =
+                                                chart.datasets[tooltipItem.datasetIndex].label || "";
+                                            return datasetLabel + " : " + tooltipItem.yLabel;
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                 }
+                 else
+                 {
+                    window.location.replace("/patientportal/profile");
+                 }
+
+            }
+        </script>
+        {% include '//components/template-mfa.html' %}
+        <script>
+          window.addEventListener('load', function () {
+             $("#healthinfo").hide();
+             document.onload = checkmfa(runmyscript);
+            })
+        </script>
+
+</section>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

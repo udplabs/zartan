@@ -260,8 +260,3 @@ def get_oauth_authorize_url(okta_session_token=None):
     )
 
     return oauth_authorize_url
-
-
-"""
-end MFA verification routes
-"""

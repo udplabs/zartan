@@ -23,7 +23,7 @@ def registration_bp():
 
 @gbac_registration_bp.route("/registration-state/<stateToken>", methods=["GET"])
 def gbac_registration_state_get(stateToken):
-    logger.debug("dealer_registration_state_get()")
+    logger.debug("gbac_registration_state_get()")
     user_id = stateToken
     return render_template(
         "/registration-state.html",
@@ -33,21 +33,22 @@ def gbac_registration_state_get(stateToken):
         _scheme="https")
 
 
-@gbac_registration_bp.route("/registration-state/<stateToken>", methods=["POST"])
-def gbac_registration_state_post(stateToken):
-    logger.debug("dealer_registration_state_get()")
-    user_id = stateToken
-    logger.debug(request.form.get('inputPassword'))
+@gbac_registration_bp.route("/registration-state/<userid>", methods=["POST"])
+def gbac_registration_state_post(userid):
+    logger.debug("gbac_registration_state_post()")
+    user_id = userid
+    logger.debug(request.form.get('password'))
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     user_data = {
         "credentials": {
             "password": {"value": request.form.get('password')},
             "recovery_question": {
-                "question": "Company Name? (hint: It's \"Okta\")",
+                "question": "Company Name, its Okta.",
                 "answer": "Okta"
             }
         }
     }
+    logger.debug(user_data)
     user_update_response = okta_admin.update_user(user_id=user_id, user=user_data)
 
     logger.debug(user_update_response)
@@ -59,7 +60,8 @@ def gbac_registration_state_post(stateToken):
             templatename=get_app_vertical(), config=session[SESSION_INSTANCE_SETTINGS_KEY],
             error=user_update_response['errorCauses'][0]['errorSummary'])
 
-    okta_admin.activate_user(user_id, send_email=False)
+    nresponse = okta_admin.activate_user(user_id, send_email=False)
+    logger.debug(nresponse)
     group_info = okta_admin.get_application_groups(session[SESSION_INSTANCE_SETTINGS_KEY]["client_id"])
     group_id = group_info[0]["id"]
     okta_admin.assign_user_to_group(group_id, user_id)
@@ -105,7 +107,7 @@ def emailRegistration(recipient, token):
 
     message = """
         Thank you for Applying for {app_title}! <br /> <br />Click this link to activate your account. <br /><br />
-        <a href='{activation_link}'>{activation_link}</a>).
+        <a href='{activation_link}'>Click Here to Activate Account</a>
         """.format(app_title=app_title, activation_link=activation_link)
     test = Email.send_mail(subject=subject, message=message, recipients=[recipient])
     logger.debug(test)
