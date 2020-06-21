@@ -21,7 +21,7 @@
                                     </div>
                                 </div>
                                 {% if user_info and user_info.groups %}
-                                    {% if "DEALER_ADMIN" in user_info.groups %}
+                                    {% if "_ADMIN" in user_info.groups|join(' ') %}
                                      <div class="row">
                                         <div class="col-lg-6">
                                             <h6 class="dropdown-header text-primary">Approve Requests</h6>
