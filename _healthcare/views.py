@@ -14,13 +14,13 @@ from GlobalBehaviorandComponents.validation import is_authenticated, get_userinf
 logger = logging.getLogger(__name__)
 
 # set blueprint
-patientportal_views_bp = Blueprint('patientportal_views_bp', __name__, template_folder='templates', static_folder='static', static_url_path='static')
+healthcare_views_bp = Blueprint('healthcare_views_bp', __name__, template_folder='templates', static_folder='static', static_url_path='static')
 
 
 # Required for Login Landing Page
-@patientportal_views_bp.route("/profile")
+@healthcare_views_bp.route("/profile")
 @is_authenticated
-def patientportal_profile():
+def healthcare_profile():
     user_info = get_userinfo()
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     user = okta_admin.get_user(user_info["sub"])
@@ -46,7 +46,7 @@ def patientportal_profile():
         is_evident_validated = user["profile"][get_udp_ns_fieldname("is_evident_validated")]
 
     return render_template(
-        "patientportal/profile.html",
+        "healthcare/profile.html",
         id_token=TokenUtil.get_id_token(request.cookies),
         access_token=TokenUtil.get_access_token(request.cookies),
         user_info=get_userinfo(),
@@ -58,10 +58,10 @@ def patientportal_profile():
         is_evident_validated=is_evident_validated)
 
 
-@patientportal_views_bp.route("/acceptterms")
+@healthcare_views_bp.route("/acceptterms")
 @is_authenticated
-def patientportal_accept_terms():
-    logger.debug("patientportal_accept_terms()")
+def healthcare_accept_terms():
+    logger.debug("healthcare_accept_terms()")
     user_info = get_userinfo()
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     user = okta_admin.get_user(user_info["sub"])
@@ -79,23 +79,23 @@ def patientportal_accept_terms():
     else:
         message = "Error During consent"
 
-    return redirect(url_for("patientportal_views_bp.patientportal_profile", _external="True", _scheme="https", user_id=user_id, message=message))
+    return redirect(url_for("healthcare_views_bp.healthcare_profile", _external="True", _scheme="https", user_id=user_id, message=message))
 
 
-@patientportal_views_bp.route("/account")
+@healthcare_views_bp.route("/account")
 @is_authenticated
-def patientportal_account():
-    logger.debug("patientportal_account")
+def healthcare_account():
+    logger.debug("healthcare_account")
     return render_template(
-        "patientportal/account.html",
+        "healthcare/account.html",
         user_info=get_userinfo(),
         config=session[SESSION_INSTANCE_SETTINGS_KEY])
 
 
-@patientportal_views_bp.route("/schedule")
+@healthcare_views_bp.route("/schedule")
 @is_authenticated
-def patientportal_schedule():
-    logger.debug("patientportal_schedule")
+def healthcare_schedule():
+    logger.debug("healthcare_schedule")
     user_info = get_userinfo()
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     user = okta_admin.get_user(user_info["sub"])
@@ -107,7 +107,7 @@ def patientportal_schedule():
         gender = user["profile"][get_udp_ns_fieldname("gender")]
 
     return render_template(
-        "patientportal/schedule.html",
+        "healthcare/schedule.html",
         id_token=TokenUtil.get_id_token(request.cookies),
         access_token=TokenUtil.get_access_token(request.cookies),
         user_info=get_userinfo(),
@@ -126,10 +126,10 @@ def safe_get_dict(mydict, key):
     return myval
 
 
-@patientportal_views_bp.route("/addschedule", methods=["POST"])
+@healthcare_views_bp.route("/addschedule", methods=["POST"])
 @is_authenticated
-def patientportal_add_schedule():
-    logger.debug("patientportal_add_schedule")
+def healthcare_add_schedule():
+    logger.debug("healthcare_add_schedule")
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     user_id = request.form.get('user_id')
 
@@ -171,13 +171,13 @@ def patientportal_add_schedule():
     else:
         message = "Appointment is scheduled!"
 
-    return redirect(url_for("patientportal_views_bp.patientportal_profile", _external="True", _scheme="https", user_id=user_id, message=message))
+    return redirect(url_for("healthcare_views_bp.healthcare_profile", _external="True", _scheme="https", user_id=user_id, message=message))
 
 
-@patientportal_views_bp.route("/updateuserinfo", methods=["POST"])
+@healthcare_views_bp.route("/updateuserinfo", methods=["POST"])
 @is_authenticated
-def patientportal_user_update():
-    logger.debug("patientportal_user_update")
+def healthcare_user_update():
+    logger.debug("healthcare_user_update")
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     user_id = request.form.get('user_id')
     logging.debug(request.form.to_dict())
@@ -205,13 +205,13 @@ def patientportal_user_update():
     else:
         message = "User Updated!"
 
-    return redirect(url_for("patientportal_views_bp.patientportal_profile", _external="True", _scheme="https", user_id=user_id, message=message))
+    return redirect(url_for("healthcare_views_bp.healthcare_profile", _external="True", _scheme="https", user_id=user_id, message=message))
 
 
-@patientportal_views_bp.route("/clearconsent/<userid>")
+@healthcare_views_bp.route("/clearconsent/<userid>")
 @is_authenticated
-def patientportal_clear_consent(userid):
-    logger.debug("patientportal_clear_consent")
+def healthcare_clear_consent(userid):
+    logger.debug("healthcare_clear_consent")
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
 
     user_data = {"profile": {
@@ -225,13 +225,13 @@ def patientportal_clear_consent(userid):
     else:
         message = ""
 
-    return redirect(url_for("patientportal_views_bp.patientportal_profile", _external="True", _scheme="https", user_id=userid, message=message))
+    return redirect(url_for("healthcare_views_bp.healthcare_profile", _external="True", _scheme="https", user_id=userid, message=message))
 
 
-@patientportal_views_bp.route("/getverificationcode")
+@healthcare_views_bp.route("/getverificationcode")
 @is_authenticated
-def patientportal_getverificationcode():
-    logger.debug("patientportal_getverificationcode")
+def healthcare_getverificationcode():
+    logger.debug("healthcare_getverificationcode")
     user_info = get_userinfo()
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     user = okta_admin.get_user(user_info["sub"])
@@ -262,11 +262,11 @@ def patientportal_getverificationcode():
     return evidenttoken
 
 
-@patientportal_views_bp.route("/healthrecord")
+@healthcare_views_bp.route("/healthrecord")
 @is_authenticated
-def patientportal_healthrecord():
-    logger.debug("patientportal_healthrecord")
+def healthcare_healthrecord():
+    logger.debug("healthcare_healthrecord")
     return render_template(
-        "patientportal/healthrecord.html",
+        "healthcare/healthrecord.html",
         user_info=get_userinfo(),
         config=session[SESSION_INSTANCE_SETTINGS_KEY])

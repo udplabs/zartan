@@ -93,9 +93,9 @@ app.register_blueprint(admin_views_bp, url_prefix='/admin')
 from _credit.views import credit_views_bp
 app.register_blueprint(credit_views_bp, url_prefix='/credit')
 
-# patientportal theme
-from _patientportal.views import patientportal_views_bp
-app.register_blueprint(patientportal_views_bp, url_prefix='/patientportal')
+# healthcare theme
+from _healthcare.views import healthcare_views_bp
+app.register_blueprint(healthcare_views_bp, url_prefix='/healthcare')
 
 
 ##############################################

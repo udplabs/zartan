@@ -1,4 +1,4 @@
-{% extends "patientportal/template.html" %}
+{% extends "healthcare/template.html" %}
 
 {% block content %}
 <style>
@@ -19,7 +19,7 @@
         background-color: {{config.settings.app_primary_color}} !important;
     }
 </style>
-  <form class="form-horizontal" action='/patientportal/addschedule' method="POST">
+  <form class="form-horizontal" action='/healthcare/addschedule' method="POST">
  <section class="bg-light py-5">
     <div class="container">
         <div class="row">
@@ -429,7 +429,7 @@
                 this.className += " active";
             });
         }
-        
+
         $('#datepicker').datepicker({
 			todayHighlight: true,
             autoclose: true

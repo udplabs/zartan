@@ -13,8 +13,8 @@ terraform {
 
 #For local testing, set app url correctly before commit.
 locals {
-    app_url = "${var.test_app_domain}"
-    #app_url = "${var.udp_subdomain}.${var.demo_app_name}.unidemo.info"
+    #app_url = "${var.test_app_domain}"
+    app_url = "${var.udp_subdomain}.${var.demo_app_name}.unidemo.info"
 }
 
 provider "okta" {
