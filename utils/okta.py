@@ -369,7 +369,10 @@ class OktaAdmin:
             base_url=self.okta_config["okta_org_name"],
             activate_user=activate_user)
 
-        return RestUtil.execute_post(url, user, okta_headers)
+        rtn = RestUtil.execute_post(url, user, okta_headers)
+        self.logger.debug("OktaAdmin.create_user(executePost)")
+        self.logger.debug(rtn)
+        return rtn
 
     def update_user(self, user_id, user):
         self.logger.debug("OktaAdmin.update_user()")
