@@ -1,4 +1,4 @@
-{% extends "patientportal/template.html" %}
+{% extends "healthcare/template.html" %}
 
 {% block content %}
  <section class="bg-light py-5">
@@ -191,7 +191,7 @@
             $.ajax({
                       'async': false,
                       'type': "GET",
-                      'url': "/patientportal/getverificationcode",
+                      'url': "/healthcare/getverificationcode",
                       'success': function (data) {
                          evidenttoken = data;
                       }
@@ -215,7 +215,7 @@
         })
         function acceptcompleted() {
             console.log("acceptcompleted()");
-            window.location = "/patientportal/acceptterms";
+            window.location = "/healthcare/acceptterms";
             $("#consentModal").modal("hide");
         }
 
@@ -240,7 +240,7 @@
         function resetconsent() {
                 console.log("resetconsent()");
                 $("#consent").val("");
-                window.location = "/patientportal/clearconsent/{{user_info2['id']}}" ;
+                window.location = "/healthcare/clearconsent/{{user_info2['id']}}" ;
         }
 
 
