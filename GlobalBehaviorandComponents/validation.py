@@ -29,7 +29,7 @@ def is_authenticated(f):
             return f(*args, **kws)
         else:
             logger.debug("Access Denied")
-            session[FROM_URI_KEY] = request.url
+            session[FROM_URI_KEY] = request.url.replace("http://", "https://")
             # change to different main
             return redirect(url_for("gbac_bp.gbac_login", _external="True", _scheme="https"))
     return decorated_function
