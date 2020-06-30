@@ -179,18 +179,18 @@ def oidc_callback_handler():
 
 
 def get_post_login_landing_page_url():
+    logger.debug("get_post_login_landing_page_url()")
     app_landing_page_url = ""
 
     # Pull from Confg
-    if not session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_base_url"]:
-        session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_base_url"] = request.url_root.replace("http:", "https:")
-        logger.debug("app_base_url: {0}".format(session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_base_url"]))
+    hosturl = request.host_url.replace("http://", "https://")
 
-    app_landing_page_url = "{app_base_url}/{app_template}/{landing_page}".format(
-        app_base_url=session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_base_url"],
-        app_template=session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_template"],
-        landing_page=session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_post_login_landing_url"],
-    )
+    if session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_post_login_landing_url"]:
+        app_landing_page_url = hosturl + "{app_template}/{landing_page}".format(
+            app_template=session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_template"],
+            landing_page=session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_post_login_landing_url"],)
+    else:
+        app_landing_page_url = hosturl + "/profile"
 
     # Check for from from_uri... this always overrides the config
     if FROM_URI_KEY in session:
