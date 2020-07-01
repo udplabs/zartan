@@ -11,6 +11,27 @@
   - [Use Cases or Scenarios: Finance](#use-cases-or-scenarios-finance)
 - [Troubleshooting: FAQs](#troubleshooting-faqs)
 
+### Download and Install Terraform
+
+* Download the [Terraform binary](https://www.terraform.io/downloads.html) for your OS
+* Follow the instructions for [TheTerraform Install Guide](https://learn.hashicorp.com/terraform/getting-started/install) for your OS
+* Verify terraform is installed correctly by going to the command line / shell, then type the command `terraform version`, press `Enter` or `Return` and you should see a response similar to `Terraform v0.12.28`
+
+### Configure, initialize and apply Terraform for the vertical you want to use
+* Create a local `.tfvars` file in the `terraform` folder, under the `vertical` and name the file the same as the `vertical` e.g. `terraform/travelagency/travelagency.tfvars`
+* Add the following variables
+  * `org_name="<okta_subdomain>"`
+  * `api_token="<okta_api_token>"`
+  * `base_url="<oktapreview.com or okta.com>"`
+  * `demo_app_name="<zartan vertical name i.e. travelagency>"`
+  * `udp_subdomain="<name of your demo i.e. local>"`
+  * `test_app_domain="<name of your local app domain>"`
+* Next, in the command line / shell, navigate to the terraform directory then to the desired vertical e.g. `terraform/travelagency` and type `terraform init`
+* Execute the plan `terraform plan -var-file <zartan vertical name>.tfvars` e.g. `terraform plan -var-file travelagency.tfvars`
+* Finally apply the plan `terraform apply -var-file <zartan vertical name>.tfvars` e.g. `terraform apply -var-file travelagency.tfvars`
+* Type 'yes' at the prompt and once it is completed you should see the following message similar to `Apply complete! Resources: 6 added, 0 changed, 0 destroyed.`
+* Verify by checking in your okta org
+
 ## Setup Okta Org for each Vertical
 
 >> WIP: Needs further details, just assuming. Plus attached terraform script could be reference.
