@@ -71,12 +71,12 @@
             <div class="col-md-6">
                 <div class="card border-bottom">
                     <div class="card-header">Identity Verification</div>
-                    <div class="card-body">
+                    <div class="card-body" >
                         {% if is_evident_validated|trim == 'True' %}
-                            You are Validated!<br><br>
+                            You identity validation is complete!<br><br>
                             <button type="button" onclick="openverification()" class="btn btn-primary">Re-validate</button>
                         {% else %}
-                            You are Not Validated!<br><br>
+                            <span style="color:red">Your identity validation is pending.</span><br><br>
                             <button type="button" onclick="openverification()" class="btn btn-primary">Validate</button>
                         {% endif %}
 
@@ -105,6 +105,22 @@
             </div>
         </div>
         </div>
+
+        <div class="modal fade" id="identityVerificationUpdate" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                    <div class="modal-header">
+                        Identity Verification : Click button to check the status of identity proofing request.
+                        <button class="close" type="button" onclick="closeverificationUpdate()" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    </div>
+                    <div class="modal-body" id="mfamodalbody" style="text-align: center">
+                          <button type="submit" class="btn btn-primary btn-block" style="width:400px;display: inline-block" onclick="updateIdentity()">Check Status and update profile</button>
+                          <span id="statusUpdate"  style="color:red; font-weight: bold;display: inline-block"></span>
+                    </div>
+            </div>
+        </div>
+        </div>
+
 
         <div class="modal fade" id="healthcard" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -184,6 +200,26 @@
             $("#healthcard").modal("hide");
         }
 
+         function updateIdentity(){
+            console.log("updateIdentity()");
+            //$("#identityVerification").modal("show");
+            response = "";
+            $.ajax({
+                      'async': false,
+                      'type': "GET",
+                      'url': "/healthcare/updateidentity",
+                      'success': function (data) {
+                         response = data;
+                      }
+                    });
+            if (response == "pending") {
+                $('#statusUpdate').text("The identity validation process is still pending. Please wait and try again");
+            } else {
+                 $("#identityVerificationUpdate").modal("hide");
+                 location.reload();
+            }
+        }
+
         function openverification(){
             console.log("openverification()");
             $("#identityVerification").modal("show");
@@ -201,6 +237,13 @@
         function closeverification() {
             console.log("closeverification()");
             $("#identityVerification").modal("hide");
+            $("#identityVerificationUpdate").modal("show");
+            //location.reload();
+        }
+
+        function closeverificationUpdate() {
+            console.log("closeverificationUpdate()");
+            $("#identityVerificationUpdate").modal("hide");
             location.reload();
         }
 
