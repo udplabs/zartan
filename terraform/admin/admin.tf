@@ -5,14 +5,8 @@ variable "demo_app_name" {}
 variable "udp_subdomain" {}
 variable "test_app_domain" {}
 
-terraform {
-  backend "s3" {
-  }
-}
-
 locals {
-    #app_url = "${var.test_app_domain}"
-    app_url = "${var.udp_subdomain}.${var.demo_app_name}.unidemo.info"
+    app_url = "${var.test_app_domain}"
 }
 
 provider "okta" {
