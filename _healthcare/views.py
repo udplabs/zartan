@@ -262,6 +262,54 @@ def healthcare_getverificationcode():
     return evidenttoken
 
 
+@healthcare_views_bp.route("/updateidentity")
+@is_authenticated
+def healthcare_updateidentity():
+    logger.debug("healthcare_updateidentity")
+    user_info = get_userinfo()
+    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
+    user = okta_admin.get_user(user_info["sub"])
+
+    basicauth = OktaUtil.get_encoded_auth("okta", "Ry4EZf8SyxKyStLK6BqxBBLXEW4SrIo6hc0m2rR3PoI")
+
+    headers = {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "Authorization": "Basic {0}".format(basicauth)
+    }
+
+    evident_id = user["profile"][get_udp_ns_fieldname("evident_id")]
+    response = RestUtil.execute_get("https://verify.api.demo.evidentid.com/api/v1/verify/requests/{0}".format(evident_id), headers=headers)
+
+    user_data = {
+        "profile": {
+            get_udp_ns_fieldname("is_evident_validated"): True
+        }
+    }
+    status = ""
+    for item in response["attributes"]:
+        status = item["status"]
+        if status == "pending":
+            break
+
+        if item["type"] == "core.firstname":
+            user_data["profile"]["firstName"] = item["values"][0]
+        if item["type"] == "core.lastname":
+            user_data["profile"]["lastName"] = item["values"][0]
+        if item["type"] == "core.address.zipcode":
+            user_data["profile"]["zipCode"] = item["values"][0]
+        if item["type"] == "core.address.city":
+            user_data["profile"]["city"] = item["values"][0]
+        if item["type"] == "core.address.state":
+            user_data["profile"]["state"] = item["values"][0]
+    if status == "pending":
+        return status
+    else:
+        okta_admin.update_user(user["id"], user_data)
+
+    return response
+
+
 @healthcare_views_bp.route("/healthrecord")
 @is_authenticated
 def healthcare_healthrecord():
