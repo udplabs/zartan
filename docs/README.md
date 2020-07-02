@@ -11,6 +11,22 @@
   - [Use Cases or Scenarios: Finance](#use-cases-or-scenarios-finance)
 - [Troubleshooting: FAQs](#troubleshooting-faqs)
 
+## Requirements
+
+These items need to be downloaded and installed in order to properly run a Zartan demo
+
+### Python
+
+Zartan Requires Python 3.6 or higher to run properly.  Python can be downloaded here [Python Download](https://www.python.org/downloads/)
+
+You can also leverage services like Heroku and AWS Elastic Beanstalk to run Zartan as well.
+
+### Zartan
+
+* You can clone the Zartan codebase down from github [Zartan on github](https://github.com/udplabs/zartan) to your local system
+* `pip install -r requirements.txt` from the root app folder NOTE: you may need to run as `pip3 install -r requirements.txt` if you have python 2.7 on your local instance along with python 3.x
+
+
 ### Download and Install Terraform
 
 * Download the [Terraform binary](https://www.terraform.io/downloads.html) for your OS
@@ -32,7 +48,116 @@
 * Type 'yes' at the prompt and once it is completed you should see the following message similar to `Apply complete! Resources: 6 added, 0 changed, 0 destroyed.`
 * Verify by checking in your okta org
 
-## Setup Okta Org for each Vertical
+## General Config
+
+* Set up a `.env` file [see .env sample](../.env.sample)
+* Enter the proper values based on your vertical after running your terraform script for the vertical (see below)
+
+`.env` settings in general
+
+* Okta Setting
+  * OKTA_CLIENT_ID="_GET_THIS_OKTA_"
+  * OKTA_CLIENT_SECRET="_GET_THIS_OKTA_"
+  * OKTA_ISSUER="_GET_THIS_OKTA_"
+  * OKTA_ORG_URL="_GET_THIS_OKTA_"
+  * OKTA_OIDC_REDIRECT_URI="http://localhost:8080/authorization-code/callback"
+  * OKTA_API_TOKEN="_GET_THIS_OKTA_"
+
+* Zartan Setting
+  * APP_TEMPLATE="sample"
+  * APP_LOGINMETHOD="standard-widget"
+  * APP_NAME="Sample App"
+  * APP_SLOGAN="Some Slogan"
+  * APP_SUBSLOGAN="Some Sub Text Slogan"
+  * APP_LOGO="URL_TO_LOGO"
+  * APP_FAVICON="URL_TO_FAVICON"
+  * APP_BANNER_1="URL_TO_BANNER_IMG"
+  * APP_PRIMARY_COLOR="#0061f2"
+  * APP_SECONDARY_COLOR="#6900c7"
+  * APP_SUCCESS_COLOR="#00ac69"
+  * APP_INFO_COLOR="#00cfd5"
+  * APP_WARNING_COLOR="#f4a100"
+  * APP_DANGER_COLOR="#e81500"
+
+* Third Party Setting
+  * SPARKPOST_API_KEY="[Box Link To Key](https://okta.box.com/s/cgp429sqbbowuuyiqgckq6t836lyp8jw)"
+
+* Flask Setting
+  * SECRET_KEY="SOME_RANDOM_GUID"
+
+
+## Config: Admin vertical
+
+`.env` settings: Change this value to use this vertical
+
+* Zartan Setting
+  * APP_TEMPLATE="admin"
+
+## Config: Credit vertical
+
+`.env` settings: Change/Add these values to use this vertical
+
+* Zartan Setting
+  * APP_TEMPLATE="credit"
+
+* Step Up
+  * APP_STEPUP_AUTH_CLIENTID="_GET_THIS_OKTA_"
+  * APP_STEPUP_AUTH_CLIENTURL="_GET_THIS_OKTA_"
+
+## Config: Dealer vertical
+
+`.env` settings: Change this value to use this vertical
+
+* Zartan Setting
+  * APP_TEMPLATE="dealer"
+
+## Config: Finance vertical
+
+.env` settings: Change/Add these values to use this vertical
+
+* Zartan Setting
+  * APP_TEMPLATE="finance"
+
+* Step Up
+  * APP_STEPUP_AUTH_CLIENTID="_GET_THIS_OKTA_"
+  * APP_STEPUP_AUTH_CLIENTURL="_GET_THIS_OKTA_"
+
+## Config: Healthcare vertical
+
+.env` settings: Change/Add these values to use this vertical
+
+* Zartan Setting
+  * APP_TEMPLATE="healthcare"
+
+* Step Up
+  * APP_STEPUP_AUTH_CLIENTID="_GET_THIS_OKTA_"
+  * APP_STEPUP_AUTH_CLIENTURL="_GET_THIS_OKTA_"
+
+## Config: Hospitality vertical
+
+`.env` settings: Change this value to use this vertical
+
+* Zartan Setting
+  * APP_TEMPLATE="hospitality"
+
+## Config: Streaming Service vertical
+
+`.env` settings: Change this value to use this vertical
+
+* Zartan Setting
+  * APP_TEMPLATE="streamingservice"
+
+## Config: Travelagency vertical
+
+`.env` settings: Change this value to use this vertical
+
+* Zartan Setting
+  * APP_TEMPLATE="travelagency"
+
+## Run The App
+`python app.py` NOTE: you may need to run as `python3 app.py` if you have python 2.7 on your local instance along with python 3.x
+
+## Setup Okta Org for each Vertical (outside of terraform)
 
 >> WIP: Needs further details, just assuming. Plus attached terraform script could be reference.
 
