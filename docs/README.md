@@ -1,4 +1,6 @@
-# Zartan Usage Guide <!-- omit in toc -->
+# Zartan LOCAL Usage Guide <!-- omit in toc -->
+
+This document is how to set up and run Zartan in your own local environment, outside of UDP
 
 >> WIP: Just placeholder for now and will convert this content into vuepress for readability
 
@@ -15,6 +17,10 @@
 
 These items need to be downloaded and installed in order to properly run a Zartan demo
 
+* Python 3.6+ and Flask
+* Okta tenant. [Free tenant](https://developer.okta.com/)
+* (Optional) git client [git client installation instructions](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+
 ### Python
 
 Zartan Requires Python 3.6 or higher to run properly.  Python can be downloaded here [Python Download](https://www.python.org/downloads/)
@@ -24,8 +30,11 @@ You can also leverage services like Heroku and AWS Elastic Beanstalk to run Zart
 ### Zartan
 
 * You can clone the Zartan codebase down from github [Zartan on github](https://github.com/udplabs/zartan) to your local system
+  * (optional)Create a directory to serve the Zartan app off of in your local environment
+  * (Git cloning instruction)[https://git-scm.com/book/en/v2/Git-Basics-Getting-a-Git-Repository]
+  * `git clone git@github.com:udplabs/zartan.git` for ssh
+  * `git clone https://github.com/udplabs/zartan.git` for https
 * `pip install -r requirements.txt` from the root app folder NOTE: you may need to run as `pip3 install -r requirements.txt` if you have python 2.7 on your local instance along with python 3.x
-
 
 ### Download and Install Terraform
 
