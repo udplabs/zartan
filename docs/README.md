@@ -27,6 +27,8 @@ Zartan Requires Python 3.6 or higher to run properly.  Python can be downloaded 
 
 You can also leverage services like Heroku and AWS Elastic Beanstalk to run Zartan as well.
 
+NOTE: There mmay be compatability issues with MacOS and Catalina.  Please refer to your OS version when installing Python
+
 ### Zartan
 
 * You can clone the Zartan codebase down from github [Zartan on github](https://github.com/udplabs/zartan) to your local system
@@ -34,7 +36,10 @@ You can also leverage services like Heroku and AWS Elastic Beanstalk to run Zart
   * (Git cloning instruction)[https://git-scm.com/book/en/v2/Git-Basics-Getting-a-Git-Repository]
   * `git clone git@github.com:udplabs/zartan.git` for ssh
   * `git clone https://github.com/udplabs/zartan.git` for https
-* `pip install -r requirements.txt` from the root app folder NOTE: you may need to run as `pip3 install -r requirements.txt` if you have python 2.7 on your local instance along with python 3.x
+* Use venv [venv reference](https://docs.python.org/3/tutorial/venv.html) This will set up a contained environment to run the zartan app on without impacting your entire python environment.  Please run this from a directory/folder that you specifically create for it
+  * `python -m venv zartan-env` or `python3 -m venv zartan-env` depending on your python installation. This will create and siloed environment called `zartan-env` you can change this name if you want but just remember what you used as you will need to activate the environment to run zartan.
+  * Activate the zartan environment from the folder you set up for it: for MacOS/Linux `source zartan-env/bin/activate` for Windows `zartan-env\Scripts\activate.bat`
+  * `pip install -r requirements.txt` from the root app folder NOTE: you may need to run as `pip3 install -r requirements.txt` if you have python 2.7 on your local instance along with python 3.x
 
 ### Download and Install Terraform
 
@@ -164,7 +169,10 @@ You can also leverage services like Heroku and AWS Elastic Beanstalk to run Zart
   * APP_TEMPLATE="travelagency"
 
 ## Run The App
-`python app.py` NOTE: you may need to run as `python3 app.py` if you have python 2.7 on your local instance along with python 3.x
+
+Remember to activate your zartan-env specified [in the Zartan configuration section](#zartan)
+
+then enter `python app.py` at the command prompt. NOTE: you may need to run as `python3 app.py` if you have python 2.7 on your local instance along with python 3.x
 
 ## Setup Okta Org for each Vertical (outside of terraform)
 
