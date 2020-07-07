@@ -3,10 +3,10 @@ variable "api_token" {}
 variable "base_url" {}
 variable "demo_app_name" {}
 variable "udp_subdomain" {}
-variable "test_app_domain" {}
+variable "app_uri" {}
 
 locals {
-    app_url = "${var.test_app_domain}"
+    app_url = "${var.app_uri}"
 }
 
 provider "okta" {
