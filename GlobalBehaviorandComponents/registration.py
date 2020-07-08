@@ -18,7 +18,11 @@ gbac_registration_bp = Blueprint('gbac_registration_bp', __name__, template_fold
 @gbac_registration_bp.route("/registration")
 def registration_bp():
     logger.debug("Registration")
-    return render_template("/registration.html", templatename=get_app_vertical(), config=session[SESSION_INSTANCE_SETTINGS_KEY], _scheme="https")
+    return render_template(
+        "/registration.html",
+        templatename=get_app_vertical(),
+        config=session[SESSION_INSTANCE_SETTINGS_KEY],
+        _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
 
 
 @gbac_registration_bp.route("/registration-state/<stateToken>", methods=["GET"])
@@ -30,7 +34,7 @@ def gbac_registration_state_get(stateToken):
         templatename=get_app_vertical(),
         userid=user_id,
         config=session[SESSION_INSTANCE_SETTINGS_KEY],
-        _scheme="https")
+        _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
 
 
 @gbac_registration_bp.route("/registration-state/<userid>", methods=["POST"])
@@ -66,7 +70,7 @@ def gbac_registration_state_post(userid):
     group_id = group_info[0]["id"]
     okta_admin.assign_user_to_group(group_id, user_id)
     message = "Registration Complete! Please Login Now!"
-    return redirect(url_for("gbac_bp.gbac_login", _external="True", _scheme="https", message=message))
+    return redirect(url_for("gbac_bp.gbac_login", _external="True", _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"], message=message))
 
 
 @gbac_registration_bp.route("/registration-completion", methods=["POST"])
@@ -95,14 +99,18 @@ def gbac_registration_completion():
         "/registration-completion.html",
         templatename=get_app_vertical(),
         config=session[SESSION_INSTANCE_SETTINGS_KEY],
-        _scheme="https")
+        _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
 
 
 # EMail user and admin when a new user registers successfully
 def emailRegistration(recipient, token):
     logger.debug("emailRegistration()")
     app_title = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_name"]
-    activation_link = url_for("gbac_registration_bp.gbac_registration_state_get", stateToken=token, _external=True, _scheme="https")
+    activation_link = url_for(
+        "gbac_registration_bp.gbac_registration_state_get",
+        stateToken=token,
+        _external=True,
+        _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
     subject = "Welcome to the {app_title}".format(app_title=session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_name"])
 
     message = """

@@ -1,6 +1,4 @@
 org_name        = "<okta_subdomain>"
 api_token       = "<okta_api_token>"
 base_url        = "<oktapreview.com or okta.com>"
-demo_app_name   = "<zartan vertical name i.e. travelagency>"
-udp_subdomain   = "<make up a dummy name for udp subdomain. (Follows udp subdomain naming convention). e.g. local-zartan>"
-app_uri         = "<for local install, use localhost:8666>"
+udp_subdomain   = "<OPTIONAL: make up a dummy name for udp subdomain. (Follows udp subdomain naming convention). default is 'local-zartan'>"

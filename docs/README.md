@@ -157,6 +157,7 @@ Set up the `.env` file.
     | Variable   | Value |
     | ---------- | ----- |
     | SECRET_KEY | some random guid |
+    | APP_SCHEME | http or https depending if you have an ssl cert|
 
 * Unused for local installation
 

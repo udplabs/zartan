@@ -61,7 +61,7 @@ def gbac_user_suspend():
     else:
         message = "Error During Suspension"
 
-    return redirect(url_for("gbac_manageusers_bp.gbac_users", _external="True", _scheme="https", message=message))
+    return redirect(url_for("gbac_manageusers_bp.gbac_users", _external="True", _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"], message=message))
 
 
 @gbac_manageusers_bp.route("/unsuspenduser")
@@ -77,7 +77,7 @@ def gbac_user_unsuspend():
     else:
         message = "Error During Un-Suspension"
 
-    return redirect(url_for("gbac_manageusers_bp.gbac_users", _external="True", _scheme="https", message=message))
+    return redirect(url_for("gbac_manageusers_bp.gbac_users", _external="True", _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"], message=message))
 
 
 @gbac_manageusers_bp.route("/resetpassword")
@@ -94,7 +94,7 @@ def gbac_user_resetpassword():
     else:
         message = "Error During Password Reset"
 
-    return redirect(url_for("gbac_manageusers_bp.gbac_users", _external="True", _scheme="https", message=message))
+    return redirect(url_for("gbac_manageusers_bp.gbac_users", _external="True", _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"], message=message))
 
 
 @gbac_manageusers_bp.route("/manageusercreateupdate")
@@ -133,7 +133,7 @@ def gbac_user_create():
     else:
         message = "Error During Create"
 
-    return redirect(url_for("gbac_manageusers_bp.gbac_users", _external="True", _scheme="https", message=message))
+    return redirect(url_for("gbac_manageusers_bp.gbac_users", _external="True", _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"], message=message))
 
 
 @gbac_manageusers_bp.route("/updateuserinfo", methods=["POST"])
@@ -155,4 +155,10 @@ def gbac_user_update():
     else:
         message = "Error During Update"
 
-    return redirect(url_for("gbac_manageusers_bp.gbac_users", _external="True", _scheme="https", user_id=user_id, message=message))
+    return redirect(
+        url_for(
+            "gbac_manageusers_bp.gbac_users",
+            _external="True",
+            _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"],
+            user_id=user_id,
+            message=message))
