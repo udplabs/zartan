@@ -31,5 +31,6 @@ default_settings = {
         "app_stepup_auth_clienturl": os.getenv("APP_STEPUP_AUTH_CLIENTURL", "")
     },
     "okta_api_token": os.getenv("OKTA_API_TOKEN", ""),
-    "app_secret_key": os.getenv("SECRET_KEY", "")
+    "app_secret_key": os.getenv("SECRET_KEY", ""),
+    "app_scheme": os.getenv("APP_SCHEME", "https")
 }

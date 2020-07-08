@@ -36,7 +36,7 @@ def admin_profile():
         templatename=get_app_vertical(),
         user_info=get_userinfo(),
         config=session[SESSION_INSTANCE_SETTINGS_KEY],
-        _scheme="https")
+        _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
 
 
 @admin_views_bp.route("/users_advanced")
@@ -82,7 +82,7 @@ def admin_temporarypasscode():
 
     message = "Your Temporary Code is: {0}".format(str(randcode))
 
-    return redirect(url_for("admin_views_bp.admin_usersadvanced", _external="True", _scheme="https", message=message))
+    return redirect(url_for("admin_views_bp.admin_usersadvanced", _external="True", _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"], message=message))
 
 
 def random_with_N_digits(n):

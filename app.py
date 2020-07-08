@@ -183,7 +183,7 @@ def get_post_login_landing_page_url():
     app_landing_page_url = ""
 
     # Pull from Confg
-    hosturl = request.host_url.replace("http://", "https://")
+    hosturl = request.host_url.replace("http://", "{0}://".format(session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"]))
 
     if session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_post_login_landing_url"]:
         app_landing_page_url = hosturl + "{app_template}/{landing_page}".format(
