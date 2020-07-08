@@ -104,12 +104,11 @@ app.register_blueprint(healthcare_views_bp, url_prefix='/healthcare')
 from _ecommerce.views import ecommerce_views_bp
 app.register_blueprint(ecommerce_views_bp, url_prefix='/ecommerce')
 
-
-
 ##############################################
 # Main Shared Routes
 # DO NOT TOUCH
 ##############################################
+
 
 @app.route('/<path:filename>')
 def serve_static_html(filename):

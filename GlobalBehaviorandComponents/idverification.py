@@ -2,10 +2,10 @@ import logging
 import datetime
 import time
 
-from flask import render_template, session, request, redirect, url_for
+from flask import session
 from flask import Blueprint
 from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_udp_ns_fieldname
-from utils.okta import TokenUtil, OktaAdmin, OktaUtil, OktaAuth
+from utils.okta import OktaAdmin, OktaUtil
 from utils.rest import RestUtil
 
 from GlobalBehaviorandComponents.validation import is_authenticated, get_userinfo
@@ -14,6 +14,7 @@ logger = logging.getLogger(__name__)
 
 # set blueprint
 gbac_idverification_bp = Blueprint('gbac_idverification_bp', __name__, template_folder='templates', static_folder='static', static_url_path='static')
+
 
 @gbac_idverification_bp.route("/getverificationcode")
 @is_authenticated
@@ -99,6 +100,7 @@ def gbac_idverification_updateidentity():
         logging.debug(user_data)
         okta_admin.update_user(user["id"], user_data)
     return response
+
 
 @gbac_idverification_bp.route("/isverified")
 @is_authenticated

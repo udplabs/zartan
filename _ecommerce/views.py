@@ -3,7 +3,7 @@ import requests
 
 # import functions
 from flask import render_template, session, request
-from flask import Blueprint, redirect
+from flask import Blueprint
 from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical
 from utils.okta import TokenUtil, OktaAdmin
 
@@ -39,7 +39,7 @@ def ecommerce_account():
 @ecommerce_views_bp.route("/shop")
 def ecommerce_shop():
     logger.debug("ecommerce_shop()")
-    products = requests.get(url = "https://dz-static-test.s3.amazonaws.com/dell.json")
+    products = requests.get(url="https://dz-static-test.s3.amazonaws.com/dell.json")
 
     return render_template(
         "ecommerce/shop.html",
@@ -49,10 +49,11 @@ def ecommerce_shop():
         user_info=get_userinfo(),
         _scheme="https")
 
+
 @ecommerce_views_bp.route("/product/<product_id>")
 def ecommerce_product(product_id):
     logger.debug("ecommerce_product()")
-    products = requests.get(url = "https://dz-static-test.s3.amazonaws.com/dell.json")
+    products = requests.get(url="https://dz-static-test.s3.amazonaws.com/dell.json")
 
     return render_template(
         "ecommerce/product.html",
@@ -62,6 +63,7 @@ def ecommerce_product(product_id):
         productid=product_id,
         config=session[SESSION_INSTANCE_SETTINGS_KEY],
         _scheme="https")
+
 
 # checkout Page
 @ecommerce_views_bp.route("/checkout")
@@ -74,6 +76,7 @@ def ecommerce_checkout():
 
     return render_template("ecommerce/checkout.html", user=user, user_info=get_userinfo(), config=session[SESSION_INSTANCE_SETTINGS_KEY], _scheme="https")
 
+
 # Apply Credit Page
 @ecommerce_views_bp.route("/apply")
 @is_authenticated
@@ -84,6 +87,7 @@ def ecommerce_apply():
     user = okta_admin.get_user(user_info["sub"])
 
     return render_template("ecommerce/apply.html", user=user, user_info=get_userinfo(), config=session[SESSION_INSTANCE_SETTINGS_KEY], _scheme="https")
+
 
 # Order Page
 @ecommerce_views_bp.route("/order")
@@ -96,6 +100,7 @@ def ecommerce_order():
 
     return render_template("ecommerce/order.html", user=user, user_info=get_userinfo(), config=session[SESSION_INSTANCE_SETTINGS_KEY], _scheme="https")
 
+
 # checkout Page
 @ecommerce_views_bp.route("/updateuser")
 @is_authenticated
@@ -103,7 +108,6 @@ def ecommerce_updateuser():
     logger.debug("ecommerce_updateuser()")
     user_info = get_userinfo()
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
-    user = okta_admin.get_user(user_info["sub"])
     logger.debug(request)
 
     firstname = request.args["firstName"]
