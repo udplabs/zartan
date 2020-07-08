@@ -38,7 +38,7 @@ def dealer_profile_get():
         access_token=TokenUtil.get_access_token(request.cookies),
         user_info=get_userinfo(),
         config=session[SESSION_INSTANCE_SETTINGS_KEY],
-        _scheme="https")
+        _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
 
 
 # dealer my applications
@@ -71,7 +71,7 @@ def dealer_myapps_get():
         config=session[SESSION_INSTANCE_SETTINGS_KEY],
         location=location,
         apps=get_apps_response,
-        _scheme="https")
+        _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
 
 
 @dealer_views_bp.route("/registration", methods=["GET"])
@@ -122,7 +122,7 @@ def dealer_registration_get():
             config=session[SESSION_INSTANCE_SETTINGS_KEY],
             user_data=user_data,
             setup_options=setup_options,
-            _scheme="https")
+            _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
     except Exception as e:
         return render_template(
             "{0}/registration.html".format(get_app_vertical()),
@@ -131,7 +131,7 @@ def dealer_registration_get():
             error=e,
             user_data=user_data,
             setup_options=setup_options,
-            _scheme="https")
+            _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
 
 
 @dealer_views_bp.route("/registration", methods=["POST"])
@@ -203,7 +203,7 @@ def dealer_registration_post():
         templatename=get_app_vertical(),
         config=session[SESSION_INSTANCE_SETTINGS_KEY],
         email=request.form.get('email'),
-        _scheme="https")
+        _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
 
 
 @dealer_views_bp.route("/registration-state/<stateToken>", methods=["GET"])
@@ -221,7 +221,7 @@ def dealer_registration_state_get(stateToken):
     return render_template(
         "{0}/registration-state.html".format(get_app_vertical()),
         templatename=get_app_vertical(),
-        config=session[SESSION_INSTANCE_SETTINGS_KEY], _scheme="https")
+        config=session[SESSION_INSTANCE_SETTINGS_KEY], _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
 
 
 @dealer_views_bp.route("/registration-completion", methods=["GET"])
@@ -231,7 +231,7 @@ def dealer_registration_completion_get():
         "{0}/registration-completion.html".format(get_app_vertical()),
         templatename=get_app_vertical(),
         config=session[SESSION_INSTANCE_SETTINGS_KEY],
-        _scheme="https")
+        _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
 
 
 @dealer_views_bp.route("/workflow-approvals", methods=["GET"])
@@ -276,7 +276,7 @@ def workflow_approvals_get():
             workflow_list=workflow_list,
             user_info=user_info,
             config=session[SESSION_INSTANCE_SETTINGS_KEY],
-            _scheme="https")
+            _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
     else:
         return "ERROR: Unauthorized", 401
 
@@ -332,7 +332,7 @@ def workflow_approvals_post():
         }
         okta_admin.update_user(user_id=user_id, user=user_data)
 
-    return redirect(url_for("dealer_views_bp.workflow_approvals_get", _external=True, _scheme="https"))
+    return redirect(url_for("dealer_views_bp.workflow_approvals_get", _external=True, _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"]))
 
 
 @is_authenticated
@@ -394,7 +394,7 @@ def workflow_requests_get():
             user_info=user_info,
             workflow_list=workflow_list,
             config=session[SESSION_INSTANCE_SETTINGS_KEY],
-            _scheme="https")
+            _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
     else:  # If not a user of a dealership, cannot request access to applications
         return render_template(
             "{0}/workflow-requests.html".format(get_app_vertical()),
@@ -402,7 +402,7 @@ def workflow_requests_get():
             user_info=user_info,
             error="You have not been assigned to a dealership. Only users of a dealership can request access to applications",
             config=session[SESSION_INSTANCE_SETTINGS_KEY],
-            _scheme="https")
+            _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
 
 
 @is_authenticated
@@ -433,7 +433,7 @@ def workflow_requests_post():
         okta_admin.update_user(user_id=user_id, user=user_data)
         EmailServices().emailWorkFlowRequest()
 
-    return redirect(url_for("dealer_views_bp.workflow_requests_get", _external=True, _scheme="https"))
+    return redirect(url_for("dealer_views_bp.workflow_requests_get", _external=True, _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"]))
 
 
 # Class containing email services and formats
@@ -465,7 +465,7 @@ class EmailServices:
         logger.debug("emailWorkFlowRequest()")
 
         CONFIG_GROUP_ADMIN = get_udp_ns_fieldname(CONFIG_ADMIN)
-        activation_link = url_for("dealer_views_bp.workflow_approvals_get", _external=True, _scheme="https")
+        activation_link = url_for("dealer_views_bp.workflow_approvals_get", _external=True, _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
         # Send Activation Email to the Admin
         subject_admin = "A workflow request was received"
         message_admin = """
@@ -481,7 +481,11 @@ class EmailServices:
         CONFIG_GROUP_ADMIN = get_udp_ns_fieldname(CONFIG_ADMIN)
 
         app_title = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_name"]
-        activation_link = url_for("dealer_views_bp.dealer_registration_state_get", stateToken=token, _external=True, _scheme="https")
+        activation_link = url_for(
+            "dealer_views_bp.dealer_registration_state_get",
+            stateToken=token,
+            _external=True,
+            _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
         subject = "Welcome to the {app_title}".format(app_title=session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_name"])
         # Send Activation Email to the user
         message = """
@@ -496,5 +500,10 @@ class EmailServices:
             A new user has registered. His request is awaiting your approval.
             Click this link to log into your account <br />
             <a href='{activation_link}'>{activation_link}</a> to review the request
-            """.format(activation_link=url_for("dealer_views_bp.workflow_approvals_get", _external=True, _scheme="https"))
+            """.format(
+            activation_link=url_for(
+                "dealer_views_bp.workflow_approvals_get",
+                _external=True,
+                _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"]))
+
         return self.emailAllMembersOfGroup(group_name=CONFIG_GROUP_ADMIN, subject=subject_admin, message=message_admin)

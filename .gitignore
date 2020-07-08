@@ -4,7 +4,7 @@
 *.json
 .~c9*
 .env.*
-
+*.tfvars
 # End Zartan ignore rules
 
 
