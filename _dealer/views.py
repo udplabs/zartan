@@ -496,5 +496,9 @@ class EmailServices:
             A new user has registered. His request is awaiting your approval.
             Click this link to log into your account <br />
             <a href='{activation_link}'>{activation_link}</a> to review the request
-            """.format(activation_link=url_for("dealer_views_bp.workflow_approvals_get", _external=True, _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
+            """.format(
+                activation_link=url_for("dealer_views_bp.workflow_approvals_get",
+                _external=True,
+                _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"]))
+
         return self.emailAllMembersOfGroup(group_name=CONFIG_GROUP_ADMIN, subject=subject_admin, message=message_admin)
