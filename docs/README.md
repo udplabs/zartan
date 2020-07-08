@@ -22,7 +22,7 @@ These items need to be downloaded and installed in order to properly run a Zarta
 * (Optional) git client [git client installation instructions](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 
 ### Python
-Zartan Requires Python 3.6 or higher to run properly. 
+Zartan Requires Python 3.6 or higher to run properly.
 * Please refer to your OS specific instructions on installing [Python](https://www.python.org/downloads/)
     * e.g. for Mac users, you can use homebrew:
     ```bash
@@ -46,11 +46,11 @@ To run Zartan locally, run these steps:
     git clone https://github.com/udplabs/zartan.git
     ```
 2. After cloning, `cd` into the `zartan` folder
-3. Use [`venv`](https://docs.python.org/3/tutorial/venv.html) to setup a contained environment to run the zartan app without impacting your entire Python environment. 
+3. Use [`venv`](https://docs.python.org/3/tutorial/venv.html) to setup a contained environment to run the zartan app without impacting your entire Python environment.
     ```
     python3 -m venv venv
     ```
-    Or,  just `python -m venv venv` if you only have python 3.x installed on your system. Python allows multiple versions to be installed; For Mac users, most likely you'll have both python 2.7 on your local instance along with python 3.x. 
+    Or,  just `python -m venv venv` if you only have python 3.x installed on your system. Python allows multiple versions to be installed; For Mac users, most likely you'll have both python 2.7 on your local instance along with python 3.x.
 4. Activate the `venv` environment: <a name="venv-activate"></a>
     * On Mac/Linux
     ```bash
@@ -79,7 +79,7 @@ We've provided terraform files for easy configuration of the Okta Org. Specific 
 
 ℹ️  Zartan is a collection of demos for different verticals. In addition to the `.tf` files in the `/terraform/{vertical}` folders, there are also vertical specific READMEs in `/docs/{vertical}`. __For readability, this documentation will perform all following steps as if we're in the `travelagency` vertical.__ If you're installing/setting up a different vertical, simply reference the folder and/or file for that vertical.
 
-1. `cd` into `/terraform/travelagency` 
+1. `cd` into `/terraform/travelagency`
 2. Copy `travelagency.tfvars.sample` into `travelagency.tfvars`
 3. Edit in the variables of the `travelagency.tfvars` file:
     ```
@@ -87,10 +87,10 @@ We've provided terraform files for easy configuration of the Okta Org. Specific 
     api_token       = "<okta_api_token>"
     base_url        = "<oktapreview.com or okta.com>"
     demo_app_name   = "<zartan vertical name i.e. travelagency>"
-    udp_subdomain   = "<make up a dummy name for udp subdomain. 
-                       (Follows udp subdomain naming convention). 
+    udp_subdomain   = "<make up a dummy name for udp subdomain.
+                       (Follows udp subdomain naming convention).
                        e.g. local-zartan>"
-    app_uri         = "<for local install, use localhost:8080>"
+    app_uri         = "<for local install, use localhost:8666>"
     ```
 3. Initialize terraform:
     ```
@@ -123,7 +123,7 @@ Set up the `.env` file.
     | OKTA_CLIENT_SECRET     | {{client_secret}} | |
     | OKTA_ISSUER            | {{issuer_uri}} | |
     | OKTA_ORG_URL           | {{org_url}} | |
-    | OKTA_OIDC_REDIRECT_URI | http://localhost:8080/authorization-code/callback | |
+    | OKTA_OIDC_REDIRECT_URI | http://localhost:8666/authorization-code/callback | |
     | OKTA_API_TOKEN         | {{ssws token}} | |
 
 * Zartan Setting
@@ -131,7 +131,7 @@ Set up the `.env` file.
     | Variable            | Value | Default/Example |
     | ------------------- | ----- | ------- |
     | APP_TEMPLATE        | Enter the specific value based on the [vertical](#vertical-specific-variables) | |
-    | APP_LOGINMETHOD     | the login UX, widget, custom or redirect | standard-widget 
+    | APP_LOGINMETHOD     | the login UX, widget, custom or redirect | standard-widget
     | APP_NAME            | some app name prominently displayed | |
     | APP_SLOGAN          | some slogan | |
     | APP_SUBSLOGAN       | some subtitle | |
@@ -147,23 +147,23 @@ Set up the `.env` file.
 
 * Third Party Setting
 
-    | Variable          | Value | 
-    | ----------------- | ----- | 
+    | Variable          | Value |
+    | ----------------- | ----- |
     | SPARKPOST_API_KEY | ℹ️ Mandatory. Get the value from [Box](https://okta.box.com/s/cgp429sqbbowuuyiqgckq6t836lyp8jw) |
 
 
 * Flask Setting
 
-    | Variable   | Value | 
-    | ---------- | ----- | 
+    | Variable   | Value |
+    | ---------- | ----- |
     | SECRET_KEY | some random guid |
 
 * Unused for local installation
 
     ℹ️ You can ignore these as they are for UDP and not applicable when running locally
-    | Variable          | 
-    | ----------------- | 
-    | UDP_CONFIG_URL    | 
+    | Variable          |
+    | ----------------- |
+    | UDP_CONFIG_URL    |
     | UDP_ISSUER        |
     | UDP_CLIENT_ID     |
     | UDP_CLIENT_SECRET |
@@ -175,21 +175,21 @@ Set up the `.env` file.
 * Config: Admin vertical
 
     Set this value to use this vertical
-    | Variable     | Value | 
-    | ------------ | ----- | 
+    | Variable     | Value |
+    | ------------ | ----- |
     | APP_TEMPLATE | admin |
 
 * Config: Credit vertical
 
     Set this value to use this vertical
-    | Variable     | Value | 
-    | ------------ | ----- | 
+    | Variable     | Value |
+    | ------------ | ----- |
     | APP_TEMPLATE | credit |
 
 
     Add these values to use this vertical
-    | Variable                  | Value | 
-    | ------------------------- | ----- | 
+    | Variable                  | Value |
+    | ------------------------- | ----- |
     | APP_STEPUP_AUTH_CLIENTID  | client_id of the "Step up" app |
     | APP_STEPUP_AUTH_CLIENTURL | |
 
@@ -197,22 +197,22 @@ Set up the `.env` file.
 * Config: Dealer vertical
 
     Set this value to use this vertical
-    | Variable     | Value | 
-    | ------------ | ----- | 
+    | Variable     | Value |
+    | ------------ | ----- |
     | APP_TEMPLATE | dealer |
 
 
 * Config: Finance vertical
 
     Set this value to use this vertical
-    | Variable     | Value | 
-    | ------------ | ----- | 
+    | Variable     | Value |
+    | ------------ | ----- |
     | APP_TEMPLATE | finance |
 
 
     Add these values to use this vertical
-    | Variable                  | Value | 
-    | ------------------------- | ----- | 
+    | Variable                  | Value |
+    | ------------------------- | ----- |
     | APP_STEPUP_AUTH_CLIENTID  | client_id of the "Step up" app |
     | APP_STEPUP_AUTH_CLIENTURL | |
 
@@ -220,14 +220,14 @@ Set up the `.env` file.
 * Config: Healthcare vertical
 
     Set this value to use this vertical
-    | Variable     | Value | 
-    | ------------ | ----- | 
+    | Variable     | Value |
+    | ------------ | ----- |
     | APP_TEMPLATE | healthcare |
 
 
     Add these values to use this vertical
-    | Variable                  | Value | 
-    | ------------------------- | ----- | 
+    | Variable                  | Value |
+    | ------------------------- | ----- |
     | APP_STEPUP_AUTH_CLIENTID  | client_id of the "Step up" app |
     | APP_STEPUP_AUTH_CLIENTURL | |
 
@@ -235,16 +235,16 @@ Set up the `.env` file.
 * Config: Hospitality vertical
 
     Set this value to use this vertical
-    | Variable     | Value | 
-    | ------------ | ----- | 
+    | Variable     | Value |
+    | ------------ | ----- |
     | APP_TEMPLATE | hospitality |
 
 
 * Config: Streaming Service vertical
 
     Set this value to use this vertical
-    | Variable     | Value | 
-    | ------------ | ----- | 
+    | Variable     | Value |
+    | ------------ | ----- |
     | APP_TEMPLATE | streamingservice |
 
 
@@ -252,8 +252,8 @@ Set up the `.env` file.
 * Config: Travelagency vertical
 
     Set this value to use this vertical
-    | Variable     | Value | 
-    | ------------ | ----- | 
+    | Variable     | Value |
+    | ------------ | ----- |
     | APP_TEMPLATE | travelagency |
 
 ---
