@@ -31,33 +31,32 @@ Zartan Requires Python 3.6 or higher to run properly.
 * You can also leverage services like Heroku and AWS Elastic Beanstalk to run Zartan as well.
 
 
-ℹ️ Mac users: If you've never run a Python app locally before, your machine is in an unknown state when it comes to Python development. It is a known issue for Python dependencies to have moved, become unlinked or deleted during MacOS upgrades (e.g. an upgrade to Catalina). If you have issues during any of the install steps (below) or when running Zartan locally, try reinstalling Python:
+ℹ️  Mac users: If you've never run a Python app locally before, your machine is in an unknown state when it comes to Python development. It is a known issue for Python dependencies to have moved, become unlinked or deleted during MacOS upgrades (e.g. an upgrade to Catalina). If you have issues during any of the install steps (below) or when running Zartan locally, try reinstalling Python:
 ```bash
 brew reinstall python
 ```
 
-### Install
+---
+
+## Install
 To run Zartan locally, run these steps:
 1. Git [`clone`](https://git-scm.com/book/en/v2/Git-Basics-Getting-a-Git-Repository) this repo:
-    
-    e.g.
     ```bash
+    # e.g. using https
     git clone https://github.com/udplabs/zartan.git
     ```
-2. `cd` into the `zartan` folder from the cloning process above
+2. After cloning, `cd` into the `zartan` folder
 3. Use [`venv`](https://docs.python.org/3/tutorial/venv.html) to setup a contained environment to run the zartan app without impacting your entire Python environment. 
-
-    In the `/zartan` folder you `cd`'d into:
     ```
     python3 -m venv venv
     ```
-    * or just `python -m venv venv` if you only have python 3.x installed on your system. Python allows multiple versions to be installed; For Mac users, most likely you'll have both python 2.7 on your local instance along with python 3.x. 
+    Or,  just `python -m venv venv` if you only have python 3.x installed on your system. Python allows multiple versions to be installed; For Mac users, most likely you'll have both python 2.7 on your local instance along with python 3.x. 
 4. Activate the `venv` environment: <a name="venv-activate"></a>
-    * Mac/Linux
+    * On Mac/Linux
     ```bash
     source venv/bin/activate
     ```
-    * Windows:
+    * On Windows:
     ```
     venv\Scripts\activate.bat
     ```
@@ -65,20 +64,20 @@ To run Zartan locally, run these steps:
     ```bash
     pip install -r requirements.txt
     ```
-    * NOTE: you may need to run as `pip3 install -r requirements.txt` if you have python 2.7 on your local instance along with python 3.x
+    NOTE: You may need to run as `pip3 install -r requirements.txt` if you have python 2.7 on your local instance along with python 3.x
 
 ---
 
-### Terraform
+## Terraform
 We've provided terraform files for easy configuration of the Okta Org. Specific verticals' `.tf` files are located in their respective `/terraform/{vertical}` folder.
 
 * Download the [Terraform binary](https://www.terraform.io/downloads.html) for your OS
-* Follow the instructions for [TheTerraform Install Guide](https://learn.hashicorp.com/terraform/getting-started/install) for your OS
+* Follow the instructions for [Terraform Install Guide](https://learn.hashicorp.com/terraform/getting-started/install) for your OS
 * Verify terraform is installed correctly by going to the command line / shell, then type the command `terraform version`, press `Enter` or `Return` and you should see a response similar to `Terraform v0.12.28`
 
 ### Configure, initialize and apply Terraform for the vertical you want to use
 
-ℹ️ Zartan is a collection of demos for different verticals. In addition to the `.tf` files in the `/terraform/{vertical}` folders, there are also vertical specific READMEs in `/docs/{vertical}`. __For readability, this documentation will perform all following steps as if we're in the `travelagency` vertical.__ If you're installing/setting up a different vertical, simply reference the folder and/or file for that vertical.
+ℹ️  Zartan is a collection of demos for different verticals. In addition to the `.tf` files in the `/terraform/{vertical}` folders, there are also vertical specific READMEs in `/docs/{vertical}`. __For readability, this documentation will perform all following steps as if we're in the `travelagency` vertical.__ If you're installing/setting up a different vertical, simply reference the folder and/or file for that vertical.
 
 1. `cd` into `/terraform/travelagency` 
 2. Copy `travelagency.tfvars.sample` into `travelagency.tfvars`
@@ -105,15 +104,14 @@ We've provided terraform files for easy configuration of the Okta Org. Specific 
     ```
     terraform apply -var-file travelagency.tfvars
     ```
-    * Type 'yes' at the prompt and once it is completed you should see the following message similar to `Apply complete! Resources: 6 added, 0 changed, 0 destroyed.`
-6. Verify by checking in your okta org
+    Type `'yes'` at the prompt. Once it is completed you should see a message similar to `Apply complete! Resources: 6 added, 0 changed, 0 destroyed.`
+6. Verify by checking in your Okta Org
 
 ---
 
-## General Config
-
-Set up the `.env` file. [see .env sample](../.env.sample)
-* Copy the `.env.sample` file into `.env` and edit it in:
+## Local Environment Variables
+Set up the `.env` file.
+* Copy the [`.env.sample`](../.env.sample) (in the root directory) file into `.env` and edit it.
 * Enter the proper values based on vertical after running your terraform script for the vertical.
 
 ### Variables common to all verticals:
@@ -132,7 +130,7 @@ Set up the `.env` file. [see .env sample](../.env.sample)
 
     | Variable            | Value | Default/Example |
     | ------------------- | ----- | ------- |
-    | APP_TEMPLATE        | Enter the specific value based on the [vertical](vertical-specific-variables) | |
+    | APP_TEMPLATE        | Enter the specific value based on the [vertical](#vertical-specific-variables) | |
     | APP_LOGINMETHOD     | the login UX, widget, custom or redirect | standard-widget 
     | APP_NAME            | some app name prominently displayed | |
     | APP_SLOGAN          | some slogan | |
@@ -170,6 +168,7 @@ Set up the `.env` file. [see .env sample](../.env.sample)
     | UDP_CLIENT_ID     |
     | UDP_CLIENT_SECRET |
 
+---
 
 ### Vertical specific variables
 
@@ -262,11 +261,11 @@ Set up the `.env` file. [see .env sample](../.env.sample)
 ## Run The App
 
 * Remember to activate your `venv` specified [in the __Install__ section](#venv-activate) if you haven't done it already.
-* Run python:
+* Then, run python:
     ```
     python app.py
     ```
-    * NOTE: you may need to run as `python3 app.py` if you have python 2.7 on your local instance along with python 3.x
+    NOTE: you may need to run as `python3 app.py` if you have python 2.7 on your local instance along with python 3.x
 
 ## Setup Okta Org for each Vertical (outside of terraform)
 
