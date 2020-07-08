@@ -1,4 +1,4 @@
 org_name        = "<okta_subdomain>"
 api_token       = "<okta_api_token>"
 base_url        = "<oktapreview.com or okta.com>"
-udp_subdomain   = "<OPTIONAL: make up a dummy name for udp subdomain. (Follows udp subdomain naming convention). default is 'local-zartan'>"
+udp_subdomain   = "<OPTIONAL: make up a dummy name for udp subdomain. (Follows udp subdomain naming convention). default is 'local_zartan'>"

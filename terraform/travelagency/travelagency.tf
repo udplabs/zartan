@@ -2,7 +2,7 @@ variable "org_name" {}
 variable "api_token" {}
 variable "base_url" {}
 variable "demo_app_name" { default="travelagency" }
-variable "udp_subdomain" { default="local-zartan"}
+variable "udp_subdomain" { default="local_zartan" }
 variable "app_uri" { default="localhost:8666" }
 
 locals {
@@ -37,12 +37,12 @@ resource "okta_app_oauth" "travelagency" {
   consent_method = "TRUSTED"
   groups         = ["${data.okta_group.all.id}"]
 }
-resource "okta_trusted_origin" "travelagency-https" {
+resource "okta_trusted_origin" "travelagency_https" {
   name   = "${var.udp_subdomain} ${var.demo_app_name} HTTPS"
   origin = "https://${local.app_url}"
   scopes = ["REDIRECT", "CORS"]
 }
-resource "okta_trusted_origin" "travelagency-http" {
+resource "okta_trusted_origin" "travelagency_http" {
   name   = "${var.udp_subdomain} ${var.demo_app_name} HTTP"
   origin = "http://${local.app_url}"
   scopes = ["REDIRECT", "CORS"]
