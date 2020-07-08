@@ -169,9 +169,17 @@ def get_domain_parts_from_request():
     logger.debug("get_domain_parts_from_request()")
 
     domain_parts = request.host.split(".")
-    udp_subdomain = domain_parts[0]
-    udp_app_name = domain_parts[1]
-    remaining_domain = ".".join(domain_parts[2:])
+
+    if len(domain_parts) >= 3:
+        # Assume running in UDP
+        udp_subdomain = domain_parts[0]
+        udp_app_name = domain_parts[1]
+        remaining_domain = ".".join(domain_parts[2:])
+    else:
+        # Assum local running
+        udp_subdomain = "local"
+        udp_app_name = "local"
+        remaining_domain = "local"
 
     # ENV always trumps remote config
     udp_subdomain = os.getenv("UDP_SUB_DOMAIN", udp_subdomain)
