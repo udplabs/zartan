@@ -18,7 +18,11 @@ gbac_registration_bp = Blueprint('gbac_registration_bp', __name__, template_fold
 @gbac_registration_bp.route("/registration")
 def registration_bp():
     logger.debug("Registration")
-    return render_template("/registration.html", templatename=get_app_vertical(), config=session[SESSION_INSTANCE_SETTINGS_KEY], _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
+    return render_template(
+        "/registration.html",
+        templatename=get_app_vertical(),
+        config=session[SESSION_INSTANCE_SETTINGS_KEY],
+        _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
 
 
 @gbac_registration_bp.route("/registration-state/<stateToken>", methods=["GET"])
@@ -102,7 +106,11 @@ def gbac_registration_completion():
 def emailRegistration(recipient, token):
     logger.debug("emailRegistration()")
     app_title = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_name"]
-    activation_link = url_for("gbac_registration_bp.gbac_registration_state_get", stateToken=token, _external=True, _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
+    activation_link = url_for(
+        "gbac_registration_bp.gbac_registration_state_get",
+        stateToken=token,
+        _external=True,
+        _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
     subject = "Welcome to the {app_title}".format(app_title=session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_name"])
 
     message = """

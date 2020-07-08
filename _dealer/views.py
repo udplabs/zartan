@@ -481,7 +481,11 @@ class EmailServices:
         CONFIG_GROUP_ADMIN = get_udp_ns_fieldname(CONFIG_ADMIN)
 
         app_title = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_name"]
-        activation_link = url_for("dealer_views_bp.dealer_registration_state_get", stateToken=token, _external=True, _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
+        activation_link = url_for(
+            "dealer_views_bp.dealer_registration_state_get",
+            stateToken=token,
+            _external=True,
+            _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
         subject = "Welcome to the {app_title}".format(app_title=session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_name"])
         # Send Activation Email to the user
         message = """
@@ -497,7 +501,8 @@ class EmailServices:
             Click this link to log into your account <br />
             <a href='{activation_link}'>{activation_link}</a> to review the request
             """.format(
-                activation_link=url_for("dealer_views_bp.workflow_approvals_get",
+            activation_link=url_for(
+                "dealer_views_bp.workflow_approvals_get",
                 _external=True,
                 _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"]))
 

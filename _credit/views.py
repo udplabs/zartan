@@ -32,7 +32,11 @@ def credit_profile():
 @is_authenticated
 def credit_account():
     logger.debug("credit_account()")
-    return render_template("credit/account.html", user_info=get_userinfo(), config=session[SESSION_INSTANCE_SETTINGS_KEY], _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
+    return render_template(
+        "credit/account.html",
+        user_info=get_userinfo(),
+        config=session[SESSION_INSTANCE_SETTINGS_KEY],
+        _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
 
 
 @credit_views_bp.route("/mycredit")

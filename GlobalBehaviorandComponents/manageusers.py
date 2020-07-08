@@ -155,4 +155,10 @@ def gbac_user_update():
     else:
         message = "Error During Update"
 
-    return redirect(url_for("gbac_manageusers_bp.gbac_users", _external="True", _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"], user_id=user_id, message=message))
+    return redirect(
+        url_for(
+            "gbac_manageusers_bp.gbac_users",
+            _external="True",
+            _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"],
+            user_id=user_id,
+            message=message))

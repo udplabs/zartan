@@ -82,7 +82,12 @@ def admin_temporarypasscode():
 
     message = "Your Temporary Code is: {0}".format(str(randcode))
 
-    return redirect(url_for("admin_views_bp.admin_usersadvanced", _external="True", _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"], message=message))
+    return redirect(
+        url_for(
+            "admin_views_bp.admin_usersadvanced",
+            _external="True",
+            _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"],
+            message=message))
 
 
 def random_with_N_digits(n):

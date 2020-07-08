@@ -79,7 +79,13 @@ def healthcare_accept_terms():
     else:
         message = "Error During consent"
 
-    return redirect(url_for("healthcare_views_bp.healthcare_profile", _external="True", _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"], user_id=user_id, message=message))
+    return redirect(
+        url_for(
+            "healthcare_views_bp.healthcare_profile",
+            _external="True",
+            _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"],
+            user_id=user_id,
+            message=message))
 
 
 @healthcare_views_bp.route("/account")
@@ -171,7 +177,13 @@ def healthcare_add_schedule():
     else:
         message = "Appointment is scheduled!"
 
-    return redirect(url_for("healthcare_views_bp.healthcare_profile", _external="True", _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"], user_id=user_id, message=message))
+    return redirect(
+        url_for(
+            "healthcare_views_bp.healthcare_profile",
+            _external="True",
+            _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"],
+            user_id=user_id,
+            message=message))
 
 
 @healthcare_views_bp.route("/updateuserinfo", methods=["POST"])
@@ -205,7 +217,13 @@ def healthcare_user_update():
     else:
         message = "User Updated!"
 
-    return redirect(url_for("healthcare_views_bp.healthcare_profile", _external="True", _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"], user_id=user_id, message=message))
+    return redirect(
+        url_for(
+            "healthcare_views_bp.healthcare_profile",
+            _external="True",
+            _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"],
+            user_id=user_id,
+            message=message))
 
 
 @healthcare_views_bp.route("/clearconsent/<userid>")
@@ -225,7 +243,13 @@ def healthcare_clear_consent(userid):
     else:
         message = ""
 
-    return redirect(url_for("healthcare_views_bp.healthcare_profile", _external="True", _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"], user_id=userid, message=message))
+    return redirect(
+        url_for(
+            "healthcare_views_bp.healthcare_profile",
+            _external="True",
+            _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"],
+            user_id=userid,
+            message=message))
 
 
 @healthcare_views_bp.route("/getverificationcode")
