@@ -43,7 +43,7 @@ app.register_blueprint(gbac_bp, url_prefix='/')
 from GlobalBehaviorandComponents.manageusers import gbac_manageusers_bp
 app.register_blueprint(gbac_manageusers_bp, url_prefix='/')
 
-from GlobalBehaviorandComponents.stupupauth import gbac_stepupauth_bp
+from GlobalBehaviorandComponents.stepupauth import gbac_stepupauth_bp
 app.register_blueprint(gbac_stepupauth_bp, url_prefix='/')
 
 from GlobalBehaviorandComponents.userapps import gbac_userapps_bp
@@ -60,6 +60,9 @@ app.register_blueprint(gvalidation_bp, url_prefix='/')
 
 from GlobalBehaviorandComponents.mfaenrollment import gbac_mfaenrollment_bp
 app.register_blueprint(gbac_mfaenrollment_bp, url_prefix='/')
+
+from GlobalBehaviorandComponents.idverification import gbac_idverification_bp
+app.register_blueprint(gbac_idverification_bp, url_prefix='/')
 
 # sample theme
 from _sample.views import sample_views_bp
@@ -97,11 +100,15 @@ app.register_blueprint(credit_views_bp, url_prefix='/credit')
 from _healthcare.views import healthcare_views_bp
 app.register_blueprint(healthcare_views_bp, url_prefix='/healthcare')
 
+# healthcare theme
+from _ecommerce.views import ecommerce_views_bp
+app.register_blueprint(ecommerce_views_bp, url_prefix='/ecommerce')
 
 ##############################################
 # Main Shared Routes
 # DO NOT TOUCH
 ##############################################
+
 
 @app.route('/<path:filename>')
 def serve_static_html(filename):

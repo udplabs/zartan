@@ -1,0 +1,165 @@
+{% extends "ecommerce/template.html" %}
+
+{% block content %}
+<section class="bg-light py-5">
+    <div class="container">
+       <div class="card mb-4">
+            <div class="card-body p-0">
+                <div class="row no-gutters">
+                    <div class="col-lg-6 p-5">
+                        <h2>Get your credit now!</h2>
+                    </div>
+                    <div class="col-lg-6 align-self-stretch bg-img-cover d-none d-lg-flex" style='background-image: url("{{ config.settings.app_banner_img_1 }}")'></div>
+                </div>
+            </div>
+        </div>
+        <hr class="mb-4" />
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 order-md-2 mb-4">
+                      <h4 class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="text-muted">Terms</span>
+                        <span class="badge badge-secondary badge-pill" id="cartcount"></span>
+                      </h4>
+                      APR's and credit limits may vary with creditworthiness, as determined by MyBank, Member FDIC.<br><br>
+                      Promotional Financing Offers may vary and are subject to eligibility requirements. <br><br>
+                      Future purchases may be subject to different terms and promotions.<br><br>
+                      Minimum monthly payments are required.<br><br>
+                      I am of legal age to enter into a binding agreement. Upon approval and verification, I can immediately use my Account.<br><br>
+                      I have reviewed and acknowledged the U.S. Consumer Privacy Statement for this Account. <br><br>
+                    </div>
+                    <div class="col-md-8 order-md-1">
+                      <h4 class="mb-3">Apply Now</h4>
+                      <form class="needs-validation" novalidate="">
+                        <div class="row">
+                          <div class="col-md-6 mb-3">
+                            <label for="firstName">First name</label>
+                            <input type="text" class="form-control" id="firstName" placeholder="" value="{{ user['profile']['firstName'] }}"  required="">
+                            <div class="invalid-feedback">
+                              Valid first name is required.
+                            </div>
+                          </div>
+                          <div class="col-md-6 mb-3">
+                            <label for="lastName">Last name</label>
+                            <input type="text" class="form-control" id="lastName" placeholder="" value="{{ user['profile']['lastName'] }}" required="">
+                            <div class="invalid-feedback">
+                              Valid last name is required.
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="mb-3">
+                          <label for="email">Email <span class="text-muted">(Optional)</span></label>
+                          <input type="email" class="form-control" id="email" placeholder="you@example.com" value="{{ user['profile']['email'] }}">
+                          <div class="invalid-feedback">
+                            Please enter a valid email address for shipping updates.
+                          </div>
+                        </div>
+
+                        <div class="mb-3">
+                          <label for="address">Address</label>
+                          <input type="text" class="form-control" id="address"  required="" value="{{ user['profile']['streetAddress'] }}">
+                          <div class="invalid-feedback">
+                            Please enter your shipping address.
+                          </div>
+                        </div>
+
+                         <div class="mb-3">
+                          <label for="city">City</label>
+                          <input type="text" class="form-control" id="city" value="{{ user['profile']['city'] }}">
+                        </div>
+
+                        <div class="row">
+                          <div class="col-md-5 mb-3">
+                            <label for="country">Country</label>
+                            <input type="text" class="form-control" id="countryCode" value="{{ user['profile']['countryCode'] }}">
+                            <div class="invalid-feedback">
+                              Please select a valid country.
+                            </div>
+                          </div>
+                          <div class="col-md-4 mb-3">
+                            <label for="state">State</label>
+                            <input type="text" class="form-control" id="state" value="{{ user['profile']['state'] }}">
+                            <div class="invalid-feedback">
+                              Please provide a valid state.
+                            </div>
+                          </div>
+                          <div class="col-md-3 mb-3">
+                            <label for="zip">Zip</label>
+                            <input type="text" class="form-control" id="zipCode" required="" value="{{ user['profile']['zipCode'] }}">
+                            <div class="invalid-feedback">
+                              Zip code required.
+                            </div>
+                          </div>
+
+                        </div>
+                        <div class="mb-3">
+                          <label for="phone">Phone Number </label>
+                          <input type="text" class="form-control" id="phone" value="{{ user['profile']['mobilePhone'] }}">
+                        </div>
+
+                        <hr class="mb-4">
+                         {% include '//components/template-idverification.html' %}
+
+                        <button class="btn btn-primary btn-lg btn-block" onclick="createcard()" type="button">Apply for Card</button>
+                      </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    function createcard()
+    {
+      console.log("createcard");
+      var creditcard = {
+        name : $("#firstName").val() + " " + $("#lastName").val(),
+        cardnumber : "5363754907930277",
+        expirationdate : "12/26",
+        cvv : "555"
+      }
+
+      response = "";
+      var formdata = {firstName: $("#firstName").val(),
+      lastName: $("#lastName").val(),
+      email: $("#email").val(),
+      streetAddress: $("#address").val(),
+      city: $("#city").val(),
+      zipCode: $("#zipCode").val(),
+      countryCode: $("#countryCode").val(),
+      state: $("#state").val(),
+      phone: $("#phone").val(),
+      };
+
+      console.log(formdata);
+
+      $.ajax({
+                'async': false,
+                'type': "GET",
+                'url': "/ecommerce/updateuser",
+                'data': formdata,
+                'success': function (data) {
+                 response = data;
+                }
+              });
+
+      console.log("1: " + response);
+
+      if (response == "complete") {
+      } else {
+      }
+
+      newcreditcard = JSON.stringify(creditcard);
+      window.sessionStorage["creditcard"] = newcreditcard;
+      location.href = "/ecommerce/checkout";
+    }
+</script>
+
+
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
