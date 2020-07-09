@@ -2,7 +2,7 @@
 
 This document is how to set up and run Zartan in your own local environment, outside of UDP
 
->> WIP: Just placeholder for now and will convert this content into vuepress for readability
+> :construction: WIP: Just placeholder for now and will convert this content into vuepress for readability
 
 - [Setup Okta Org for each Vertical](#setup-okta-org-for-each-vertical-outside-of-terraform)
 - [How to demo](#how-to-demo)
@@ -136,7 +136,7 @@ Set up the `.env` file:
 
 ## Setup Okta Org for each Vertical (outside of terraform)
 
->> WIP: Needs further details, just assuming. Plus attached terraform script could be reference.
+> :construction: WIP: Needs further details, just assuming. Plus attached terraform script could be reference.
 
 * Feature Flags to enable
 * Attributes to create in UD
