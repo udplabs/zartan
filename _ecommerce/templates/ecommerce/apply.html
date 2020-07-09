@@ -31,6 +31,9 @@
                     </div>
                     <div class="col-md-8 order-md-1">
                       <h4 class="mb-3">Apply Now</h4>
+                      {% include '//components/template-idverification.html' %}
+                      This processes will automatically fill the form. 
+                      <hr class="mb-4">
                       <form class="needs-validation" novalidate="">
                         <div class="row">
                           <div class="col-md-6 mb-3">
@@ -99,8 +102,7 @@
                           <input type="text" class="form-control" id="phone" value="{{ user['profile']['mobilePhone'] }}">
                         </div>
 
-                        <hr class="mb-4">
-                         {% include '//components/template-idverification.html' %}
+                      
 
                         <button class="btn btn-primary btn-lg btn-block" onclick="createcard()" type="button">Apply for Card</button>
                       </form>
@@ -117,7 +119,7 @@
       console.log("createcard");
       var creditcard = {
         name : $("#firstName").val() + " " + $("#lastName").val(),
-        cardnumber : "5363754907930277",
+        cardnumber : "************0277",
         expirationdate : "12/26",
         cvv : "555"
       }
@@ -154,7 +156,7 @@
 
       newcreditcard = JSON.stringify(creditcard);
       window.sessionStorage["creditcard"] = newcreditcard;
-      location.href = "/ecommerce/checkout";
+      location.href = "/ecommerce/checkout?message=Application Complete. Congratulations you've been Approved!";
     }
 </script>
 

@@ -49,6 +49,7 @@ def gbac_login():
     linkedin = ""
     microsoft = ""
     idp = ""
+    idptype = ""
     for idp in idplist:
         if idp["type"] == "FACEBOOK":
             facebook = idp["id"]
@@ -62,6 +63,9 @@ def gbac_login():
         elif idp["type"] == "MICROSOFT":
             microsoft = idp["id"]
             idp = "true"
+        elif idp["type"] == "SAML2":
+            idptype = "SAML2"
+            idp = "true"
     return render_template(
         "/login.html",
         templatename=get_app_vertical(),
@@ -71,7 +75,8 @@ def gbac_login():
         google=google,
         linkedin=linkedin,
         microsoft=microsoft,
-        idp=idp)
+        idp=idp,
+        idptype=idptype)
 
 
 @gbac_bp.route("/signup")
