@@ -8,6 +8,7 @@ from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical
 from utils.okta import TokenUtil, OktaAdmin
 
 from GlobalBehaviorandComponents.validation import is_authenticated, get_userinfo
+from GlobalBehaviorandComponents.mfaenrollment import get_enrolled_factors
 
 logger = logging.getLogger(__name__)
 
@@ -20,11 +21,17 @@ ecommerce_views_bp = Blueprint('ecommerce_views_bp', __name__, template_folder='
 @is_authenticated
 def ecommerce_profile():
     logger.debug("ecommerce_profile()")
+    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
+    user_info = get_userinfo()
+    user_info2 = okta_admin.get_user(user_info["sub"])
+    factors = get_enrolled_factors(user_info["sub"])
     return render_template(
         "ecommerce/profile.html",
         id_token=TokenUtil.get_id_token(request.cookies),
         access_token=TokenUtil.get_access_token(request.cookies),
-        user_info=get_userinfo(),
+        user_info=user_info,
+        user_info2=user_info2,
+        factors=factors,
         config=session[SESSION_INSTANCE_SETTINGS_KEY])
 
 
@@ -101,7 +108,7 @@ def ecommerce_order():
     return render_template("ecommerce/order.html", user=user, user_info=get_userinfo(), config=session[SESSION_INSTANCE_SETTINGS_KEY], _scheme="https")
 
 
-# checkout Page
+# updateuser Page
 @ecommerce_views_bp.route("/updateuser")
 @is_authenticated
 def ecommerce_updateuser():
@@ -139,3 +146,15 @@ def ecommerce_updateuser():
     response = okta_admin.update_user(user_id=user_info["sub"], user=user_data)
     logger.debug(response)
     return response
+
+
+# See if credit app exists
+@ecommerce_views_bp.route("/credit")
+def ecommerce_credit():
+    logger.debug("ecommerce_credit()")
+    return render_template(
+        "ecommerce/credit.html",
+        templatename=get_app_vertical(),
+        config=session[SESSION_INSTANCE_SETTINGS_KEY],
+        user_info=get_userinfo(),
+        _scheme="https")

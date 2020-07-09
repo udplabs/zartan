@@ -1,7 +1,69 @@
 {% extends "ecommerce/template.html" %}
 
 {% block content %}
-        {% include '/components/template-profile.html' %}
+ <section class="bg-light py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card border-bottom">
+                    <div class="card-header">Account</div>
+                    <div class="card-body">
+                          <form class="form-horizontal" action='updateuserinfo' method="POST">
+                              <div class="form-group input-group">
+                             	  <div class="input-group-prepend">
+                            		  <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                            		</div>
+                            	  <input name="firstname" class="form-control" id="firstname" placeholder="First Name" type="text" value="{{ user_info2['profile']['firstName'] }}">
+                              </div>
+
+                              <div class="form-group input-group">
+                                <div class="input-group-prepend">
+                          		    <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                          		  </div>
+                                <input name="lastname" class="form-control" id="lastname" placeholder="Last Name" type="text" value="{{ user_info2['profile']['lastName']  }}">
+                              </div>
+
+                              <div class="form-group input-group">
+                              	<div class="input-group-prepend">
+                          		    <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
+                          		  </div>
+                                <input name="email" class="form-control" id="email" placeholder="Email address" type="email" value="{{ user_info2['profile']['email']  }}">
+                              </div>
+
+                              <div class="form-group input-group">
+                              	<div class="input-group-prepend">
+                          		    <span class="input-group-text"> <i class="fa fa-phone"></i> </span>
+                          		  </div>
+                          			<input name="mobilePhone" id="mobilePhone" class="form-control" placeholder="Mobile Phone" type="text" value="{{ user_info2['profile']['mobilePhone']  }}">
+                              </div>
+
+
+                              <input id="user_id" name="user_id" class="form-control" type="hidden" value="{{ user_info2['id'] }}">
+                              <div class="form-group">
+                              <button type="submit" class="btn btn-primary btn-block">Update Account</button>
+                              </div>
+                          </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card border-bottom">
+                    <div class="card-header">Credit Account</div>
+                    <div class="card-body" >
+                       <!--<button type="button" onclick="location.href='/ecommerce/credit';" class="btn btn-primary">Pay Your Bill</button> -->
+                       <button type="button" onclick="window.open('https://be2aeed98fc743cbad39ef88a800ca1b.vfs.cloud9.us-east-1.amazonaws.com/','_blank')" class="btn btn-primary">Pay Your Bill</button>
+                    </div>
+                </div><br><br>
+                {% include '//components/template-mfaenrollment.html' %}
+            </div>
+        </div>
+    </div>
+</section>
+
+{% include '//components/template-modal.html' %}
+
+
+
 {% endblock %}
 
 {% block footer %}

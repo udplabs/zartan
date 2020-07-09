@@ -104,7 +104,7 @@
                             <input id="customcard" name="paymentMethod" type="radio" class="custom-control-input" value="{{ config.settings.app_name|safe }} card">
                             <label class="custom-control-label" for="customcard">{{ config.settings.app_name|safe }} card</label><br>
                           </div>
-                           <button onclick="location.href='apply';" class='btn btn-primary' type='button'>Apply For a Card Today!</button>
+                           <button onclick="location.href='apply';" class='btn btn-primary' id="applycc" type='button'>Apply For a Card Today!</button>
                         </div>
                         <div class="row">
                           <div class="col-md-6 mb-3">
@@ -125,14 +125,14 @@
                         </div>
                         <div class="row">
                           <div class="col-md-3 mb-3">
-                            <label for="cc-expiration">Expiration</label>
+                            <label for="cc-expiration" id="cc-exptitle">Expiration</label>
                             <input type="text" class="form-control" id="cc-expiration" placeholder="" required="">
                             <div class="invalid-feedback">
                               Expiration date required
                             </div>
                           </div>
                           <div class="col-md-3 mb-3">
-                            <label for="cc-expiration">CVV</label>
+                            <label for="cc-expiration" id="cc-cvvtitle">CVV</label>
                             <input type="text" class="form-control" id="cc-cvv" placeholder="" required="">
                             <div class="invalid-feedback">
                               Security code required
@@ -165,11 +165,18 @@
       creditcardinfo = window.sessionStorage["creditcard"];
       creditcard = JSON.parse(creditcardinfo);
 
-      $("#cc-name").val(creditcard.name)
-      $("#cc-number").val(creditcard.cardnumber)
-      $("#cc-expiration").val(creditcard.expirationdate)
-      $("#cc-cvv").val(creditcard.cvv)
-      $("#customcard").prop('checked',true);
+     
+      if (creditcard != "")
+      {
+        $("#cc-name").val(creditcard.name);
+        $("#cc-number").val(creditcard.cardnumber);
+        $("#cc-expiration").hide();
+        $("#cc-cvv").hide();
+        $("#applycc").hide();
+        $("#cc-exptitle").hide();
+        $("#cc-cvvtitle").hide();
+        $("#customcard").prop('checked',true);
+      }
     }
 
     function addorder(id, name, price) {
