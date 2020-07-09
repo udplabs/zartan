@@ -2,7 +2,7 @@
 
 This document is how to set up and run Zartan in your own local environment, outside of UDP
 
->> WIP: Just placeholder for now and will convert this content into vuepress for readability
+> :construction: WIP: Just placeholder for now and will convert this content into vuepress for readability
 
 - [Setup Okta Org for each Vertical](#setup-okta-org-for-each-vertical-outside-of-terraform)
 - [How to demo](#how-to-demo)
@@ -20,6 +20,7 @@ These items need to be downloaded and installed in order to properly run a Zarta
 * Python 3.6+ and Flask
 * Okta tenant. [Free tenant](https://developer.okta.com/)
 * (Optional) git client [git client installation instructions](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+* (Optional) [Terraform](https://www.terraform.io/downloads.html) to automatically configure your Okta Org
 
 ### Python
 Zartan Requires Python 3.6 or higher to run properly.
@@ -31,15 +32,22 @@ Zartan Requires Python 3.6 or higher to run properly.
 * You can also leverage services like Heroku and AWS Elastic Beanstalk to run Zartan as well.
 
 
-ℹ️  Mac users: If you've never run a Python app locally before, your machine is in an unknown state when it comes to Python development. It is a known issue for Python dependencies to have moved, become unlinked or deleted during MacOS upgrades (e.g. an upgrade to Catalina). If you have issues during any of the install steps (below) or when running Zartan locally, try reinstalling Python:
+> ℹ️  Mac users: If you've never run a Python app locally before, your machine is in an unknown state when it comes to Python development. It is a known issue for Python dependencies to have moved, become unlinked or deleted during MacOS upgrades (e.g. an upgrade to Catalina). If you have issues during any of the install steps (below) or when running Zartan locally, try reinstalling Python:
 ```bash
 brew reinstall python
 ```
 
+### Terraform
+We've provided terraform files for easy configuration of the Okta Org. Specific verticals' `.tf` files are located in their respective `/terraform/{vertical}` folder. If you'd rather configure your Org manually, refer to [these steps](#setup-okta-org-for-each-vertical-outside-of-terraform).
+
+* Download the [Terraform binary](https://www.terraform.io/downloads.html) for your OS
+* Follow the instructions for [Terraform Install Guide](https://learn.hashicorp.com/terraform/getting-started/install) for your OS
+* Verify terraform is installed correctly by going to the command line / shell, then type the command `terraform version`, press `Enter` or `Return` and you should see a response similar to `Terraform v0.12.28`
+
 ---
 
 ## Install
-To run Zartan locally, run these steps:
+Open up a terminal/shell then:
 1. Git [`clone`](https://git-scm.com/book/en/v2/Git-Basics-Getting-a-Git-Repository) this repo:
     ```bash
     # e.g. using https
@@ -68,29 +76,16 @@ To run Zartan locally, run these steps:
 
 ---
 
-## Terraform
-We've provided terraform files for easy configuration of the Okta Org. Specific verticals' `.tf` files are located in their respective `/terraform/{vertical}` folder.
-
-* Download the [Terraform binary](https://www.terraform.io/downloads.html) for your OS
-* Follow the instructions for [Terraform Install Guide](https://learn.hashicorp.com/terraform/getting-started/install) for your OS
-* Verify terraform is installed correctly by going to the command line / shell, then type the command `terraform version`, press `Enter` or `Return` and you should see a response similar to `Terraform v0.12.28`
-
 ### Configure, initialize and apply Terraform for the vertical you want to use
-
-ℹ️  Zartan is a collection of demos for different verticals. In addition to the `.tf` files in the `/terraform/{vertical}` folders, there are also vertical specific READMEs in `/docs/{vertical}`. __For readability, this documentation will perform all following steps as if we're in the `travelagency` vertical.__ If you're installing/setting up a different vertical, simply reference the folder and/or file for that vertical.
+> ℹ️  Zartan is a collection of demos for different verticals. In addition to the `.tf` files in the `/terraform/{vertical}` folders, there are also vertical specific READMEs in `/docs/{vertical}`. __For readability, this documentation will perform all following steps as if we're in the `travelagency` vertical.__ If you're installing/setting up a different vertical, simply reference the folder and/or file for that vertical.
 
 1. `cd` into `/terraform/travelagency`
 2. Copy `travelagency.tfvars.sample` into `travelagency.tfvars`
 3. Edit in the variables of the `travelagency.tfvars` file:
     ```
-    org_name        = "<okta_subdomain>"
+    org_name        = "<okta_subdomain, e.g. atko>"
     api_token       = "<okta_api_token>"
-    base_url        = "<oktapreview.com or okta.com>"
-    demo_app_name   = "<zartan vertical name i.e. travelagency>"
-    udp_subdomain   = "<make up a dummy name for udp subdomain.
-                       (Follows udp subdomain naming convention).
-                       e.g. local-zartan>"
-    app_uri         = "<for local install, use localhost:8666>"
+    base_url        = "<enter oktapreview.com or okta.com>"
     ```
 3. Initialize terraform:
     ```
@@ -106,13 +101,58 @@ We've provided terraform files for easy configuration of the Okta Org. Specific 
     ```
     Type `'yes'` at the prompt. Once it is completed you should see a message similar to `Apply complete! Resources: 6 added, 0 changed, 0 destroyed.`
 6. Verify by checking in your Okta Org
+    > NOTE: The terraform script for `travelagency` generates: 1) an OIDC Client, 2) an Auth Server, and 3) adds CORS for http://localhost:8666 and https://localhost:8666
+
 
 ---
 
-## Local Environment Variables
-Set up the `.env` file.
-* Copy the [`.env.sample`](../.env.sample) (in the root directory) file into `.env` and edit it.
-* Enter the proper values based on vertical after running your terraform script for the vertical.
+### Local Environment Variables
+Set up the `.env` file:
+* Copy the [`.env.sample`](../.env.sample) (in the root directory) file into `.env`. Look for and edit these values in the file:
+
+    | Variable               | Value | 
+    | ---------------------- | ----- | 
+    | OKTA_CLIENT_ID         | Terraform created an OIDC client named `local_zartan travelagency Demo (Generated by UDP)`. Provide its `client_id` |
+    | OKTA_CLIENT_SECRET     | Terraform created an OIDC client named `local_zartan travelagency Demo (Generated by UDP)`. Provide its `client_secret` |
+    | OKTA_ISSUER            | Terraform created an Auth Server named `local_zartan travelagency`. Provide its `issuer_uri` |
+    | OKTA_ORG_URL           | Your org url. e.g. `https://dev-13485.oktapreview.com` |
+    | OKTA_OIDC_REDIRECT_URI | Use `http://localhost:8666/authorization-code/callback` as this was set by Terraform.
+    | OKTA_API_TOKEN         | Provide an okta SSWS key |
+* (Optional) Provide values for the other variables. Refer to [this section](#env-variables-details) for details.
+
+---
+
+### Run The App
+* Remember to get out of the `/terraform/travelagency` folder! __Return to the root folder, then:__
+* Remember to activate your `venv` specified [in the __Install__ section](#venv-activate) (if you haven't done it already).
+* Then, run python:
+    ```
+    python app.py
+    ```
+    NOTE: you may need to run as `python3 app.py` if you have python 2.7 on your local instance along with python 3.x
+* Open up a browser and navigate to `http://localhost:8666`
+
+---
+
+## Setup Okta Org for each Vertical (outside of terraform)
+
+> :construction: WIP: Needs further details, just assuming. Plus attached terraform script could be reference.
+
+* Feature Flags to enable
+* Attributes to create in UD
+* SignOn Policy
+* Authorization Servers
+* Access Policy
+* Scope and Claims
+* Multi-factor
+* Inline and Event Hooks
+
+## How to demo
+Navigate to the respective `/docs/{vertical}` section for vertical specific READMEs.
+
+## Additional Env File Configuration Variables
+<a name="env-variables-details"></a>
+The `.env` file provides additional confuration depending on the functionality supported by Zartan. Refer to the tables below to decide the proper values based on vertical. 
 
 ### Variables common to all verticals:
 * Okta Setting
@@ -256,33 +296,6 @@ Set up the `.env` file.
     | Variable     | Value |
     | ------------ | ----- |
     | APP_TEMPLATE | travelagency |
-
----
-
-## Run The App
-
-* Remember to activate your `venv` specified [in the __Install__ section](#venv-activate) if you haven't done it already.
-* Then, run python:
-    ```
-    python app.py
-    ```
-    NOTE: you may need to run as `python3 app.py` if you have python 2.7 on your local instance along with python 3.x
-
-## Setup Okta Org for each Vertical (outside of terraform)
-
->> WIP: Needs further details, just assuming. Plus attached terraform script could be reference.
-
-* Feature Flags to enable
-* Attributes to create in UD
-* SignOn Policy
-* Authorization Servers
-* Access Policy
-* Scope and Claims
-* Multi-factor
-* Inline and Event Hooks
-
-## How to demo
-Navigate to the respective `/docs/{vertical}` section for vertical specific READMEs.
 
 ## Troubleshooting: FAQs
 
