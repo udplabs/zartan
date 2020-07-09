@@ -86,10 +86,10 @@ resource "local_file" "dotenv" {
 }
 
 resource "okta_user_schema" "customfield1" {
-  index       = "${var.udp_subdomain}_${var.demo_app_name}_is_evident_validated"
-  title       = "${var.udp_subdomain}_${var.demo_app_name}_is_evident_validated"
-  type        = "boolean"
-  description = "Has Evident Validated User"
+  index       = "${var.udp_subdomain}_${var.demo_app_name}_last_verified_date"
+  title       = "${var.udp_subdomain}_${var.demo_app_name}_last_verified_date"
+  type        = "string"
+  description = "Date Evident Last Verified"
   master      = "OKTA"
   scope       = "SELF"
   permissions = "READ_WRITE"
