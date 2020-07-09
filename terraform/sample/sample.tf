@@ -3,10 +3,9 @@ variable "api_token" {}
 variable "base_url" {}
 variable "demo_app_name" {}
 variable "udp_subdomain" {}
-variable "app_uri" {}
 
 locals {
-    app_url = "${var.app_uri}"
+    app_domain = "${var.udp_subdomain}.${var.demo_app_name}.unidemo.info"
 }
 
 provider "okta" {
@@ -14,12 +13,6 @@ provider "okta" {
   api_token = "${var.api_token}"
   base_url  = "${var.base_url}"
   version   = "~> 3.0"
-}
-provider "template" {
-  version = "~> 2.1"
-}
-provider "local" {
-  version = "~> 1.2"
 }
 data "okta_group" "all" {
   name = "Everyone"
@@ -62,18 +55,21 @@ resource "okta_auth_server_policy_rule" "sample" {
   grant_type_whitelist = ["authorization_code"]
   scope_whitelist      = ["*"]
 }
-data "template_file" "configuration" {
-  template = "${file("${path.module}/sample.dotenv.template")}"
-  vars = {
-    client_id         = "${okta_app_oauth.sample.client_id}"
-    client_secret     = "${okta_app_oauth.sample.client_secret}"
-    domain            = "${var.org_name}.${var.base_url}"
-    auth_server_id    = "${okta_auth_server.sample.id}"
-    issuer            = "${okta_auth_server.sample.issuer}"
-    okta_app_oauth_id = "${okta_app_oauth.sample.id}"
-  }
+output "client_id" {
+  value = "${okta_app_oauth.sample.client_id}"
 }
-resource "local_file" "dotenv" {
-  content  = "${data.template_file.configuration.rendered}"
-  filename = "${path.module}/sample.env"
+output "client_secret" {
+  value = "${okta_app_oauth.sample.client_secret}"
+}
+output "domain" {
+  value = "${var.org_name}.${var.base_url}"
+}
+output "auth_server_id" {
+  value = "${okta_auth_server.sample.id}"
+}
+output "issuer" {
+  value = "${okta_auth_server.sample.issuer}"
+}
+output "okta_app_oauth_id" {
+  value = "${okta_app_oauth.sample.id}"
 }
