@@ -10,7 +10,7 @@ from utils.rest import RestUtil
 from utils.okta import OktaUtil
 
 SESSION_INSTANCE_SETTINGS_KEY = "instance_settings"
-SESSION_IS_CONFIGURED_KEY = "is_configured_remotley"
+SESSION_IS_CONFIGURED_KEY = "is_configured_remotely"
 SESSION_IS_APITOKEN_VALID_KEY = "is_apitoken_valid"
 SESSION_IS_CONFIG_VALID_KEY = "is_config_valid"
 
@@ -32,8 +32,8 @@ def apply_remote_config(f):
         # 1) Check if config was set by UDP
         # 2) Attempt UDP config against default_settings
         # 3) Always allow ENV to override UDP i.e. ENV trumps UDP settings
-        # logger.debug("is_configured_remotley: {0}".format(is_configured_remotley()))
-        if not is_configured_remotley():
+        # logger.debug("is_configured_remotely: {0}".format(is_configured_remotely()))
+        if not is_configured_remotely():
             logger.info("Domain is not confgured.  pulling configuration from UDP")
             # Pull remote config here
             # map remote config to default_settings
@@ -50,9 +50,21 @@ def apply_remote_config(f):
     return decorated_function
 
 
-def is_configured_remotley():
-    logger.debug("is_configured_remotley()")
-    # Allways assume false unless explicitly set
+def clear_session_decorator(f):
+    @wraps(f)
+    def decorated_function(*args, **kws):
+        logger.debug("clear_session_decorator()")
+
+        session[SESSION_IS_CONFIGURED_KEY] = False
+        session[SESSION_INSTANCE_SETTINGS_KEY] = default_settings
+
+        return f(*args, **kws)
+    return decorated_function
+
+
+def is_configured_remotely():
+    logger.debug("is_configured_remotely()")
+    # Always assume false unless explicitly set
     if SESSION_IS_CONFIGURED_KEY not in session:
         session[SESSION_IS_CONFIGURED_KEY] = False
 
@@ -64,7 +76,7 @@ def is_configured_remotley():
 
 def is_apitoken_valid():
     logger.debug("is_apitoken_valid()")
-    # Allways assume false unless explicitly set
+    # Always assume false unless explicitly set
     if SESSION_IS_APITOKEN_VALID_KEY not in session:
         session[SESSION_IS_APITOKEN_VALID_KEY] = False
 
@@ -169,9 +181,17 @@ def get_domain_parts_from_request():
     logger.debug("get_domain_parts_from_request()")
 
     domain_parts = request.host.split(".")
-    udp_subdomain = domain_parts[0]
-    udp_app_name = domain_parts[1]
-    remaining_domain = ".".join(domain_parts[2:])
+
+    if len(domain_parts) >= 3:
+        # Assume running in UDP
+        udp_subdomain = domain_parts[0]
+        udp_app_name = domain_parts[1]
+        remaining_domain = ".".join(domain_parts[2:])
+    else:
+        # Assum local running
+        udp_subdomain = "local"
+        udp_app_name = "local"
+        remaining_domain = "local"
 
     # ENV always trumps remote config
     udp_subdomain = os.getenv("UDP_SUB_DOMAIN", udp_subdomain)

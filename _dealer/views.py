@@ -6,7 +6,7 @@ import logging.config
 from flask import render_template, url_for, redirect, session, request
 from flask import Blueprint
 from utils.okta import OktaAdmin, TokenUtil
-from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical
+from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical, get_udp_ns_fieldname
 from utils.email import Email
 
 from GlobalBehaviorandComponents.validation import is_authenticated, get_userinfo
@@ -18,10 +18,9 @@ logger = logging.getLogger(__name__)
 # 1) Group Name for "Regular User"
 # 2) Group Name for "Admin User"
 # 3) Group Name startswith  for Agency Location
-CONFIG_GROUP = "DEALER"
-CONFIG_GROUP_REGULAR = "{0}_USER".format(CONFIG_GROUP)
-CONFIG_GROUP_ADMIN = "{0}_ADMIN".format(CONFIG_GROUP)
-CONFIG_GROUP_LOCATION_STARTSWITH = "_LOC_"
+CONFIG_REGULAR = "USER"
+CONFIG_ADMIN = "ADMIN"
+CONFIG_LOCATION = "LOC"
 
 # set blueprint
 dealer_views_bp = Blueprint('dealer_views_bp', __name__, template_folder='templates', static_folder='static', static_url_path='static')
@@ -39,7 +38,7 @@ def dealer_profile_get():
         access_token=TokenUtil.get_access_token(request.cookies),
         user_info=get_userinfo(),
         config=session[SESSION_INSTANCE_SETTINGS_KEY],
-        _scheme="https")
+        _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
 
 
 # dealer my applications
@@ -47,6 +46,8 @@ def dealer_profile_get():
 @is_authenticated
 def dealer_myapps_get():
     logger.debug("dealer_myapps_get()")
+
+    CONFIG_GROUP_LOCATION_STARTSWITH = "{0}_".format(get_udp_ns_fieldname(CONFIG_LOCATION))
 
     user_info = get_userinfo()
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
@@ -70,12 +71,16 @@ def dealer_myapps_get():
         config=session[SESSION_INSTANCE_SETTINGS_KEY],
         location=location,
         apps=get_apps_response,
-        _scheme="https")
+        _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
 
 
 @dealer_views_bp.route("/registration", methods=["GET"])
 def dealer_registration_get():
     logger.debug("dealer_registration()")
+    CONFIG_GROUP_REGULAR = get_udp_ns_fieldname(CONFIG_REGULAR)
+    CONFIG_GROUP_ADMIN = get_udp_ns_fieldname(CONFIG_ADMIN)
+    CONFIG_GROUP_LOCATION_STARTSWITH = get_udp_ns_fieldname(CONFIG_LOCATION)
+
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
 
     setup_options = {
@@ -117,7 +122,7 @@ def dealer_registration_get():
             config=session[SESSION_INSTANCE_SETTINGS_KEY],
             user_data=user_data,
             setup_options=setup_options,
-            _scheme="https")
+            _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
     except Exception as e:
         return render_template(
             "{0}/registration.html".format(get_app_vertical()),
@@ -126,7 +131,7 @@ def dealer_registration_get():
             error=e,
             user_data=user_data,
             setup_options=setup_options,
-            _scheme="https")
+            _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
 
 
 @dealer_views_bp.route("/registration", methods=["POST"])
@@ -149,7 +154,7 @@ def dealer_registration_post():
             "email": request.form.get('email'),
             "login": request.form.get('email'),
             "mobilePhone": request.form.get('phonenumber'),
-            "_dealer_access_requests": ['{id}'.format(id=request.form.get('location'))]
+            get_udp_ns_fieldname("access_requests"): ['{id}'.format(id=request.form.get('location'))]
         },
         "credentials": {
             "password": {"value": request.form.get('password')}
@@ -157,25 +162,15 @@ def dealer_registration_post():
         "groupIds": []
     }
 
-    try:
-        user_data["groupIds"].append(setup_options["type_user_selected"])
-        # user_data["groupIds"].append(setup_options["dealership_selected"])
+    user_data["groupIds"].append(setup_options["type_user_selected"])
+    user_create_response = okta_admin.create_user(user_data, activate_user=False)
 
-        user_create_response = okta_admin.create_user(user_data, activate_user=False)
-        if "errorCode" in user_create_response:
-            return render_template(
-                "{0}/registration.html".format(get_app_vertical()),
-                templatename=get_app_vertical(),
-                config=session[SESSION_INSTANCE_SETTINGS_KEY],
-                error=user_create_response,
-                user_data=user_data,
-                setup_options=setup_options)
+    if "errorCode" in user_create_response:
 
-        # Send Activation Email to the user
-        EmailServices().emailRegistration(
-            recipient={"address": request.form.get('email')},
-            token=user_create_response["id"])
-    except Exception as e:
+        CONFIG_GROUP_REGULAR = get_udp_ns_fieldname(CONFIG_REGULAR)
+        CONFIG_GROUP_ADMIN = get_udp_ns_fieldname(CONFIG_ADMIN)
+        CONFIG_GROUP_LOCATION_STARTSWITH = get_udp_ns_fieldname(CONFIG_LOCATION)
+
         # Prepopulate choice for setup
         # Get Group
         group_get_response = okta_admin.get_groups_by_name(CONFIG_GROUP_ADMIN)
@@ -194,17 +189,21 @@ def dealer_registration_post():
             "{0}/registration.html".format(get_app_vertical()),
             templatename=get_app_vertical(),
             config=session[SESSION_INSTANCE_SETTINGS_KEY],
-            error=e,
+            error=user_create_response,
             user_data=user_data,
-            setup_options=setup_options,
-            _scheme="https")
+            setup_options=setup_options)
+
+    # Send Activation Email to the user
+    EmailServices().emailRegistration(
+        recipient={"address": request.form.get('email')},
+        token=user_create_response["id"])
 
     return render_template(
         "{0}/registration-completion.html".format(get_app_vertical()),
         templatename=get_app_vertical(),
         config=session[SESSION_INSTANCE_SETTINGS_KEY],
         email=request.form.get('email'),
-        _scheme="https")
+        _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
 
 
 @dealer_views_bp.route("/registration-state/<stateToken>", methods=["GET"])
@@ -222,7 +221,7 @@ def dealer_registration_state_get(stateToken):
     return render_template(
         "{0}/registration-state.html".format(get_app_vertical()),
         templatename=get_app_vertical(),
-        config=session[SESSION_INSTANCE_SETTINGS_KEY], _scheme="https")
+        config=session[SESSION_INSTANCE_SETTINGS_KEY], _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
 
 
 @dealer_views_bp.route("/registration-completion", methods=["GET"])
@@ -232,13 +231,15 @@ def dealer_registration_completion_get():
         "{0}/registration-completion.html".format(get_app_vertical()),
         templatename=get_app_vertical(),
         config=session[SESSION_INSTANCE_SETTINGS_KEY],
-        _scheme="https")
+        _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
 
 
 @dealer_views_bp.route("/workflow-approvals", methods=["GET"])
 @is_authenticated
 def workflow_approvals_get():
     logger.debug("workflow_approvals()")
+    CONFIG_GROUP_ADMIN = get_udp_ns_fieldname(CONFIG_ADMIN)
+
     workflow_list = []
     user_info = get_userinfo()
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
@@ -255,12 +256,12 @@ def workflow_approvals_get():
             admin_group_id = item["id"]
 
     if admin_group_id:
-        # _dealer_access_requests attribute contains workflow request
-        # 'profile._dealer_access_requests  eq pr"
+        # access_requests attribute contains workflow request
+        # 'profile.access_requests  eq pr"
         user_get_response = okta_admin.get_user_list_by_search(
-            'profile._dealer_access_requests pr  ')
+            'profile.{0} pr  '.format(get_udp_ns_fieldname("access_requests")))
         for list in user_get_response:
-            for grp in list["profile"]["_dealer_access_requests"]:
+            for grp in list["profile"][get_udp_ns_fieldname("access_requests")]:
                 group_get_response = okta_admin.get_group(id=grp)
                 var = {
                     "requestor": list["profile"]["login"],
@@ -275,7 +276,7 @@ def workflow_approvals_get():
             workflow_list=workflow_list,
             user_info=user_info,
             config=session[SESSION_INSTANCE_SETTINGS_KEY],
-            _scheme="https")
+            _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
     else:
         return "ERROR: Unauthorized", 401
 
@@ -297,13 +298,13 @@ def workflow_approvals_post():
         group_id = req["group_id"]
         user_wf = okta_admin.get_user(user_id)
 
-        grps = user_wf["profile"]["_dealer_access_requests"]
+        grps = user_wf["profile"][get_udp_ns_fieldname("access_requests")]
         grps.remove(group_id)
 
         # Remove user attribute organization ( as the request has been rejected)
         user_data = {
             "profile": {
-                "_dealer_access_requests": grps
+                get_udp_ns_fieldname("access_requests"): grps
             }
         }
         okta_admin.update_user(user_id=user_id, user=user_data)
@@ -320,30 +321,32 @@ def workflow_approvals_post():
 
         user_wf = okta_admin.get_user(user_id)
 
-        grps = user_wf["profile"]["_dealer_access_requests"]
+        grps = user_wf["profile"][get_udp_ns_fieldname("access_requests")]
         grps.remove(group_id)
 
         # Remove user attribute organization ( as the request has been rejected)
         user_data = {
             "profile": {
-                "_dealer_access_requests": grps
+                get_udp_ns_fieldname("access_requests"): grps
             }
         }
         okta_admin.update_user(user_id=user_id, user=user_data)
 
-    return redirect(url_for("dealer_views_bp.workflow_approvals_get", _external=True, _scheme="https"))
+    return redirect(url_for("dealer_views_bp.workflow_approvals_get", _external=True, _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"]))
 
 
 @is_authenticated
 @dealer_views_bp.route("/workflow-requests", methods=["GET"])
 def workflow_requests_get():
     logger.debug("workflow_requests_get()")
+    CONFIG_GROUP_LOCATION_STARTSWITH = get_udp_ns_fieldname(CONFIG_LOCATION)
+
     user_info = get_userinfo()
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     user = okta_admin.get_user(user_info["sub"])
     user_id = user["id"]
-    if "_dealer_access_requests" in user["profile"]:
-        pendingRequest = user["profile"]["_dealer_access_requests"]
+    if get_udp_ns_fieldname("access_requests") in user["profile"]:
+        pendingRequest = user["profile"][get_udp_ns_fieldname("access_requests")]
     else:
         pendingRequest = []
 
@@ -370,7 +373,7 @@ def workflow_requests_get():
     # If not a user of a dealership, cannot request access to applications
     if is_user_dealership:
         # Find the groups for this portal that start with name "DEALER_"
-        get_groups = okta_admin.get_groups_by_name(CONFIG_GROUP)
+        get_groups = okta_admin.get_groups_by_name(get_udp_ns_fieldname(""))
         for item in get_groups:
             group_id = "{id}".format(id=item["id"])
             list_group_full.append({"id": item["id"],
@@ -391,7 +394,7 @@ def workflow_requests_get():
             user_info=user_info,
             workflow_list=workflow_list,
             config=session[SESSION_INSTANCE_SETTINGS_KEY],
-            _scheme="https")
+            _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
     else:  # If not a user of a dealership, cannot request access to applications
         return render_template(
             "{0}/workflow-requests.html".format(get_app_vertical()),
@@ -399,7 +402,7 @@ def workflow_requests_get():
             user_info=user_info,
             error="You have not been assigned to a dealership. Only users of a dealership can request access to applications",
             config=session[SESSION_INSTANCE_SETTINGS_KEY],
-            _scheme="https")
+            _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
 
 
 @is_authenticated
@@ -410,8 +413,8 @@ def workflow_requests_post():
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     user = okta_admin.get_user(user_info["sub"])
     user_id = user["id"]
-    if "_dealer_access_requests" in user["profile"]:
-        pendingRequest = user["profile"]["_dealer_access_requests"]
+    if get_udp_ns_fieldname("access_requests") in user["profile"]:
+        pendingRequest = user["profile"][get_udp_ns_fieldname("access_requests")]
     else:
         pendingRequest = []
 
@@ -424,13 +427,13 @@ def workflow_requests_post():
         # organization": "[ '{id}' ]".format(id=request.form.get('location'))
         user_data = {
             "profile": {
-                "_dealer_access_requests": pendingRequest
+                get_udp_ns_fieldname("access_requests"): pendingRequest
             }
         }
         okta_admin.update_user(user_id=user_id, user=user_data)
         EmailServices().emailWorkFlowRequest()
 
-    return redirect(url_for("dealer_views_bp.workflow_requests_get", _external=True, _scheme="https"))
+    return redirect(url_for("dealer_views_bp.workflow_requests_get", _external=True, _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"]))
 
 
 # Class containing email services and formats
@@ -460,7 +463,9 @@ class EmailServices:
     # EMail workflow Request to the Admin
     def emailWorkFlowRequest(self):
         logger.debug("emailWorkFlowRequest()")
-        activation_link = url_for("dealer_views_bp.workflow_approvals_get", _external=True, _scheme="https")
+
+        CONFIG_GROUP_ADMIN = get_udp_ns_fieldname(CONFIG_ADMIN)
+        activation_link = url_for("dealer_views_bp.workflow_approvals_get", _external=True, _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
         # Send Activation Email to the Admin
         subject_admin = "A workflow request was received"
         message_admin = """
@@ -470,11 +475,17 @@ class EmailServices:
             """.format(activation_link=activation_link)
         return self.emailAllMembersOfGroup(group_name=CONFIG_GROUP_ADMIN, subject=subject_admin, message=message_admin)
 
-    # EMail user and admin when a new user registers successfully
+    # Email user and admin when a new user registers successfully
     def emailRegistration(self, recipient, token):
         logger.debug("emailRegistration()")
+        CONFIG_GROUP_ADMIN = get_udp_ns_fieldname(CONFIG_ADMIN)
+
         app_title = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_name"]
-        activation_link = url_for("dealer_views_bp.dealer_registration_state_get", stateToken=token, _external=True, _scheme="https")
+        activation_link = url_for(
+            "dealer_views_bp.dealer_registration_state_get",
+            stateToken=token,
+            _external=True,
+            _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
         subject = "Welcome to the {app_title}".format(app_title=session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_name"])
         # Send Activation Email to the user
         message = """
@@ -489,5 +500,10 @@ class EmailServices:
             A new user has registered. His request is awaiting your approval.
             Click this link to log into your account <br />
             <a href='{activation_link}'>{activation_link}</a> to review the request
-            """.format(activation_link=url_for("dealer_views_bp.workflow_approvals_get", _external=True, _scheme="https"))
+            """.format(
+            activation_link=url_for(
+                "dealer_views_bp.workflow_approvals_get",
+                _external=True,
+                _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"]))
+
         return self.emailAllMembersOfGroup(group_name=CONFIG_GROUP_ADMIN, subject=subject_admin, message=message_admin)

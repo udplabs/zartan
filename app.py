@@ -43,7 +43,7 @@ app.register_blueprint(gbac_bp, url_prefix='/')
 from GlobalBehaviorandComponents.manageusers import gbac_manageusers_bp
 app.register_blueprint(gbac_manageusers_bp, url_prefix='/')
 
-from GlobalBehaviorandComponents.stupupauth import gbac_stepupauth_bp
+from GlobalBehaviorandComponents.stepupauth import gbac_stepupauth_bp
 app.register_blueprint(gbac_stepupauth_bp, url_prefix='/')
 
 from GlobalBehaviorandComponents.userapps import gbac_userapps_bp
@@ -63,6 +63,9 @@ app.register_blueprint(gbac_mfaenrollment_bp, url_prefix='/')
 
 from GlobalBehaviorandComponents.idpmanagement import gbac_manageidps_bp
 app.register_blueprint(gbac_manageidps_bp, url_prefix='/')
+
+from GlobalBehaviorandComponents.idverification import gbac_idverification_bp
+app.register_blueprint(gbac_idverification_bp, url_prefix='/')
 
 # sample theme
 from _sample.views import sample_views_bp
@@ -96,15 +99,19 @@ app.register_blueprint(admin_views_bp, url_prefix='/admin')
 from _credit.views import credit_views_bp
 app.register_blueprint(credit_views_bp, url_prefix='/credit')
 
-# patientportal theme
-from _patientportal.views import patientportal_views_bp
-app.register_blueprint(patientportal_views_bp, url_prefix='/patientportal')
+# healthcare theme
+from _healthcare.views import healthcare_views_bp
+app.register_blueprint(healthcare_views_bp, url_prefix='/healthcare')
 
+# healthcare theme
+from _ecommerce.views import ecommerce_views_bp
+app.register_blueprint(ecommerce_views_bp, url_prefix='/ecommerce')
 
 ##############################################
 # Main Shared Routes
 # DO NOT TOUCH
 ##############################################
+
 
 @app.route('/<path:filename>')
 def serve_static_html(filename):
@@ -182,18 +189,18 @@ def oidc_callback_handler():
 
 
 def get_post_login_landing_page_url():
+    logger.debug("get_post_login_landing_page_url()")
     app_landing_page_url = ""
 
     # Pull from Confg
-    if not session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_base_url"]:
-        session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_base_url"] = request.url_root.replace("http:", "https:")
-        logger.debug("app_base_url: {0}".format(session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_base_url"]))
+    hosturl = request.host_url.replace("http://", "{0}://".format(session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"]))
 
-    app_landing_page_url = "{app_base_url}/{app_template}/{landing_page}".format(
-        app_base_url=session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_base_url"],
-        app_template=session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_template"],
-        landing_page=session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_post_login_landing_url"],
-    )
+    if session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_post_login_landing_url"]:
+        app_landing_page_url = hosturl + "{app_template}/{landing_page}".format(
+            app_template=session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_template"],
+            landing_page=session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_post_login_landing_url"],)
+    else:
+        app_landing_page_url = hosturl + "/profile"
 
     # Check for from from_uri... this always overrides the config
     if FROM_URI_KEY in session:
@@ -216,4 +223,4 @@ if __name__ == '__main__':
     log_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "config", os.getenv("LOGGER_CONFIG", "DEV_logger.config"))
     logging.config.fileConfig(fname=log_file_path, disable_existing_loggers=False)
     logger.debug("default_settings: {0}".format(json.dumps(default_settings, indent=4, sort_keys=True)))
-    app.run(host=os.getenv("IP", "0.0.0.0"), port=int(os.getenv("PORT", 8080)), debug=True)
+    app.run(host=os.getenv("IP", "0.0.0.0"), port=int(os.getenv("PORT", 8666)), debug=True)

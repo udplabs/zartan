@@ -1,0 +1,102 @@
+{% extends "ecommerce/template.html" %}
+
+{% block content %}
+<section class="bg-light py-5">
+    <div class="container">
+       <div class="card mb-4">
+            <div class="card-body p-0">
+                <div class="row no-gutters">
+                    <div class="col-lg-6 p-10">
+                        <h2>{{ config.settings.app_subslogan|safe }}</h2>
+                        <p>Need Credit? We've got you covered!</p>
+                        <a class="text-arrow-icon small" href="#!">Learn more<i data-feather="arrow-right"></i></a>
+                    </div>
+                    <div class="col-lg-6 align-self-stretch bg-img-cover d-none d-lg-flex" style='background-image: url("{{ config.settings.app_banner_img_1 }}")'></div>
+                </div>
+            </div>
+        </div>
+        <hr class="mb-4" />
+        <div class="card mb-4">
+          <div class="card-body p-0">
+            <div class="row no-gutters">
+                <div class="col-lg-12 p-lg-4"  >
+                    <div id="orderNumber"></div>
+                    <table id="example" class="table" style="width:100%;">
+                        <thead>
+                            <tr class="thead-dark">
+                                <th>Count</th>
+                                <th>Name</th>
+                                <th>Price</th>
+                            </tr>
+                        </thead>
+                        <tbody id="myitems">
+                        </tbody>
+                    </table>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+</section>
+
+
+
+
+
+<script>
+    $( document ).ready(function() {
+      console.log("documentready()");
+      orders();
+    });
+
+
+
+    function orders()
+    {
+        htmlresponse = "";
+        $("#orders").html("");
+
+        var arrayList = getorders();
+        console.log(arrayList.products);
+
+        for(let i = 0; i < arrayList.products.length; i++){
+
+           item = arrayList.products[i];
+           htmlresponse = htmlresponse + "<tr><td>"+ (i+1) +"</td><td>" + item.name + "</td><td>$" + item.price + "</td></tr>";
+        }
+        htmlresponse = htmlresponse + "<tr><td></td><td></td><td><strong>$" + arrayList.total +"</strong> Total (USD)</td></tr>";
+
+        $("#myitems").html(htmlresponse);
+        $("#orderNumber").html("<h1>Order Number: " + arrayList.ordernumber + "</h1><br>")
+
+    }
+
+
+
+
+    function getorders()
+    {
+        var arrayList = [];
+        try
+        {
+            currentorder = window.sessionStorage["order"];
+            if (typeof currentorder == 'undefined')
+            {
+            }
+            else
+            {
+                arrayList = JSON.parse(currentorder);
+            }
+        }
+        catch (exception)
+        {
+
+        }
+        return arrayList;
+    }
+</script>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

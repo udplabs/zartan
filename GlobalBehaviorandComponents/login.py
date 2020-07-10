@@ -8,6 +8,7 @@ from flask import make_response
 from flask import Blueprint
 from utils.okta import OktaAuth, OktaAdmin, TokenUtil
 from utils.udp import apply_remote_config, clear_session_setting, SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical
+from utils.udp import clear_session_decorator
 
 from GlobalBehaviorandComponents.validation import get_userinfo, check_okta_api_token, check_zartan_config
 
@@ -20,6 +21,7 @@ gbac_bp = Blueprint('gbac_bp', __name__, template_folder='templates', static_fol
 # main route
 @gbac_bp.route("/")
 @gbac_bp.route("/index")
+@clear_session_decorator
 @apply_remote_config
 @check_okta_api_token
 @check_zartan_config
@@ -36,7 +38,7 @@ def gbac_main():
 def clear_session():
     logger.debug("clear_session()")
     clear_session_setting()
-    return redirect(url_for("gbac_bp.gbac_main", _external="True", _scheme="https"))
+    return redirect(url_for("gbac_bp.gbac_main", _external="True", _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"]))
 
 
 @gbac_bp.route("/login")
@@ -49,6 +51,7 @@ def gbac_login():
     linkedin = ""
     microsoft = ""
     idp = ""
+    idptype = ""
     for idp in idplist:
         if idp["type"] == "FACEBOOK":
             facebook = idp["id"]
@@ -62,6 +65,9 @@ def gbac_login():
         elif idp["type"] == "MICROSOFT":
             microsoft = idp["id"]
             idp = "true"
+        elif idp["type"] == "SAML2":
+            idptype = "SAML2"
+            idp = "true"
     return render_template(
         "/login.html",
         templatename=get_app_vertical(),
@@ -71,7 +77,8 @@ def gbac_login():
         google=google,
         linkedin=linkedin,
         microsoft=microsoft,
-        idp=idp)
+        idp=idp,
+        idptype=idptype)
 
 
 @gbac_bp.route("/signup")
@@ -85,7 +92,7 @@ def gbac_logout():
     logger.debug("gbac_logout()")
     redirect_url = "{host}/login/signout?fromURI={redirect_path}".format(
         host=session[SESSION_INSTANCE_SETTINGS_KEY]["okta_org_name"],
-        redirect_path=url_for("gbac_bp.gbac_main", _external="True", _scheme="https"))
+        redirect_path=url_for("gbac_bp.gbac_main", _external="True", _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"]))
 
     response = make_response(redirect(redirect_url))
     response.set_cookie(TokenUtil.OKTA_TOKEN_COOKIE_KEY, "")

@@ -65,6 +65,11 @@
                         }
                       },
                       features: {
+                        {% if idp %}
+                          {% if idptype %}
+                        idpDiscovery:true,
+                          {% endif %}
+                        {% endif %}
                         registration: true,                 // Enable self-service registration flow
                         rememberMe: true,                   // Setting to false will remove the checkbox to save username
                         multiOptionalFactorEnroll: true,  // Allow users to enroll in multiple optional factors before finishing the authentication flow.
@@ -72,18 +77,25 @@
                         smsRecovery: true,                // Enable SMS-based account recovery
                         callRecovery: true               // Enable voice call-based account recovery
                       },
-                      {% if idp %} 
+                      {% if idp %}
+                      {% if idptype %}
+                      idpDiscovery: {
+                        requestContext: '{{request.url_root | replace("http", "https")  }}'
+                      },
+                      {% endif %}
+                      {% endif %}
+                      {% if idp %}
                       idps: [
-                        {% if google %} 
+                        {% if google %}
                         {type: 'GOOGLE', id: '{{google}}'},
                         {% endif %}
-                        {% if facebook %} 
+                        {% if facebook %}
                         {type: 'FACEBOOK', id: '{{facebook}}'},
                         {% endif %}
-                        {% if microsoft %} 
+                        {% if microsoft %}
                         {type: 'MICROSOFT', id: '{{microsoft}}'},
                         {% endif %}
-                        {% if linkedin %} 
+                        {% if linkedin %}
                         {type: 'LINKEDIN', id: '{{linkedin}}'}
                         {% endif %}
                       ],

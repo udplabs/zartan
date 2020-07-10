@@ -1,0 +1,98 @@
+{% extends "healthcare/template.html" %}
+
+{% block content %}
+<header class="page-header page-header-dark bg-img-cover overlay overlay-80"
+    style='background-image: url("{{ config.settings.app_banner_img_1 }}")'>
+    <div class="page-header-content py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-xl-8 col-lg-10 text-center">
+                    <div data-aos="fade-up">
+                        <h1 class="page-header-title">{{ config.settings.app_slogan }}</h1>
+                        <p class="page-header-text">{{ config.settings.app_subslogan }} </p>
+                    </div>
+                    <button class="btn btn-marketing rounded-pill btn-primary" data-aos="fade-up" data-aos-delay="100">
+                        Learn More
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="svg-border-rounded text-white">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 144.54 17.34" preserveAspectRatio="none"
+             fill="currentColor">
+            <path d="M144.54,17.34H0V0H144.54ZM0,0S32.36,17.34,72.27,17.34,144.54,0,144.54,0"></path>
+        </svg>
+    </div>
+</header>
+<section class="bg-white py-10">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-lg-4 mb-5 mb-lg-0">
+                <div class="icon-stack icon-stack-xl bg-primary text-white mb-4"><i data-feather="activity"></i></div>
+                <h2>Get Healthy</h2>
+                <p class="mb-0">We provide services to assist in getting healthy.</p>
+            </div>
+            <div class="col-lg-4 mb-5 mb-lg-0">
+                <div class="icon-stack icon-stack-xl bg-primary text-white mb-4"><i data-feather="heart"></i></div>
+                <h2>Proficient Medical Services</h2>
+                <p class="mb-0">We are determined to raise the standard of patient care.</p>
+            </div>
+            <div class="col-lg-4">
+                <div class="icon-stack icon-stack-xl bg-primary text-white mb-4"><i data-feather="award"></i></div>
+                <h2>Best in Class Doctors</h2>
+                <p class="mb-0">We are always seeking strategic opportunities for growth within the industry.</p>
+            </div>
+        </div>
+    </div>
+    <div class="svg-border-rounded text-light">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 144.54 17.34" preserveAspectRatio="none"
+             fill="currentColor">
+            <path d="M144.54,17.34H0V0H144.54ZM0,0S32.36,17.34,72.27,17.34,144.54,0,144.54,0"></path>
+        </svg>
+    </div>
+</section>
+<section class="bg-light py-10">
+    <div class="container">
+        <div class="row justify-content-center z-1">
+            <div class="col-lg-8" data-aos="fade-up">
+                <div class="card mb-n15">
+                    <div class="card-body p-2">
+                        <div class="video overlay bg-img-cover rounded"
+                             style='background-image: "https://cdn-zartan.s3.us-east-2.amazonaws.com/static/img/travel-editor-favorite-products.jpg"'>
+                            <div style="width:100%;height:0px;position:relative;padding-bottom:52.708%;"><iframe src="https://streamable.com/e/p5rmgx?autoplay=1" frameborder="0" width="100%" height="100%" style="width:100%;height:100%;position:absolute;left:0px;top:0px;overflow:hidden;"></iframe></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="bg-img-cover overlay overlay-80 py-10"
+          style='background-image: url("https://cdn-zartan.s3.us-east-2.amazonaws.com/static/img/medicalstaff.jpg")'>
+    <div class="container position-relative">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="display-4 text-center py-10 my-10 text-white">With  medical healthcare and long term care facilities from
+					 coast to coast, our facilities are uniquely qualified as a leader in
+					 the field of healthcare and  hospitalization.</span>.
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="bg-white py-8">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-6 col-lg-8 col-md-10 text-center my-10 py-10">
+                <h2>Ready to get Started?</h2>
+                <p class="lead text-gray-500 mb-5">We'd love to hear from you. Contact us to get more information or setup an appointment.</p>
+                <a class="btn btn-primary btn-marketing rounded-pill" href="#!">Contact us</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

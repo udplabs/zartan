@@ -12,7 +12,6 @@ default_settings = {
     "redirect_uri": os.getenv("OKTA_OIDC_REDIRECT_URI", "http://yoursite/authorization-code/callback"),
     "settings": {
         "app_template": os.getenv("APP_TEMPLATE", "sample"),
-        "app_base_url": os.getenv("APP_BASE_URL", ""),
         "app_post_login_landing_url": os.getenv("APP_POST_LOGIN_LANDING_URL", "profile"),
         "app_loginmethod": os.getenv("APP_LOGINMETHOD", "standard-widget"),
         "app_name": os.getenv("APP_NAME", "Sample App"),
@@ -32,5 +31,6 @@ default_settings = {
         "app_stepup_auth_clienturl": os.getenv("APP_STEPUP_AUTH_CLIENTURL", "")
     },
     "okta_api_token": os.getenv("OKTA_API_TOKEN", ""),
-    "app_secret_key": os.getenv("SECRET_KEY", "")
+    "app_secret_key": os.getenv("SECRET_KEY", ""),
+    "app_scheme": os.getenv("APP_SCHEME", "https")
 }
