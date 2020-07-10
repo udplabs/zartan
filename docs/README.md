@@ -40,10 +40,17 @@ brew reinstall python
 ### Terraform
 We've provided terraform files for easy configuration of the Okta Org. Specific verticals' `.tf` files are located in their respective `/terraform/{vertical}` folder. If you'd rather configure your Org manually, refer to [these steps](#setup-okta-org-for-each-vertical-outside-of-terraform).
 
-* Download the [Terraform binary](https://www.terraform.io/downloads.html) for your OS
-* Follow the instructions for [Terraform Install Guide](https://learn.hashicorp.com/terraform/getting-started/install) for your OS
-* Verify terraform is installed correctly by going to the command line / shell, then type the command `terraform version`, press `Enter` or `Return` and you should see a response similar to `Terraform v0.12.28`
-
+* [Install Terraform](https://learn.hashicorp.com/terraform/getting-started/install#install-terraform) for your OS
+    * e.g. for Mac users, you can use homebrew:
+    ```
+    brew install terraform
+    ```
+* Verify terraform is installed correctly by going to the command line/shell, and type the command `terraform version`
+    ```bash
+    # sample output
+    $ terraform version
+    Terraform v0.12.28
+    ```
 ---
 
 ## Install
@@ -81,34 +88,37 @@ Open up a terminal/shell then:
 
 1. `cd` into `/terraform/travelagency`
 2. Copy `travelagency.tfvars.sample` into `travelagency.tfvars`
-3. Edit in the variables of the `travelagency.tfvars` file:
+3. Edit in the variables of the `travelagency.tfvars` file
     ```
     org_name        = "<okta_subdomain, e.g. atko>"
     api_token       = "<okta_api_token>"
-    base_url        = "<enter oktapreview.com or okta.com>"
+    base_url        = "<the okta domain  e.g. oktapreview.com, okta.com, or okta-emea.com>"
     ```
-3. Initialize terraform:
+4. Rename the file `localhost.tf.none` to `localhost.tf` 
+    > This `.tf` file is for adding a CORS trusted origin `htt://localhost:8666` to the Okta Org. If you already have this trusted origin in your org, skip this step.
+5. Initialize terraform
     ```
     terraform init
     ```
-4. Execute the "plan":
+6. Execute the "plan"
     ```
     terraform plan -var-file travelagency.tfvars
     ```
-5. "Apply" the plan:
+7. "Apply" the plan
     ```
     terraform apply -var-file travelagency.tfvars
     ```
     Type `'yes'` at the prompt. Once it is completed you should see a message similar to `Apply complete! Resources: 6 added, 0 changed, 0 destroyed.`
-6. Verify by checking in your Okta Org
-    > NOTE: The terraform script for `travelagency` generates: 1) an OIDC Client, 2) an Auth Server, and 3) adds CORS for http://localhost:8666 and https://localhost:8666
-
+8. Verify by checking in your Okta Org
+    > NOTE: The terraform script for `travelagency` generates: 1) an OIDC Client, 2) an Auth Server, and 3) adds CORS for http://localhost:8666
+9.  __Return to the root folder__ 
+    > Your Org should be setup now so get out of `/terraform/travelagency` (go back to `/zartan` or "project root") to complete the rest of the steps.
 
 ---
 
 ### Local Environment Variables
 Set up the `.env` file:
-* Copy the [`.env.sample`](../.env.sample) (in the root directory) file into `.env`. Look for and edit these values in the file:
+* Copy the [`.env.sample`](../.env.sample) (in the root directory) file into `.env` (this should also be in the root directory). Look for and edit these values in the file:
 
     | Variable               | Value | 
     | ---------------------- | ----- | 
@@ -118,15 +128,16 @@ Set up the `.env` file:
     | OKTA_ORG_URL           | Your org url. e.g. `https://dev-13485.oktapreview.com` |
     | OKTA_OIDC_REDIRECT_URI | Use `http://localhost:8666/authorization-code/callback` as this was set by Terraform.
     | OKTA_API_TOKEN         | Provide an okta SSWS key |
+    | SPARKPOST_API_KEY      | ℹ️ Mandatory. Get the value from this [Box folder](https://okta.box.com/s/cgp429sqbbowuuyiqgckq6t836lyp8jw) (Only accessible to Okta employees) |
+    
 * (Optional) Provide values for the other variables. Refer to [this section](#env-variables-details) for details.
 
 ---
 
 ### Run The App
-* Remember to get out of the `/terraform/travelagency` folder! __Return to the root folder, then:__
 * Remember to activate your `venv` specified [in the __Install__ section](#venv-activate) (if you haven't done it already).
-* Then, run python:
-    ```
+* Then, run python
+    ```bash
     python app.py
     ```
     NOTE: you may need to run as `python3 app.py` if you have python 2.7 on your local instance along with python 3.x
