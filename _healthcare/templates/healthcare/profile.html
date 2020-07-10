@@ -72,14 +72,7 @@
                 <div class="card border-bottom">
                     <div class="card-header">Identity Verification</div>
                     <div class="card-body" >
-                        {% if is_evident_validated|trim == 'True' %}
-                            You identity validation is complete!<br><br>
-                            <button type="button" onclick="openverification()" class="btn btn-primary">Re-validate</button>
-                        {% else %}
-                            <span style="color:red">Your identity validation is pending.</span><br><br>
-                            <button type="button" onclick="openverification()" class="btn btn-primary">Validate</button>
-                        {% endif %}
-
+                      {% include '//components/template-idverification.html' %}
                     </div>
                 </div>
                 <br>
@@ -90,38 +83,6 @@
 </section>
 
         {% include '//components/template-modal.html' %}
-
-        <div class="modal fade" id="identityVerification" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                    <div class="modal-header">
-                        <a href="https://cdn-zartan.s3.us-east-2.amazonaws.com/static/img/michael-motorist-front.jpg" download="michael-motorist-front.jpg">sample front license</a>&nbsp;&nbsp;&nbsp;
-                        <a href="https://cdn-zartan.s3.us-east-2.amazonaws.com/static/img/michael-motorist-back.jpg" download="michael-motorist-back.jpg">sample back license</a>
-                        <button class="close" type="button" onclick="closeverification()" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                    </div>
-                    <div class="modal-body" id="mfamodalbody">
-                          <iframe name="iframeEvident" id="iframeEvident" width="100%" height="700" frameBorder="0" src=""></iframe>
-                    </div>
-            </div>
-        </div>
-        </div>
-
-        <div class="modal fade" id="identityVerificationUpdate" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                    <div class="modal-header">
-                        Identity Verification : Click button to check the status of identity proofing request.
-                        <button class="close" type="button" onclick="closeverificationUpdate()" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                    </div>
-                    <div class="modal-body" id="mfamodalbody" style="text-align: center">
-                          <button type="submit" class="btn btn-primary btn-block" style="width:400px;display: inline-block" onclick="updateIdentity()">Check Status and update profile</button>
-                          <span id="statusUpdate"  style="color:red; font-weight: bold;display: inline-block"></span>
-                    </div>
-            </div>
-        </div>
-        </div>
-
-
         <div class="modal fade" id="healthcard" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -198,53 +159,6 @@
         function closeidcard() {
             console.log("closeidcard()");
             $("#healthcard").modal("hide");
-        }
-
-         function updateIdentity(){
-            console.log("updateIdentity()");
-            //$("#identityVerification").modal("show");
-            response = "";
-            $.ajax({
-                      'async': false,
-                      'type': "GET",
-                      'url': "/healthcare/updateidentity",
-                      'success': function (data) {
-                         response = data;
-                      }
-                    });
-            if (response == "pending") {
-                $('#statusUpdate').text("The identity validation process is still pending. Please wait and try again");
-            } else {
-                 $("#identityVerificationUpdate").modal("hide");
-                 location.reload();
-            }
-        }
-
-        function openverification(){
-            console.log("openverification()");
-            $("#identityVerification").modal("show");
-            evidenttoken = "";
-            $.ajax({
-                      'async': false,
-                      'type': "GET",
-                      'url': "/healthcare/getverificationcode",
-                      'success': function (data) {
-                         evidenttoken = data;
-                      }
-                    });
-            $('#iframeEvident').attr('src', "https://idoweb.api.demo.evidentid.com/api/v1/auth?auth_token="+evidenttoken)
-        }
-        function closeverification() {
-            console.log("closeverification()");
-            $("#identityVerification").modal("hide");
-            $("#identityVerificationUpdate").modal("show");
-            //location.reload();
-        }
-
-        function closeverificationUpdate() {
-            console.log("closeverificationUpdate()");
-            $("#identityVerificationUpdate").modal("hide");
-            location.reload();
         }
 
         window.addEventListener('load', function () {
