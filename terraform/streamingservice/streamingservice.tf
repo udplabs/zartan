@@ -23,7 +23,7 @@ resource "okta_app_oauth" "streamingservice" {
   grant_types    = ["authorization_code"]
   redirect_uris  = [
     "https://${local.app_domain}/authorization-code/callback",
-    "http://${local.app_domain}/authorization-code/callback"
+    "http://localhost:8666/authorization-code/callback"
   ]
   response_types = ["code"]
   issuer_mode    = "ORG_URL"
@@ -32,11 +32,6 @@ resource "okta_app_oauth" "streamingservice" {
 resource "okta_trusted_origin" "streamingservice_https" {
   name   = "${var.udp_subdomain} ${var.demo_app_name} HTTPS"
   origin = "https://${local.app_domain}"
-  scopes = ["REDIRECT", "CORS"]
-}
-resource "okta_trusted_origin" "streamingservice_http" {
-  name   = "${var.udp_subdomain} ${var.demo_app_name} HTTP"
-  origin = "http://${local.app_domain}"
   scopes = ["REDIRECT", "CORS"]
 }
 resource "okta_auth_server" "streamingservice" {
