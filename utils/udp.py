@@ -55,7 +55,8 @@ def clear_session_decorator(f):
     def decorated_function(*args, **kws):
         logger.debug("clear_session_decorator()")
 
-        clear_session_setting()
+        session[SESSION_IS_CONFIGURED_KEY] = False
+        session[SESSION_INSTANCE_SETTINGS_KEY] = default_settings
 
         return f(*args, **kws)
     return decorated_function
