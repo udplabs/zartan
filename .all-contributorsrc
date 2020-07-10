@@ -49,6 +49,27 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "zeekhoo-okta",
+      "name": "zeekhoo-okta",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/20686224?v=4",
+      "profile": "https://github.com/zeekhoo-okta",
+      "contributions": [
+        "doc",
+        "code",
+        "bug"
+      ]
+    },
+    {
+      "login": "jpf",
+      "name": "Joël Franusic",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/41538?v=4",
+      "profile": "http://joel.franusic.com",
+      "contributions": [
+        "doc",
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7
