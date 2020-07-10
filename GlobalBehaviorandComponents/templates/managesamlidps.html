@@ -13,7 +13,7 @@
                 </div>
                 <div class="card border-bottom">
                     <div class="card-body">
-                        <button type="button" class="btn btn-secondary" onclick="window.location.href = 'manageidp';">Create Identity Provider</button><br/>
+                        <button type="button" class="btn btn-secondary" onclick="window.location.href = 'managesamlidp';">Create Identity Provider</button><br/>
                         <br />
                         <div class="separator-2"></div>
                             <table class="table table-striped">
@@ -31,13 +31,13 @@
                                      <tr>
                                         <td>{{ i['name'] }}</td>
                                         <td>{{ i['type'] }}</td>
-                                        <td style="text-align:center"><a href="manageidp?idpId={{ i.id }}"><i class="fa fa-edit"></i></a></td>
+                                        <td style="text-align:center"><a href="managesamlidp?idpId={{ i.id }}"><i class="fa fa-edit"></i></a></td>
                                         {% if i['status'] == 'ACTIVE'  %}
-                                               <td style="text-align:center"><a href="deactivateidp?idpId={{ i.id }}"><i class="fa fa-toggle-on"></i></a></td>
+                                               <td style="text-align:center"><a href="deactivatesamlidp?idpId={{ i.id }}"><i class="fa fa-toggle-on"></i></a></td>
                                         {% else %}
-                                               <td style="text-align:center"><a href="activateidp?idpId={{ i.id }}"><i class="fa fa-toggle-off"></i></a></td>
+                                               <td style="text-align:center"><a href="activatesamlidp?idpId={{ i.id }}"><i class="fa fa-toggle-off"></i></a></td>
                                         {% endif %}
-                                        <td style="text-align:center"><a href="deleteidp?idpId={{ i.id }}"><i class="fa fa-trash"></i></a></td>
+                                        <td style="text-align:center"><a href="deletesamlidp?idpId={{ i.id }}"><i class="fa fa-trash"></i></a></td>
                                     </tr>
                                 {% endfor %}
                             </tbody>

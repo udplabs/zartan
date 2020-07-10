@@ -19,24 +19,29 @@ gbac_manageidps_bp = Blueprint(
     static_folder='static',
     static_url_path='static')
 
-@gbac_manageidps_bp.route("/manageidps")
+@gbac_manageidps_bp.route("/managesamlidps")
 @is_authenticated
-def gbac_idps():
-    logger.debug("gbac_idps()")
+def gbac_saml_idps():
+    logger.debug("gbac_saml_idps()")
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     idp_list = okta_admin.get_idps()
+
+    for idp in idp_list:
+        if idp['type'] != 'SAML2':
+            idp_list.remove(idp)
+
     logger.debug(idp_list)
     return render_template(
-        "/manageidps.html",
+        "/managesamlidps.html",
         templatename=get_app_vertical(),
         user_info=get_userinfo(),
         idplist=idp_list,
         config=session[SESSION_INSTANCE_SETTINGS_KEY])
 
-@gbac_manageidps_bp.route("/manageidp")
+@gbac_manageidps_bp.route("/managesamlidp")
 @is_authenticated
-def gbac_create_update_idp_page():
-    logger.debug("gbac_create_update_idp_page()")
+def gbac_create_update_saml_idp_page():
+    logger.debug("gbac_create_update_saml_idp_page()")
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
 
     idp_id = request.args.get('idpId')
@@ -50,17 +55,17 @@ def gbac_create_update_idp_page():
 
     logger.debug("Retrieved IDP: {0}".format(idp_info))
     return render_template(
-        "/manageidp.html",
+        "/managesamlidp.html",
         templatename=get_app_vertical(),
         id_token=TokenUtil.get_id_token(request.cookies),
         access_token=TokenUtil.get_access_token(request.cookies),
         idp_info=idp_info,
         config=session[SESSION_INSTANCE_SETTINGS_KEY])
 
-@gbac_manageidps_bp.route("/updateidp", methods=["POST"])
+@gbac_manageidps_bp.route("/updatesamlidp", methods=["POST"])
 @is_authenticated
-def gbac_update_idp():
-    logger.debug("gbac_update_idp()")
+def gbac_update_saml_idp():
+    logger.debug("gbac_update_saml_idp()")
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     idpMetadataFile = request.files.get('idpMetadata')
 
@@ -122,40 +127,40 @@ def gbac_update_idp():
         resp = okta_admin.create_idp(idpAPIData)
 
     logger.info(resp)
-    return redirect(url_for("gbac_manageidps_bp.gbac_idps", _external="True", _scheme="http", message="Success!"))
+    return redirect(url_for("gbac_manageidps_bp.gbac_saml_idps", _external="True", _scheme="http", message="Success!"))
 
-@gbac_manageidps_bp.route("/activateidp")
+@gbac_manageidps_bp.route("/activatesamlidp")
 @is_authenticated
-def sample_activateidp():
-    logger.debug("activateidp()")
+def gbac_activatesamlidp():
+    logger.debug("activatesamlidp()")
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
 
     if request.args.get('idpId'):
         resp = okta_admin.activate_idp(request.args.get('idpId'))
 
     logger.info(resp)
-    return redirect(url_for("gbac_manageidps_bp.gbac_idps", _external="True", _scheme="http", message="Success!"))
+    return redirect(url_for("gbac_manageidps_bp.gbac_saml_idps", _external="True", _scheme="http", message="Success!"))
 
-@gbac_manageidps_bp.route("/deactivateidp")
+@gbac_manageidps_bp.route("/deactivatesamlidp")
 @is_authenticated
-def sample_deactivateidp():
-    logger.debug("deactivateidp()")
+def gbac_deactivatesamlidp():
+    logger.debug("deactivatesamlidp()")
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
 
     if request.args.get('idpId'):
         resp = okta_admin.deactivate_idp(request.args.get('idpId'))
 
     logger.info(resp)
-    return redirect(url_for("gbac_manageidps_bp.gbac_idps", _external="True", _scheme="http", message="Success!"))
+    return redirect(url_for("gbac_manageidps_bp.gbac_saml_idps", _external="True", _scheme="http", message="Success!"))
 
-@gbac_manageidps_bp.route("/deleteidp")
+@gbac_manageidps_bp.route("/deletesamlidp")
 @is_authenticated
-def sample_deleteidp():
-    logger.debug("deleteidp()")
+def gbac_deletesamlidp():
+    logger.debug("deletesamlidp()")
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
 
     if request.args.get('idpId'):
         resp = okta_admin.delete_idp(request.args.get('idpId'))
 
     logger.info(resp)
-    return redirect(url_for("gbac_manageidps_bp.gbac_idps", _external="True", _scheme="http", message="Success!"))
+    return redirect(url_for("gbac_manageidps_bp.gbac_saml_idps", _external="True", _scheme="http", message="Success!"))
