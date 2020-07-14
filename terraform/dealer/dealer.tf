@@ -6,6 +6,7 @@ variable "udp_subdomain" { default="local_zartan" }
 
 locals {
     app_domain = "${var.udp_subdomain}.${var.demo_app_name}.unidemo.info"
+    nodash_subdomain = replace(var.udp_subdomain, "-", "_")
 }
 
 provider "okta" {
@@ -68,8 +69,8 @@ resource "okta_auth_server_claim" "dealer" {
   claim_type     = "IDENTITY"
 }
 resource "okta_user_schema" "customfield1" {
-  index       = "${var.demo_app_name}_access_requests"
-  title       = "${var.demo_app_name}_access_requests"
+  index       = "${local.nodash_subdomain}_${var.demo_app_name}_access_requests"
+  title       = "${var.udp_subdomain}_${var.demo_app_name}_access_requests"
   type        = "array"
   array_type  = "string"
   description = "${var.udp_subdomain}_${var.demo_app_name}_access_requests contains workflow request"
