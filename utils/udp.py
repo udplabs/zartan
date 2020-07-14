@@ -272,8 +272,8 @@ def get_udp_oauth_access_token(udp_config):
 
 def get_udp_ns_fieldname(fieldname):
     parts = get_domain_parts_from_request()
-    #Fix for Okta Field Nameing Issue. Okta Custom Fields cannot contain dashes.
-    udp_subdomain = parts["udp_subdomain"].replace("-","_")
+    # Fix for Okta Field Nameing Issue. Okta Custom Fields cannot contain dashes.
+    udp_subdomain = parts["udp_subdomain"].replace("-", "_")
     udp_app_name = parts["udp_app_name"]
     field = "{subdomain}_{appname}_{fieldname}".format(subdomain=udp_subdomain, appname=udp_app_name, fieldname=fieldname)
 
