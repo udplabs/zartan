@@ -15,22 +15,20 @@ This document is how to set up and run Zartan in your own local environment, out
 
 ## Requirements
 
-These items need to be downloaded and installed in order to properly run a Zartan demo
+These items need to be installed in order to properly run Zartan:
 
-* Python 3.6+ and Flask
-* Okta tenant. [Free tenant](https://developer.okta.com/)
+* Python 3.6+
+* Okta Org. You can signup for a free "dev edition" [here](https://developer.okta.com/)
+* [Terraform](https://www.terraform.io/downloads.html) to automatically configure your Okta Org
 * (Optional) git client [git client installation instructions](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
-* (Optional) [Terraform](https://www.terraform.io/downloads.html) to automatically configure your Okta Org
 
 ### Python
 Zartan Requires Python 3.6 or higher to run properly.
 * Please refer to your OS specific instructions on installing [Python](https://www.python.org/downloads/)
-    * e.g. for Mac users, you can use homebrew:
+    * e.g. Mac users can install using [homebrew](https://brew.sh/):
     ```bash
     brew install python
     ```
-* You can also leverage services like Heroku and AWS Elastic Beanstalk to run Zartan as well.
-
 
 > ℹ️  Mac users: If you've never run a Python app locally before, your machine is in an unknown state when it comes to Python development. It is a known issue for Python dependencies to have moved, become unlinked or deleted during MacOS upgrades (e.g. an upgrade to Catalina). If you have issues during any of the install steps (below) or when running Zartan locally, try reinstalling Python:
 ```bash
@@ -61,11 +59,13 @@ Open up a terminal/shell then:
     git clone https://github.com/udplabs/zartan.git
     ```
 2. After cloning, `cd` into the `zartan` folder
-3. Use [`venv`](https://docs.python.org/3/tutorial/venv.html) to setup a contained environment to run the zartan app without impacting your entire Python environment.
+3. Use "virtual env" aka [`venv`](https://docs.python.org/3/tutorial/venv.html) to setup a contained environment to run the zartan app without impacting your system's Python environment.
     ```
     python3 -m venv venv
     ```
-    Or,  just `python -m venv venv` if you only have python 3.x installed on your system. Python allows multiple versions to be installed; For Mac users, most likely you'll have both python 2.7 on your local instance along with python 3.x.
+    Or,  just `python -m venv venv` if you only have python 3.x installed on your system. 
+    
+    *(Python allows multiple versions to be installed; For Mac users, most likely you'll have both python 2.7 on your local instance along with python 3.x.)*
 4. Activate the `venv` environment: <a name="venv-activate"></a>
     * On Mac/Linux
     ```bash
@@ -73,8 +73,23 @@ Open up a terminal/shell then:
     ```
     * On Windows:
     ```
-    venv\Scripts\activate.bat
+    .\venv\Scripts\activate.bat
     ```
+
+    > ℹ️  NOTE: You'll notice that venv has "activated" when there is a `(venv)` in your command prompt:
+    > * Mac/Linux:
+    > ```bash
+    > #zsh
+    > user@macbook zartan % source venv/bin/activate
+    > (venv) user@macbook zartan % 
+    > ```    
+    > * Windows:
+    > ```
+    > C:\temp123> .\venv\Scripts\activate.bat
+    > (venv) C:\temp123>
+    > ```
+    > __As best practice, ALWAYS run inside venv. For more information on why you'd want to do this, read up on `venv` [here](https://docs.python.org/3/tutorial/venv.html)__
+
 5. Install dependencies
     ```bash
     pip install -r requirements.txt
@@ -135,7 +150,7 @@ Set up the `.env` file:
 ---
 
 ### Run The App
-* Remember to activate your `venv` specified [in the __Install__ section](#venv-activate) (if you haven't done it already).
+* Remember to "activate" `venv`. See [__Install__ section](#venv-activate).
 * Then, run python
     ```bash
     python app.py
