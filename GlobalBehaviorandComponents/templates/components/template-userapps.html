@@ -6,17 +6,20 @@
                         </tr>
                         </thead>
                         <tbody>
-                        
-                        {% for i in applist %}
-                          {% set isHidden = i['visibility']['hide']['web'] %}
-                          {% if 'False' == isHidden|string %}
-                             <tr>
-                                <td>{{ i['label'] }}</td>
-                                <td id="id{{ loop.index }}">
-                                    <a href="{{ i["_links"]["appLinks"][0]["href"] }}"><img src="{{ i["_links"]["logo"][0]["href"]}}"></a>
-                                </td>
-                            </tr>
-                          {% endif %}
-                        {% endfor %}
+                        {% if applist|length > 0 %}
+                            {% for i in applist %}
+                              {% set isHidden = i['visibility']['hide']['web'] %}
+                              {% if 'False' == isHidden|string %}
+                                 <tr>
+                                    {% if i["_links"]["appLinks"] %}
+                                    <td>{{ i['label'] }}</td>
+                                    <td id="id{{ loop.index }}">
+                                        <a href="{{ i["_links"]["appLinks"][0]["href"] }}"><img src="{{ i["_links"]["logo"][0]["href"]}}"></a>
+                                    </td>
+                                    {% endif %}
+                                </tr>
+                              {% endif %}
+                            {% endfor %}
+                        {% endif %}
                         </tbody>
                     </table>

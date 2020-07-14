@@ -97,6 +97,7 @@ def gbac_registration_completion():
 
     return render_template(
         "/registration-completion.html",
+        email=request.form.get('email'),
         templatename=get_app_vertical(),
         config=session[SESSION_INSTANCE_SETTINGS_KEY],
         _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
