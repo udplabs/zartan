@@ -1,7 +1,15 @@
 {% extends "finance/template.html" %}
 
 {% block content %}
+<section class="bg-light py-5">
         <div class="container">
+            <div class="d-flex align-items-center mb-5">
+                    <div class="icon-stack icon-stack-lg bg-primary text-white"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
+                    <div class="ml-3">
+                        <h2 class="mb-0">Account</h2>
+                        <p class="lead mb-0">Account Information</p>
+                    </div>
+            </div>
             <div class="alert alert-primary alert-dismissible fade show" role="alert" id="TransferAlertBox" >
                 <h5 class="alert-heading">Transfer Complete</h5>
                 <div id="Alertmsg"></div>
@@ -40,37 +48,38 @@
             <div class="card mb-1">
                 <div class="card-header">Transfer Money</div>
                 <div class="card-body">
-                <table cellspacing="0" cellpadding="1" width="100%" border="0">
-                        		  <tbody><tr>
-                        		    <td><h5><b>From Account:</h5></b>
-                        		    </td>
-                        		    <td>
-                        			  <select size="1" id="fromAccount" name="fromAccount">
-                        				<option value="800000">800000 Corporate</option>
-                                        <option value="800001">800001 Checking</option>
-                        			  </select>
-                        		    </td>
-                        		  </tr>
-                        		  <tr>
-                        		    <td><h5><b>To Account:</h5></b></td>
-                        		    <td>
-                        			  <select size="1" id="toAccount" name="toAccount">
-                        				<option value="800000">800000 Corporate</option>
-                                        <option value="800001" selected>800001 Checking</option>
-                        			  </select>
-                        		    </td>
-                        		  </tr>
-                        		  <tr>
-                        		    <td><h5><b>Amount to Transfer:</h5></b>
-                        		    </td>
-                        		    <td><input type="text" id="transferAmount" name="transferAmount"></td>
-                        		  </tr>
-                        		  <tr>
-                        		    <td></td><td colspan="2">  <button type="button" id="mfa-button" onclick="checkmfa(runmyscript)" class="btn btn-primary"> Submit Transfer</button>
-                                    </button></td>
-                        		  </tr>
-                    		    </tbody>
-                    	    </table>
+                    <table cellspacing="0" cellpadding="1" width="100%" border="0">
+                		<tbody>
+                		  <tr>
+                		    <td><h5><b>From Account:</h5></b>
+                		    </td>
+                		    <td>
+                			  <select size="1" id="fromAccount" name="fromAccount">
+                				<option value="800000">800000 Corporate</option>
+                                <option value="800001">800001 Checking</option>
+                			  </select>
+                		    </td>
+                		  </tr>
+                		  <tr>
+                		    <td><h5><b>To Account:</h5></b></td>
+                		    <td>
+                			  <select size="1" id="toAccount" name="toAccount">
+                				<option value="800000">800000 Corporate</option>
+                                <option value="800001" selected>800001 Checking</option>
+                			  </select>
+                		    </td>
+                		  </tr>
+                		  <tr>
+                		    <td><h5><b>Amount to Transfer:</h5></b>
+                		    </td>
+                		    <td><input type="text" style="width:170px" id="transferAmount" name="transferAmount"></td>
+                		  </tr>
+                		  <tr>
+                		    <td></td><td colspan="2">  <button type="button" id="mfa-button" onclick="checkmfa(runmyscript)" class="btn btn-primary"> Submit Transfer</button>
+                            </button></td>
+                		  </tr>
+            		    </tbody>
+            	    </table>
                 </div>
             </div>
         </div>
@@ -82,7 +91,7 @@
         <script type="text/javascript">
              function runmyscript(mfachecked) {
                  console.log(mfachecked.active);
-                 if (mfachecked.active) 
+                 if (mfachecked.active)
                  {
                     $("#TransferAlertBox").fadeIn();
                     $("#Alertmsg").text("$"+ $("#transferAmount").val() + " has been Transfered to Account: " + $("#toAccount").children("option:selected").val());
@@ -91,12 +100,13 @@
                  {
                     $("#TransferAlertBox").fadeIn();
                     $("#Alertmsg").text("Error during Transfer");
-                
+
                  }
-                 
+
              }
         </script>
-        {% include '//components/template-mfa.html' %} 
+        {% include '//components/template-mfa.html' %}
+</section>
 {% endblock %}
 
 {% block footer %}

@@ -22,14 +22,14 @@
     background-size: auto;
     background-origin: content-box !important;;
   }
-  
+
   /*
   display: block;
     max-width: 72px;
     max-height: 28px;
     margin: 9px auto 0;
     */
-    
+
     .sign-in-facebook
   {
     background-image: url('http://i.stack.imgur.com/e2S63.png');
@@ -48,7 +48,7 @@
     padding-left: 41px;
     color: #000;
   }
-  
+
 </style>
 
 <section class="bg-light py-5">
@@ -63,9 +63,17 @@
                 <div class="card border-bottom">
                     <div class="card-body">
                         <div class="separator-2"></div>
-                             {% for app in apps %}
-                                 <a href="{{app._links.appLinks[0].href}}"  class="btn btn-default button" style="height:55px; width:300px; color: white; background-color: #650461; padding: 5px 11px; border: 2px solid #5a827f; margin-top:2px; margin-bottom:2px; background-image: url('{{app._links.logo[0].href}}')">{{app.label}}</a>
-                            {% endfor %}     
+                        <div class="row">
+                        {% if apps|length > 0 %}
+                            {% for app in apps %}
+                              {% if app["_links"]["appLinks"] %}
+                                 <div class="col-4">
+                                 <a href="{{app._links.appLinks[0].href}}"  class="btn btn-default button" style="height:55px; width:300px; color: black; padding: 5px 11px; border: 1px solid; margin-top:2px; margin-bottom:2px; background-image: url('{{app._links.logo[0].href}}')">{{app.label}}</a>
+                                 </div>
+                              {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                        </div>
                     </div>
                 </div>
             </div>
