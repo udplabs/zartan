@@ -2,7 +2,7 @@ variable "org_name" {}
 variable "api_token" {}
 variable "base_url" {}
 variable "demo_app_name" { default="admin" }
-variable "udp_subdomain" { default="local_zartan" }
+variable "udp_subdomain" { default="local" }
 
 locals {
     app_domain = "${var.udp_subdomain}.${var.demo_app_name}.unidemo.info"
