@@ -7,6 +7,7 @@ from cryptography import x509
 from cryptography.hazmat.backends import default_backend
 import xml.etree.ElementTree as ET
 
+
 class OktaAuth:
 
     okta_config = None
@@ -537,13 +538,6 @@ class OktaAdmin:
 
         return RestUtil.execute_post(url, body, okta_headers)
 
-    def get_idps(self):
-        self.logger.debug("OktaAdmin.get_idps()")
-        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
-        url = "{base_url}/api/v1/idps".format(base_url=self.okta_config["okta_org_name"])
-
-        return RestUtil.execute_get(url, okta_headers)
-
     def close_session(self, session_id):
         self.logger.debug("OktaAdmin.close_session(session_id)")
         okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
@@ -850,6 +844,7 @@ class OktaAdmin:
             idp_id=idp_id)
         return RestUtil.execute_delete(url, {}, okta_headers)
 
+
 class OktaUtil:
 
     @staticmethod
@@ -1042,6 +1037,7 @@ class TokenUtil:
 
         return result
 
+
 class IDPUtil:
     logger = logging.getLogger(__name__)
 
@@ -1121,37 +1117,37 @@ class IDPUtil:
 
     @staticmethod
     def parseIDPMetadata(metaDataContent):
-        #TODO - parse the algorithms used by IDP.
+        # TODO - parse the algorithms used by IDP.
 
         mdaTree = ET.fromstring(metaDataContent)
         IDPUtil.logger.debug("Metadata: {0}".format(mdaTree))
         if mdaTree.tag == '{urn:oasis:names:tc:SAML:2.0:metadata}EntityDescriptor':
-            #Metadata only has the IDP in it.
+            # Metadata only has the IDP in it.
             mdaEntityDescriptor = mdaTree
         else:
-            #There's more than 1 descriptor here- let's find the one we want.
-            #Find first entitydescriptor node that has a IDPSSODescriptor node within.
+            # There's more than 1 descriptor here- let's find the one we want.
+            # Find first entitydescriptor node that has a IDPSSODescriptor node within.
             mdaEntityDescriptor = mdaTree.find("{urn:oasis:names:tc:SAML:2.0:metadata}EntityDescriptor[{urn:oasis:names:tc:SAML:2.0:metadata}IDPSSODescriptor]")
 
         idpEntityId = mdaEntityDescriptor.get("entityID")
         IDPUtil.logger.debug("Found entity ID: {0}".format(idpEntityId))
 
-        #Get our IDP definition element.
+        # Get our IDP definition element.
         mdaIDPDescriptor = mdaEntityDescriptor.find("{urn:oasis:names:tc:SAML:2.0:metadata}IDPSSODescriptor")
 
-        #Get the SSO url from the first SSO URL found for the IDP.
+        # Get the SSO url from the first SSO URL found for the IDP.
         mdaBindingElement = mdaIDPDescriptor.find("{urn:oasis:names:tc:SAML:2.0:metadata}SingleSignOnService")
         idpBindingType = mdaBindingElement.get("Binding").replace("urn:oasis:names:tc:SAML:2.0:bindings:", "")
         idpSSOUrl = mdaBindingElement.get("Location")
         IDPUtil.logger.debug("Found Binding Type: {0}".format(idpBindingType))
         IDPUtil.logger.debug("Found SSO Url: {0}".format(idpSSOUrl))
 
-        #Get NameID Format
+        # Get NameID Format
         mdaNameIdElement = mdaIDPDescriptor.find("{urn:oasis:names:tc:SAML:2.0:metadata}NameIDFormat")
         idpNameIdFormat = mdaNameIdElement.text
         IDPUtil.logger.debug("Found NameID Format: {0}".format(idpNameIdFormat))
 
-        #Get the signing Certificate
+        # Get the signing Certificate
         mdaSignCertElement = mdaIDPDescriptor.find("{urn:oasis:names:tc:SAML:2.0:metadata}KeyDescriptor[@use='signing']")
         IDPUtil.logger.debug("Found signing cert element: {0}".format(mdaSignCertElement))
         idpSigningCert = mdaSignCertElement.find(".//{http://www.w3.org/2000/09/xmldsig#}X509Certificate").text
@@ -1172,7 +1168,7 @@ class IDPUtil:
         certData = ""
         ln = str(fileContentStream.readline(), 'utf-8')
         while ln:
-            if ln[0] != '-': #Get rid of the --BEGIN/END Lines
+            if ln[0] != '-': # Get rid of the --BEGIN/END Lines
                 certData += ln.rstrip()
             ln = str(fileContentStream.readline(), 'utf-8')
         IDPUtil.logger.info(certData)
@@ -1186,7 +1182,7 @@ class IDPUtil:
             IDPUtil.logger.debug("Found cert: {0}".format(cert['x5c'][0]))
             if certData == cert['x5c'][0]:
                 return cert['kid']
-        return "" #Cert was not found.
+        return "" # Cert was not found.
 
     @staticmethod
     def getCertificateDisplayValues(cert_x5c):

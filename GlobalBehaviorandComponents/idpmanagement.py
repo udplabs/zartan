@@ -1,5 +1,4 @@
 import logging
-import xml.etree.ElementTree as ET
 
 # import functions
 from flask import render_template, session, request, redirect, url_for
@@ -18,6 +17,7 @@ gbac_manageidps_bp = Blueprint(
     template_folder='templates',
     static_folder='static',
     static_url_path='static')
+
 
 @gbac_manageidps_bp.route("/managesamlidps")
 @is_authenticated
@@ -38,6 +38,7 @@ def gbac_saml_idps():
         idplist=idp_list,
         config=session[SESSION_INSTANCE_SETTINGS_KEY])
 
+
 @gbac_manageidps_bp.route("/managesamlidp")
 @is_authenticated
 def gbac_create_update_saml_idp_page():
@@ -57,10 +58,10 @@ def gbac_create_update_saml_idp_page():
     return render_template(
         "/managesamlidp.html",
         templatename=get_app_vertical(),
-        id_token=TokenUtil.get_id_token(request.cookies),
-        access_token=TokenUtil.get_access_token(request.cookies),
+        user_info=get_userinfo(),
         idp_info=idp_info,
         config=session[SESSION_INSTANCE_SETTINGS_KEY])
+
 
 @gbac_manageidps_bp.route("/updatesamlidp", methods=["POST"])
 @is_authenticated
@@ -69,7 +70,7 @@ def gbac_update_saml_idp():
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     idpMetadataFile = request.files.get('idpMetadata')
 
-    #If we're updating, we need to pull current data.
+    # If we're updating, we need to pull current data.
     if request.form.get('idpId'):
         idpAPIData = okta_admin.get_idp(request.form.get('idpId'))
     else:
@@ -78,7 +79,7 @@ def gbac_update_saml_idp():
     idpAPIData['name'] = request.form.get('idpName')
 
     if idpMetadataFile:
-        #Use metadata here.
+        # Use metadata here.
         logger.info("Metadata uploaded. Parsing...")
         data = IDPUtil.parseIDPMetadata(idpMetadataFile.read())
         idpAPIData['protocol']['endpoints']['sso']['url'] = data['ssoUrl']
@@ -97,8 +98,8 @@ def gbac_update_saml_idp():
     if certData:
         kid = IDPUtil.getCertificateKid(certData, okta_admin)
     else:
-        #Unlike other form inputs, if we're not changing the cert in update mode, the cert file upload will be null instead of filled out.
-        #so rather than loading from formdata like normal, we have to load from the fetched Okta data.
+        # Unlike other form inputs, if we're not changing the cert in update mode, the cert file upload will be null instead of filled out.
+        # so rather than loading from formdata like normal, we have to load from the fetched Okta data.
         kid = idpAPIData['protocol']['credentials']['trust']['kid']
 
     if not kid:
@@ -111,7 +112,7 @@ def gbac_update_saml_idp():
             kid = resp["kid"]
         elif "errorCode" in resp:
             logger.error(resp)
-            #How do i handle the error properly here?
+            # How do i handle the error properly here?
         else:
             logger.error("An exception was thrown.")
     else:
@@ -123,11 +124,12 @@ def gbac_update_saml_idp():
 
     if request.form.get('idpId'):
         resp = okta_admin.update_idp(request.form.get('idpId'), idpAPIData)
-    else: #Create.
+    else: # Create.
         resp = okta_admin.create_idp(idpAPIData)
 
     logger.info(resp)
     return redirect(url_for("gbac_manageidps_bp.gbac_saml_idps", _external="True", _scheme="http", message="Success!"))
+
 
 @gbac_manageidps_bp.route("/activatesamlidp")
 @is_authenticated
@@ -141,6 +143,7 @@ def gbac_activatesamlidp():
     logger.info(resp)
     return redirect(url_for("gbac_manageidps_bp.gbac_saml_idps", _external="True", _scheme="http", message="Success!"))
 
+
 @gbac_manageidps_bp.route("/deactivatesamlidp")
 @is_authenticated
 def gbac_deactivatesamlidp():
@@ -152,6 +155,7 @@ def gbac_deactivatesamlidp():
 
     logger.info(resp)
     return redirect(url_for("gbac_manageidps_bp.gbac_saml_idps", _external="True", _scheme="http", message="Success!"))
+
 
 @gbac_manageidps_bp.route("/deletesamlidp")
 @is_authenticated
