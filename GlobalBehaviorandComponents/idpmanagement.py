@@ -4,7 +4,7 @@ import logging
 from flask import render_template, session, request, redirect, url_for
 from flask import Blueprint
 from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical
-from utils.okta import TokenUtil, OktaAdmin, IDPUtil
+from utils.okta import OktaAdmin, IDPUtil
 
 from GlobalBehaviorandComponents.validation import is_authenticated, get_userinfo
 
@@ -124,7 +124,7 @@ def gbac_update_saml_idp():
 
     if request.form.get('idpId'):
         resp = okta_admin.update_idp(request.form.get('idpId'), idpAPIData)
-    else: # Create.
+    else:  # Create.
         resp = okta_admin.create_idp(idpAPIData)
 
     logger.info(resp)

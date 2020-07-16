@@ -1156,7 +1156,7 @@ class IDPUtil:
         idpData = {
             "entityID": idpEntityId,
             "ssoUrl": idpSSOUrl,
-            "bindingType":idpBindingType,
+            "bindingType": idpBindingType,
             "nameIdFormat": idpNameIdFormat,
             "signingCert": idpSigningCert
         }
@@ -1168,7 +1168,7 @@ class IDPUtil:
         certData = ""
         ln = str(fileContentStream.readline(), 'utf-8')
         while ln:
-            if ln[0] != '-': # Get rid of the --BEGIN/END Lines
+            if ln[0] != '-':  # Get rid of the --BEGIN/END Lines
                 certData += ln.rstrip()
             ln = str(fileContentStream.readline(), 'utf-8')
         IDPUtil.logger.info(certData)
@@ -1182,12 +1182,12 @@ class IDPUtil:
             IDPUtil.logger.debug("Found cert: {0}".format(cert['x5c'][0]))
             if certData == cert['x5c'][0]:
                 return cert['kid']
-        return "" # Cert was not found.
+        return ""  # Cert was not found.
 
     @staticmethod
     def getCertificateDisplayValues(cert_x5c):
         IDPUtil.logger.debug("Loading display information for cert: {0}".format(cert_x5c))
         pem_data = "-----BEGIN CERTIFICATE-----\r\n{0}\r\n-----END CERTIFICATE-----".format(cert_x5c)
 
-        cert = x509.load_pem_x509_certificate(pem_data.encode() , default_backend())
+        cert = x509.load_pem_x509_certificate(pem_data.encode(), default_backend())
         return cert
