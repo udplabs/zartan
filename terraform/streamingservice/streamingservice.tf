@@ -26,6 +26,7 @@ resource "okta_app_oauth" "streamingservice" {
     "http://localhost:8666/authorization-code/callback"
   ]
   response_types = ["code"]
+  consent_method = "TRUSTED"  
   issuer_mode    = "ORG_URL"
   groups         = ["${data.okta_group.all.id}"]
 }
