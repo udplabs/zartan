@@ -190,7 +190,7 @@ def get_domain_parts_from_request():
     else:
         # Assum local running
         udp_subdomain = "local"
-        udp_app_name = os.getenv("APP_TEMPLATE", udp_app_name)
+        udp_app_name = os.getenv("APP_TEMPLATE", "local")
         remaining_domain = "local"
 
     # ENV always trumps remote config
