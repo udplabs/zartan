@@ -57,6 +57,7 @@ def clear_session_decorator(f):
 
         session[SESSION_IS_CONFIGURED_KEY] = False
         session[SESSION_INSTANCE_SETTINGS_KEY] = default_settings
+        session[SESSION_INSTANCE_SETTINGS_KEY]["get_new_token_url"] = "/index"
 
         return f(*args, **kws)
     return decorated_function
