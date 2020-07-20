@@ -3,6 +3,9 @@ import json
 import logging
 
 from utils.rest import RestUtil
+from cryptography import x509
+from cryptography.hazmat.backends import default_backend
+import xml.etree.ElementTree as ET
 
 
 class OktaAuth:
@@ -535,13 +538,6 @@ class OktaAdmin:
 
         return RestUtil.execute_post(url, body, okta_headers)
 
-    def get_idps(self):
-        self.logger.debug("OktaAdmin.get_idps()")
-        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
-        url = "{base_url}/api/v1/idps".format(base_url=self.okta_config["okta_org_name"])
-
-        return RestUtil.execute_get(url, okta_headers)
-
     def close_session(self, session_id):
         self.logger.debug("OktaAdmin.close_session(session_id)")
         okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
@@ -762,6 +758,92 @@ class OktaAdmin:
 
         return RestUtil.execute_get(url, okta_headers)
 
+    def upload_idp_certificate(self, idp_cert):
+        self.logger.debug("OktaAdmin.upload_idp_certificate(idp_cert)")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/idps/credentials/keys".format(
+            base_url=self.okta_config["okta_org_name"])
+
+        return RestUtil.execute_post(url, idp_cert, okta_headers)
+
+    def get_idp_certificates(self):
+        self.logger.debug("OktaAdmin.get_idp_certificates()")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/idps/credentials/keys".format(
+            base_url=self.okta_config["okta_org_name"])
+
+        return RestUtil.execute_get(url, okta_headers)
+
+    def get_idp_certificate(self, kid):
+        self.logger.debug("OktaAdmin.get_idp_certificates()")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/idps/credentials/keys/{kid}".format(
+            base_url=self.okta_config["okta_org_name"],
+            kid=kid)
+
+        return RestUtil.execute_get(url, okta_headers)
+
+    def get_idp(self, idp_id):
+        self.logger.debug("OktaAdmin.get_idp(idp_id)")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/idps/{idp_id}".format(
+            base_url=self.okta_config["okta_org_name"],
+            idp_id=idp_id)
+        return RestUtil.execute_get(url, okta_headers)
+
+    def get_idps(self):
+        self.logger.debug("OktaAdmin.get_idps()")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/idps".format(
+            base_url=self.okta_config["okta_org_name"])
+        return RestUtil.execute_get(url, okta_headers)
+
+    def create_idp(self, idp):
+        self.logger.debug("OktaAdmin.create_idp(idp)")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/idps".format(
+            base_url=self.okta_config["okta_org_name"])
+        self.logger.debug(idp)
+        return RestUtil.execute_post(url, idp, okta_headers)
+
+    def update_idp(self, idp_id, idp):
+        self.logger.debug("OktaAdmin.update_idp(idp)")
+        # self.logger.debug("User profile: {0}".format(json.dumps(user)))
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/idps/{idp_id}".format(
+            base_url=self.okta_config["okta_org_name"],
+            idp_id=idp_id)
+
+        return RestUtil.execute_put(url, idp, okta_headers)
+
+    def activate_idp(self, idp_id):
+        self.logger.debug("OktaAdmin.activate_idp(idp_id)")
+        # self.logger.debug("User profile: {0}".format(json.dumps(user)))
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/idps/{idp_id}/lifecycle/activate".format(
+            base_url=self.okta_config["okta_org_name"],
+            idp_id=idp_id)
+
+        return RestUtil.execute_post(url, {}, okta_headers)
+
+    def deactivate_idp(self, idp_id):
+        self.logger.debug("OktaAdmin.deactivate_idp(idp_id)")
+        # self.logger.debug("User profile: {0}".format(json.dumps(user)))
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/idps/{idp_id}/lifecycle/deactivate".format(
+            base_url=self.okta_config["okta_org_name"],
+            idp_id=idp_id)
+
+        return RestUtil.execute_post(url, {}, okta_headers)
+
+    def delete_idp(self, idp_id):
+        self.logger.debug("OktaAdmin.delete_idp(idp_id)")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/idps/{idp_id}".format(
+            base_url=self.okta_config["okta_org_name"],
+            idp_id=idp_id)
+        return RestUtil.execute_delete(url, {}, okta_headers)
+
 
 class OktaUtil:
 
@@ -954,3 +1036,158 @@ class TokenUtil:
                     result = introspect_result["active"]
 
         return result
+
+
+class IDPUtil:
+    logger = logging.getLogger(__name__)
+
+    @staticmethod
+    def getIDPModel():
+        return {
+            "type": "SAML2",
+            "name": "<Default Name Value>",
+            "protocol": {
+                "type": "SAML2",
+                "endpoints": {
+                    "sso": {
+                        "url": "<Default SSO URL>",
+                        "binding": "HTTP-POST",
+                        "destination": "<Default SSO URL>"
+                    },
+                    "acs": {
+                        "binding": "HTTP-POST",
+                        "type": "INSTANCE"
+                    }
+                },
+                "algorithms": {
+                    "request": {
+                        "signature": {
+                            "algorithm": "SHA-256",
+                            "scope": "REQUEST"
+                        }
+                    },
+                    "response": {
+                        "signature": {
+                            "algorithm": "SHA-256",
+                            "scope": "ANY"
+                        }
+                    }
+                },
+                "credentials": {
+                    "trust": {
+                        "issuer": "<Default IDP Issuer>",
+                        "audience": None,
+                        "kid": "<Default KID>"
+                    }
+                }
+            },
+            "policy": {
+                "provisioning": {
+                    "action": "AUTO",
+                    "profileMaster": "true",
+                    "groups": {
+                        "action": "NONE"
+                    },
+                    "conditions": {
+                        "deprovisioned": {
+                            "action": "NONE"
+                        },
+                        "suspended": {
+                            "action": "NONE"
+                        }
+                    }
+                },
+                "accountLink": {
+                    "filter": None,
+                    "action": "AUTO"
+                },
+                "subject": {
+                    "userNameTemplate": {
+                        "template": "idpuser.subjectNameId"
+                    },
+                    "format": [
+                        "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified"
+                    ],
+                    "filter": None,
+                    "matchType": "USERNAME"
+                },
+                "maxClockSkew": 120000
+            }
+        }
+
+    @staticmethod
+    def parseIDPMetadata(metaDataContent):
+        # TODO - parse the algorithms used by IDP.
+
+        mdaTree = ET.fromstring(metaDataContent)
+        IDPUtil.logger.debug("Metadata: {0}".format(mdaTree))
+        if mdaTree.tag == '{urn:oasis:names:tc:SAML:2.0:metadata}EntityDescriptor':
+            # Metadata only has the IDP in it.
+            mdaEntityDescriptor = mdaTree
+        else:
+            # There's more than 1 descriptor here- let's find the one we want.
+            # Find first entitydescriptor node that has a IDPSSODescriptor node within.
+            mdaEntityDescriptor = mdaTree.find("{urn:oasis:names:tc:SAML:2.0:metadata}EntityDescriptor[{urn:oasis:names:tc:SAML:2.0:metadata}IDPSSODescriptor]")
+
+        idpEntityId = mdaEntityDescriptor.get("entityID")
+        IDPUtil.logger.debug("Found entity ID: {0}".format(idpEntityId))
+
+        # Get our IDP definition element.
+        mdaIDPDescriptor = mdaEntityDescriptor.find("{urn:oasis:names:tc:SAML:2.0:metadata}IDPSSODescriptor")
+
+        # Get the SSO url from the first SSO URL found for the IDP.
+        mdaBindingElement = mdaIDPDescriptor.find("{urn:oasis:names:tc:SAML:2.0:metadata}SingleSignOnService")
+        idpBindingType = mdaBindingElement.get("Binding").replace("urn:oasis:names:tc:SAML:2.0:bindings:", "")
+        idpSSOUrl = mdaBindingElement.get("Location")
+        IDPUtil.logger.debug("Found Binding Type: {0}".format(idpBindingType))
+        IDPUtil.logger.debug("Found SSO Url: {0}".format(idpSSOUrl))
+
+        # Get NameID Format
+        mdaNameIdElement = mdaIDPDescriptor.find("{urn:oasis:names:tc:SAML:2.0:metadata}NameIDFormat")
+        idpNameIdFormat = mdaNameIdElement.text
+        IDPUtil.logger.debug("Found NameID Format: {0}".format(idpNameIdFormat))
+
+        # Get the signing Certificate
+        mdaSignCertElement = mdaIDPDescriptor.find("{urn:oasis:names:tc:SAML:2.0:metadata}KeyDescriptor[@use='signing']")
+        IDPUtil.logger.debug("Found signing cert element: {0}".format(mdaSignCertElement))
+        idpSigningCert = mdaSignCertElement.find(".//{http://www.w3.org/2000/09/xmldsig#}X509Certificate").text
+        IDPUtil.logger.debug("Found Signing Cert: {0}".format(idpSigningCert))
+
+        idpData = {
+            "entityID": idpEntityId,
+            "ssoUrl": idpSSOUrl,
+            "bindingType": idpBindingType,
+            "nameIdFormat": idpNameIdFormat,
+            "signingCert": idpSigningCert
+        }
+        IDPUtil.logger.debug(idpData)
+        return idpData
+
+    @staticmethod
+    def parseX509File(fileContentStream):
+        certData = ""
+        ln = str(fileContentStream.readline(), 'utf-8')
+        while ln:
+            if ln[0] != '-':  # Get rid of the --BEGIN/END Lines
+                certData += ln.rstrip()
+            ln = str(fileContentStream.readline(), 'utf-8')
+        IDPUtil.logger.info(certData)
+        return certData
+
+    @staticmethod
+    def getCertificateKid(certData, adminAPI):
+        existingCerts = adminAPI.get_idp_certificates()
+        IDPUtil.logger.debug("Existing cert to find: {0}".format(certData))
+        for cert in existingCerts:
+            IDPUtil.logger.debug("Found cert: {0}".format(cert['x5c'][0]))
+            if certData == cert['x5c'][0]:
+                return cert['kid']
+        return ""  # Cert was not found.
+
+    @staticmethod
+    def getCertificateDisplayValues(cert_x5c):
+        IDPUtil.logger.debug("Loading display information for cert: {0}".format(cert_x5c))
+        pem_data = "-----BEGIN CERTIFICATE-----\r\n{0}\r\n-----END CERTIFICATE-----".format(cert_x5c)
+
+        cert = x509.load_pem_x509_certificate(pem_data.encode(), default_backend())
+        return cert

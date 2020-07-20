@@ -61,6 +61,9 @@ app.register_blueprint(gvalidation_bp, url_prefix='/')
 from GlobalBehaviorandComponents.mfaenrollment import gbac_mfaenrollment_bp
 app.register_blueprint(gbac_mfaenrollment_bp, url_prefix='/')
 
+from GlobalBehaviorandComponents.idpmanagement import gbac_manageidps_bp
+app.register_blueprint(gbac_manageidps_bp, url_prefix='/')
+
 from GlobalBehaviorandComponents.idverification import gbac_idverification_bp
 app.register_blueprint(gbac_idverification_bp, url_prefix='/')
 

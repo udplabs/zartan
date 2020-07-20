@@ -1,0 +1,114 @@
+{% extends templatename+"/template.html" %}
+
+{% block content %}
+       {% include '//components/template-modal.html' %}
+       <section class="bg-light py-5">
+            <div class="container">
+                <div class="d-flex align-items-center mb-5">
+                    <div class="icon-stack icon-stack-lg bg-primary text-white"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
+                    <div class="ml-3">
+                        <h2 class="mb-0">Configure SSO</h2>
+                        <p class="lead mb-0">Connect your SAML2.0 Compatible Identity System!</p>
+                    </div>
+                </div>
+
+                <form class="form-horizontal" action="/updatesamlidp" method="POST" enctype="multipart/form-data">
+                <div class="card">
+                    <div class="card-header border-bottom">
+                        <ul class="nav nav-tabs card-header-tabs" id="idpTab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link {{ '' if idp_info['id']|length > 1 else 'active' }}" id="metadata-tab" href="#metadata" data-toggle="tab" role="tab" aria-controls="metadata" aria-selected="{{ 'false' if idp_info['id']|length > 1 else 'true' }}">IDP Metadata Upload</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ 'active' if idp_info['id']|length > 1 else '' }}" id="manual-tab" href="#manual" data-toggle="tab" role="tab" aria-controls="manual" aria-selected="{{ 'true' if idp_info['id']|length > 1 else 'false' }}">Manual Entry</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content" id="cardTabContent">
+                          <!-- Friendly Name -->
+                          <div class="form-group input-group">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text"> <i class="fa fa-tag"></i> </span>
+                            </div>
+                            <input name="idpName" class="form-control" placeholder="IDP Friendly Name" type="text" value="{{ idp_info['name'] if idp_info['name']|length > 1 else '' }}">
+                          </div>
+
+                            <!-- Metadata Tab -->
+                            <div class="tab-pane fade {{ '' if idp_info['id']|length > 1 else 'show active' }}" id="metadata" role="tabpanel" aria-labelledby="metadata-tab">
+                                <h5 class="card-title">Upload an IDP Metadata File</h5> <!-- Upload metadata option -->
+
+                                <!-- File upload for metadata -->
+                                <div class="form-group input-group">
+                                  <div class="input-group-prepend">
+                                    <span class="input-group-text"> <i class="fa fa-code"></i> </span>
+                                  </div>
+                                  <div class="custom-file">
+                                      <input type="file" class="custom-file-input" id="idpMetadata" name="idpMetadata" onchange="fileUploadChange(this)">
+                                      <label class="custom-file-label" for="idpMetadata">Upload IDP Metadata</label>
+                                  </div>
+                                </div>
+
+                            </div>
+                            <!-- Manual Entry Tab -->
+                            <div class="tab-pane fade {{ 'show active' if idp_info['id']|length > 1 else '' }}" id="manual" role="tabpanel" aria-labelledby="manual-tab">
+                                <h5 class="card-title">Manual Entry</h5>
+                                <!-- Issuer -->
+                                <div class="form-group input-group">
+                                  <div class="input-group-prepend">
+                            		    <span class="input-group-text"> <i class="fa fa-id-card"></i> </span>
+                            		  </div>
+                                  <input name="idpIssuer" class="form-control" placeholder="IDP Issuer (EntityID)" type="text" value="{{ idp_info['protocol']['credentials']['trust']['issuer'] if idp_info['id']|length > 1 else '' }}">
+                                </div>
+
+                                <!-- SSO URL -->
+                                <div class="form-group input-group">
+                                	<div class="input-group-prepend">
+                            		    <span class="input-group-text"> <i class="fa fa-link"></i> </span>
+                            		  </div>
+                                  <input name="ssoUrl" class="form-control" placeholder="IDP SSO URL" type="texct" value="{{ idp_info['protocol']['endpoints']['sso']['url'] if idp_info['id']|length > 1 else '' }}">
+                                </div>
+
+                                <!--Existing cert Info -->
+                                {% if idp_info['cert_expiry']  %}
+                                <div class="form-group input-group">
+                                  <span class="small font-italic">Certificate Issued By: {{ idp_info['cert_issuer'] }}</span>
+                                  <span class="small font-italic">Certificate Expires: {{ idp_info['cert_expiry'] }}</span>
+                                </div>
+                                {% endif %}
+
+                                <!-- IDP Signing Certificate-->
+                                <div class="form-group input-group">
+                                	<div class="input-group-prepend">
+                            		    <span class="input-group-text"> <i class="fa fa-certificate"></i> </span>
+                            		  </div>
+                                  <div class="custom-file">
+                                    	<input id="idpCertificate" name="idpCertificate" class="custom-file-input" type="file" onchange="fileUploadChange(this)">
+                                      <label class="custom-file-label" for="idpCertificate">Upload IDP Signing Certificate</label>
+                                  </div>
+                                </div>
+                            </div>
+
+                            <!-- Tabs done, submit button -->
+                            <input name="idpId" class="form-control" type="hidden" value="{{ idp_info['id'] if idp_info['id']|length > 1 else '' }}">
+                            <div class="form-group">
+                            <button type="submit" class="btn btn-primary btn-block">{{ 'Update SSO Configuration' if idp_info['id']|length > 1 else 'Create SSO Configuration' }}</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                </form>
+
+            </div>
+        </section>
+        <script>
+            function fileUploadChange(element) {
+              var fileName = element.files[0].name;
+              element.nextElementSibling.innerHTML = fileName;
+            }
+        </script>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
