@@ -91,15 +91,15 @@ def gbac_registration_completion():
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     user_create_response = okta_admin.create_user(user=user_data, activate_user='false')
     logger.debug(user_create_response)
-    
-    activation_link= ""
+
+    activation_link = ""
     if request.form.get('noemail').lower() == 'true':
         logger.debug("no email will be sent")
         activation_link = url_for(
-        "gbac_registration_bp.gbac_registration_state_get",
-        stateToken=user_create_response["id"],
-        _external=True,
-        _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
+            "gbac_registration_bp.gbac_registration_state_get",
+            stateToken=user_create_response["id"],
+            _external=True,
+            _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
     else:
         logger.debug("email sent")
         emailRegistration(
