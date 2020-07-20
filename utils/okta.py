@@ -489,7 +489,7 @@ class OktaAdmin:
     def get_applications_by_user_id(self, user_id):
         self.logger.debug("OktaAdmin.get_applications_by_user_id(user_id)")
         okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
-        url = "{base_url}/api/v1/apps/?filter=user.id+eq+\"{user_id}\"".format(
+        url = "{base_url}/api/v1/apps/?limit=200&filter=user.id+eq+\"{user_id}\"".format(
             base_url=self.okta_config["okta_org_name"],
             user_id=user_id)
 
@@ -498,7 +498,7 @@ class OktaAdmin:
     def get_applications_all(self):
         self.logger.debug("OktaAdmin.get_applications_all(user_id)")
         okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
-        url = "{base_url}/api/v1/apps/".format(
+        url = "{base_url}/api/v1/apps/?limit=200".format(
             base_url=self.okta_config["okta_org_name"])
 
         return RestUtil.execute_get(url, okta_headers)

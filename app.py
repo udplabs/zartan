@@ -103,9 +103,10 @@ app.register_blueprint(credit_views_bp, url_prefix='/credit')
 from _healthcare.views import healthcare_views_bp
 app.register_blueprint(healthcare_views_bp, url_prefix='/healthcare')
 
-# healthcare theme
+# ecommerce theme
 from _ecommerce.views import ecommerce_views_bp
 app.register_blueprint(ecommerce_views_bp, url_prefix='/ecommerce')
+
 
 ##############################################
 # Main Shared Routes

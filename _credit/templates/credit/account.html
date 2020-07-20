@@ -2,7 +2,7 @@
 
 {% block content %}
         <div class="container">
-            <div class="alert alert-primary alert-dismissible fade show" role="alert" id="TransferAlertBox" >
+            <div class="alert alert-success alert-solid alert-dismissible fade show" role="alert" id="TransferAlertBox" >
                 <h5 class="alert-heading">Payment Complete</h5>
                 <div id="Alertmsg"></div>
                 <button class="close" type="button" data-dismiss="alert" aria-label="Close">
@@ -10,7 +10,7 @@
                 </button>
             </div>
             <div class="card mb-1">
-                <div class="card-header">Account History - 800000 Corporate</div>
+                <div class="card-header">Account History - 800000</div>
                 <div class="card-body">
                     <div class="datatable">
                         <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
@@ -46,8 +46,7 @@
                         		    </td>
                         		    <td>
                         			  <select size="1" id="fromAccount" name="fromAccount">
-                        				<option value="800000">800000 Corporate</option>
-                                        <option value="800001">800001 Personal</option>
+                        				<option value="800000">800000</option>
                         			  </select>
                         		    </td>
                         		  </tr>
@@ -64,7 +63,7 @@
                     	    </table>
                 </div>
             </div>
-           
+
         </div>
         <style>
             #TransferAlertBox{

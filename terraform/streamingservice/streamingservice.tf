@@ -2,7 +2,7 @@ variable "org_name" {}
 variable "api_token" {}
 variable "base_url" {}
 variable "demo_app_name" { default="streamingservice" }
-variable "udp_subdomain" { default="local_zartan" }
+variable "udp_subdomain" { default="local" }
 
 locals {
     app_domain = "${var.udp_subdomain}.${var.demo_app_name}.unidemo.info"
@@ -26,6 +26,7 @@ resource "okta_app_oauth" "streamingservice" {
     "http://localhost:8666/authorization-code/callback"
   ]
   response_types = ["code"]
+  consent_method = "TRUSTED"  
   issuer_mode    = "ORG_URL"
   groups         = ["${data.okta_group.all.id}"]
 }

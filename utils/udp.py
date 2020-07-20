@@ -57,6 +57,7 @@ def clear_session_decorator(f):
 
         session[SESSION_IS_CONFIGURED_KEY] = False
         session[SESSION_INSTANCE_SETTINGS_KEY] = default_settings
+        session[SESSION_INSTANCE_SETTINGS_KEY]["get_new_token_url"] = "/index"
 
         return f(*args, **kws)
     return decorated_function
@@ -190,7 +191,7 @@ def get_domain_parts_from_request():
     else:
         # Assum local running
         udp_subdomain = "local"
-        udp_app_name = "local"
+        udp_app_name = os.getenv("APP_TEMPLATE", "local")
         remaining_domain = "local"
 
     # ENV always trumps remote config
@@ -272,7 +273,8 @@ def get_udp_oauth_access_token(udp_config):
 
 def get_udp_ns_fieldname(fieldname):
     parts = get_domain_parts_from_request()
-    udp_subdomain = parts["udp_subdomain"]
+    # Fix for Okta Field Nameing Issue. Okta Custom Fields cannot contain dashes.
+    udp_subdomain = parts["udp_subdomain"].replace("-", "_")
     udp_app_name = parts["udp_app_name"]
     field = "{subdomain}_{appname}_{fieldname}".format(subdomain=udp_subdomain, appname=udp_app_name, fieldname=fieldname)
 

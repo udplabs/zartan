@@ -2,10 +2,11 @@ variable "org_name" {}
 variable "api_token" {}
 variable "base_url" {}
 variable "demo_app_name" { default="healthcare" }
-variable "udp_subdomain" { default="local_zartan" }
+variable "udp_subdomain" { default="local" }
 
 locals {
     app_domain = "${var.udp_subdomain}.${var.demo_app_name}.unidemo.info"
+    nodash_subdomain = replace(var.udp_subdomain, "-", "_")
 }
 
 provider "okta" {
@@ -26,6 +27,7 @@ resource "okta_app_oauth" "healthcare" {
     "http://localhost:8666/authorization-code/callback"
   ]
   response_types = ["code"]
+  consent_method = "TRUSTED"  
   issuer_mode    = "ORG_URL"
   groups         = ["${data.okta_group.all.id}"]
 }
@@ -58,7 +60,7 @@ resource "okta_auth_server_policy_rule" "healthcare" {
   scope_whitelist      = ["*"]
 }
 resource "okta_user_schema" "customfield1" {
-  index       = "${var.udp_subdomain}_${var.demo_app_name}_last_verified_date"
+  index       = "${local.nodash_subdomain}_${var.demo_app_name}_last_verified_date"
   title       = "${var.udp_subdomain}_${var.demo_app_name}_last_verified_date"
   type        = "string"
   description = "Date Evident Last Verified"
@@ -68,7 +70,7 @@ resource "okta_user_schema" "customfield1" {
 }
 
 resource "okta_user_schema" "customfield2" {
-  index       = "${var.udp_subdomain}_${var.demo_app_name}_evident_id"
+  index       = "${local.nodash_subdomain}_${var.demo_app_name}_evident_id"
   title       = "${var.udp_subdomain}_${var.demo_app_name}_evident_id"
   type        = "string"
   description = "Evident ID"
@@ -79,7 +81,7 @@ resource "okta_user_schema" "customfield2" {
 }
 
 resource "okta_user_schema" "customfield3" {
-  index       = "${var.udp_subdomain}_${var.demo_app_name}_dob"
+  index       = "${local.nodash_subdomain}_${var.demo_app_name}_dob"
   title       = "${var.udp_subdomain}_${var.demo_app_name}_dob"
   type        = "string"
   description = "Date of Birth"
@@ -90,7 +92,7 @@ resource "okta_user_schema" "customfield3" {
 }
 
 resource "okta_user_schema" "customfield4" {
-  index       = "${var.udp_subdomain}_${var.demo_app_name}_gender"
+  index       = "${local.nodash_subdomain}_${var.demo_app_name}_gender"
   title       = "${var.udp_subdomain}_${var.demo_app_name}_gender"
   type        = "string"
   description = "Gender"
@@ -101,7 +103,7 @@ resource "okta_user_schema" "customfield4" {
 }
 
 resource "okta_user_schema" "customfield5" {
-  index       = "${var.udp_subdomain}_${var.demo_app_name}_hasvisited"
+  index       = "${local.nodash_subdomain}_${var.demo_app_name}_hasvisited"
   title       = "${var.udp_subdomain}_${var.demo_app_name}_hasvisited"
   type        = "string"
   description = "Patient has visted facility"
@@ -112,7 +114,7 @@ resource "okta_user_schema" "customfield5" {
 }
 
 resource "okta_user_schema" "customfield6" {
-  index       = "${var.udp_subdomain}_${var.demo_app_name}_consent"
+  index       = "${local.nodash_subdomain}_${var.demo_app_name}_consent"
   title       = "${var.udp_subdomain}_${var.demo_app_name}_consent"
   type        = "string"
   description = "Date Patient Consensted HIPAA"
@@ -139,4 +141,3 @@ output "issuer" {
 output "okta_app_oauth_id" {
   value = "${okta_app_oauth.healthcare.id}"
 }
-

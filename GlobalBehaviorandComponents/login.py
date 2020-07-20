@@ -42,6 +42,7 @@ def clear_session():
 
 
 @gbac_bp.route("/login")
+@apply_remote_config
 def gbac_login():
     logger.debug("gbac_login()")
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
@@ -82,6 +83,7 @@ def gbac_login():
 
 
 @gbac_bp.route("/signup")
+@apply_remote_config
 def gbac_signup():
     logger.debug("gbac_signup()")
     return render_template("/signup.html", templatename=get_app_vertical(), config=session[SESSION_INSTANCE_SETTINGS_KEY])

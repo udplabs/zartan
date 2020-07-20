@@ -2,10 +2,11 @@ variable "org_name" {}
 variable "api_token" {}
 variable "base_url" {}
 variable "demo_app_name" { default="dealer" }
-variable "udp_subdomain" { default="local_zartan" }
+variable "udp_subdomain" { default="local" }
 
 locals {
     app_domain = "${var.udp_subdomain}.${var.demo_app_name}.unidemo.info"
+    nodash_subdomain = replace(var.udp_subdomain, "-", "_")
 }
 
 provider "okta" {
@@ -68,7 +69,7 @@ resource "okta_auth_server_claim" "dealer" {
   claim_type     = "IDENTITY"
 }
 resource "okta_user_schema" "customfield1" {
-  index       = "${var.udp_subdomain}_${var.demo_app_name}_access_requests"
+  index       = "${local.nodash_subdomain}_${var.demo_app_name}_access_requests"
   title       = "${var.udp_subdomain}_${var.demo_app_name}_access_requests"
   type        = "array"
   array_type  = "string"
