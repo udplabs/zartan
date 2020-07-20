@@ -19,7 +19,12 @@
                       <strong>Success!</strong>
                       <br>
                            An email message was sent with an activation link to <span style="color:blue;font-weight:bold">{{email}}</span>.
-                           Please click on the registration link in your email to activate your account<br>
+                            {% if noemail == 'true' %}
+                                Please click on this link to activate your account<br><br>
+                                <a href='{{activationlink}}'>{{activationlink}}</a> <br>
+                            {% else %}
+                                Please click on the registration link in your email to activate your account<br>
+                            {% endif %}
                     </div>
                     <br>
                     <br>
