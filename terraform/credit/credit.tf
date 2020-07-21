@@ -25,6 +25,7 @@ resource "okta_app_oauth" "credit" {
     "https://${local.app_domain}/authorization-code/callback",
     "http://localhost:8666/authorization-code/callback"
   ]
+  login_uri      = "https://${local.app_domain}/"
   response_types = ["code"]
   issuer_mode    = "ORG_URL"
   consent_method = "TRUSTED"
