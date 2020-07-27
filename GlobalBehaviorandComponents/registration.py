@@ -92,6 +92,16 @@ def gbac_registration_completion():
     user_create_response = okta_admin.create_user(user=user_data, activate_user='false')
     logger.debug(user_create_response)
 
+    if "id" not in user_create_response:
+        error_message = "Failed to get a valid response from Okta Create User: user_data:{0} user_create_response:{1}".format(user_data, user_create_response)
+        logger.error(error_message)
+
+        return render_template(
+            "/error.html",
+            templatename=get_app_vertical(),
+            config=session[SESSION_INSTANCE_SETTINGS_KEY],
+            error_message=error_message)
+
     activation_link = ""
     if request.form.get('noemail').lower() == 'true':
         logger.debug("no email will be sent")
