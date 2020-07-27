@@ -6,7 +6,11 @@
     <link href="https://cdn-zartan.s3.us-east-2.amazonaws.com/static/css/styles.css" rel="stylesheet" />
     <link href="/styles" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn-zartan.s3.us-east-2.amazonaws.com/static/css/aos.css" />
-    <link rel="icon" type="image/x-icon" href="{{ config.settings.app_favicon }}" />
+    {% if config.settings.app_favicon|length > 0  %}
+    <link rel="icon" type="image/x-icon" href="{{  config.settings.app_favicon  }}" />
+    {% else %}
+    <link rel="icon" type="image/x-icon" href="https://cdn-zartan.s3.us-east-2.amazonaws.com/static/img/favicon.ico" />
+    {% endif %}
     <script data-search-pseudo-elements defer src="https://cdn-zartan.s3.us-east-2.amazonaws.com/static/js/all.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn-zartan.s3.us-east-2.amazonaws.com/static/js/feather.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn-zartan.s3.us-east-2.amazonaws.com/static/js/jquery.min.js"></script>
