@@ -93,7 +93,7 @@ def gbac_registration_completion():
     logger.debug(user_create_response)
 
     if "id" not in user_create_response:
-        error_message = "Failed to get a valid response from Okta Create User: {0}".format(user_create_response)
+        error_message = "Failed to get a valid response from Okta Create User: user_data:{0} user_create_response:{1}".format(user_data, user_create_response)
         logger.error(error_message)
 
         return render_template(
