@@ -1,70 +1,78 @@
 {% extends "credit/template.html" %}
 
 {% block content %}
-        <div class="container">
-            <div class="alert alert-success alert-solid alert-dismissible fade show" role="alert" id="TransferAlertBox" >
-                <h5 class="alert-heading">Payment Complete</h5>
-                <div id="Alertmsg"></div>
-                <button class="close" type="button" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
+ <section class="bg-light py-5">
+    <div class="container">
+        <div class="d-flex align-items-center mb-5">
+            <div class="icon-stack icon-stack-lg bg-primary text-white"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
+            <div class="ml-3">
+                <h2 class="mb-0">Account</h2>
+                <p class="lead mb-0">Account Overview</p>
             </div>
-            <div class="card mb-1">
-                <div class="card-header">Account History - 800000</div>
-                <div class="card-body">
-                    <div class="datatable">
-                        <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
-                            <div class="row">
-                                <div class="col-sm-12 col-md-6">
-                                    <div class="dataTables_length" id="dataTable_length">
-
-                                        </div></div><div class="col-sm-12 col-md-6"></div></div></div><div class="row"><div class="col-sm-12">
-                                            <table class="table table-bordered table-hover dataTable" id="dataTable" width="100%" cellspacing="0" role="grid" aria-describedby="dataTable_info" style="width: 100%;">
-                            <thead>
-                               <tr><th rowspan="1" colspan="1">Balance Details</th><th rowspan="1" colspan="1">Amount</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                              <tr role="row" class="odd">
-                                    <td class="sorting_1">Ending balance as of <script> document.write("<strong>" + (new Date()).toString() + "</strong>");</script></td>
-                                    <td>$4010.00</td>
-                                </tr><tr role="row" class="even">
-                                    <td class="sorting_1">Available Credit</td>
-                                    <td>$5990.00</td>
-                                </tr></tbody>
-                        </table></div></div><div class="row"><div class="col-sm-12 col-md-5"></div></div>
-                    </div>
-                </div>
-            </div>
-            <br /><br />
-            <div class="card mb-1">
-                <div class="card-header">Make Payment</div>
-                <div class="card-body">
-                <table cellspacing="0" cellpadding="1" width="100%" border="0">
-                        		  <tbody><tr>
-                        		    <td><h5><b>To Account:</h5></b>
-                        		    </td>
-                        		    <td>
-                        			  <select size="1" id="fromAccount" name="fromAccount">
-                        				<option value="800000">800000</option>
-                        			  </select>
-                        		    </td>
-                        		  </tr>
-                        		  <tr>
-                        		    <td><h5><b>Amount to Pay:</h5></b>
-                        		    </td>
-                        		    <td><input type="text" id="transferAmount" name="transferAmount"></td>
-                        		  </tr>
-                        		  <tr>
-                        		    <td></td><td colspan="2">  <button type="button" id="mfa-button" onclick="checkmfa(runmyscript)" class="btn btn-primary"> Submit Payment</button>
-                                    </button></td>
-                        		  </tr>
-                    		    </tbody>
-                    	    </table>
-                </div>
-            </div>
-
         </div>
+        <div class="alert alert-success alert-solid alert-dismissible fade show" role="alert" id="TransferAlertBox" >
+            <h5 class="alert-heading">Payment Complete</h5>
+            <div id="Alertmsg"></div>
+            <button class="close" type="button" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="card mb-1">
+            <div class="card-header">Account History - 800000</div>
+            <div class="card-body">
+                <div class="datatable">
+                    <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                        <div class="row">
+                            <div class="col-sm-12 col-md-6">
+                                <div class="dataTables_length" id="dataTable_length">
+
+                                    </div></div><div class="col-sm-12 col-md-6"></div></div></div><div class="row"><div class="col-sm-12">
+                                        <table class="table table-bordered table-hover dataTable" id="dataTable" width="100%" cellspacing="0" role="grid" aria-describedby="dataTable_info" style="width: 100%;">
+                        <thead>
+                           <tr><th rowspan="1" colspan="1">Balance Details</th><th rowspan="1" colspan="1">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                          <tr role="row" class="odd">
+                                <td class="sorting_1">Ending balance as of <script> document.write("<strong>" + (new Date()).toString() + "</strong>");</script></td>
+                                <td>$4010.00</td>
+                            </tr><tr role="row" class="even">
+                                <td class="sorting_1">Available Credit</td>
+                                <td>$5990.00</td>
+                            </tr></tbody>
+                    </table></div></div><div class="row"><div class="col-sm-12 col-md-5"></div></div>
+                </div>
+            </div>
+        </div>
+        <br /><br />
+        <div class="card mb-1">
+            <div class="card-header">Make Payment</div>
+            <div class="card-body">
+            <table cellspacing="0" cellpadding="1" width="100%" border="0">
+                    		  <tbody><tr>
+                    		    <td><h5><b>To Account:</h5></b>
+                    		    </td>
+                    		    <td>
+                    			  <select size="1" id="fromAccount" name="fromAccount">
+                    				<option value="800000">800000</option>
+                    			  </select>
+                    		    </td>
+                    		  </tr>
+                    		  <tr>
+                    		    <td><h5><b>Amount to Pay:</h5></b>
+                    		    </td>
+                    		    <td><input type="text" id="transferAmount" name="transferAmount"></td>
+                    		  </tr>
+                    		  <tr>
+                    		    <td></td><td colspan="2">  <button type="button" id="mfa-button" onclick="checkmfa(runmyscript)" class="btn btn-primary"> Submit Payment</button>
+                                </button></td>
+                    		  </tr>
+                		    </tbody>
+                	    </table>
+            </div>
+        </div>
+    </div>
+</section>
         <style>
             #TransferAlertBox{
                 display:none;

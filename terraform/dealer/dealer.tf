@@ -2,7 +2,7 @@ variable "org_name" {}
 variable "api_token" {}
 variable "base_url" {}
 variable "demo_app_name" { default="dealer" }
-variable "udp_subdomain" { default="local" }
+variable "udp_subdomain" { default="local_zartan" }
 
 locals {
     app_domain = "${var.udp_subdomain}.${var.demo_app_name}.unidemo.info"
@@ -80,28 +80,34 @@ resource "okta_user_schema" "customfield1" {
 }
 
 resource "okta_group" "dealer_admin" {
-  name = "${var.udp_subdomain}_${var.demo_app_name}_ADMIN"
+  name = "${local.nodash_subdomain}_${var.demo_app_name}_ADMIN"
   description = "Dealer Portal Administrator"
 }
-
+resource "okta_group_rule" "dealer_group_rule" {
+  name              = "${var.udp_subdomain} ${var.demo_app_name} Admin Rule"
+  status            = "ACTIVE"
+  group_assignments = ["${okta_group.dealer_admin.id}"]
+  expression_type   = "urn:okta:expression:1.0"
+  expression_value  = "String.stringContains(user.email,\"okta.com\")"
+}
 resource "okta_group" "dealer_user" {
-  name = "${var.udp_subdomain}_${var.demo_app_name}_USER"
+  name = "${local.nodash_subdomain}_${var.demo_app_name}_USER"
   description = "Dealer Regular User"
 }
 resource "okta_group" "dealer_loc1" {
-  name = "${var.udp_subdomain}_${var.demo_app_name}_LOC_Austin"
+  name = "${local.nodash_subdomain}_${var.demo_app_name}_LOC_Austin"
   description = "Austin, Texas Branch"
 }
 resource "okta_group" "dealer_loc2" {
-  name = "${var.udp_subdomain}_${var.demo_app_name}_LOC_Chicago"
+  name = "${local.nodash_subdomain}_${var.demo_app_name}_LOC_Chicago"
   description = "Chicago, Illinois Branch"
 }
 resource "okta_group" "dealer_loc3" {
-  name = "${var.udp_subdomain}_${var.demo_app_name}_LOC_SF"
+  name = "${local.nodash_subdomain}_${var.demo_app_name}_LOC_SF"
   description = "San Fransisco, California Branch"
 }
 resource "okta_group" "dealer_loc4" {
-  name = "${var.udp_subdomain}_${var.demo_app_name}_LOC_WashingtonDC"
+  name = "${local.nodash_subdomain}_${var.demo_app_name}_LOC_WashingtonDC"
   description = "Washingthon DC Branch"
 }
 output "client_id" {
