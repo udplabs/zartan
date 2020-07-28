@@ -45,11 +45,12 @@ def gbac_registration_state_post(user_id):
     user_data = okta_admin.get_user(user_id)
 
     if "errorCode" in user_data:
+        logger.error("user_data: {0}".format(user_data))
         return render_template(
             "/registration-state.html",
             userid=user_id,
             templatename=get_app_vertical(), config=session[SESSION_INSTANCE_SETTINGS_KEY],
-            error=user_data['errorCauses'][0]['errorSummary'])
+            error=user_data['errorSummary'])
 
     user_data["credentials"] = {
         "password": {"value": request.form.get('password')},
