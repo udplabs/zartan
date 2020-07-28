@@ -38,37 +38,44 @@ def gbac_registration_state_get(stateToken):
 
 
 @gbac_registration_bp.route("/registration-state/<userid>", methods=["POST"])
-def gbac_registration_state_post(userid):
+def gbac_registration_state_post(user_id):
     logger.debug("gbac_registration_state_post()")
-    user_id = userid
     logger.debug(request.form.get('password'))
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
-    user_data = {
-        "credentials": {
-            "password": {"value": request.form.get('password')},
-            "recovery_question": {
-                "question": "Company Name, its Okta.",
-                "answer": "Okta"
-            }
+    user_data = okta_admin.get_user(user_id)
+
+    if "errorCode" in user_data:
+        return render_template(
+            "/registration-state.html",
+            userid=user_id,
+            templatename=get_app_vertical(), config=session[SESSION_INSTANCE_SETTINGS_KEY],
+            error=user_data['errorCauses'][0]['errorSummary'])
+
+    user_data["credentials"] = {
+        "password": {"value": request.form.get('password')},
+        "recovery_question": {
+            "question": "Company Name, its Okta.",
+            "answer": "Okta"
         }
     }
+
     logger.debug(user_data)
-    user_update_response = okta_admin.update_user(user_id=user_id, user=user_data)
+    user_update_response = okta_admin.update_user(user_id=user_data["id"], user=user_data)
 
     logger.debug(user_update_response)
 
     if "errorCode" in user_update_response:
         return render_template(
             "/registration-state.html",
-            userid=user_id,
+            userid=user_data["id"],
             templatename=get_app_vertical(), config=session[SESSION_INSTANCE_SETTINGS_KEY],
             error=user_update_response['errorCauses'][0]['errorSummary'])
 
-    nresponse = okta_admin.activate_user(user_id, send_email=False)
+    nresponse = okta_admin.activate_user(user_data["id"], send_email=False)
     logger.debug(nresponse)
     group_info = okta_admin.get_application_groups(session[SESSION_INSTANCE_SETTINGS_KEY]["client_id"])
     group_id = group_info[0]["id"]
-    okta_admin.assign_user_to_group(group_id, user_id)
+    okta_admin.assign_user_to_group(group_id, user_data["id"])
     message = "Registration Complete! Please Login Now!"
     return redirect(url_for("gbac_bp.gbac_login", _external="True", _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"], message=message))
 
