@@ -37,7 +37,7 @@ def gbac_registration_state_get(stateToken):
         _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
 
 
-@gbac_registration_bp.route("/registration-state/<userid>", methods=["POST"])
+@gbac_registration_bp.route("/registration-state/<user_id>", methods=["POST"])
 def gbac_registration_state_post(user_id):
     logger.debug("gbac_registration_state_post()")
     logger.debug(request.form.get('password'))
