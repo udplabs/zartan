@@ -63,7 +63,7 @@ resource "okta_auth_server_policy_rule" "credit" {
   name                 = "one_hour"
   priority             = 1
   group_whitelist      = ["${okta_group.credit_group.id}"]
-  grant_type_whitelist = ["authorization_code"]
+  grant_type_whitelist = ["authorization_code", "implicit"]
   scope_whitelist      = ["*"]
 }
 output "client_id" {
