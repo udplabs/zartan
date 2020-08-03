@@ -143,7 +143,7 @@ Set up the `.env` file:
     | OKTA_ORG_URL           | Your org url. e.g. `https://dev-13485.oktapreview.com` |
     | OKTA_OIDC_REDIRECT_URI | Use `http://localhost:8666/authorization-code/callback` as this was set by Terraform.
     | OKTA_API_TOKEN         | Provide an okta SSWS key |
-    | SPARKPOST_API_KEY      | ℹ️ Mandatory. Get the value from this [Box folder](https://okta.box.com/s/cgp429sqbbowuuyiqgckq6t836lyp8jw) (Only accessible to Okta employees) |
+    | SPARKPOST_API_KEY      | ℹ️ Mandatory. Get the value from this [Box folder](https://okta.box.com/s/56cnuhratuzjnhxo1odt11tmesjqv4o3) (Only accessible to Okta employees) |
 
 * (Optional) Provide values for the other variables. Refer to [this section](#env-variables-details) for details.
 
@@ -215,7 +215,7 @@ The `.env` file provides additional confuration depending on the functionality s
 
     | Variable          | Value |
     | ----------------- | ----- |
-    | SPARKPOST_API_KEY | ℹ️ Mandatory. Get the value from [Box](https://okta.box.com/s/cgp429sqbbowuuyiqgckq6t836lyp8jw) |
+    | SPARKPOST_API_KEY | ℹ️ Mandatory. Get the value from [Box](https://okta.box.com/s/56cnuhratuzjnhxo1odt11tmesjqv4o3) |
 
 
 * Flask Setting
