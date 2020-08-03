@@ -110,7 +110,7 @@ Open up a terminal/shell then:
     base_url        = "<the okta domain  e.g. oktapreview.com, okta.com, or okta-emea.com>"
     ```
 4. Rename the file `localhost.tf.none` to `localhost.tf`
-    > This `.tf` file is for adding a CORS trusted origin `htt://localhost:8666` to the Okta Org. If you already have this trusted origin in your org, skip this step.
+    > This `.tf` file is for adding a CORS trusted origin `http://localhost:8666` to the Okta Org. If you already have this trusted origin in your org, skip this step.
 5. Initialize terraform
     ```
     terraform init
