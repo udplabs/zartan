@@ -1,7 +1,5 @@
 import json
 import logging
-import datetime
-import requests
 
 # import functions
 from flask import render_template, session, request, redirect, url_for
@@ -11,7 +9,6 @@ from utils.okta import TokenUtil, OktaAdmin
 from utils.email import Email
 
 from GlobalBehaviorandComponents.validation import is_authenticated, get_userinfo
-from GlobalBehaviorandComponents.mfaenrollment import get_enrolled_factors
 
 logger = logging.getLogger(__name__)
 
@@ -64,7 +61,7 @@ def b2b_requests_get():
     for item in get_user_groups_response:
         logging.debug(item)
         if item["profile"]["name"].startswith(CONFIG_GROUP_B2B_STARTSWITH):
-            
+
             group_id = "{id}".format(id=item["id"])
             applist.append(item["profile"]["name"].replace(CONFIG_GROUP_B2B_STARTSWITH, ""))
 
@@ -81,7 +78,6 @@ def b2b_requests_get():
                     "description": item["profile"]["description"],
                     "status": "Pending" if group_id in pendingRequest else "Not Requested"
                 })
-
 
     return render_template(
         "{0}/workflow-requests.html".format(get_app_vertical()),
