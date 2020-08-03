@@ -65,13 +65,13 @@
                         }
                       },
                       features: {
-                        registration: true,                 // Enable self-service registration flow
-                        rememberMe: true,                   // Setting to false will remove the checkbox to save username
+                        registration: true,               // Enable self-service registration flow
+                        rememberMe: true,                 // Setting to false will remove the checkbox to save username
                         multiOptionalFactorEnroll: true,  // Allow users to enroll in multiple optional factors before finishing the authentication flow.
                         selfServiceUnlock: true,          // Will enable unlock in addition to forgotten password
                         smsRecovery: true,                // Enable SMS-based account recovery
                         callRecovery: true,               // Enable voice call-based account recovery
-                        passwordlessAuth: true
+                        webauthn: true                    // Enalbe passwordless
                       },
                       authParams: {
                         issuer: "{{config.issuer}}",
