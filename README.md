@@ -13,8 +13,8 @@ Zartan is a master of make-up and disguise and so is this demo platform. :tada::
 
 ## Requirements
 
-* Python 3.7+
-* Flask 1.x
+* Python >= 3.7+
+* Flask >= 1.x
 * A Okta tenant. [Free](https://developer.okta.com/) :wink:
 
 ## Setup
