@@ -107,6 +107,10 @@ app.register_blueprint(healthcare_views_bp, url_prefix='/healthcare')
 from _ecommerce.views import ecommerce_views_bp
 app.register_blueprint(ecommerce_views_bp, url_prefix='/ecommerce')
 
+# b2b theme
+from _b2b.views import b2b_views_bp
+app.register_blueprint(b2b_views_bp, url_prefix='/b2b')
+
 
 ##############################################
 # Main Shared Routes
@@ -201,7 +205,7 @@ def get_post_login_landing_page_url():
             app_template=session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_template"],
             landing_page=session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_post_login_landing_url"],)
     else:
-        app_landing_page_url = hosturl + "/profile"
+        app_landing_page_url = hosturl + "profile"
 
     # Check for from from_uri... this always overrides the config
     if FROM_URI_KEY in session:
