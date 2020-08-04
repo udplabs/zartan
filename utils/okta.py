@@ -469,7 +469,7 @@ class OktaAdmin:
     def assign_user_to_group(self, group_id, user_id):
         self.logger.debug("OktaAdmin.assign_user_to_group(user_id)")
         okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
-        url = "{base_url}/api/v1//groups/{group_id}/users/{user_id}".format(
+        url = "{base_url}/api/v1/groups/{group_id}/users/{user_id}".format(
             base_url=self.okta_config["okta_org_name"],
             group_id=group_id,
             user_id=user_id)
