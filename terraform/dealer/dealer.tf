@@ -56,7 +56,7 @@ resource "okta_auth_server_policy_rule" "dealer" {
   name                 = "one_hour"
   priority             = 1
   group_whitelist      = ["${data.okta_group.all.id}"]
-  grant_type_whitelist = ["authorization_code"]
+  grant_type_whitelist = ["authorization_code", "implicit"]
   scope_whitelist      = ["*"]
 }
 resource "okta_auth_server_claim" "dealer" {

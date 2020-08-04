@@ -110,7 +110,7 @@ Open up a terminal/shell then:
     base_url        = "<the okta domain  e.g. oktapreview.com, okta.com, or okta-emea.com>"
     ```
 4. Rename the file `localhost.tf.none` to `localhost.tf`
-    > This `.tf` file is for adding a CORS trusted origin `htt://localhost:8666` to the Okta Org. If you already have this trusted origin in your org, skip this step.
+    > This `.tf` file is for adding a CORS trusted origin `http://localhost:8666` to the Okta Org. If you already have this trusted origin in your org, skip this step.
 5. Initialize terraform
     ```
     terraform init
@@ -143,7 +143,7 @@ Set up the `.env` file:
     | OKTA_ORG_URL           | Your org url. e.g. `https://dev-13485.oktapreview.com` |
     | OKTA_OIDC_REDIRECT_URI | Use `http://localhost:8666/authorization-code/callback` as this was set by Terraform.
     | OKTA_API_TOKEN         | Provide an okta SSWS key |
-    | SPARKPOST_API_KEY      | ℹ️ Mandatory. Get the value from this [Box folder](https://okta.box.com/s/cgp429sqbbowuuyiqgckq6t836lyp8jw) (Only accessible to Okta employees) |
+    | SPARKPOST_API_KEY      | ℹ️ Mandatory. Get the value from this [Box folder](https://okta.box.com/s/56cnuhratuzjnhxo1odt11tmesjqv4o3) (Only accessible to Okta employees) |
 
 * (Optional) Provide values for the other variables. Refer to [this section](#env-variables-details) for details.
 
@@ -215,7 +215,7 @@ The `.env` file provides additional confuration depending on the functionality s
 
     | Variable          | Value |
     | ----------------- | ----- |
-    | SPARKPOST_API_KEY | ℹ️ Mandatory. Get the value from [Box](https://okta.box.com/s/cgp429sqbbowuuyiqgckq6t836lyp8jw) |
+    | SPARKPOST_API_KEY | ℹ️ Mandatory. Get the value from [Box](https://okta.box.com/s/56cnuhratuzjnhxo1odt11tmesjqv4o3) |
 
 
 * Flask Setting

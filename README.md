@@ -1,34 +1,30 @@
-# zartan
+# Zartan
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-6-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
-![Zartan Logo][logo]
 
-Zartan is a master of make-up and disguise and so is this demo platform
+<!-- markdownlint-disable -->
+<a href="https://en.wikipedia.org/wiki/Zartan">
+  <img src="./docs/_img/zartan.png" width="200px;" />
+</a>
+<!-- markdownlint-enable -->
+
+Zartan is a master of make-up and disguise and so is this demo platform. :tada::unicorn::rainbow:
 
 ## Requirements
-Access to UDP.  Please reach out to TBD
-* Python 3.7+ and Flask
-* (optional) Okta tenant. [Free tenant](https://developer.okta.com/)
 
-## Set up for LOCAL environemnt
+* Python >= 3.7+
+* Flask >= 1.x
+* A Okta tenant. [Free](https://developer.okta.com/) :wink:
+
+## Setup
+
 [Local Zartan Setup instructions](./docs/README.md)
-
-## Setup for UDP
-* TODO
-
-### Setup Okta tenant.
-
-* TODO
-
-### Configure in UDP
 
 ## Authors
 * [Shawn Recinto](https://github.com/srecinto)
 * [Dan Zadik](https://github.com/dzadikdev)
 * [Bhanchand Prasad](https://github.com/bhanchand)
-
-[logo]: ./docs/_img/zartan.png "Zartan is a master of make-up and disguise and so is this demo platform"
 
 ## Contributors ✨
 
