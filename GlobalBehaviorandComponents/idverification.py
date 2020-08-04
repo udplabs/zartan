@@ -112,6 +112,6 @@ def gbac_idverification_isverified():
     verified_date = ""
     try:
         verified_date = user["profile"][get_udp_ns_fieldname("last_verified_date")]
-    except:
+    except Exception:
         verified_date = ""
     return verified_date
