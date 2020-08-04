@@ -109,5 +109,9 @@ def gbac_idverification_isverified():
     user_info = get_userinfo()
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     user = okta_admin.get_user(user_info["sub"])
-    verified_date = user["profile"][get_udp_ns_fieldname("last_verified_date")]
+    verified_date = ""
+    try:
+        verified_date = user["profile"][get_udp_ns_fieldname("last_verified_date")]
+    except Exception:
+        verified_date = ""
     return verified_date
