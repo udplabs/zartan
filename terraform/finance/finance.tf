@@ -2,7 +2,7 @@ variable "org_name" {}
 variable "api_token" {}
 variable "base_url" {}
 variable "demo_app_name" { default="finance" }
-variable "udp_subdomain" { default="local" }
+variable "udp_subdomain" { default="local_zartan" }
 
 locals {
     app_domain = "${var.udp_subdomain}.${var.demo_app_name}.unidemo.info"
@@ -55,7 +55,7 @@ resource "okta_auth_server_policy_rule" "finance" {
   name                 = "one_hour"
   priority             = 1
   group_whitelist      = ["${data.okta_group.all.id}"]
-  grant_type_whitelist = ["authorization_code"]
+  grant_type_whitelist = ["authorization_code", "implicit"]
   scope_whitelist      = ["*"]
 }
 output "client_id" {
