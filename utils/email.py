@@ -14,7 +14,7 @@ class Email:
         url = "https://api.sparkpost.com/api/v1/transmissions"
         headers = {
             "Authorization": session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["sparkpost_api_key"],
-            "Content-Type": "application/json"
+            "Content-Type": "text/html"
         }
         body = {
             "options": {
