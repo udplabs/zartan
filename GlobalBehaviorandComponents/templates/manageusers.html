@@ -13,8 +13,32 @@
                 </div>
                 <div class="card border-bottom">
                     <div class="card-body">
-                        <button type="button" class="btn btn-secondary" onclick="window.location.href = 'manageusercreateupdate';">Create User</button><br/>
-                        <br />
+                        <div class="d-flex flex-column flex-sm-row" >
+                            <div class="dropdown" >
+                                <button class="btn btn-primary dropdown-toggle" id="dropdownMenuButton" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Groups</button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                 {% for x in group_list %}
+                                     {% if x['profile']['description']|trim != "None"  %}
+                                        <a class="dropdown-item" href="/manageusers?group_id={{ x['id'] }}">{{ x['profile']['description']}}</a>
+                                     {% else %}
+                                        <a class="dropdown-item" href="/manageusers?group_id={{ x['id'] }}">{{ x['profile']['name']}}</a>
+                                     {% endif %}
+                                 {% endfor %}
+                                </div>
+                            </div>&nbsp;&nbsp;
+                            {% if user_group['profile']['description']|trim != "None"  %}
+                                {% set group_title = user_group['profile']['description'] %}
+                            {% else %}
+                                {% set group_title = user_group['profile']['name'] %}
+                            {% endif %}
+                            <h2 class="mr-2" style="margin-top:8px">{{ group_title }}</h2>
+                            {% if group_title|trim == "All users in your organization"  %}
+                                <button type="button" class="btn btn-secondary ml-auto" onclick="window.location.href = 'manageusercreateupdate';">Create User</button>
+                            {% else %}
+                                <button type="button" class="btn btn-secondary ml-auto" onclick="window.location.href = 'manageusercreateupdate?group_id={{user_group['id']}}';">Create User in {{ group_title }}</button>
+                            {% endif %}
+                        </div>
+                        <br>
                         <div class="separator-2"></div>
                             <table class="table table-striped">
                                 <thead>
