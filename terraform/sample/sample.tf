@@ -5,7 +5,7 @@ variable "demo_app_name" {}
 variable "udp_subdomain" {}
 
 locals {
-    app_domain = "${var.udp_subdomain}.${var.demo_app_name}.unidemo.info"
+  app_domain = "${var.udp_subdomain}.${var.demo_app_name}.unidemo.info"
 }
 
 provider "okta" {
