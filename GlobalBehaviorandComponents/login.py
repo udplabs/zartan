@@ -90,6 +90,7 @@ def gbac_signup():
 
 
 @gbac_bp.route("/logout")
+@apply_remote_config
 def gbac_logout():
     logger.debug("gbac_logout()")
     redirect_url = "{host}/login/signout?fromURI={redirect_path}".format(
@@ -112,6 +113,7 @@ routes for MFA verification
 
 
 @gbac_bp.route("/send_push", methods=["POST"])
+@apply_remote_config
 def gbac_send_push():
     logger.debug("gbac_send_push()")
     okta_auth = OktaAuth(session[SESSION_INSTANCE_SETTINGS_KEY])
@@ -125,6 +127,7 @@ def gbac_send_push():
 
 
 @gbac_bp.route("/poll_for_push_verification", methods=["POST"])
+@apply_remote_config
 def gbac_poll_for_push_verification():
     logger.debug("gbac_poll_for_push_verification()")
     okta_auth = OktaAuth(session[SESSION_INSTANCE_SETTINGS_KEY])
@@ -138,6 +141,7 @@ def gbac_poll_for_push_verification():
 
 
 @gbac_bp.route("/send_otp_admin", methods=["POST"])
+@apply_remote_config
 def gbac_send_push_admin():
     logger.debug("gbac_send_push_admin()")
     body = request.get_json()
@@ -151,6 +155,7 @@ def gbac_send_push_admin():
 
 
 @gbac_bp.route("/verify_answer_admin", methods=["POST"])
+@apply_remote_config
 def gbac_verify_answer_admin():
     logger.debug("gbac_verify_answer_admin()")
 
@@ -165,6 +170,7 @@ def gbac_verify_answer_admin():
 
 
 @gbac_bp.route("/resend_push", methods=["POST"])
+@apply_remote_config
 def gbac_resend_push():
     logger.debug("gbac_resend_push()")
 
@@ -184,6 +190,7 @@ def gbac_resend_push():
 
 
 @gbac_bp.route("/verify_answer", methods=["POST"])
+@apply_remote_config
 def gbac_verify_answer():
     logger.debug("gbac_verify_answer()")
 
@@ -200,6 +207,7 @@ def gbac_verify_answer():
 
 
 @gbac_bp.route("/get_username/<altid>")
+@apply_remote_config
 def gbac_get_username(altid):
     logger.debug("gbac_get_username()")
 
@@ -211,6 +219,7 @@ def gbac_get_username(altid):
 
 
 @gbac_bp.route("/get_authorize_url", methods=["POST"])
+@apply_remote_config
 def gbac_get_authorize_url():
     logger.debug("gbac_get_authorize_url()")
     body = request.get_json()
@@ -227,6 +236,7 @@ def gbac_get_authorize_url():
 
 
 @gbac_bp.route("/verify_totp", methods=["POST"])
+@apply_remote_config
 def gbac_verify_totp():
     logger.debug("gbac_verify_totp()")
 
@@ -244,6 +254,22 @@ def gbac_verify_totp():
     logger.debug("verifying factor ID {0} with code {1} ({2})".format(factor_id, pass_code, state_token))
     response = okta_auth.verify_totp(factor_id, state_token, pass_code)
     return json.dumps(response)
+
+
+@gbac_bp.route("/access_token", methods=["POST"])
+@apply_remote_config
+def gbac_access_token():
+    token = TokenUtil.get_access_token(request.cookies)
+    decodedToken = TokenUtil.get_claims_from_token(token)
+    return json.dumps(decodedToken)
+
+
+@gbac_bp.route("/id_token", methods=["POST"])
+@apply_remote_config
+def gbac_id_tokenp():
+    token = TokenUtil.get_id_token(request.cookies)
+    decodedToken = TokenUtil.get_claims_from_token(token)
+    return json.dumps(decodedToken)
 
 
 def get_oauth_authorize_url(okta_session_token=None):

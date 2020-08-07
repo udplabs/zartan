@@ -5,7 +5,7 @@ from flask import render_template, session, request
 from flask import Blueprint, url_for, redirect
 
 from utils.okta import OktaAdmin
-from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical
+from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical, apply_remote_config
 from utils.email import Email
 
 logger = logging.getLogger(__name__)
@@ -16,6 +16,7 @@ gbac_registration_bp = Blueprint('gbac_registration_bp', __name__, template_fold
 
 # Required for Registration Page
 @gbac_registration_bp.route("/registration")
+@apply_remote_config
 def registration_bp():
     logger.debug("Registration")
     return render_template(
@@ -26,6 +27,7 @@ def registration_bp():
 
 
 @gbac_registration_bp.route("/registration-state/<stateToken>", methods=["GET"])
+@apply_remote_config
 def gbac_registration_state_get(stateToken):
     logger.debug("gbac_registration_state_get()")
     user_id = stateToken
@@ -38,6 +40,7 @@ def gbac_registration_state_get(stateToken):
 
 
 @gbac_registration_bp.route("/registration-state/<user_id>", methods=["POST"])
+@apply_remote_config
 def gbac_registration_state_post(user_id):
     logger.debug("gbac_registration_state_post()")
     logger.debug(request.form.get('password'))
@@ -74,14 +77,23 @@ def gbac_registration_state_post(user_id):
 
     nresponse = okta_admin.activate_user(user_data["id"], send_email=False)
     logger.debug(nresponse)
-    group_info = okta_admin.get_application_groups(session[SESSION_INSTANCE_SETTINGS_KEY]["client_id"])
-    group_id = group_info[0]["id"]
-    okta_admin.assign_user_to_group(group_id, user_data["id"])
+
+    app_already_exists = False
+    user_apps = okta_admin.get_applications_by_user_id(user_data["id"])
+    for each_app in user_apps:
+        if each_app["id"] == session[SESSION_INSTANCE_SETTINGS_KEY]["client_id"]:
+            app_already_exists = True
+
+    if not app_already_exists:
+        okta_admin.assign_user_to_application(user_data["id"], user_data["profile"]["email"], session[SESSION_INSTANCE_SETTINGS_KEY]["client_id"])
+
     message = "Registration Complete! Please Login Now!"
+
     return redirect(url_for("gbac_bp.gbac_login", _external="True", _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"], message=message))
 
 
 @gbac_registration_bp.route("/registration-completion", methods=["POST"])
+@apply_remote_config
 def gbac_registration_completion():
     logger.debug("gbac_registration_completion()")
 

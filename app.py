@@ -8,7 +8,7 @@ from flask import request, session, make_response, redirect
 from config.app_config import default_settings
 
 from utils.okta import OktaAuth, TokenUtil
-from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical
+from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical, apply_remote_config
 from GlobalBehaviorandComponents.validation import gvalidation_bp_error, FROM_URI_KEY
 
 ##############################################
@@ -137,6 +137,7 @@ def healthcheck():
 
 
 @app.route('/authorization-code/callback', methods=["POST"])
+@apply_remote_config
 def oidc_callback_handler():
     """ handler for the oidc call back of the app """
     logger.debug("oidc_callback_handler()")
