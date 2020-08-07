@@ -217,7 +217,7 @@ def b2b_emailWorkFlowRequest(group_id):
     # Send Activation Email to the Admin
     subject_admin = "A workflow request was received"
     message_admin = """\
-            <p><h1>AB new request for access was received.</h1><br>
+            <p><h1>A new request for access was received.</h1><br>
                The request is awaiting your approval.<br><br>
                Click this link to log into your account and review the request<br><br>
                <a href='{activation_link}'>{activation_link}</a>
