@@ -39,7 +39,7 @@ def b2b_profile():
 @is_authenticated
 @b2b_views_bp.route("/workflow-requests", methods=["GET"])
 def b2b_requests_get():
-    logger.debug("workflow_requests_get()")
+    logger.debug("b2bworkflow_requests_get()")
 
     user_info = get_userinfo()
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
@@ -91,7 +91,7 @@ def b2b_requests_get():
 @is_authenticated
 @b2b_views_bp.route("/workflow-requests", methods=["POST"])
 def b2b_requests_post():
-    logger.debug("workflow_requests_post()")
+    logger.debug("b2bworkflow_requests_post()")
     user_info = get_userinfo()
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     user = okta_admin.get_user(user_info["sub"])
@@ -114,7 +114,7 @@ def b2b_requests_post():
             }
         }
         okta_admin.update_user(user_id=user_id, user=user_data)
-        b2bEmailServices().emailWorkFlowRequest(group_id)
+        b2b_emailWorkFlowRequest(group_id=group_id)
 
     return redirect(url_for("b2b_views_bp.b2b_requests_get", _external=True, _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"]))
 
@@ -122,7 +122,7 @@ def b2b_requests_post():
 @b2b_views_bp.route("/workflow-approvals", methods=["GET"])
 @is_authenticated
 def b2b_approvals_get():
-    logger.debug("workflow_approvals()")
+    logger.debug("b2bworkflow_approvals()")
 
     workflow_list = []
     user_info = get_userinfo()
@@ -157,7 +157,7 @@ def b2b_approvals_get():
 @b2b_views_bp.route("/workflow-approvals", methods=["POST"])
 @is_authenticated
 def b2b_approvals_post():
-    logger.debug("workflow_approvals()")
+    logger.debug("b2bworkflow_approvals()")
     user_info = get_userinfo()
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     user = okta_admin.get_user(user_info["sub"])
@@ -208,31 +208,30 @@ def b2b_approvals_post():
     return redirect(url_for("b2b_views_bp.b2b_approvals_get", _external=True, _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"]))
 
 
-# Class containing email services and formats
-class b2bEmailServices:
+# EMail workflow Request to the Admin
+def b2b_emailWorkFlowRequest(group_id):
+    logger.debug("b2bemailWorkFlowRequest()")
+    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
 
-    # EMail workflow Request to the Admin
-    def emailWorkFlowRequest(self, group_id):
-        logger.debug("emailWorkFlowRequest()")
-        okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
+    activation_link = url_for("b2b_views_bp.b2b_approvals_get", _external=True, _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
+    # Send Activation Email to the Admin
+    subject_admin = "A workflow request was received"
+    message_admin = """\
+            <p><h1>A new request for access was received.</h1><br>
+               The request is awaiting your approval.<br><br>
+               Click this link to log into your account and review the request<br><br>
+               <a href='{activation_link}'>{activation_link}</a>
+            </p>
+        """.format(activation_link=activation_link)
 
-        activation_link = url_for("b2b_views_bp.b2b_approvals_get", _external=True, _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
-        # Send Activation Email to the Admin
-        subject_admin = "A workflow request was received"
-        message_admin = """
-            A new request for access was received. The request is awaiting your approval. <br /> <br />
-            Click this link to log into your account and review the request<br /><br />
-            <a href='{activation_link}'>{activation_link}</a>"
-            """.format(activation_link=activation_link)
+    # Find All members that will be notified
+    recipients = []
+    user_list = okta_admin.get_user_list_by_group_id(group_id)
+    for user in user_list:
+        recipients.append({"address": user["profile"]["email"]})
 
-        # Find All members that will be notified
-        recipients = []
-        user_list = okta_admin.get_user_list_by_group_id(group_id)
-        for user in user_list:
-            recipients.append({"address": user["profile"]["email"]})
-
-        if recipients:
-            email_send = Email.send_mail(subject=subject_admin, message=message_admin, recipients=recipients)
-            return email_send
-        else:
-            return ''
+    if recipients:
+        email_send = Email.send_mail(subject=subject_admin, message=message_admin, recipients=recipients)
+        return email_send
+    else:
+        return ''
