@@ -477,6 +477,24 @@ class OktaAdmin:
 
         return RestUtil.execute_put(url, body, okta_headers)
 
+    def assign_user_to_application(self, user_id, user_email, app_id, ):
+        self.logger.debug("OktaAdmin.assign_user_to_application")
+
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/apps/{app_id}/users".format(
+            base_url=self.okta_config["okta_org_name"],
+            app_id=self.okta_config["client_id"])
+
+        body = {
+            "id": user_id,
+            "scope": "USER",
+            "credentials": {
+                "userName": user_email
+            }
+        }
+
+        return RestUtil.execute_post(url, body, okta_headers)
+
     def get_applications_by_id(self, app_id):
         self.logger.debug("OktaAdmin.get_applications_by_id(app_id)")
         okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
