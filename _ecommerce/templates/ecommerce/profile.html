@@ -36,8 +36,14 @@
                           		  </div>
                           			<input name="mobilePhone" id="mobilePhone" class="form-control" placeholder="Mobile Phone" type="text" value="{{ user_info2['profile']['mobilePhone']  }}">
                               </div>
-
-
+                              <div class="form-group input-group">
+                                    <div class="input-group-prepend">
+                          		        <span class="input-group-text"> <i class="fa fa-check"></i> </span>
+                                    </div>
+                          			<input name="consent" id="consent" class="form-control" type="text" value="{{ consent }}" disabled>&nbsp;&nbsp;
+                          			<button type="button" onclick="resetconsent()" class="btn btn-primary">Reset Consent</button>
+                              </div>
+                              <input name="nconsent" id="nconsent" class="form-control" type="hidden" value="{{ consent }}">
                               <input id="user_id" name="user_id" class="form-control" type="hidden" value="{{ user_info2['id'] }}">
                               <div class="form-group">
                               <button type="submit" class="btn btn-primary btn-block">Update Account</button>
@@ -46,22 +52,133 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="card border-bottom">
-                    <div class="card-header">Credit Account</div>
-                    <div class="card-body" >
-                       <!--<button type="button" onclick="location.href='/ecommerce/credit';" class="btn btn-primary">Pay Your Bill</button> -->
-                       <button type="button" onclick="window.open('https://be2aeed98fc743cbad39ef88a800ca1b.vfs.cloud9.us-east-1.amazonaws.com/','_blank')" class="btn btn-primary">Pay Your Bill</button>
+            <div class="col-md-6" >
+                {% if crediturl != "" %}
+                <div id='CreditAccount'>
+                    <div class="card border-bottom">
+                        <div class="card-header">Credit Account</div>
+                        <div class="card-body" >
+                           <!--<button type="button" onclick="location.href='/ecommerce/credit';" class="btn btn-primary">Pay Your Bill</button> -->
+                           <button type="button" onclick="window.open('{{crediturl}}','_blank')" class="btn btn-primary">Pay Your Bill</button>
+                        </div>
+                        
                     </div>
-                </div><br><br>
+                    <br><br>
+                </div>
+                {% endif %}
                 {% include '//components/template-mfaenrollment.html' %}
             </div>
         </div>
     </div>
 </section>
 
-{% include '//components/template-modal.html' %}
+<div class="modal fade" id="consentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalCenterTitle">Sign Up Now</h5><br>
+                        </div>
+                        <div class="modal-body" id="mfamodalbody">
+                            <h3>Website usage terms and conditions</h3>
+                            <p>Welcome to our website. If you continue to browse and use this website, you are agreeing to comply with and be bound by the following terms and conditions of use, which together with our privacy policy govern [business name]&rsquo;s relationship with you in relation to this website. If you disagree with any part of these terms and conditions, please do not use our website.</p>
+                            <p>The term &lsquo;[business name]&rsquo; or &lsquo;us&rsquo; or &lsquo;we&rsquo; refers to the owner of the website whose registered office is [address]. Our company registration number is [company registration number and place of registration]. The term &lsquo;you&rsquo; refers to the user or viewer of our website.</p>
+                            <p>The use of this website is subject to the following terms of use:</p>
+                            <ul>
+                            <li>The content of the pages of this website is for your general information and use only. It is subject to change without notice.</li>
+                            <li>This website uses cookies to monitor browsing preferences. If you do allow cookies to be used, the following personal information may be stored by us for use by third parties: [insert list of information].</li>
+                            <li>Neither we nor any third parties provide any warranty or guarantee as to the accuracy, timeliness, performance, completeness or suitability of the information and materials found or offered on this website for any particular purpose. You acknowledge that such information and materials may contain inaccuracies or errors and we expressly exclude liability for any such inaccuracies or errors to the fullest extent permitted by law.</li>
+                            <li>Your use of any information or materials on this website is entirely at your own risk, for which we shall not be liable. It shall be your own responsibility to ensure that any products, services or information available through this website meet your specific requirements.</li>
+                            <li>This website contains material which is owned by or licensed to us. This material includes, but is not limited to, the design, layout, look, appearance and graphics. Reproduction is prohibited other than in accordance with the copyright notice, which forms part of these terms and conditions.</li>
+                            <li>All trademarks reproduced in this website, which are not the property of, or licensed to the operator, are acknowledged on the website.</li>
+                            <li>Unauthorised use of this website may give rise to a claim for damages and/or be a criminal offence.</li>
+                            <li>From time to time, this website may also include links to other websites. These links are provided for your convenience to provide further information. They do not signify that we endorse the website(s). We have no responsibility for the content of the linked website(s).</li>
+                            <li>Your use of this website and any dispute arising out of such use of the website is subject to the laws of England, Northern Ireland, Scotland and Wales.</li>
+                            </ul>
+                        </div>
+                        <div class="modal-footer">
+                            <div  style="float: left;"><input type="checkbox" id="acceptterms" name="acceptterms" onclick="acceptterms()" value="Accept Terms"> &nbsp;&nbsp;I hereby consent and
+                                acknowledge my agreement to the terms set forth in the Terms and Conditions and any
+                                subsequent changes in office policy. I understand that this consent shall remain in force
+                                from this time forward.
+                            </div>&nbsp;&nbsp;&nbsp;
+                            <button class="btn btn-primary" type="button" id="confirm"  onclick="acceptcompleted()" disabled>Confirm</button>
+                            <button class="btn btn-primary" type="button" onclick="closepopup()">Cancel</button>
+                        </div>
+                </div>
+            </div>
+        </div>
 
+    <script type="text/javascript">
+
+        window.addEventListener('load', function () {
+            testconsent = '{{consent}}';
+            console.log("check_consent()");
+            console.log(testconsent);
+            if (testconsent.trim() == '')
+            {
+                $("#consentModal").modal("show");
+            }
+        })
+        function acceptcompleted() {
+            console.log("acceptcompleted()");
+            window.location = "/ecommerce/acceptterms";
+            $("#consentModal").modal("hide");
+        }
+
+        function closepopup() {
+            console.log("closepopup()");
+            $("#consentModal").modal("hide");
+        }
+
+
+        function acceptterms() {
+                console.log("acceptterms()");
+                if($("#acceptterms").prop("checked") == true)
+                {
+                    $("#confirm").prop('disabled', false);
+                }
+                else
+                {
+                    $("#confirm").prop('disabled', true);
+                }
+        }
+
+        function resetconsent() {
+                console.log("resetconsent()");
+                $("#consent").val("");
+                window.location = "/ecommerce/clearconsent/{{user_info2['id']}}" ;
+        }
+
+        $.ajax({
+            'async': false,
+            'type': "POST",
+            'url': "/id_token",
+            'data': {},
+            'success': function (data) {
+             response = data;
+            }
+        });
+
+        var test = JSON.parse(response);
+        console.log(test["groups"]);
+        var foundbuyer = false;
+        for(var i in test["groups"]) {
+            if(test["groups"][i].includes("buyer")) {
+                foundbuyer = true;
+                break;
+            }
+        }
+        if (foundbuyer == false) {
+            $("#CreditAccount").remove();
+        }
+
+    </script>
+
+    <style>
+        .modal-dialog {
+            max-width: 800;
+        }
+    </style>
 
 
 {% endblock %}

@@ -1,6 +1,6 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto mr-lg-5">
-                <li class="nav-item"><a class="nav-link" href="../index">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="/index">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="/ecommerce/shop">Shop</a></li>
                 <li class="nav-item dropdown dropdown-xl no-caret">
                     <a class="nav-link dropdown-toggle" id="navbarDropdownDemos" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Account Information<i class="fas fa-chevron-right dropdown-arrow"></i></a>
@@ -17,10 +17,15 @@
                                 <div class="row">
                                     <div class="col-lg-6">
                                         <h6 class="dropdown-header text-primary">Manage Account</h6>
-                                        <a class="dropdown-item" href="/ecommerce/order">Orders</a>
+                                        <a class="dropdown-item" href="/ecommerce/order">My Orders</a>
+                                        <a class="dropdown-item" href="/profile">My Tokens</a>
+                                        <a class="dropdown-item" href="/ecommerce/workflow-requests">Request Access</a>
                                         <div class="dropdown-divider border-0"></div>
+                                        <div id="adminmenu">
                                         <h6 class="dropdown-header text-primary">Manage Users</h6>
                                         <a class="dropdown-item" href="/manageusers">Account Users</a>
+                                        <a class="dropdown-item" href="/ecommerce/workflow-approvals">Review Requests</a>
+                                        </div>
                                     </div>
                               </div>
                             </div>
@@ -29,3 +34,27 @@
                 </li>
             </ul>
         </div>
+        <script>
+        $.ajax({
+            'async': false,
+            'type': "POST",
+            'url': "/id_token",
+            'data': {},
+            'success': function (data) {
+             response = data;
+            }
+        });
+
+        var test = JSON.parse(response);
+        console.log(test["groups"]);
+        var foundbuyer = false;
+        for(var i in test["groups"]) {
+            if(test["groups"][i].includes("buyer")) {
+                foundbuyer = true;
+                break;
+            }
+        }
+        if (foundbuyer == false) {
+            $("#adminmenu").remove();
+        }
+        </script>
