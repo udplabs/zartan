@@ -184,7 +184,8 @@ function do_login(un, pw) {
             url: '{{config.okta_org_name}}',
             clientId: '{{config.client_id}}',
             redirectUri: '{{ config.redirect_uri}}',
-            issuer: '{{config.issuer}}'
+            issuer: '{{config.issuer}}',
+            pkce: false
         });
 
         authClient.signIn({
@@ -207,7 +208,7 @@ function do_login(un, pw) {
                     scopes: ['openid', 'profile', 'email'],
                 });
             }
-            if (transaction.status === 'MFA_REQUIRED') {
+            else if (transaction.status === 'MFA_REQUIRED') {
                console.log("MFA_REQUIRED");
                $("#state").val(transaction.data.stateToken);
                showwidget();
@@ -220,12 +221,14 @@ function do_login(un, pw) {
                $("#exampleModalCenterTitle").text('Multi-Factor Enrollment');
             }
             else {
-
+                console.log("TEst1");
                 throw 'We cannot handle the ' + transaction.status + ' status';
             }
         })
-        .fail(function(err) {
-            console.error(err);
+        .catch(function(err) {
+            $('#ModalBody').text(err['message']);
+            $('#basicExampleModal').modal('show');
+            console.log(err);
         });
 }
 </script>
