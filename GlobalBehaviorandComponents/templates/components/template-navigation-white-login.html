@@ -204,6 +204,7 @@ function do_login(un, pw) {
                     responseType: 'code',
                     responseMode: 'form_post',
                     state: '{{state}}',
+                    pkce: false,
                     sessionToken: transaction.sessionToken,
                     scopes: ['openid', 'profile', 'email'],
                 });
