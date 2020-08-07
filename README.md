@@ -21,6 +21,21 @@ Zartan is a master of make-up and disguise and so is this demo platform. :tada::
 
 [Local Zartan Setup instructions](./docs/README.md)
 
+## Features
+
+<table>
+<tr style="height: 115px;"><td>Application</td><td>Okta Session Auto Login</td><td>Login Widget (Social Login, IDP Discovery, MFA)</td><td>Password-less <br />Widget&nbsp;</td><td>Custom Widget</td><td>Custom&nbsp; Registration</td><td>Profile<br />(ID Token and Access Token Viewer)</td><td>Custom MFA Enrollment</td><td>User Apps (Display Other User Apps, B2B)</td><td>Manage Users (Create User, Update User, Suspend User, Password Reset)</td><td>Step Up Authentication using MFA</td><td>ID Verification (Uses Evident)</td><td>Consent&nbsp;</td><td>Progressive Profiling&nbsp;</td><td>Temporary MFA for Users</td><td>Hard Token Setup</td><td>User Approve Workflow</td><td>IDP Management</td></tr>
+<tr style="height: 36px;"><td>Travel Agency</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>&nbsp;</td><td>✓</td><td>✓</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr style="height: 39px;"><td>Streaming Service</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>&nbsp;</td><td>✓</td><td>✓</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr style="height: 24px;"><td>Hospitality</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>&nbsp;</td><td>✓</td><td>✓</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr style="height: 24px;"><td>Credit</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>&nbsp;</td><td>✓</td><td>✓</td><td>✓</td><td>&nbsp;</td><td>✓</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr style="height: 24px;"><td>Finance</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>&nbsp;</td><td>✓</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr style="height: 27px;"><td>Dealer</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>&nbsp;</td><td>✓</td><td>✓</td><td>✓</td><td>&nbsp;</td><td>&nbsp;</td><td>✓</td><td>&nbsp;</td><td>&nbsp;</td><td>✓</td><td>&nbsp;</td></tr>
+<tr style="height: 27px;"><td>Healthcare</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr style="height: 25px;"><td>Admin</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>&nbsp;</td><td>✓</td><td>✓</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>✓</td><td>✓</td><td>&nbsp;</td><td>✓</td></tr>
+<tr style="height: 49px;"><td>Ecommerce (Coming Soon)</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+</table>
+
 ## Authors
 * [Shawn Recinto](https://github.com/srecinto)
 * [Dan Zadik](https://github.com/dzadikdev)
