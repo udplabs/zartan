@@ -68,7 +68,7 @@ def ecommerce_account():
 @ecommerce_views_bp.route("/shop")
 def ecommerce_shop():
     logger.debug("ecommerce_shop()")
-    products = requests.get(url="https://dz-static-test.s3.amazonaws.com/bh.json")
+    products = requests.get(url=session[SESSION_INSTANCE_SETTINGS_KEY]["app_ecomm_products"])
 
     return render_template(
         "ecommerce/shop.html",
@@ -82,7 +82,7 @@ def ecommerce_shop():
 @ecommerce_views_bp.route("/product/<product_id>")
 def ecommerce_product(product_id):
     logger.debug("ecommerce_product()")
-    products = requests.get(url="https://dz-static-test.s3.amazonaws.com/bh.json")
+    products = requests.get(url=session[SESSION_INSTANCE_SETTINGS_KEY]["app_ecomm_products"])
 
     return render_template(
         "ecommerce/product.html",
