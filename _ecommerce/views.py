@@ -68,7 +68,7 @@ def ecommerce_account():
 @ecommerce_views_bp.route("/shop")
 def ecommerce_shop():
     logger.debug("ecommerce_shop()")
-    products = requests.get(url=session[SESSION_INSTANCE_SETTINGS_KEY]["app_ecomm_products"])
+    products = requests.get(url=session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_ecomm_products"])
 
     return render_template(
         "ecommerce/shop.html",
