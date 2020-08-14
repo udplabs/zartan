@@ -6,7 +6,7 @@
             <div class="container py-1 bg-light" >
                 <div class="row">
                     <div class="col-lg-6 mb-3 mb-lg-0 text-left txt-primary text-xs" style="justify: middle;">
-                     Part of the Kimberly-Clark Family: <div id="logos" style="display: inline-block;"></div>
+                     <b>Part of the Kimberly-Clark Family:</b>&nbsp;&nbsp;&nbsp;<div id="logos" style="display: inline-block;"></div>
                     </div>
                 </div>
             </div>
@@ -16,8 +16,8 @@
             $.ajax({
                 url:'/consumerproducts/apps',
                 type: "GET",
-                data:{                
-                },    
+                data:{
+                },
                 complete: function (response) {
                     console.log(response.responseText);
                      apps = JSON.parse(response.responseText);
@@ -26,17 +26,17 @@
                     for (i = 0; i < apps.length; i++) {
                         url = apps[i]._links.appLinks[0].href;
                         image = apps[i]._links.logo[0].href;
-                        applinks = applinks + "<a href="+url +"><img border=0 style='height:25px;' src=" + image +"></a>";
+                        applinks = applinks + "<a href="+url +"><img border=0 style='height:18px;' src=" + image +"></a>&nbsp;&nbsp;&nbsp;";
                     }
-                    
+
                     $("#logos").html(applinks);
                 },
                 error: function () {
                     alert('Bummer: there was an error!');
                 },
             });
-            
-            
+
+
         </script>
         <div id="layoutDefault">
             <div id="layoutDefault_content">
