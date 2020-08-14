@@ -60,7 +60,9 @@ def consumerproducts_discounts():
         logging.debug(user)
         consent = user["profile"][get_udp_ns_fieldname("consent")]
         logging.debug(consent)
-        if consent.strip() == "":
+        if consent is None:
+            consent = ''
+        elif consent.strip() == "":
             consent = ''
     else:
         consent = ''
