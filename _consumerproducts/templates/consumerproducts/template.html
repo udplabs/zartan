@@ -11,32 +11,67 @@
                 </div>
             </div>
         </div>
+        <input type="hidden" id="isLoggedin" name="isLoggedin" value="">
         <script>
+        $(document).ready(function() {
+            authClient.session.get()
+                .then(function (res) {
+                    console.log(res);
+                    if (res.status === 'ACTIVE') {
+                        $("#isLoggedin").val(res.id);
+                    }
+                    else
+                    {
+                        $("#isLoggedin").val('');
+                    }
+                })
+                .catch(function(err) {
+                    console.log("FAIL");
+                    console.log(err);
+                });
+
             var apps;
             $.ajax({
                 url:'/consumerproducts/apps',
                 type: "GET",
-                data:{
-                },
+                data:{},
                 complete: function (response) {
-                    console.log(response.responseText);
-                     apps = JSON.parse(response.responseText);
+
+                    apps = JSON.parse(response.responseText);
+                    isloggedin = $("#isLoggedin").val();
+                    console.log(isloggedin);
                     console.log(apps);
+
                     var applinks = "" ;
                     for (i = 0; i < apps.length; i++) {
                         url = apps[i]._links.appLinks[0].href;
                         image = apps[i]._links.logo[0].href;
-                        applinks = applinks + "<a href="+url +"><img border=0 style='height:18px;' src=" + image +"></a>&nbsp;&nbsp;&nbsp;";
+                        title = apps[i].label;
+                        if (isloggedin)
+                        {
+                            applinks = applinks + "<a href="+url +"><img border=0 style='height:18px;' src=" + image +"></a>&nbsp;&nbsp;&nbsp;";
+                        }
+                        else
+                        {
+                            if (title == "Cottonelle")
+                            {
+                                applinks = applinks + "<a href='https://fda7d42e54574ac3859bcf5deedf973d.vfs.cloud9.us-east-1.amazonaws.com/index'><img border=0 style='height:18px;' src=" + image +"></a>&nbsp;&nbsp;&nbsp;";
+                            }
+                            else if (title == "Huggies")
+                            {
+                                applinks = applinks + "<a href='https://be2aeed98fc743cbad39ef88a800ca1b.vfs.cloud9.us-east-1.amazonaws.com/index'><img border=0 style='height:18px;' src=" + image +"></a>&nbsp;&nbsp;&nbsp;";
+                            }
+                        }
+                         console.log(applinks);
                     }
-
+                   
                     $("#logos").html(applinks);
                 },
                 error: function () {
                     alert('Bummer: there was an error!');
                 },
             });
-
-
+        });
         </script>
         <div id="layoutDefault">
             <div id="layoutDefault_content">
