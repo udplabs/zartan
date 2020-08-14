@@ -47,22 +47,25 @@
                         url = apps[i]._links.appLinks[0].href;
                         image = apps[i]._links.logo[0].href;
                         title = apps[i].label;
-                        if (isloggedin)
+                        if (title.indexOf("IOS") < 1)
                         {
-                            applinks = applinks + "<a href="+url +"><img border=0 style='height:18px;' src=" + image +"></a>&nbsp;&nbsp;&nbsp;";
-                        }
-                        else
-                        {
-                            if (title == "Cottonelle")
+                            if (isloggedin )
                             {
-                                applinks = applinks + "<a href='https://fda7d42e54574ac3859bcf5deedf973d.vfs.cloud9.us-east-1.amazonaws.com/index'><img border=0 style='height:18px;' src=" + image +"></a>&nbsp;&nbsp;&nbsp;";
+                                applinks = applinks + "<a href="+url +"><img border=0 style='height:18px;' src=" + image +"></a>&nbsp;&nbsp;&nbsp;";
                             }
-                            else if (title == "Huggies")
+                            else
                             {
-                                applinks = applinks + "<a href='https://be2aeed98fc743cbad39ef88a800ca1b.vfs.cloud9.us-east-1.amazonaws.com/index'><img border=0 style='height:18px;' src=" + image +"></a>&nbsp;&nbsp;&nbsp;";
+                                if (title == "Cottonelle")
+                                {
+                                    applinks = applinks + "<a href='https://fda7d42e54574ac3859bcf5deedf973d.vfs.cloud9.us-east-1.amazonaws.com/index'><img border=0 style='height:18px;' src=" + image +"></a>&nbsp;&nbsp;&nbsp;";
+                                }
+                                else if (title == "Huggies")
+                                {
+                                    applinks = applinks + "<a href='https://be2aeed98fc743cbad39ef88a800ca1b.vfs.cloud9.us-east-1.amazonaws.com/index'><img border=0 style='height:18px;' src=" + image +"></a>&nbsp;&nbsp;&nbsp;";
+                                }
                             }
                         }
-                         console.log(applinks);
+                        console.log(applinks);
                     }
                    
                     $("#logos").html(applinks);
