@@ -111,6 +111,9 @@ app.register_blueprint(ecommerce_views_bp, url_prefix='/ecommerce')
 from _b2b.views import b2b_views_bp
 app.register_blueprint(b2b_views_bp, url_prefix='/b2b')
 
+# consumerproducts theme
+from _consumerproducts.views import consumerproducts_views_bp
+app.register_blueprint(consumerproducts_views_bp, url_prefix='/consumerproducts')
 
 ##############################################
 # Main Shared Routes

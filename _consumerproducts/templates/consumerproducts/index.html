@@ -1,0 +1,89 @@
+{% extends "consumerproducts/template.html" %}
+
+{% block content %}
+<header class="page-header page-header-dark bg-img-cover"
+    style='color: {{config.settings.app_primary_color}} !important; background-color: {{config.settings.app_primary_color}} !important;'>
+    <div class="page-header-content py-5">
+        <div class="container">
+            <div class="row justify-content-left">
+                <div class="col-xl-6 text-left">
+                    <div data-aos="fade-up">
+                        <h1 class="page-header-title">{{ config.settings.app_slogan }}</h1>
+                        <p class="page-header-text">{{ config.settings.app_subslogan }} </p>
+                    </div>
+                    <button class="btn btn-marketing rounded-pill btn-secondary" data-aos="fade-up" data-aos-delay="100" style="color: {{config.settings.app_primary_color}} !important;">
+                        Learn More
+                    </button>
+                </div>
+                <div class="col-xl-4 col-lg-10 text-right">
+                    <img src="{{ config.settings.app_banner_img_1 }}">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="svg-border-rounded text-white">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 144.54 17.34" preserveAspectRatio="none"
+             fill="currentColor">
+            <path d="M144.54,17.34H0V0H144.54ZM0,0S32.36,17.34,72.27,17.34,144.54,0,144.54,0"></path>
+        </svg>
+    </div>
+</header>
+<section class="bg-white py-10">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-lg-4 mb-5 mb-lg-0">
+                <div class="icon-stack icon-stack-xl bg-primary text-white mb-4"><i data-feather="dollar-sign"></i></div>
+                <h2>Get your Discounts</h2>
+                <p class="mb-0">Stock up with discounts our amazing products.</p>
+            </div>
+            <div class="col-lg-4 mb-5 mb-lg-0">
+                <div class="icon-stack icon-stack-xl bg-primary text-white mb-4"><i data-feather="heart"></i></div>
+                <h2>Our Products</h2>
+                <p class="mb-0">Building products that matter.</p>
+            </div>
+            <div class="col-lg-4">
+                <div class="icon-stack icon-stack-xl bg-primary text-white mb-4"><i data-feather="map-pin"></i></div>
+                <h2>Available Near You</h2>
+                <p class="mb-0">Find our products near you.</p>
+            </div>
+        </div>
+    </div>
+    <div class="svg-border-rounded text-light">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 144.54 17.34" preserveAspectRatio="none"
+             fill="currentColor">
+            <path d="M144.54,17.34H0V0H144.54ZM0,0S32.36,17.34,72.27,17.34,144.54,0,144.54,0"></path>
+        </svg>
+    </div>
+</section>
+<section class="bg-light py-10" >
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-6 col-lg-8 col-md-10 text-center">
+                <h2>Have any questions?</h2>
+                <p class="lead text-gray-500 mb-5">We'd love to hear from you. Contact us to get more information or chat with us now.</p>
+                <a class="btn btn-primary btn-marketing rounded-pill" href="#!">Contact us</a>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="bg-white py-10">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-5 col-lg-8 col-md-10 text-left">
+                <h4>Get the latest discounts</h4>
+                <p class="lead text-gray-500 mb-0">Stay in the loop with the latest product news and discounts!</p>
+            </div>
+            <div class="col-xl-5 col-lg-8 col-md-10 text-right">
+                <div class="input-group mb-2">
+                    <input class="form-control form-control-solid" type="text" placeholder="youremail@example.com" aria-label="Recipient's username" aria-describedby="button-addon2" />
+                    <div class="input-group-append"><button class="btn btn-primary" id="button-addon2" type="button">Sign up</button></div>
+                </div>
+                <div class="small text-gray-500">You can unsubscribe at any time.</div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
