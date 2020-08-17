@@ -1,4 +1,4 @@
-name: DEPLOY TO EBS
+name: CD (Manual)
 
 on:
   workflow_dispatch:
