@@ -53,7 +53,10 @@
                             {
                                 if (isloggedin )
                                 {
-                                    applinks = applinks + "<a href="+url +"><img border=0 style='height:18px;' src=" + image +"></a>&nbsp;&nbsp;&nbsp;";
+                                    if (title == "Cottonelle" || title == "Huggies")
+                                    {
+                                        applinks = applinks + "<a href="+url +"><img border=0 style='height:18px;' src=" + image +"></a>&nbsp;&nbsp;&nbsp;";
+                                    }
                                 }
                                 else
                                 {
