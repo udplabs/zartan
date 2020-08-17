@@ -52,8 +52,10 @@ jobs:
       with:
         aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        region: us-east-2
         application_name: ${{ github.event.inputs.ebApplicationName }}
         environment_name: ${{ github.event.inputs.ebEnvironmentName }}
         version_label: ${{ github.event.inputs.deployTagVersion }}
-        region: us-east-2
+        version_description: ${{ github.SHA }}
         deployment_package: deploy.zip
+        use_existing_version_if_available: true
