@@ -1,0 +1,59 @@
+name: DEPLOY TO EBS
+
+on:
+  workflow_dispatch:
+    inputs:
+      deployTagVersion:
+        description: 'Deploy Tag Version'
+        required: true
+        default: 'v1.0.0'
+      ebApplicationName:
+        description: 'EB Application Name'
+        required: true
+        default: 'udp-zartan'
+      ebEnvironmentName:
+        description: 'EB Environment Name'
+        required: true
+        default:  'stg-healthcare'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Output inputs
+      run: |
+        echo "Deploy Tag Version: ${{ github.event.inputs.deployTagVersion }}"
+        echo "EB Application Name: ${{ github.event.inputs.ebApplicationName }}"
+        echo "EB Environment Name: ${{ github.event.inputs.ebEnvironmentName }}"
+
+    - name: Checkout source code
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Checkout version tag
+      run: |
+        git tag --list
+        git checkout tags/${{ github.event.inputs.deployTagVersion }} -b ${{ github.event.inputs.deployTagVersion }}-branch
+
+    - name: Generate deployment package
+      if: ${{ success() }}
+      run: |
+        zip -r deploy.zip . \
+            -x '*.git*' \
+            -x '*__pycache__/*' \
+            -x '*.pytest_cache/*' \
+            -x 'venv/*' \
+            -x '*node_modules/*' \
+            -x '*env*'
+
+    - name: Deploy to EB
+      uses: einaregilsson/beanstalk-deploy@v11
+      with:
+        aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        application_name: ${{ github.event.inputs.ebApplicationName }}
+        environment_name: ${{ github.event.inputs.ebEnvironmentName }}
+        version_label: ${{ github.event.inputs.deployTagVersion }}
+        region: us-east-2
+        deployment_package: deploy.zip
