@@ -1,6 +1,8 @@
 import logging
 import datetime
 import json
+import time
+import requests
 
 from flask import render_template, session, request, redirect, url_for
 from flask import Blueprint
@@ -253,3 +255,29 @@ def consumerproducts_apps():
     logging.debug(app_info)
 
     return json.dumps(app_info)
+
+@consumerproducts_views_bp.route("/addusertogroup")
+def consumerproducts_addusertogroup():
+    logger.debug("consumerproducts_addusertogroup")
+    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
+    useremail = request.args.get('user')
+    logging.debug(useremail)
+    time.sleep(2)
+    user_info2 = okta_admin.get_user_list_by_search("profile.email eq \""+ useremail+ "\"")
+    user_id = user_info2[0]['id']
+
+    ip_url = "http://api.ipstack.com/" + request.headers.get('X-Forwarded-For', request.remote_addr) + "?access_key=bbbb8ea2884759d65964575de2f35c46"
+    ip_response = requests.get(ip_url)
+
+    print(ip_response.text)
+    ip_info = json.loads(ip_response.text)
+    country = ip_info['country_code']
+    print(country)
+    user_data = {"profile": {
+        "countryCode": country,
+    }}
+
+    user_update_response = okta_admin.update_user(user_id, user_data)
+    okta_admin.assign_user_to_group("00gqicoygOv967hEu4x6",user_id)
+
+    return 'true'

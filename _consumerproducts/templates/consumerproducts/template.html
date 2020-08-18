@@ -39,7 +39,7 @@
 
                     apps = JSON.parse(response.responseText);
                     isloggedin = $("#isLoggedin").val();
-                    console.log(isloggedin);
+                    //console.log(isloggedin);
                     console.log(apps);
 
                     var applinks = "" ;
@@ -73,11 +73,11 @@
                         }
                         catch
                         {
-                        
+
                         }
-                        console.log(applinks);
+                        //console.log(applinks);
                     }
-                   
+
                     $("#logos").html(applinks);
                 },
                 error: function () {
