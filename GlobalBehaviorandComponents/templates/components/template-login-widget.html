@@ -2,6 +2,42 @@
     <section class="main-container">
         <div class="container" >
            <div class="row">
+             <div class="dropdown col-md-12 text-right">
+                <button class="btn btn-primary rounded-pill dropdown-toggle" id="language" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Select a Language</button>
+                <style>
+                  .dropdown-item {
+                        font-size: 11px;
+                  }
+                </style>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="#" onclick="changelanguage('cs')">Czech</a>
+                    <a value="press" class="dropdown-item" href="#" onclick="changelanguage('da')">Danish</a>
+                    <a value="press" class="dropdown-item" href="#" onclick="changelanguage('de')">German</a>
+                    <a value="press" class="dropdown-item" href="#" onclick="changelanguage('el')">Greek</a>
+                    <a value="press" class="dropdown-item" href="#" onclick="changelanguage('en')">English</a>
+                    <a value="press" class="dropdown-item" href="#" onclick="changelanguage('es')">Spanish</a>
+                    <a value="press" class="dropdown-item" href="#" onclick="changelanguage('fi')">Finnish</a>
+                    <a value="press" class="dropdown-item" href="#" onclick="changelanguage('fr')">French</a>
+                    <a value="press" class="dropdown-item" href="#" onclick="changelanguage('hu')">Hungarian</a>
+                    <a value="press" class="dropdown-item" href="#" onclick="changelanguage('id')">Indonesian</a>
+                    <a value="press" class="dropdown-item" href="#" onclick="changelanguage('it')">Italian</a>
+                    <a value="press" class="dropdown-item" href="#" onclick="changelanguage('ja')">Japanese</a>
+                    <a value="press" class="dropdown-item" href="#" onclick="changelanguage('ko')">Korean</a>
+                    <a value="press" class="dropdown-item" href="#" onclick="changelanguage('ms')">Malaysian</a>
+                    <a value="press" class="dropdown-item" href="#" onclick="changelanguage('nb')">Norwegian</a>
+                    <a value="press" class="dropdown-item" href="#" onclick="changelanguage('nl-NL')">Dutch</a>
+                    <a value="press" class="dropdown-item" href="#" onclick="changelanguage('pl')">Polish</a>
+                    <a value="press" class="dropdown-item" href="#" onclick="changelanguage('pt-BR')">Portuguese (Brazil)</a>
+                    <a value="press" class="dropdown-item" href="#" onclick="changelanguage('ro')">Romanian</a>
+                    <a value="press" class="dropdown-item" href="#" onclick="changelanguage('ru')">Russian</a>
+                    <a value="press" class="dropdown-item" href="#" onclick="changelanguage('sv')">Swedish</a>
+                    <a value="press" class="dropdown-item" href="#" onclick="changelanguage('th')">Thai</a>
+                    <a value="press" class="dropdown-item" href="#" onclick="changelanguage('tr')">Turkish</a>
+                    <a value="press" class="dropdown-item" href="#" onclick="changelanguage('zh-TW')">Ukrainian</a>
+                    <a value="press" class="dropdown-item" href="#" onclick="changelanguage('zh-CN)">Chinese (PRC)</a>
+                    <a value="press" class="dropdown-item" href="#" onclick="changelanguage('zh-TW')">Chinese (Taiwan)</a>
+                </div>
+            </div>
             <div class="col-md-8 offset-md-2">
             <!-- main start -->
             <!-- ================ -->
@@ -52,13 +88,28 @@
                     }
 
                   </style>
+                  <script>
+                  function changelanguage(lang){
+                    $("#language").val(lang);
+                    console.log(signInWidget);
+                    signInWidget.remove();
+                    signInWidget.renderEl({el: '#sign-in-widget'});
+                  }
+                  </script>
+                  <input name="language" id="language" class="form-control" type="hidden" value="en">
+                  
                   <div id="sign-in-widget"></div>
                   <script type="text/javascript">
-                    new OktaSignIn({
+                   signInWidgetConfig = {
                       baseUrl: "{{config.okta_org_name}}",
                       logo: "{{config.settings.app_logo}}",
                       clientId: "{{config.client_id}}",
                       redirectUri: "{{config.redirect_uri}}",
+                      language: function () {
+                        newlang = $("#language").val();
+                        console.log(newlang);
+                        return newlang;
+                      },
                       i18n: {
                         en: {
                           'primaryauth.title': 'Sign in to {{config.settings.app_name}}'
@@ -127,15 +178,16 @@
                             return nname;
                           }
                       },
-                    }).renderEl(
-                      { el: '#sign-in-widget' },
-                      function (res) {}
-                    );
+                    };
+
+                    signInWidget = new OktaSignIn(signInWidgetConfig);
+                    signInWidget.renderEl({el: '#sign-in-widget'});
                   </script>
                 </div>
               </div>
             </div>
             </div>
         </div>
+
     </section>
     <!-- page-wrapper end -->
