@@ -1,5 +1,11 @@
  <!-- Custom css -->
-    <section class="main-container">
+      <section class="main-container">
+        <script>
+        function callme(request)
+        {
+           
+        }
+      </script>
         <div class="container" >
            <div class="row">
              <div class="dropdown col-md-12 text-right">
@@ -115,6 +121,23 @@
                           'primaryauth.title': 'Sign in to {{config.settings.app_name}}'
                         }
                       },
+                      registration: {
+                        postSubmit: function (response, onSuccess, onFailure) {
+                          // handle postsubmit callback
+                          $.ajax({
+                              url:'/consumerproducts/addusertogroup',
+                              type: "GET",
+                              data:{
+                                  "user": response
+                              },
+                              complete: function (response) {
+                              },
+                              error: function () {
+                              },
+                          });
+                          onSuccess(response);
+                        }
+                      },
                       features: {
                         {% if idp %}
                           {% if idptype %}
@@ -188,6 +211,5 @@
             </div>
             </div>
         </div>
-
-    </section>
+      </section>
     <!-- page-wrapper end -->

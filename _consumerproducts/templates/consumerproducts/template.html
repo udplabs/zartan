@@ -1,0 +1,118 @@
+<!--Do Not Remove any parts of this document unless you expect to not use out of the box behaviours-->
+<html lang="en">
+    {% include '//components/template-header-meta.html' %}
+    <body>
+        <div class="bg-light" >
+            <div class="container py-1 bg-light" >
+                <div class="row">
+                    <div class="col-lg-6 mb-3 mb-lg-0 text-left txt-primary text-xs" style="justify: middle;">
+                     <b>Part of the Kimberly-Clark Family:</b>&nbsp;&nbsp;&nbsp;<div id="logos" style="display: inline-block;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" id="isLoggedin" name="isLoggedin" value="">
+        <script>
+        $(document).ready(function() {
+            authClient.session.get()
+                .then(function (res) {
+                    console.log(res);
+                    if (res.status === 'ACTIVE') {
+                        $("#isLoggedin").val(res.id);
+                    }
+                    else
+                    {
+                        $("#isLoggedin").val('');
+                    }
+                })
+                .catch(function(err) {
+                    console.log("FAIL");
+                    console.log(err);
+                });
+
+            var apps;
+            $.ajax({
+                url:'/consumerproducts/apps',
+                type: "GET",
+                data:{},
+                complete: function (response) {
+
+                    apps = JSON.parse(response.responseText);
+                    isloggedin = $("#isLoggedin").val();
+                    //console.log(isloggedin);
+                    console.log(apps);
+
+                    var applinks = "" ;
+                    for (i = 0; i < apps.length; i++) {
+                        try
+                        {
+                            url = apps[i]._links.appLinks[0].href;
+                            image = apps[i]._links.logo[0].href;
+                            title = apps[i].label;
+                            if (title.indexOf("IOS") < 1)
+                            {
+                                if (isloggedin )
+                                {
+                                    if (title == "Cottonelle" || title == "Huggies")
+                                    {
+                                        applinks = applinks + "<a href="+url +"><img border=0 style='height:18px;' src=" + image +"></a>&nbsp;&nbsp;&nbsp;";
+                                    }
+                                }
+                                else
+                                {
+                                    if (title == "Cottonelle")
+                                    {
+                                        applinks = applinks + "<a href='https://fda7d42e54574ac3859bcf5deedf973d.vfs.cloud9.us-east-1.amazonaws.com/index'><img border=0 style='height:18px;' src=" + image +"></a>&nbsp;&nbsp;&nbsp;";
+                                    }
+                                    else if (title == "Huggies")
+                                    {
+                                        applinks = applinks + "<a href='https://be2aeed98fc743cbad39ef88a800ca1b.vfs.cloud9.us-east-1.amazonaws.com/index'><img border=0 style='height:18px;' src=" + image +"></a>&nbsp;&nbsp;&nbsp;";
+                                    }
+                                }
+                            }
+                        }
+                        catch
+                        {
+
+                        }
+                        //console.log(applinks);
+                    }
+
+                    $("#logos").html(applinks);
+                },
+                error: function () {
+                    alert('Bummer: there was an error!');
+                },
+            });
+        });
+        </script>
+        <div id="layoutDefault">
+            <div id="layoutDefault_content">
+                <main>
+                    {% if "login" in request.path %}
+                        {% set navitems ="navitems.html" %}
+                    {% elif "index" in request.path %}
+                        {% set navitems ="navitems.html" %}
+                    {% elif "registration" in request.path %}
+                        {% set navitems ="navitems.html" %}
+                    {% elif "/" == request.path %}
+                        {% set navitems ="navitems.html" %}
+                    {% else %}
+                        {% set navitems ="navitemslogin.html" %}
+                    {% endif %}
+                    {% with mynavitems=navitems %}
+                        {% include '//components/template-navigation.html' %}
+                    {% endwith %}
+                    {% block content %}{% endblock %}
+                </main>
+            </div>
+            <div id="layoutDefault_footer">
+                {% block footer %}{% endblock %}
+            </div>
+            {% with color="black" %}
+                {% include '//components/template-footer.html' %}
+            {% endwith %}
+        </div>
+        {% include '//components/template-footer-scripts.html' %}
+    </body>
+</html>

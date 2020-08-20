@@ -1,0 +1,126 @@
+{% extends "consumerproducts/template.html" %}
+
+{% block content %}
+ <section class="bg-light py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card border-bottom">
+                    <div class="card-header">Account</div>
+                    <div class="card-body">
+                          <form class="form-horizontal" action='updateuserinfo' method="POST">
+                              <div class="form-group input-group">
+                             	  <div class="input-group-prepend">
+                            		  <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                            		</div>
+                            	  <input name="firstname" class="form-control" id="firstname" placeholder="First Name" type="text" value="{{ user_info2['profile']['firstName'] }}">
+                              </div>
+
+                              <div class="form-group input-group">
+                                <div class="input-group-prepend">
+                          		    <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                          		  </div>
+                                <input name="lastname" class="form-control" id="lastname" placeholder="Last Name" type="text" value="{{ user_info2['profile']['lastName']  }}">
+                              </div>
+
+                              <div class="form-group input-group">
+                              	<div class="input-group-prepend">
+                          		    <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
+                          		  </div>
+                                <input name="email" class="form-control" id="email" placeholder="Email address" type="email" value="{{ user_info2['profile']['email']  }}">
+                              </div>
+
+                              <div class="form-group input-group">
+                              	<div class="input-group-prepend">
+                          		    <span class="input-group-text"> <i class="fa fa-phone"></i> </span>
+                          		  </div>
+                          			<input name="mobilePhone" id="mobilePhone" class="form-control" placeholder="Mobile Phone" type="text" value="{{ user_info2['profile']['mobilePhone']  }}">
+                              </div>
+                              <div class="form-group input-group">
+                                    <div class="input-group-prepend">
+                          		        <span class="input-group-text"> <i class="fa fa-check"></i> </span>
+                                    </div>
+                          			<input name="consent" id="consent" class="form-control" type="text" value="{{ consent }}" disabled>&nbsp;&nbsp;
+                          			<button type="button" onclick="resetconsent()" class="btn btn-primary">Reset Consent</button>
+                              </div>
+                              <input name="nconsent" id="nconsent" class="form-control" type="hidden" value="{{ consent }}">
+                              <input id="user_id" name="user_id" class="form-control" type="hidden" value="{{ user_info2['id'] }}">
+                              <div class="form-group">
+                              <button type="submit" class="btn btn-primary btn-block">Update Account</button>
+                              </div>
+                          </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card border-bottom">
+                    <div class="card-header">Subscriptions</div>
+                    <div class="card-body" >
+                        <div class="custom-control custom-checkbox">
+                            <input class="custom-control-input" id="huggies" type="checkbox" onclick="updatecomm('huggies')" {{ 'checked' if user_info2['profile']['local_app_huggies_comm']|string() == 'true' else '' }}>
+                            <label class="custom-control-label" for="huggies" style="background: none;">Huggies Communications</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                            <input class="custom-control-input" id="pullups" type="checkbox" onclick="updatecomm('pullups')" {{ 'checked' if user_info2['profile']['local_app_pullups_comm']|string() ==  'true' else '' }}>
+                            <label class="custom-control-label" for="pullups" style="background: none;">Pull-Ups® Communications</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                            <input class="custom-control-input" id="goodnights" type="checkbox" onclick="updatecomm('goodnights')" {{ 'checked' if user_info2['profile']['local_app_goodnights_comm']|string() == 'true' else '' }}>
+                            <label class="custom-control-label" for="goodnights" style="background: none;">GoodNites® Communications</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                            <input class="custom-control-input" id="ubykotex" type="checkbox" onclick="updatecomm('ubykotex')" {{ 'checked' if user_info2['profile']['local_app_ubykotex_comm']|string() == 'true' else '' }}>
+                            <label class="custom-control-label" for="ubykotex" style="background: none;">UByKotex® Communications</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                            <input class="custom-control-input" id="depend" type="checkbox" onclick="updatecomm('depend')" {{ 'checked' if user_info2['profile']['local_app_depend_comm']|string() == 'true' else '' }}>
+                            <label class="custom-control-label" for="depend" style="background: none;">Depend® Communications</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                            <input class="custom-control-input" id="poise" type="checkbox" onclick="updatecomm('poise')" {{ 'checked' if user_info2['profile']['local_app_poise_comm']|string() == 'true' else '' }}>
+                            <label class="custom-control-label" for="poise" style="background: none;">Poise® Communications</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                            <input class="custom-control-input" id="kcc" type="checkbox" onclick="updatecomm('kcc')" {{ 'checked' if user_info2['profile']['local_app_kcc_comm']|string() == 'true' else '' }}>
+                            <label class="custom-control-label" for="kcc" style="background: none;">Yes! I want to be the first to know about exciting offers, product updates and more from Scott® and other Kimberly-Clark brands, including Cottonelle®, Kleenex® and VIVA®.</label>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                {% include '//components/template-mfaenrollment.html' %}
+            </div>
+        </div>
+    </div>
+</section>
+    <script type="text/javascript">
+
+        function updatecomm(comm){
+            console.log("updatecomm()");
+            console.log($("#"+comm).is(":checked"));
+            var $label = $("label[for='"+comm+"']")
+            ischecked = $("#"+comm).is(":checked")
+            if (ischecked) {
+                window.location = "/consumerproducts/updatecomm/" + comm+"?set=true&user_id={{user_info2['id']}}&product=" + $label.text();
+            }
+            else{
+                window.location = "/consumerproducts/updatecomm/" + comm+"?set=false&user_id={{user_info2['id']}}&product=" + $label.text();
+            }
+        }
+
+        function resetconsent() {
+            console.log("resetconsent()");
+            $("#consent").val("");
+            window.location = "/consumerproducts/clearconsent/{{user_info2['id']}}" ;
+        }
+    </script>
+
+    <style>
+        .modal-dialog {
+            max-width: 800;
+        }
+    </style>
+
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
