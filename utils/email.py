@@ -14,7 +14,7 @@ class Email:
         logging.debug(recipients)
         url = "https://tjfvw6nb97.execute-api.us-east-2.amazonaws.com/prod/sendmail"
         headers = {
-            "x-api-key": "RSbnqQJM5zHakqvbgcb19NiKRGEzBC4mRxOZGKc0",
+            "x-api-key": session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["sparkpost_api_key"],
             "Content-Type": "application/json"
         }
         body = {
