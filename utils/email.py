@@ -11,20 +11,16 @@ class Email:
     @staticmethod
     def send_mail(subject, message, recipients):
         Email.logger.debug("send_mail()")
-        url = "https://api.sparkpost.com/api/v1/transmissions"
+        logging.debug(recipients)
+        url = "https://tjfvw6nb97.execute-api.us-east-2.amazonaws.com/prod/sendmail"
         headers = {
-            "Authorization": session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["sparkpost_api_key"],
+            "x-api-key": "RSbnqQJM5zHakqvbgcb19NiKRGEzBC4mRxOZGKc0",
             "Content-Type": "application/json"
         }
         body = {
-            "options": {
-                "sandbox": False
-            },
-            "content": {
-                "from": "noreply@recintodev.com",
-                "subject": subject,
-                "html": message
-            },
-            "recipients": recipients
+            "to": recipients[0]['address'],
+            "from": "udpsystem@udp.awsapps.com",
+            "subject": subject,
+            "text": message
         }
         return RestUtil.execute_post(url, body, headers=headers)
