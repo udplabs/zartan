@@ -131,7 +131,7 @@
                       {% if idp %}
                       {% if idptype %}
                       idpDiscovery: {
-                        requestContext: '{{request.url_root | replace("http", "https")  }}'
+                        requestContext: '{{request.url_root | replace("http://", "https://")  }}'
                       },
                       {% endif %}
                       {% endif %}
