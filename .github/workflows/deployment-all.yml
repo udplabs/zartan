@@ -18,6 +18,7 @@ jobs:
     strategy:
       matrix:
         ebEnvironment: [admin, credit, dealer, ecommerce, finance, healthcare, hospitality, streamingservice, travelagency]
+      max-parallel: 1
     steps:
     - name: Output inputs
       run: |
