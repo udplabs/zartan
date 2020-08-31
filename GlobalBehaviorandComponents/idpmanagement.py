@@ -28,8 +28,8 @@ def gbac_saml_idps():
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     idp_list = okta_admin.get_idps("SAML2")
 
-    #Grab the runtime details we care about and stuff them into a JSON object
-    #for easy display.
+    # Grab the runtime details we care about and stuff them into a JSON object
+    # for easy display.
     for idp in idp_list:
         detail = {
             "acs_url": idp['_links']['acs']['href'],

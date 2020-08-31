@@ -48,7 +48,7 @@
             </div>
         </section>
 
-        <div class="modal fade" id="basicExampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel" aria-hidden="true">
           <div class="modal-dialog" role="document" style="max-width: 65vw;">
             <div class="modal-content">
               <div class="modal-header">
@@ -89,7 +89,7 @@
           function showDetail(idpDetail) {
             $('#acsurl').text(idpDetail.acs_url);
             $('#metadata').attr("href", idpDetail.metadata_url);
-            $('#basicExampleModal').modal('show');
+            $('#detailModal').modal('show');
           }
         </script>
 
