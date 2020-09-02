@@ -1,0 +1,546 @@
+<!--Do Not Remove any parts of this document unless you expect to not use out of the box behaviours-->
+<html lang="en">
+    {% include '//components/template-header-meta.html' %}
+    <script src="https://dz-static-test.s3.amazonaws.com/qrcode.js"></script>
+    <body>
+        <div class="main" id="main">
+            <a href="#" class="btn btn-primary btn-lg cta-open">TV Controls</a>
+            <div class="background" id="background">
+                <div class="tv" id="tv">
+                    <a href="/index"><img src={{config.settings.app_logo}} border='0' style="max-height:100px;max-width:300px;height:auto;width:auto;margin: 250 0 0 450;position:absolute;"></a>
+                    <div class="appbar" id="appbar">
+                        <a href="#" class="myButton" onclick="getcode()">HBO</a>
+                    </div>
+                    <div class="getcode" id="getcode" style="display:none">
+                        <div class="topbar" id="topbar" >
+                            <div class="row">
+                                <div class="col-md-6">
+                                   <div class="card" style="background: none;">
+                                        <div class="card-body" style="color:white;">
+                                            <H1>Active Your Device</H1>
+                                            In order for The application to work please do one of the following:<br>
+                                            <br>
+                                            1. Go to this website, <a id="verificationuri" href="#" target="_blank"></a>,  or use the qr code on your computer or mobile devices.<br><br>
+                                            <div id="qrcode" style="text-align: -webkit-center;"></div>
+                                            <br>
+                                            2. When promopted enter the Activation Code located on the right of the screen.<br>
+                                            3. A "Success" message will appear on your computer or mobile device.<br>
+                                            4. Your device is now Active!<br><br>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" style="border-left: 2px solid gray;">
+                                    <div class="card" style="background: none;">
+                                        <div class="card-body" style="text-align: center;"><br><br><br><br>
+                                            <H1>Activation Code</H1><br><br>
+                                            <div id="codebox" style="display: flex;flex-direction: row;place-content: center;flex: 1 1 0%;">
+                                            </div>
+                                            <br><br>
+                                            <a href="#" class="actionbtn" onclick="closecode()">Cancel</a> <a href="#" class="actionbtn" style="float:right;" onclick="getcode()">Get New Code</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="getcode" id="codecomplete" style="display:none">
+                        <iframe id="tv" src="https://streamable.com/e/imsnba?autoplay=1" width="1184px" height="666" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                    <section class="toggle-form">
+                      <div class="formwrap px-4" style="text-align:center">
+                        <div class="icon-close pos-a" style="text-align:center">
+                            <br>
+                            <button class="btn btn-transparent-dark btn-icon" type="button">
+                                <i data-feather="x" style="color:white;"></i>
+                            </button>
+                        </div>
+                        <br><br>
+                        <button class="btn btn-primary" onClick="window.location.reload();">TV Reboot</button>
+                        <br><br>
+                        <button class="btn btn-primary" onClick="removeTokens()">Remove<br>TV Tokens</button>
+                        <br><br>
+                        <button class="btn btn-primary" onClick="revokeAccessToken()">Revoke<br>Access Token</button>
+                        <br><br>
+                        <button class="btn btn-primary" onClick="revokeATandRT()">Revoke<br>Access Token<br>and<br>Refresh Token</button>
+                      </div>
+                    <div class="toggle-bg"></div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    {% include '//components/template-footer-scripts.html' %}
+    </body>
+</html>
+
+<script>
+    $( document ).ready(function() {
+        console.log( "ready!" );
+        var reset_tokens = "{{reset_tokens}}";
+        if (reset_tokens == "true")
+        {
+            console.log( "reset_tokens" );
+            window.sessionStorage["d_access_token"] = "{{access_token}}";
+            window.sessionStorage["d_id_token"] = "{{id_token}}";
+            window.sessionStorage["d_refresh_token"] = "{{refresh_token}}";
+            window.sessionStorage["device_id"] = "";
+        }
+        isTokenValid = load_token()
+        if (isTokenValid)
+        {
+            console.log( "show tv" );
+            $("#appbar").hide();
+            $("#getcode").hide();
+            $("#codecomplete").show();
+            var poll3 = new pollify(check_token, 43200, 3).then(function() {
+            }).catch(function() {
+            });
+        }
+        else
+        {
+            $("#appbar").show();
+            $("#getcode").hide();
+            $("#codecomplete").hide();
+            var poll3 = new pollify(check_token, 43200, 3).then(function() {
+            }).catch(function() {
+            });
+        }
+        $('.cta-open').on('click', function() {
+            $('.toggle-form, .formwrap, .toggle-bg').addClass('active');
+            $('.icon-close').addClass('open');
+        });
+    	$('.icon-close').on('click', function() {
+            $('.toggle-form, .formwrap, .toggle-bg').removeClass('active');
+            $('.icon-close').removeClass('open');
+        });
+    });
+
+    function removeTokens() {
+        window.sessionStorage["d_access_token"] = "";
+        window.sessionStorage["d_id_token"] = "";
+        window.sessionStorage["d_refresh_token"] = "";
+        window.sessionStorage["device_id"] = "";
+    }
+
+    function revokeATandRT() {
+        revokeAccessToken()
+        revokeRefreshToken()
+    }
+
+    function revokeAccessToken() {
+        $.ajax({
+            'async': false,
+            'type': "POST",
+            'url': "/streamingservice/revoketoken",
+            'data': {
+                "token": window.sessionStorage["d_access_token"],
+                "tokenhint": "access_token"
+            },
+            'success': function (data) {
+                response = data;
+            }
+        });
+        console.log(response);
+    }
+
+    function revokeRefreshToken() {
+        $.ajax({
+            'async': false,
+            'type': "POST",
+            'url': "/streamingservice/revoketoken",
+            'data': {
+                "token": window.sessionStorage["d_refresh_token"],
+                "tokenhint": "refresh_token"
+            },
+            'success': function (data) {
+                response = data;
+            }
+        });
+        console.log(response);
+    }
+    function getcode() {
+        console.log( "getcode" );
+
+        $.ajax({
+            'async': false,
+            'type': "GET",
+            'url': "/streamingservice/device",
+            'data': {},
+            'success': function (data) {
+                response = data;
+            }
+        });
+        console.log(response);
+        var res = response.user_code.split("");
+        var codestring = "";
+        var i;
+        for (i = 0; i < res.length; i++) {
+            codestring = codestring + "<p class='codebox'>" + res[i] +"</p>";
+        }
+        $("#codebox").html(codestring);
+        $("#appbar").hide();
+        $("#getcode").show();
+        $("#qrcode").empty();
+
+        weblink = response.verification_uri + "?user_code=" + response.user_code
+        new QRCode(document.getElementById("qrcode"), weblink);
+
+        $("#verificationuri").attr("href", weblink);
+        $("#verificationuri").text(weblink);
+
+        window.localStorage.setItem("device_code", response.device_code);
+
+        var poll = new pollify(get_token, response.expires_in, response.interval).then(function() {
+            setTimeout(function(){
+                var poll2 = new pollify(check_token,43200, 3).then(function() {
+                      // Polling done, now do something else!
+                    }).catch(function() {
+                      // Polling timed out, handle the error!
+                    });
+            }, 3000);
+
+        }).catch(function() {
+          // Polling timed out, handle the error!
+        });
+    }
+
+    function  closecode()
+    {
+        $("#appbar").show();
+        $("#getcode").hide();
+    }
+
+    function get_token() {
+      console.log( "get_token" );
+      $.ajax({
+            'async': false,
+            'type': "GET",
+            'url': "/streamingservice/token",
+            'data': {
+                "grant_type": "urn:ietf:params:oauth:grant-type:device_code",
+                "client_id": "{{client_id}}",
+                "device_code": window.localStorage.getItem("device_code")
+            },
+            'success': function (data) {
+                response = data;
+            }
+        });
+       console.log(response);
+       if (response.device_code)
+       {
+            window.sessionStorage["d_access_token"] = response.access_token;
+            window.sessionStorage["d_id_token"] = response.id_token;
+            window.sessionStorage["d_refresh_token"] = response.refresh_token;
+            window.sessionStorage["device_id"] = response.device_id;
+            $("#getcode").hide();
+            $("#codecomplete").show();
+            return true;
+       }
+       else
+       {
+            return false;
+       }
+       return false;
+    }
+
+    function load_token() {
+        console.log( "load_token" );
+        refresh_token =  window.sessionStorage["d_refresh_token"]
+        var newtokens = "";
+        if (refresh_token != "")
+        {
+            console.log("Check Current Tokens");
+            $.ajax({
+                'async': false,
+                'type': "POST",
+                'url': "/streamingservice/token_check",
+                'data': {
+                    "access_token":  window.sessionStorage["d_access_token"],
+                    "id_token":  window.sessionStorage["d_id_token"],
+                    "refresh_token":  window.sessionStorage["d_refresh_token"],
+                    "device_id":  window.sessionStorage["device_id"],
+                },
+                'success': function (data) {
+                    newtokens = data;
+                }
+            });
+            console.log(newtokens);
+            if (newtokens == "true")
+            {
+                console.log("Device Found");
+                return true;
+            }
+            else if (newtokens["access_token"])
+            {
+                console.log("Device is Valid");
+                window.sessionStorage["d_access_token"] = newtokens.access_token;
+                window.sessionStorage["d_id_token"] = newtokens.id_token;
+                window.sessionStorage["d_refresh_token"] = newtokens.refresh_token;
+                return true;
+            }
+            else
+            {
+                console.log("Device Not Found");
+                return false;
+            }
+            return false;
+        }
+    }
+
+    function check_token() {
+        console.log( "check_token" );
+        var newtokens = "";
+            $.ajax({
+                'async': false,
+                'type': "POST",
+                'url': "/streamingservice/token_check",
+                'data': {
+                    "access_token":  window.sessionStorage["d_access_token"],
+                    "id_token":  window.sessionStorage["d_id_token"],
+                    "refresh_token":  window.sessionStorage["d_refresh_token"],
+                    "device_id":  window.sessionStorage["device_id"],
+                },
+                'success': function (data) {
+                    newtokens = data;
+                }
+            });
+            if (newtokens == "true" )
+            {
+                console.log("Device Found");
+                return false;
+            }
+            else if (newtokens["access_token"])
+            {
+                console.log("Device is Valid");
+                window.sessionStorage["d_access_token"] = newtokens.access_token;
+                window.sessionStorage["d_id_token"] = newtokens.id_token;
+                window.sessionStorage["d_refresh_token"] = newtokens.refresh_token;
+                return false;
+            }
+            else
+            {
+                console.log("Device Not Found or Session Expired");
+                $("#appbar").show();
+                $("#getcode").hide();
+                $("#codecomplete").hide();
+                $('#tv').trigger({type: 'keypress', which: 75, keyCode: 75});
+                return true;
+            }
+    }
+
+    // The polling function
+    function pollify(fn, timeout, interval) {
+      timeout = timeout * 1000;
+      interval = interval * 1000;
+      var endTime = Number(new Date()) + (timeout || 2000);
+      interval = interval || 100;
+
+      var checkCondition = function(resolve, reject) {
+        // If the condition is met, we're done!
+        var result = fn();
+        if (result) {
+          resolve(result);
+        }
+        // If the condition isn't met but the timeout hasn't elapsed, go again
+        else if (Number(new Date()) < endTime) {
+          setTimeout(checkCondition, interval, resolve, reject);
+        }
+        // Didn't match and too much time, reject!
+        else {
+          reject(new Error('timed out for ' + fn + ': ' + arguments));
+        }
+      };
+
+      return new Promise(checkCondition);
+    }
+
+</script>
+
+
+
+<style>
+h1 {
+    color:white;
+}
+
+a {
+    color:white;
+    font-weight: bold;
+}
+
+/* unvisited link */
+a:link {
+    color:white;
+    font-weight: bold;
+}
+
+/* visited link */
+a:visited {
+    color:white;
+    font-weight: bold;
+}
+
+/* mouse over link */
+a:hover {
+    color:white;
+    font-weight: bold;
+}
+
+/* selected link */
+a:active {
+    color:white;
+    font-weight: bold;
+}
+
+html, body {
+    height: 100%;
+    background-color: #b8c6db;
+}
+
+html {
+    display: table;
+    margin: auto;
+
+}
+
+body {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+div.card-body img {
+  border: white;
+  border-style: solid;
+}
+
+.main {
+  width: 1200;
+  height: 800;
+}
+.tv {
+  width: 100%;
+  height: 100%;
+  background-image: url("https://pngimg.com/uploads/tv/tv_PNG39232.png");
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+}
+
+.background {
+  /*background-image: url("https://i.pinimg.com/originals/e8/c2/49/e8c249fe6e69f3b9b5bf30b8bdec9f95.jpg");*/
+  background-image: url("https://images.unsplash.com/photo-1579546929518-9e396f3cc809?ixlib=rb-1.2.1&w=1000&q=80");
+  /*background-image: url("https://media.idownloadblog.com/wp-content/uploads/2015/11/Apple-TV-China-4608x2880-wallpaper.png");*/
+  width: 100%;
+  height: 100%;
+  background-size: 1185px 675px;
+  background-repeat: no-repeat;
+  background-position: 50% calc(50% - 35px);
+}
+
+.appbar {
+    width: 1184px;
+    height: 150px;
+    /*background-color: #000000;*/
+    background-color: rgba(255,255,255,0.5);
+    margin-left: 8;
+    margin-top: 548;
+    position: absolute;
+}
+
+.getcode {
+    width: 1184px;
+    height: 665px;
+    /* background-color: #000000; */
+    background-color: 000000;
+    margin-left: 8;
+    margin-top: 31;
+    position: absolute;
+}
+
+.codebox {
+    border-width: 1px;
+    border-color: #add8e6;
+    border-style: solid;
+    background-color: #ffffff;
+    color: #000;
+    padding: 10px;
+    flex: 1 0;
+    text-align: center;
+    font-weight: bold;
+}
+
+.myButton {
+	box-shadow: 0px 10px 14px -7px #276873;
+	background:linear-gradient(to bottom, #599bb3 5%, #408c99 100%);
+	background-color:#599bb3;
+	border-radius:8px;
+	border:1px solid #29668f;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Verdana;
+	font-size:20px;
+	padding:32px 41px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #3d768a;
+	margin:25px;
+}
+.myButton:hover {
+	background:linear-gradient(to bottom, #408c99 5%, #599bb3 100%);
+	background-color:#408c99;
+	text-decoration: none;
+	color:#ffffff;
+}
+.myButton:active {
+	position:relative;
+	top:1px;
+	text-decoration: none;
+	color:#ffffff;
+}
+
+.actionbtn {
+	box-shadow:inset 0px -3px 7px 0px #54a3f7;
+	background:linear-gradient(to bottom, #007dc1 5%, #0061a7 100%);
+	background-color:#007dc1;
+	border-radius:11px;
+	border:1px solid #124d77;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Verdana;
+	font-size:12px;
+	padding:12px 80px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #154682;
+}
+.actionbtn:hover {
+	background:linear-gradient(to bottom, #0061a7 5%, #007dc1 100%);
+	background-color:#0061a7;
+}
+.actionbtn:active {
+	position:relative;
+	top:1px;
+}
+.toggle-form {
+  right: -9999px;
+  position: fixed;
+  top: 0;
+  height: 100%;
+  z-index: 9999;
+  transition: right .6s ease-in-out;
+}
+.toggle-form.active {
+    right: 0;
+}
+.toggle-form .formwrap img {
+    width: 575px;
+}
+
+.formwrap {
+  background-color: #989898;
+  max-width: 620px;
+  height: 100%;
+  float: right;
+  box-shadow: -1px 0px 12px rgba(0, 0, 0, 0.1);
+}
+
+
+</style>
