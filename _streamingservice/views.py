@@ -6,11 +6,11 @@ import uuid
 # import functions
 from flask import render_template, session, request, url_for, redirect
 from flask import Blueprint, make_response
-from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical, get_udp_ns_fieldname
+from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical, get_udp_ns_fieldname, apply_remote_config
 from utils.okta import TokenUtil, OktaAdmin, OktaAuth, OktaUtil, PKCE
 from utils.rest import RestUtil
 
-from GlobalBehaviorandComponents.validation import is_authenticated, get_userinfo, gvalidation_bp_error
+from GlobalBehaviorandComponents.validation import is_authenticated, get_userinfo, gvalidation_bp_error, check_okta_api_token, check_zartan_config
 
 logger = logging.getLogger(__name__)
 
@@ -194,11 +194,15 @@ def streamingservice_token_check():
 
 
 @streamingservice_views_bp.route("/device_activate")
+@apply_remote_config
+@check_okta_api_token
+@check_zartan_config
 def streamingservice_device_activate():
     logger.debug("streamingservice_device_activate()")
 
     return render_template(
         "streamingservice/device_activate.html",
+        user_info=get_userinfo(),
         config=session[SESSION_INSTANCE_SETTINGS_KEY])
 
 
