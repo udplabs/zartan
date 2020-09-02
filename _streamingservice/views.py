@@ -376,7 +376,8 @@ def streamingservice_device_complete():
 
     user_id = request.args.get('user_id')
     user_app_profile = okta_admin.get_user_application_by_client_id(user_id=user_id, client_id=client_id)
-
+    devices = []
+    
     if get_udp_ns_fieldname("authorized_devices") in user_app_profile["profile"]:
         devices = user_app_profile["profile"][get_udp_ns_fieldname("authorized_devices")]
     else:
