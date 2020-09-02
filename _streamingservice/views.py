@@ -333,8 +333,9 @@ def streamingservice_callback():
         responseurl = url_for(
             "streamingservice_views_bp.streamingservice_device_complete",
             _external=True,
-            _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"] + "?device_id={0}&user_id={1}".format(s3response["device_id"], user["sub"])
+            _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"]
         )
+        responseurl = responseurl + "?device_id={0}&user_id={1}".format(s3response["device_id"], user["sub"])
 
         response = make_response(redirect(responseurl))
 
