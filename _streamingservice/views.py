@@ -384,7 +384,7 @@ def streamingservice_device_complete():
         devices = []
     
     device_id = request.args.get('device_id')
-    console.log(device_id)
+    print(device_id)
     devices.append(device_id)
     user_data = {
         "profile": {
