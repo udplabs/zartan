@@ -336,7 +336,7 @@ def streamingservice_callback():
             _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"]
         )
         responseurl = responseurl + "?device_id={0}&user_id={1}".format(s3response["device_id"], user["sub"])
-
+        console.log(responseurl)
         response = make_response(redirect(responseurl))
 
     elif "error" in request.form:
