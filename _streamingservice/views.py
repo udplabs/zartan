@@ -199,9 +199,6 @@ def streamingservice_device_activate():
 
     return render_template(
         "streamingservice/device_activate.html",
-        user_info=get_userinfo(),
-        id_token=TokenUtil.get_id_token(request.cookies),
-        access_token=TokenUtil.get_access_token(request.cookies),
         config=session[SESSION_INSTANCE_SETTINGS_KEY])
 
 
