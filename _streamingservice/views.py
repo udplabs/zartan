@@ -382,8 +382,10 @@ def streamingservice_device_complete():
         devices = user_app_profile["profile"][get_udp_ns_fieldname("authorized_devices")]
     else:
         devices = []
-
-    devices.append(request.args.get('device_id'))
+    
+    device_id = request.args.get('device_id')
+    console.log(device_id)
+    devices.append(device_id)
     user_data = {
         "profile": {
             get_udp_ns_fieldname("authorized_devices"): devices
