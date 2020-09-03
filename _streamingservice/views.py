@@ -259,6 +259,9 @@ def streamingservice_device_register():
     idp = ""
     idptype = ""
     appname = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_deviceflow_appname"]
+    if appname is None:
+        appname = ""
+
     for idp in idplist:
         if idp["type"] == "FACEBOOK":
             facebook = idp["id"]
