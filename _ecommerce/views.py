@@ -6,7 +6,7 @@ import requests
 # import functions
 from flask import render_template, session, request, redirect, url_for
 from flask import Blueprint
-from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical, get_udp_ns_fieldname
+from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical, get_udp_ns_fieldname, apply_remote_config
 from utils.okta import TokenUtil, OktaAdmin
 from utils.email import Email
 from urllib.parse import urlparse
@@ -22,6 +22,7 @@ ecommerce_views_bp = Blueprint('ecommerce_views_bp', __name__, template_folder='
 
 # Required for Login Landing Page
 @ecommerce_views_bp.route("/profile")
+@apply_remote_config
 @is_authenticated
 def ecommerce_profile():
     logger.debug("ecommerce_profile()")
@@ -59,6 +60,7 @@ def ecommerce_profile():
 
 # Account Page
 @ecommerce_views_bp.route("/account")
+@apply_remote_config
 @is_authenticated
 def ecommerce_account():
     logger.debug("ecommerce_account()")
@@ -66,6 +68,7 @@ def ecommerce_account():
 
 
 @ecommerce_views_bp.route("/shop")
+@apply_remote_config
 def ecommerce_shop():
     logger.debug("ecommerce_shop()")
     products = requests.get(url=session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_ecomm_products"])
@@ -80,6 +83,7 @@ def ecommerce_shop():
 
 
 @ecommerce_views_bp.route("/product/<product_id>")
+@apply_remote_config
 def ecommerce_product(product_id):
     logger.debug("ecommerce_product()")
     products = requests.get(url=session[SESSION_INSTANCE_SETTINGS_KEY]["app_ecomm_products"])
@@ -96,6 +100,7 @@ def ecommerce_product(product_id):
 
 # checkout Page
 @ecommerce_views_bp.route("/checkout")
+@apply_remote_config
 @is_authenticated
 def ecommerce_checkout():
     logger.debug("ecommerce_checkout()")
@@ -108,6 +113,7 @@ def ecommerce_checkout():
 
 # Apply Credit Page
 @ecommerce_views_bp.route("/apply")
+@apply_remote_config
 @is_authenticated
 def ecommerce_apply():
     logger.debug("ecommerce_apply()")
@@ -120,6 +126,7 @@ def ecommerce_apply():
 
 # Order Page
 @ecommerce_views_bp.route("/order")
+@apply_remote_config
 @is_authenticated
 def ecommerce_order():
     logger.debug("ecommerce_order()")
@@ -132,6 +139,7 @@ def ecommerce_order():
 
 # updateuser Page
 @ecommerce_views_bp.route("/updateuser")
+@apply_remote_config
 @is_authenticated
 def ecommerce_updateuser():
     logger.debug("ecommerce_updateuser()")
@@ -172,6 +180,7 @@ def ecommerce_updateuser():
 
 # See if credit app exists
 @ecommerce_views_bp.route("/credit")
+@apply_remote_config
 def ecommerce_credit():
     logger.debug("ecommerce_credit()")
     return render_template(
@@ -183,6 +192,7 @@ def ecommerce_credit():
 
 
 @ecommerce_views_bp.route("/clearconsent/<userid>")
+@apply_remote_config
 @is_authenticated
 def ecommerce_clear_consent(userid):
     logger.debug("ecommerce_clear_consent")
@@ -209,6 +219,7 @@ def ecommerce_clear_consent(userid):
 
 
 @ecommerce_views_bp.route("/acceptterms")
+@apply_remote_config
 @is_authenticated
 def ecommerce_accept_terms():
     logger.debug("ecommerce_accept_terms()")
@@ -239,6 +250,7 @@ def ecommerce_accept_terms():
 
 @is_authenticated
 @ecommerce_views_bp.route("/workflow-requests", methods=["GET"])
+@apply_remote_config
 def ecommerce_requests_get():
     logger.debug("workflow_requests_get()")
 
@@ -262,6 +274,7 @@ def ecommerce_requests_get():
     get_user_groups_response = okta_admin.get_user_groups(user_id=user_id)
     CONFIG_GROUP_EMPLOYEE_STARTSWITH = get_udp_ns_fieldname("employee")
     CONFIG_GROUP_BUYER_STARTSWITH = get_udp_ns_fieldname("buyer")
+    print(CONFIG_GROUP_BUYER_STARTSWITH)
     companylist = []
     buyerlist = []
     for item in get_user_groups_response:
@@ -328,13 +341,15 @@ def ecommerce_requests_post():
                 get_udp_ns_fieldname("access_requests"): pendingRequest
             }
         }
-        okta_admin.update_user(user_id=user_id, user=user_data)
+        test = okta_admin.update_user(user_id=user_id, user=user_data)
+        print(test)
         ecommerce_emailWorkFlowRequest(group_id)
 
     return redirect(url_for("ecommerce_views_bp.ecommerce_requests_get", _external=True, _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"]))
 
 
 @ecommerce_views_bp.route("/workflow-approvals", methods=["GET"])
+@apply_remote_config
 @is_authenticated
 def ecommerce_approvals_get():
     logger.debug("workflow_approvals()")
