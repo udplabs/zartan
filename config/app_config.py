@@ -32,6 +32,7 @@ default_settings = {
         "app_ecomm_products": os.getenv("APP_ECOMM_PRODUCTS", ""),
         "app_deviceflow_clientid": os.getenv("APP_DEVICEFLOW_CLIENTID", ""),
         "app_deviceflow_clientsecret": os.getenv("APP_DEVICEFLOW_CLIENTSECRET", ""),
+        "app_deviceflow_appname": os.getenv("APP_DEVICEFLOW_APPNAME", ""),
     },
     "okta_api_token": os.getenv("OKTA_API_TOKEN", ""),
     "app_secret_key": os.getenv("SECRET_KEY", ""),

@@ -7,39 +7,15 @@
         <div id="layoutDefault">
             <div id="layoutDefault_content">
                 <main>
-                <nav class="navbar navbar-marketing navbar-expand-lg bg-white navbar-light">
+                  <nav class="navbar navbar-marketing navbar-expand-lg bg-white navbar-light">
                     <div class="container" style="height:98">
                         {% if config.settings.app_logo != "" %}
                              <a href="/index"><img src={{config.settings.app_logo}} border='0' style="max-height:100px;max-width:300px;height:auto;width:auto;"></a>
                         {% else %}
                              <a class="navbar-brand text-primary" href="/index">{{config.settings.app_name}}</a><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><i data-feather="menu"></i></button>
                         {% endif %}
-                        {% if user_info is none or user_info is not defined %}
-                             <a class="btn-primary btn rounded-pill px-4 ml-lg-4" href="/login">Login<i class="fas fa-arrow-right ml-1"></i></a>
-                        {% else %}
-                               <ul class="navbar-nav align-items-center ml-auto">
-                                    <li class="nav-item dropdown no-caret mr-3 dropdown-user">
-                                    <a class="btn-primary btn rounded-pill px-4 ml-lg-4 dropdown-toggle" href="javascript:void(0);" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Hi {{ user_info.name }}</a>
-                                    <div class="dropdown-menu dropdown-menu-right border-0 shadow animated--fade-in-up" aria-labelledby="navbarDropdownUserImage">
-                                        <h6 class="dropdown-header d-flex align-items-center">
-                                            <div class="dropdown-user-details">
-                                                <div class="dropdown-user-details-name">{{ user_info.name }}</div>
-                                                <div class="dropdown-user-details-email">{{ user_info.email }}</div>
-                                            </div>
-                                        </h6>
-                                        <div class="dropdown-divider"></div>
-                                        {% if config.settings.app_template in request.path  %}
-                                        <a class="dropdown-item" href="profile"><div class="dropdown-item-icon"><i data-feather="settings"></i></div>Profile</a>
-                                        {% else %}
-                                        <a class="dropdown-item" href="{{ config.settings.app_template }}/profile"><div class="dropdown-item-icon"><i data-feather="settings"></i></div>Profile</a>
-                                        {% endif %}
-                                        <a class="dropdown-item" href="/logout"><div class="dropdown-item-icon"><i data-feather="log-out"></i></div>Logout</a>
-                                    </div>
-                                    </li>
-                                </ul>
-                        {% endif %}
                     </div>
-                </nav>
+                  </nav>
                   <section class="main-container">
                     <div class="container" >
                       <div class="row">
