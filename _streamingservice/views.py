@@ -4,8 +4,8 @@ import string
 import uuid
 
 # import functions
-from flask import render_template, session, request, url_for, redirect
-from flask import Blueprint, make_response
+from flask import render_template, session, request
+from flask import Blueprint, url_for, redirect
 from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical, get_udp_ns_fieldname, apply_remote_config
 from utils.okta import TokenUtil, OktaAdmin, OktaAuth, OktaUtil, PKCE
 from utils.rest import RestUtil
@@ -377,14 +377,16 @@ def streamingservice_device_complete():
     user_id = request.args.get('user_id')
     user_app_profile = okta_admin.get_user_application_by_client_id(user_id=user_id, client_id=client_id)
     devices = []
-    
     if get_udp_ns_fieldname("authorized_devices") in user_app_profile["profile"]:
-        devices = user_app_profile["profile"][get_udp_ns_fieldname("authorized_devices")]
+
+        user_devices = user_app_profile["profile"][get_udp_ns_fieldname("authorized_devices")]
+        print(user_devices)
+        if user_devices is None:
+            devices = []
     else:
         devices = []
-    
+
     device_id = request.args.get('device_id')
-    print(device_id)
     devices.append(device_id)
     user_data = {
         "profile": {
