@@ -22,6 +22,7 @@ streamingservice_views_bp = Blueprint('streamingservice_views_bp', __name__, tem
 def streamingservice_devicepage():
     logger.debug("streamingservice_devicepage()")
     client_id = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_deviceflow_clientid"]
+    appname = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_deviceflow_appname"]
 
     if request.method == 'POST':
         logging.debug("POSTBACK")
@@ -42,6 +43,7 @@ def streamingservice_devicepage():
         refresh_token=refresh_token,
         reset_tokens=reset_tokens,
         client_id=client_id,
+        appname=appname,
         config=session[SESSION_INSTANCE_SETTINGS_KEY])
 
 
@@ -199,7 +201,6 @@ def streamingservice_token_check():
 @check_zartan_config
 def streamingservice_device_activate():
     logger.debug("streamingservice_device_activate()")
-
     return render_template(
         "streamingservice/device_activate.html",
         user_info=get_userinfo(),
@@ -257,6 +258,7 @@ def streamingservice_device_register():
     microsoft = ""
     idp = ""
     idptype = ""
+    appname = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_deviceflow_appname"]
     for idp in idplist:
         if idp["type"] == "FACEBOOK":
             facebook = idp["id"]
@@ -285,6 +287,7 @@ def streamingservice_device_register():
         microsoft=microsoft,
         idp=idp,
         idptype=idptype,
+        appname=appname,
         client_id=client_id)
 
 

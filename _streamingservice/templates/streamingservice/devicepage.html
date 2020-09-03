@@ -9,7 +9,7 @@
                 <div class="tv" id="tv">
                     <a href="/index"><img src={{config.settings.app_logo}} border='0' style="max-height:100px;max-width:300px;height:auto;width:auto;margin: 250 0 0 450;position:absolute;"></a>
                     <div class="appbar" id="appbar">
-                        <a href="#" class="myButton" onclick="getcode()">HBO</a>
+                        <button class="action-button shadow animate blue" onclick="getcode()">{{appname}}</button>
                     </div>
                     <div class="getcode" id="getcode" style="display:none">
                         <div class="topbar" id="topbar" >
@@ -443,6 +443,7 @@ div.card-body img {
     margin-left: 8;
     margin-top: 548;
     position: absolute;
+    text-align: center;
 }
 
 .getcode {
@@ -465,35 +466,6 @@ div.card-body img {
     flex: 1 0;
     text-align: center;
     font-weight: bold;
-}
-
-.myButton {
-	box-shadow: 0px 10px 14px -7px #276873;
-	background:linear-gradient(to bottom, #599bb3 5%, #408c99 100%);
-	background-color:#599bb3;
-	border-radius:8px;
-	border:1px solid #29668f;
-	display:inline-block;
-	cursor:pointer;
-	color:#ffffff;
-	font-family:Verdana;
-	font-size:20px;
-	padding:32px 41px;
-	text-decoration:none;
-	text-shadow:0px 1px 0px #3d768a;
-	margin:25px;
-}
-.myButton:hover {
-	background:linear-gradient(to bottom, #408c99 5%, #599bb3 100%);
-	background-color:#408c99;
-	text-decoration: none;
-	color:#ffffff;
-}
-.myButton:active {
-	position:relative;
-	top:1px;
-	text-decoration: none;
-	color:#ffffff;
 }
 
 .actionbtn {
@@ -542,5 +514,44 @@ div.card-body img {
   box-shadow: -1px 0px 12px rgba(0, 0, 0, 0.1);
 }
 
+.animate
+{
+	transition: all 0.1s;
+	-webkit-transition: all 0.1s;
+}
+
+.action-button
+{
+  padding: 10px 40px;
+  border-radius: 10px;
+  font-size: 18px;
+  color: #FFF;
+  text-decoration: none;	
+  width:175px;
+  height:120px;
+  display:inline-block;
+  margin:10px;
+}
+
+.blue
+{
+  background-color: #3498DB;
+  border-bottom: 5px solid #2980B9;
+  border-right: 1px solid #2980B9;
+  border-left: 1px solid #2980B9;
+  border-top: 1px solid #2980B9;
+  text-shadow: 0px -2px #2980B9;
+}
+
+.action-button:active
+{
+	transform: translate(0px,5px);
+  -webkit-transform: translate(0px,5px);
+  background-color: #3498DB;
+}
+.action-button:focus
+{
+  outline:none;
+}
 
 </style>
