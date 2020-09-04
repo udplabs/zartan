@@ -4,15 +4,31 @@ change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
 template: |
   ## Changes
 
-  $CHANGES
+  $CHANGES  
 categories:
+  - title: '❗ Breaking'
+    label: 'type: breaking'
   - title: '🚀 New'
-    label: 'type: enhancement'
+    label: 'type: feature'
   - title: '🐛 Bug Fixes'
     label: 'type: bug'
   - title: '🧰 Maintenance'
-    label: 'type: chore'
+    label: 'type: maintenance'
   - title: 'Documentation'
-    label: 'type: documentation'
+    label: 'type: docs'
   - title: 'Dependency Updates'
     label: 'type: dependencies'
+version-resolver:
+  major:
+    labels:
+      - 'type: breaking'
+  minor:
+    labels:
+      - 'type: feature'
+  patch:
+    labels:
+      - 'type: bug'
+      - 'type: maintenance'
+      - 'type: docs'
+      - 'type: dependencies'
+      - 'type: security'
