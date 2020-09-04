@@ -1,6 +1,8 @@
 import base64
 import json
 import logging
+import secrets
+import hashlib
 
 from utils.rest import RestUtil
 from cryptography import x509
@@ -123,12 +125,46 @@ class OktaAuth:
 
         return RestUtil.execute_post(url, body, okta_headers)
 
+    def get_oauth_token_from_refresh_token(self, refresh_token, client_id, client_secret, grant_type, headers, redirect_uri, scopes):
+        self.logger.debug("OktaAuth.get_oauth_token_from_refresh_token()")
+        okta_headers = OktaUtil.get_oauth_okta_headers(headers, client_id, client_secret)
+
+        url = (
+            "{issuer}/v1/token?"
+            "grant_type={grant_type}&"
+            "redirect_uri={redirect_uri}&"
+            "scopes={scopes}&"
+            "refresh_token={refresh_token}"
+        ).format(
+            issuer=self.okta_config["issuer"],
+            refresh_token=refresh_token,
+            redirect_uri=redirect_uri,
+            scopes=scopes,
+            grant_type=grant_type
+        )
+
+        body = {}
+
+        return RestUtil.execute_post(url, body, okta_headers)
+
     def introspect(self, token, headers=None):
         self.logger.debug("OktaAuth.introspect()")
         okta_headers = OktaUtil.get_oauth_okta_headers(headers, self.okta_config["client_id"], self.okta_config["client_secret"])
 
         url = "{issuer}/v1/introspect?token={token}".format(
             issuer=self.okta_config["issuer"],
+            token=token)
+        body = {}
+
+        return RestUtil.execute_post(url, body, okta_headers)
+
+    def introspect_with_clientid(self, token, token_type_hint, client_id, client_secret, headers=None):
+        self.logger.debug("OktaAuth.introspect_with_clientid()")
+        okta_headers = OktaUtil.get_oauth_okta_headers(headers, client_id, client_secret)
+
+        url = "{issuer}/v1/introspect?token={token}&token_type_hint={token_type_hint}".format(
+            issuer=self.okta_config["issuer"],
+            token_type_hint=token_type_hint,
             token=token)
         body = {}
 
@@ -145,6 +181,18 @@ class OktaAuth:
             client_id=client_id
         )
         return RestUtil.execute_post(url=url, body=body, headers=okta_headers)
+
+    def revoke_token_with_clientid(self, token, token_type_hint, client_id, client_secret, headers=None):
+        self.logger.debug("OktaAuth.revoke_token_with_clientid()")
+        okta_headers = OktaUtil.get_oauth_okta_headers(headers, client_id, client_secret)
+
+        url = "{issuer}/v1/revoke?token={token}&token_type_hint={token_type_hint}".format(
+            issuer=self.okta_config["issuer"],
+            token_type_hint=token_type_hint,
+            token=token)
+        body = {}
+
+        return RestUtil.execute_post(url, body, okta_headers)
 
     def userinfo(self, token, headers=None):
         self.logger.debug("OktaAuth.userinfo()")
@@ -540,6 +588,17 @@ class OktaAdmin:
 
         return RestUtil.execute_get(url, okta_headers)
 
+    def get_user_application_by_client_id(self, user_id, client_id):
+        self.logger.debug("OktaAdmin.get_user_application_by_current_client_id()")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+
+        url = "{base_url}/api/v1/apps/{app_id}/users/{user_id}".format(
+            base_url=self.okta_config["okta_org_name"],
+            app_id=client_id,
+            user_id=user_id)
+
+        return RestUtil.execute_get(url, okta_headers)
+
     def update_application_user_profile(self, user_id, app_user_profile):
         self.logger.debug("OktaAdmin.update_application_user_profile()")
         # self.logger.debug("App user profile: {0}".format(json.dumps(app_user_profile)))
@@ -548,6 +607,22 @@ class OktaAdmin:
         url = "{base_url}/api/v1/apps/{app_id}/users/{user_id}".format(
             base_url=self.okta_config["okta_org_name"],
             app_id=self.okta_config["client_id"],
+            user_id=user_id)
+
+        body = {
+            "profile": app_user_profile["profile"]
+        }
+
+        return RestUtil.execute_post(url, body, okta_headers)
+
+    def update_application_user_profile_by_clientid(self, user_id, app_user_profile, client_id):
+        self.logger.debug("OktaAdmin.update_application_user_profile_by_clientid()")
+        # self.logger.debug("App user profile: {0}".format(json.dumps(app_user_profile)))
+
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/apps/{app_id}/users/{user_id}".format(
+            base_url=self.okta_config["okta_org_name"],
+            app_id=client_id,
             user_id=user_id)
 
         body = {
@@ -809,11 +884,16 @@ class OktaAdmin:
             idp_id=idp_id)
         return RestUtil.execute_get(url, okta_headers)
 
-    def get_idps(self):
-        self.logger.debug("OktaAdmin.get_idps()")
+    def get_idps(self, type_filter):
+        self.logger.debug("OktaAdmin.get_idps(type_filter)")
         okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
-        url = "{base_url}/api/v1/idps".format(
-            base_url=self.okta_config["okta_org_name"])
+        if type_filter is None:
+            url = "{base_url}/api/v1/idps".format(
+                base_url=self.okta_config["okta_org_name"])
+        else:
+            url = "{base_url}/api/v1/idps?type={type_filter}".format(
+                base_url=self.okta_config["okta_org_name"],
+                type_filter=type_filter)
         return RestUtil.execute_get(url, okta_headers)
 
     def create_idp(self, idp):
@@ -1209,3 +1289,65 @@ class IDPUtil:
 
         cert = x509.load_pem_x509_certificate(pem_data.encode(), default_backend())
         return cert
+
+
+class PKCE:
+    logger = logging.getLogger(__name__)
+    """Simple module to generate PKCE code verifier and code challenge.
+    Examples
+    --------
+    >>> import pkce
+    >>> code_verifier, code_challenge = pkce.generate_pkce_pair()
+    >>> import pkce
+    >>> code_verifier = pkce.generate_code_verifier(length=128)
+    >>> code_challenge = pkce.get_code_challenge(code_verifier)
+    """
+
+    @staticmethod
+    def generate_code_verifier(length=128):
+        """Return a random PKCE-compliant code verifier.
+        Parameters
+        ----------
+        length : int
+            Code verifier length. Must verify `43 <= length <= 128`.
+        Returns
+        -------
+        code_verifier : str
+            Code verifier.
+        Raises
+        ------
+        ValueError
+            When `43 <= length <= 128` is not verified.
+        """
+        if not 43 <= length <= 128:
+            msg = 'Parameter `length` must verify `43 <= length <= 128`.'
+            raise ValueError(msg)
+        code_verifier = secrets.token_urlsafe(96)[:length]
+        return code_verifier
+
+    @staticmethod
+    def get_code_challenge(code_verifier):
+        """Return the PKCE-compliant code challenge for a given verifier.
+        Parameters
+        ----------
+        code_verifier : str
+            Code verifier. Must verify `43 <= len(code_verifier) <= 128`.
+        Returns
+        -------
+        code_challenge : str
+            Code challenge that corresponds to the input code verifier.
+        Raises
+        ------
+        ValueError
+            When `43 <= len(code_verifier) <= 128` is not verified.
+        """
+        if not 43 <= len(code_verifier) <= 128:
+            msg = (
+                'Parameter `code_verifier` must verify '
+                '`43 <= len(code_verifier) <= 128`.'
+            )
+            raise ValueError(msg)
+        hashed = hashlib.sha256(code_verifier.encode('ascii')).digest()
+        encoded = base64.urlsafe_b64encode(hashed)
+        code_challenge = encoded.decode('ascii')[:-1]
+        return code_challenge
