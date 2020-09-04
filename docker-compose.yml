@@ -1,0 +1,9 @@
+version: '3'
+services:
+  web:
+    build: .
+    env_file:
+      - .env
+    ports:
+      - '8666:8666'
+    volumes: ['.:/app']

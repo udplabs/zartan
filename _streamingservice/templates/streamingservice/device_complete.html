@@ -1,0 +1,50 @@
+<html lang="en">
+    {% include '//components/template-header-meta.html' %}
+    <script src="https://cdn-zartan.s3.us-east-2.amazonaws.com/static/js/okta-auth-js.min.js" type="text/javascript"></script>
+    <script src="https://global.oktacdn.com/okta-signin-widget/3.8.2/js/okta-sign-in.min.js" type="text/javascript"></script>
+    <link href="https://global.oktacdn.com/okta-signin-widget/3.8.2/css/okta-sign-in.min.css" type="text/css" rel="stylesheet"/>
+    <body>
+        <div id="layoutDefault">
+            <div id="layoutDefault_content">
+                <main>
+                  <nav class="navbar navbar-marketing navbar-expand-lg bg-white navbar-light">
+                    <div class="container" style="height:98">
+                        {% if config.settings.app_logo != "" %}
+                             <a href="/index"><img src={{config.settings.app_logo}} border='0' style="max-height:100px;max-width:300px;height:auto;width:auto;"></a>
+                        {% else %}
+                             <a class="navbar-brand text-primary" href="/index">{{config.settings.app_name}}</a><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><i data-feather="menu"></i></button>
+                        {% endif %}
+                    </div>
+                  </nav>
+                  <section class="main-container">
+                    <div class="container" >
+                      <div class="row">
+                        <div class="col-md-8 offset-md-2">
+                          <div class="main col-12">
+                            <div class="form-block center-block p-30 light-gray-bg border-clear">
+                              <br><br>
+                              <div class="card" id="codecard">
+                                <div class="card-header">Complete</div>
+                                <div class="card-body">
+                                  <div class="alert alert-primary" role="alert" id="codeinvalid">
+                                    Code Registered to Your Account. Enjoy!
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <br><br><br><br><br>
+                  </section>
+                </main>
+            <div id="layoutDefault_footer">
+            </div>
+            {% with color="black" %}
+                {% include '//components/template-footer.html' %}
+            {% endwith %}
+        </div>
+        {% include '//components/template-footer-scripts.html' %}
+    </body>
+</html>
