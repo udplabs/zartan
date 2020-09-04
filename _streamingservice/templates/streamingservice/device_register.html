@@ -1,0 +1,165 @@
+<html lang="en">
+    {% include '//components/template-header-meta.html' %}
+    <script src="https://cdn-zartan.s3.us-east-2.amazonaws.com/static/js/okta-auth-js.min.js" type="text/javascript"></script>
+    <script src="https://global.oktacdn.com/okta-signin-widget/3.8.2/js/okta-sign-in.min.js" type="text/javascript"></script>
+    <link href="https://global.oktacdn.com/okta-signin-widget/3.8.2/css/okta-sign-in.min.css" type="text/css" rel="stylesheet"/>
+    <body>
+        <div id="layoutDefault">
+            <div id="layoutDefault_content">
+                <main>
+                <nav class="navbar navbar-marketing navbar-expand-lg bg-white navbar-light">
+                    <div class="container" style="height:98">
+                        {% if config.settings.app_logo != "" %}
+                             <a href="/index"><img src={{config.settings.app_logo}} border='0' style="max-height:100px;max-width:300px;height:auto;width:auto;"></a>
+                        {% else %}
+                             <a class="navbar-brand text-primary" href="/index">{{config.settings.app_name}}</a><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><i data-feather="menu"></i></button>
+                        {% endif %}
+                    </div>
+                </nav>
+                  <section class="main-container">
+                    <style type="text/css">
+                      #okta-sign-in.auth-container .button-primary
+                      {
+                        background-color: {{config.settings.app_primary_color}};
+                        background: -webkit-gradient(linear,left top,left bottom,from({{config.settings.app_primary_color}}),to({{config.settings.app_primary_color}}));
+                        background: -webkit-linear-gradient({{config.settings.app_primary_color}},{{config.settings.app_primary_color}});
+                        background: linear-gradient({{config.settings.app_primary_color}},{{config.settings.app_primary_color}});
+                        border-color: {{config.settings.app_primary_color}} {{config.settings.app_primary_color}} {{config.settings.app_primary_color}};
+                      }
+
+                      #okta-sign-in.auth-container .button-primary:active, #okta-sign-in.auth-container .button-primary:focus, #okta-sign-in.auth-container .button-primary:hover
+                      {
+                        background-color: {{config.settings.app_primary_color}};
+                        background: -webkit-gradient(linear,left top,left bottom,from({{config.settings.app_primary_color}}),to({{config.settings.app_primary_color}}));
+                        background: -webkit-linear-gradient({{config.settings.app_primary_color}},{{config.settings.app_primary_color}});
+                        background: linear-gradient({{config.settings.app_primary_color}},{{config.settings.app_primary_color}});
+                        border-color: {{config.settings.app_primary_color}} {{config.settings.app_primary_color}} {{config.settings.app_primary_color}};
+                      }
+
+                      #okta-sign-in.auth-container .okta-form-input-field.focused-input
+                      {
+                        border-color: {{config.settings.app_primary_color}};
+                      }
+
+                      #okta-sign-in .focused-input, #okta-sign-in .link.help:focus
+                      {
+                        box-shadow: 0 0 8px {{config.settings.app_secondary_color}};
+                      }
+
+                      #okta-sign-in .registration-container .registration-link
+                      {
+                        margin-left: 10px;
+                        color: {{config.settings.app_primary_color}};
+                      }
+
+                      #okta-sign-in.auth-container .button.button-primary.link-button-disabled
+                      {
+                          color: #fff;
+                          background-color: {{config.settings.app_primary_color}};
+                          border-color: {{config.settings.app_primary_color}};
+                          background-image: none;
+                          box-shadow: none
+                      }
+
+                      .codebox {
+                          border-width: 1px;
+                          border-color: #add8e6;
+                          border-style: solid;
+                          background-color: #ffffff;
+                          color: #000;
+                          padding: 10px;
+                          flex: 1 0;
+                          text-align: center;
+                          font-weight: bold;
+                          height: 50;
+                          width:50;
+                      }
+                    </style>
+                    <div class="container" >
+                      <div class="row">
+                        <div class="col-md-8 offset-md-2">
+                          <div class="main col-12">
+                            <div class="form-block center-block p-30 light-gray-bg border-clear">
+                              <div class="alert alert-primary" role="alert" id="codevalid">
+                                  Code Found! Please login to enable your device.
+                              </div>
+                              <div id="sign-in-widget"></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <script>
+                        signInWidgetConfig = {
+                          baseUrl: "{{config.okta_org_name}}",
+                          i18n: {
+                            en: {
+                              'primaryauth.title': 'Log into {{appname}}'
+                            }
+                          },
+                          clientId: "{{client_id}}",
+                          redirectUri: '{{request.url_root | replace("http://", "https://")  }}streamingservice/authorization-code/callback',
+                          features: {
+                            {% if idp %}
+                              {% if idptype %}
+                            idpDiscovery:true,
+                              {% endif %}
+                            {% endif %}
+                            registration: true,                 // Enable self-service registration flow
+                            rememberMe: true,                   // Setting to false will remove the checkbox to save username
+                            multiOptionalFactorEnroll: true,  // Allow users to enroll in multiple optional factors before finishing the authentication flow.
+                            selfServiceUnlock: true,          // Will enable unlock in addition to forgotten password
+                            smsRecovery: true,                // Enable SMS-based account recovery
+                            callRecovery: true               // Enable voice call-based account recovery
+                          },
+                          {% if idp %}
+                          {% if idptype %}
+                          idpDiscovery: {
+                            requestContext: '{{request.url_root | replace("http://", "https://")  }}streamingservice/authorization-code/callback'
+                          },
+                          {% endif %}
+                          {% endif %}
+                          {% if idp %}
+                          idps: [
+                            {% if google %}
+                            {type: 'GOOGLE', id: '{{google}}'},
+                            {% endif %}
+                            {% if facebook %}
+                            {type: 'FACEBOOK', id: '{{facebook}}'},
+                            {% endif %}
+                            {% if microsoft %}
+                            {type: 'MICROSOFT', id: '{{microsoft}}'},
+                            {% endif %}
+                            {% if linkedin %}
+                            {type: 'LINKEDIN', id: '{{linkedin}}'}
+                            {% endif %}
+                          ],
+                          {% endif %}
+                          authParams: {
+                            issuer: "{{config.issuer}}",
+                            responseType: 'code',
+                            responseMode: 'form_post',
+                            state: '{{state}}',
+                            display: 'page',
+                            scopes: ['openid', 'profile', 'email', 'offline_access']
+                          },
+                        };
+                        signInWidget = new OktaSignIn(signInWidgetConfig);
+                        signInWidget.renderEl({el: '#sign-in-widget'});
+                    </script>
+                    <style>
+                       .okta-sign-in-header {
+                         display: none;
+                       }
+                    </style>
+                  </section>
+                </main>
+            <div id="layoutDefault_footer">
+            </div>
+            {% with color="black" %}
+                {% include '//components/template-footer.html' %}
+            {% endwith %}
+        </div>
+        {% include '//components/template-footer-scripts.html' %}
+    </body>
+</html>

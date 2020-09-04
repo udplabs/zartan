@@ -1,0 +1,153 @@
+<html lang="en">
+    {% include '//components/template-header-meta.html' %}
+    <script src="https://cdn-zartan.s3.us-east-2.amazonaws.com/static/js/okta-auth-js.min.js" type="text/javascript"></script>
+    <script src="https://global.oktacdn.com/okta-signin-widget/3.8.2/js/okta-sign-in.min.js" type="text/javascript"></script>
+    <link href="https://global.oktacdn.com/okta-signin-widget/3.8.2/css/okta-sign-in.min.css" type="text/css" rel="stylesheet"/>
+    <body>
+        <div id="layoutDefault">
+            <div id="layoutDefault_content">
+                <main>
+                  <nav class="navbar navbar-marketing navbar-expand-lg bg-white navbar-light">
+                    <div class="container" style="height:98">
+                        {% if config.settings.app_logo != "" %}
+                             <a href="/index"><img src={{config.settings.app_logo}} border='0' style="max-height:100px;max-width:300px;height:auto;width:auto;"></a>
+                        {% else %}
+                             <a class="navbar-brand text-primary" href="/index">{{config.settings.app_name}}</a><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><i data-feather="menu"></i></button>
+                        {% endif %}
+                    </div>
+                  </nav>                
+                  <section class="main-container">
+                    <style>
+                      .codebox {
+                          border-width: 1px;
+                          border-color: #add8e6;
+                          border-style: solid;
+                          background-color: #ffffff;
+                          color: #000;
+                          padding: 10px;
+                          flex: 1 0;
+                          text-align: center;
+                          font-weight: bold;
+                          height: 50;
+                          width:50;
+                      }
+                    </style>
+                    </style>
+                    <div class="container" >
+                      <div class="row">
+                        <div class="col-md-8 offset-md-2">
+                          <div class="main col-12">
+                            <div class="form-block center-block p-30 light-gray-bg border-clear">
+                              <br><br>
+                              <div class="card" id="codecard">
+                                <div class="card-header">Enter Code Here</div>
+                                <div class="card-body">
+                                  <div class="alert alert-primary" role="alert" style="display: none;" id="codeinvalid">
+                                    Code Not Found! Please try again.
+                                  </div>
+                                  <div id="codebox" style="place-content: center;flex: 1 1 0%;text-align: -webkit-center;">
+                                    <br><br>
+                                    <input class="codebox" id="codeinput1" onKeyup="this.value = this.value.toUpperCase();autotab(this, 'codeinput2', '')" type="text" maxlength="1">
+                                    <input class="codebox" id="codeinput2" onKeyup="this.value = this.value.toUpperCase();autotab(this, 'codeinput3', 'codeinput1')" type="text" maxlength="1">
+                                    <input class="codebox" id="codeinput3" onKeyup="this.value = this.value.toUpperCase();autotab(this, 'codeinput4', 'codeinput2')" type="text" maxlength="1">
+                                    <input class="codebox" id="codeinput4" onKeyup="this.value = this.value.toUpperCase();autotab(this, 'codeinput6', 'codeinput3')" type="text" maxlength="1">
+                                    <input class="codebox" id="codeinput5" type="text" value="-" readonly>
+                                    <input class="codebox" id="codeinput6" onKeyup="this.value = this.value.toUpperCase();autotab(this, 'codeinput7', 'codeinput4')" type="text" maxlength="1">
+                                    <input class="codebox" id="codeinput7" onKeyup="this.value = this.value.toUpperCase();autotab(this, 'codeinput8', 'codeinput6')" type="text" maxlength="1">
+                                    <input class="codebox" id="codeinput8" onKeyup="this.value = this.value.toUpperCase();autotab(this, 'codeinput9', 'codeinput7')" type="text" maxlength="1">
+                                    <input class="codebox" id="codeinput9" onKeyup="this.value = this.value.toUpperCase();autotab(this, '', 'codeinput8')" type="text" maxlength="1">
+                                    <br><br>
+                                    <button class="btn btn-primary" type="button" onclick="submitcode()">Submit Code</button>
+                                  </div>
+                                  <br><br><br>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <br><br><br>
+                    <br><br><br>
+                  <script type="text/javascript">
+                    $( document ).ready(function() {
+                        $.urlParam = function(name){
+                            var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+                            if (results==null) {
+                               return null;
+                            }
+                            return decodeURI(results[1]) || 0;
+                        }
+                        
+                        user_code = decodeURIComponent($.urlParam('user_code'));
+                        console.log(user_code);
+                        if (user_code.length > 0) 
+                        {
+                          var res = user_code.split("");
+                          var codestring = "";
+                          var i;
+                          for (i = 0; i < res.length; i++) {
+                              $("#codeinput"+(i+1)).val(res[i]);
+                          }
+                        }
+                    });
+
+                    function autotab(current,to,back){
+                      var eWhich = event.which;
+                       if (eWhich == 8)
+                       {
+                          var objectid = "#" + back;
+                          var nextobject = $(objectid);
+                          nextobject.val('');
+                          nextobject.focus();
+                       }
+                       else
+                       {
+                        if (current.getAttribute &&
+                          current.value.length==current.getAttribute("maxlength")) {
+                            var objectid = "#" + to;
+                            var nextobject = $(objectid);
+                            nextobject.val('');
+                            nextobject.focus();
+                          }
+                       }
+                    }
+
+                    function submitcode(){
+                      $("#codeinvalid").hide();
+
+                      userinput = $("#codeinput1").val() + $("#codeinput2").val() + $("#codeinput3").val() + $("#codeinput4").val() + $("#codeinput5").val() + $("#codeinput6").val() + $("#codeinput7").val()+$("#codeinput8").val() + $("#codeinput9").val()
+                      responseinfo = "";
+                      $.ajax({
+                          'async': false,
+                          'type': "POST",
+                          'url': "/streamingservice/device_validatecode",
+                          'data': {
+                            "user_code": userinput
+                          },
+                          'success': function (data) {
+                              responseinfo = data;
+                          }
+                      });
+                      console.log(responseinfo);
+                      if (responseinfo == "invalid")
+                      {
+                        $("#codeinvalid").show();
+                      }
+                      else
+                      {
+                        window.location.href = responseinfo;
+                      }
+                    }
+                    </script>
+                  </section>
+                </main>
+            <div id="layoutDefault_footer">
+            </div>
+            {% with color="black" %}
+                {% include '//components/template-footer.html' %}
+            {% endwith %}
+        </div>
+        {% include '//components/template-footer-scripts.html' %}
+    </body>
+</html>

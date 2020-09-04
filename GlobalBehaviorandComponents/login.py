@@ -46,7 +46,7 @@ def clear_session():
 def gbac_login():
     logger.debug("gbac_login()")
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
-    idplist = okta_admin.get_idps()
+    idplist = okta_admin.get_idps(None)
     facebook = ""
     google = ""
     linkedin = ""
