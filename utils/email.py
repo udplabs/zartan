@@ -21,7 +21,7 @@ class Email:
                 "sandbox": False
             },
             "content": {
-                "from": "noreply@recintodev.com",
+                "from": "noreply@{domain}".format(domain=session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["sparkpost_from_domain"]),
                 "subject": subject,
                 "html": message
             },

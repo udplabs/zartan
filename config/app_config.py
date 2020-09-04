@@ -27,6 +27,7 @@ default_settings = {
         "app_warning_color": os.getenv("APP_WARNING_COLOR", "#f4a100"),
         "app_danger_color": os.getenv("APP_DANGER_COLOR", "#e81500"),
         "sparkpost_api_key": os.getenv("SPARKPOST_API_KEY", ""),
+        "sparkpost_from_domain": os.getenv("SPARKPOST_FROM_DOMAIN", "recintodev.com"),
         "app_stepup_auth_clientid": os.getenv("APP_STEPUP_AUTH_CLIENTID", ""),
         "app_stepup_auth_clienturl": os.getenv("APP_STEPUP_AUTH_CLIENTURL", ""),
         "app_ecomm_products": os.getenv("APP_ECOMM_PRODUCTS", ""),
