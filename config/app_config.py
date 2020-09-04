@@ -29,7 +29,10 @@ default_settings = {
         "sparkpost_api_key": os.getenv("SPARKPOST_API_KEY", ""),
         "app_stepup_auth_clientid": os.getenv("APP_STEPUP_AUTH_CLIENTID", ""),
         "app_stepup_auth_clienturl": os.getenv("APP_STEPUP_AUTH_CLIENTURL", ""),
-        "app_ecomm_products": os.getenv("APP_ECOMM_PRODUCTS", "")
+        "app_ecomm_products": os.getenv("APP_ECOMM_PRODUCTS", ""),
+        "app_deviceflow_clientid": os.getenv("APP_DEVICEFLOW_CLIENTID", ""),
+        "app_deviceflow_clientsecret": os.getenv("APP_DEVICEFLOW_CLIENTSECRET", ""),
+        "app_deviceflow_appname": os.getenv("APP_DEVICEFLOW_APPNAME", ""),
     },
     "okta_api_token": os.getenv("OKTA_API_TOKEN", ""),
     "app_secret_key": os.getenv("SECRET_KEY", ""),

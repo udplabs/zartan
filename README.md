@@ -19,22 +19,39 @@ Zartan is a master of make-up and disguise and so is this demo platform. :tada::
 
 ## Setup
 
+### Manual
 [Local Zartan Setup instructions](./docs/README.md)
 
-## Features
+### Docker-Compose
 
-<table>
-<tr style="height: 115px;"><td>Application</td><td>Okta Session Auto Login</td><td>Login Widget (Social Login, IDP Discovery, MFA)</td><td>Password-less <br />Widget&nbsp;</td><td>Custom Widget</td><td>Custom&nbsp; Registration</td><td>Profile<br />(ID Token and Access Token Viewer)</td><td>Custom MFA Enrollment</td><td>User Apps (Display Other User Apps, B2B)</td><td>Manage Users (Create User, Update User, Suspend User, Password Reset)</td><td>Step Up Authentication using MFA</td><td>ID Verification (Uses Evident)</td><td>Consent&nbsp;</td><td>Progressive Profiling&nbsp;</td><td>Temporary MFA for Users</td><td>Hard Token Setup</td><td>User Approve Workflow</td><td>IDP Management</td></tr>
-<tr style="height: 36px;"><td>Travel Agency</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>&nbsp;</td><td>✓</td><td>✓</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr style="height: 39px;"><td>Streaming Service</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>&nbsp;</td><td>✓</td><td>✓</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr style="height: 24px;"><td>Hospitality</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>&nbsp;</td><td>✓</td><td>✓</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr style="height: 24px;"><td>Credit</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>&nbsp;</td><td>✓</td><td>✓</td><td>✓</td><td>&nbsp;</td><td>✓</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr style="height: 24px;"><td>Finance</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>&nbsp;</td><td>✓</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr style="height: 27px;"><td>Dealer</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>&nbsp;</td><td>✓</td><td>✓</td><td>✓</td><td>&nbsp;</td><td>&nbsp;</td><td>✓</td><td>&nbsp;</td><td>&nbsp;</td><td>✓</td><td>&nbsp;</td></tr>
-<tr style="height: 27px;"><td>Healthcare</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr style="height: 25px;"><td>Admin</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>&nbsp;</td><td>✓</td><td>✓</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>✓</td><td>✓</td><td>&nbsp;</td><td>✓</td></tr>
-<tr style="height: 49px;"><td>Ecommerce (Coming Soon)</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-</table>
+Pre-requirements
+* [docker-desktop](https://www.docker.com/products/docker-desktop) => 2.3.0.4
+* :warning: Assumed an OAuth/OpenID Client has already been created. Either by [terraform](https://github.com/udplabs/zartan/blob/master/docs/README.md#configure-initialize-and-apply-terraform-for-the-vertical-you-want-to-use) or [manually](https://github.com/udplabs/zartan/blob/master/docs/README.md#setup-okta-org-for-each-vertical-outside-of-terraform), with `.env` filed configured.
+
+```bash
+# Validate .env exist and configured
+$ cat .env
+# Okta Setting
+OKTA_CLIENT_ID="0oa****************"
+OKTA_CLIENT_SECRET="ntd************************"
+OKTA_ISSUER="https://udp-narisak-a59.oktapreview.com/oauth2/aus**********"
+OKTA_ORG_URL="https://udp-narisak-a59.oktapreview.com"
+OKTA_OIDC_REDIRECT_URI="http://localhost:8666/authorization-code/callback"
+OKTA_API_TOKEN="00iq*******7NHYULle5"
+...
+
+# Start the container(app) in the background (eg. '-d' flag). NOTE: Will take awhile since container needs to be built.
+$ docker-compose up -d
+
+# Navigate http://localhost:8666 with your favorite browser (eg. macOS default Chrome)
+$ open http://localhost:8666
+
+# Stop the container
+$ docker-compose stop
+
+# Clean up
+$ docker-compose down
+```
 
 ## Authors
 * [Shawn Recinto](https://github.com/srecinto)
