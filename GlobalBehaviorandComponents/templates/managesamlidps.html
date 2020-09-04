@@ -20,6 +20,7 @@
                                 <tr>
                                     <th>Name</th>
                                     <th>Type</th>
+                                    <th style="text-align:center">Detail</th>
                                     <th style="text-align:center">Update</th>
                                     <th style="text-align:center">Enabled</th>
                                     <th style="text-align:center">Delete</th>
@@ -30,6 +31,7 @@
                                      <tr>
                                         <td>{{ i['name'] }}</td>
                                         <td>{{ i['type'] }}</td>
+                                        <td style="text-align:center"><a href="#" onclick="showDetail({{ i.detailJSON }})"><i class="fa fa-info-circle"></i></a></td>
                                         <td style="text-align:center"><a href="managesamlidp?idpId={{ i.id }}"><i class="fa fa-edit"></i></a></td>
                                         {% if i['status'] == 'ACTIVE'  %}
                                                <td style="text-align:center"><a href="deactivatesamlidp?idpId={{ i.id }}"><i class="fa fa-toggle-on"></i></a></td>
@@ -45,6 +47,52 @@
                 </div>
             </div>
         </section>
+
+        <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document" style="max-width: 65vw;">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="ModalLabel">IDP Info</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body" id="ModalBody">
+
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Value</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>ACS Url</td>
+                      <td id="acsurl">placeholder</td>
+                    </tr>
+                    <tr>
+                      <td>Metadata Download</td>
+                      <td><a id="metadata" href="">Download Metadata</a></td>
+                    </tr>
+                </tbody>
+                </table>
+
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <script>
+          function showDetail(idpDetail) {
+            $('#acsurl').text(idpDetail.acs_url);
+            $('#metadata').attr("href", idpDetail.metadata_url);
+            $('#detailModal').modal('show');
+          }
+        </script>
+
 {% endblock %}
 
 {% block footer %}

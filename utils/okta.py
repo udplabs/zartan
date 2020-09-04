@@ -884,11 +884,16 @@ class OktaAdmin:
             idp_id=idp_id)
         return RestUtil.execute_get(url, okta_headers)
 
-    def get_idps(self):
-        self.logger.debug("OktaAdmin.get_idps()")
+    def get_idps(self, type_filter):
+        self.logger.debug("OktaAdmin.get_idps(type_filter)")
         okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
-        url = "{base_url}/api/v1/idps".format(
-            base_url=self.okta_config["okta_org_name"])
+        if type_filter is None:
+            url = "{base_url}/api/v1/idps".format(
+                base_url=self.okta_config["okta_org_name"])
+        else:
+            url = "{base_url}/api/v1/idps?type={type_filter}".format(
+                base_url=self.okta_config["okta_org_name"],
+                type_filter=type_filter)
         return RestUtil.execute_get(url, okta_headers)
 
     def create_idp(self, idp):
