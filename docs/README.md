@@ -132,6 +132,9 @@ Open up a terminal/shell then:
 ---
 
 ### Local Environment Variables
+
+> NOTE: ℹ️ Optional, if you prefer to use your own SparkPost account the following [documentation](https://www.sparkpost.com/docs/getting-started/getting-started-sparkpost/) should help.
+
 Set up the `.env` file:
 * Copy the [`.env.sample`](../.env.sample) (in the root directory) file into `.env` (this should also be in the root directory). Look for and edit these values in the file:
 
@@ -144,8 +147,9 @@ Set up the `.env` file:
     | OKTA_OIDC_REDIRECT_URI | Use `http://localhost:8666/authorization-code/callback` as this was set by Terraform.
     | OKTA_API_TOKEN         | Provide an okta SSWS key |
     | SPARKPOST_API_KEY      | ℹ️ Mandatory. Get the value from this [Box folder](https://okta.box.com/s/56cnuhratuzjnhxo1odt11tmesjqv4o3) (Only accessible to Okta employees) |
-
+    | SPARKPOST_FROM_DOMAIN  | ℹ️ Optional. You can use your own API KEY but SparkPost requires a registered domain. This Environment Variables overrides the default `"recintodev.com"`. |
 * (Optional) Provide values for the other variables. Refer to [this section](#env-variables-details) for details.
+
 
 ---
 
@@ -216,6 +220,7 @@ The `.env` file provides additional confuration depending on the functionality s
     | Variable          | Value |
     | ----------------- | ----- |
     | SPARKPOST_API_KEY | ℹ️ Mandatory. Get the value from [Box](https://okta.box.com/s/56cnuhratuzjnhxo1odt11tmesjqv4o3) |
+    | SPARKPOST_FROM_DOMAIN  | ℹ️ Optional. You can use your own API KEY but SparkPost requires a registered domain. This Environment Variables overrides the default `"recintodev.com"`. |
 
 
 * Flask Setting
