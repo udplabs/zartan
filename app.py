@@ -123,6 +123,10 @@ app.register_blueprint(ecommerce_views_bp, url_prefix='/ecommerce')
 from _b2b.views import b2b_views_bp
 app.register_blueprint(b2b_views_bp, url_prefix='/b2b')
 
+# developer theme
+from _developer.views import developer_views_bp
+app.register_blueprint(developer_views_bp, url_prefix='/developer')
+
 
 ##############################################
 # Main Shared Routes
