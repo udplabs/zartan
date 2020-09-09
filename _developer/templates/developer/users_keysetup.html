@@ -28,7 +28,13 @@
                                         <td>{{ i['profile']['firstName']}} {{ i['profile']['lastName']}}</td>
                                         <td>{{ i['profile']['email']}}</td>
                                         <td style="text-align:center">{{ i['status'] }}</td>
+<<<<<<< HEAD
                                         <td style="text-align:center"><a href="#" data-toggle="modal" data-target="#keycreate" onclick="adduserid('{{ i['id'] }}')"><i class="fa fa-key"></i></a></td>
+=======
+                                        <td style="text-align:center"><a href="#" data-toggle="modal" data-target="#keycreate" onclick="adduserid('{{ i['id']}}')"><i class="fa fa-key"></i></a>
+                                        
+                                        </td>
+>>>>>>> Add developer portal vertical
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -37,7 +43,11 @@
                 </div>
             </div>
         </section>
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> Add developer portal vertical
         <script>
             function adduserid(id) {
                 $("#userid").val(id);
@@ -63,7 +73,11 @@
                 </div>
             </div>
         </div>
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> Add developer portal vertical
         <script>
         function addkey() {
             factorProfileId = $("#factorprofileid").val();
@@ -72,11 +86,19 @@
             $.ajax({
                 url:'/admin/addkey',
                 type: "GET",
+<<<<<<< HEAD
                 data:{
                     "factorProfileId": factorProfileId,
                     "sharedSecret": seed,
                     "userId": user_id
                 },
+=======
+                data:{                
+                    "factorProfileId": factorProfileId,
+                    "sharedSecret": seed,
+                    "userId": user_id
+                },    
+>>>>>>> Add developer portal vertical
                 complete: function (response) {
                     alert(response.responseText);
                 },
