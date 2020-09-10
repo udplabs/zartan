@@ -343,6 +343,7 @@ def streamingservice_callback():
             _external=True,
             _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"]
         )
+
         responseurl = responseurl + "?device_id={deviceid}&user_id={userid}&device_code={devicecode}".format(
             deviceid=s3response["device_id"],
             userid=user["sub"],
