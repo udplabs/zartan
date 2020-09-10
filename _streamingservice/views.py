@@ -2,6 +2,8 @@ import logging
 import random
 import string
 import uuid
+import json
+
 
 # import functions
 from flask import render_template, session, request
@@ -18,23 +20,17 @@ logger = logging.getLogger(__name__)
 streamingservice_views_bp = Blueprint('streamingservice_views_bp', __name__, template_folder='templates', static_folder='static', static_url_path='static')
 
 
-@streamingservice_views_bp.route("/devicepage", methods=["POST", "GET"])
+@streamingservice_views_bp.route("/devicepage")
 def streamingservice_devicepage():
     logger.debug("streamingservice_devicepage()")
     client_id = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_deviceflow_clientid"]
     appname = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_deviceflow_appname"]
 
-    if request.method == 'POST':
-        logging.debug("POSTBACK")
-        id_token = request.form['id_token']
-        access_token = request.form['access_token']
-        refresh_token = request.form['refresh_token']
-        reset_tokens = "true"
-    else:
-        id_token = ""
-        access_token = ""
-        refresh_token = ""
-        reset_tokens = "false"
+    id_token = ""
+    access_token = ""
+    refresh_token = ""
+    reset_tokens = "false"
+    
     return render_template(
         "streamingservice/devicepage.html",
         user_info=get_userinfo(),
@@ -74,7 +70,7 @@ def streamingservice_device():
 
     url = "https://jl0tn0gk0e.execute-api.us-east-2.amazonaws.com/default/prd-zartan-deviceinformation"
     headers = {
-        "x-api-key": session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["sparkpost_api_key"],
+        "x-api-key": session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["aws_api_key"],
     }
     body = {
         "device_code": device_code,
@@ -97,7 +93,7 @@ def streamingservice_token():
 
     url = "https://sngfyrr4b2.execute-api.us-east-2.amazonaws.com/default/prd-zartan-devicetoken?device_code=" + device_code
     headers = {
-        "x-api-key": session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["sparkpost_api_key"],
+        "x-api-key": session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["aws_api_key"],
     }
     s3response = RestUtil.execute_get(url, headers=headers)
 
@@ -213,20 +209,18 @@ def streamingservice_device_validatecode():
 
     url = "https://jl0tn0gk0e.execute-api.us-east-2.amazonaws.com/default/prd-zartan-deviceinformation?user_code=" + request.form["user_code"]
     headers = {
-        "x-api-key": session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["sparkpost_api_key"],
+        "x-api-key": session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["aws_api_key"],
     }
     s3response = RestUtil.execute_get(url, headers=headers)
-    logger.debug(s3response['device_code'])
-
+   
     if ("device_code" in s3response):
         logger.debug("Save Device State")
         state = str(uuid.uuid4())
         session["device_state"] = state
-        logger.debug(state)
 
         url = "https://d9qgirtrci.execute-api.us-east-2.amazonaws.com/default/prd-zartan-devicestate"
         headers = {
-            "x-api-key": session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["sparkpost_api_key"],
+            "x-api-key": session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["aws_api_key"],
         }
         body = {
             "device_code": s3response['device_code'],
@@ -278,7 +272,13 @@ def streamingservice_device_register():
         elif idp["type"] == "SAML2":
             idptype = "SAML2"
             idp = "true"
-
+    
+    url = "https://d9qgirtrci.execute-api.us-east-2.amazonaws.com/default/prd-zartan-devicestate?state={0}".format(session["device_state"])
+    headers = {
+        "x-api-key": session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["aws_api_key"],
+    }
+    s3response = RestUtil.execute_get(url, headers=headers)
+    
     return render_template(
         "streamingservice/device_register.html",
         templatename=get_app_vertical(),
@@ -291,7 +291,8 @@ def streamingservice_device_register():
         idp=idp,
         idptype=idptype,
         appname=appname,
-        client_id=client_id)
+        client_id=client_id,
+        deviceinfo=json.dumps(s3response, sort_keys=True, indent=4))
 
 
 @streamingservice_views_bp.route('/authorization-code/callback', methods=["POST"])
@@ -318,13 +319,13 @@ def streamingservice_callback():
 
         url = "https://d9qgirtrci.execute-api.us-east-2.amazonaws.com/default/prd-zartan-devicestate?state={0}".format(oidc_state)
         headers = {
-            "x-api-key": session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["sparkpost_api_key"],
+            "x-api-key": session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["aws_api_key"],
         }
         s3response = RestUtil.execute_get(url, headers=headers)
 
         url = "https://sngfyrr4b2.execute-api.us-east-2.amazonaws.com/default/prd-zartan-devicetoken"
         headers = {
-            "x-api-key": session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["sparkpost_api_key"],
+            "x-api-key": session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["aws_api_key"],
         }
         body = {
             "device_code": s3response["device_code"],
@@ -342,7 +343,7 @@ def streamingservice_callback():
             _external=True,
             _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"]
         )
-        responseurl = responseurl + "?device_id={0}&user_id={1}".format(s3response["device_id"], user["sub"])
+        responseurl = responseurl + "?device_id={deviceid}&user_id={userid}&device_code={devicecode}".format(deviceid=s3response["device_id"], userid=user["sub"],devicecode=s3response["device_code"])
         response = redirect(responseurl)
 
     elif "error" in request.form:
@@ -381,28 +382,44 @@ def streamingservice_device_complete():
     client_id = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_deviceflow_clientid"]
 
     user_id = request.args.get('user_id')
-    user_app_profile = okta_admin.get_user_application_by_client_id(user_id=user_id, client_id=client_id)
-    devices = []
-    if get_udp_ns_fieldname("authorized_devices") in user_app_profile["profile"]:
-        user_devices = user_app_profile["profile"][get_udp_ns_fieldname("authorized_devices")]
-        if user_devices is None:
-            devices = []
-    else:
+
+    if user_id is not None:
+        user_app_profile = okta_admin.get_user_application_by_client_id(user_id=user_id, client_id=client_id)
         devices = []
-
-    device_id = request.args.get('device_id')
-    devices.append(device_id)
-    user_data = {
-        "profile": {
-            get_udp_ns_fieldname("authorized_devices"): devices
+        if get_udp_ns_fieldname("authorized_devices") in user_app_profile["profile"]:
+            devices = user_app_profile["profile"][get_udp_ns_fieldname("authorized_devices")]
+            if devices is None:
+                devices = []
+        else:
+            devices = []
+    
+        device_id = request.args.get('device_id')
+        devices.append(device_id)
+        user_data = {
+            "profile": {
+                get_udp_ns_fieldname("authorized_devices"): devices
+            }
         }
-    }
-    okta_admin.update_application_user_profile_by_clientid(user_id=user_id, app_user_profile=user_data, client_id=client_id)
+        okta_admin.update_application_user_profile_by_clientid(user_id=user_id, app_user_profile=user_data, client_id=client_id)
+        
+        url = "https://sngfyrr4b2.execute-api.us-east-2.amazonaws.com/default/prd-zartan-devicetoken?device_code=" + request.args.get('device_code')
+        headers = {
+            "x-api-key": session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["aws_api_key"],
+        }
+        s3response = RestUtil.execute_get(url, headers=headers)
 
-    return render_template(
-        "streamingservice/device_complete.html",
-        config=session[SESSION_INSTANCE_SETTINGS_KEY])
-
+        return render_template(
+            "streamingservice/device_complete.html",
+            config=session[SESSION_INSTANCE_SETTINGS_KEY],
+            deviceinfo=json.dumps(s3response, sort_keys=True, indent=4))
+    else:
+        
+        redirect_url = url_for(
+            "streamingservice_views_bp.streamingservice_device_activate", 
+            _external=True, 
+            _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
+        
+        return redirect(redirect_url)
 
 # Required for Login Landing Page
 @streamingservice_views_bp.route("/profile")
@@ -416,6 +433,77 @@ def streamingservice_profile():
         access_token=TokenUtil.get_access_token(request.cookies),
         config=session[SESSION_INSTANCE_SETTINGS_KEY])
 
+
+@streamingservice_views_bp.route("/mydevices")
+@is_authenticated
+def streamingservice_mydevices():
+    logger.debug("streamingservice_mydevices()")
+    
+    user_info = get_userinfo()
+    user_id = user_info["sub"]
+    
+    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
+
+    client_id = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_deviceflow_clientid"]
+
+    user_app_profile = okta_admin.get_user_application_by_client_id(user_id=user_id, client_id=client_id)
+    devices = []
+    
+    if get_udp_ns_fieldname("authorized_devices") in user_app_profile["profile"]:
+        devices = user_app_profile["profile"][get_udp_ns_fieldname("authorized_devices")]
+        
+        if devices is None:
+            devices = []
+    else:
+        devices = []
+    
+    logger.debug(devices)
+     
+    return render_template(
+        "streamingservice/mydevices.html",
+        user_info=get_userinfo(),
+        devices=devices,
+        config=session[SESSION_INSTANCE_SETTINGS_KEY])
+
+
+@streamingservice_views_bp.route("/removedevice")
+@is_authenticated
+def streamingservice_removedevice():
+    logger.debug("streamingservice_removedevice()")
+    
+    user_info = get_userinfo()
+    user_id = user_info["sub"]
+    device_id = request.args.get('device_id')
+    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
+
+    client_id = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_deviceflow_clientid"]
+
+    user_app_profile = okta_admin.get_user_application_by_client_id(user_id=user_id, client_id=client_id)
+    devices = []
+    
+    if get_udp_ns_fieldname("authorized_devices") in user_app_profile["profile"]:
+        devices = user_app_profile["profile"][get_udp_ns_fieldname("authorized_devices")]
+        
+        if devices is None:
+            devices = []
+        else:
+            devices.remove(device_id)
+    else:
+        devices = []
+    
+    user_data = {
+            "profile": {
+                get_udp_ns_fieldname("authorized_devices"): devices
+            }
+        }
+    okta_admin.update_application_user_profile_by_clientid(user_id=user_id, app_user_profile=user_data, client_id=client_id)
+     
+    redirect_url = url_for(
+        "streamingservice_views_bp.streamingservice_mydevices", 
+        _external=True, 
+        _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
+        
+    return redirect(redirect_url)
 
 def get_oauth_token_from_login(code, grant_type, auth_options=None, headers=None):
     logger.debug("OktaAuth.get_oauth_token()")
