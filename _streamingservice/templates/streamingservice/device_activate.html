@@ -14,8 +14,9 @@
                         {% else %}
                              <a class="navbar-brand text-primary" href="/index">{{config.settings.app_name}}</a><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><i data-feather="menu"></i></button>
                         {% endif %}
+                        <a href="#" class="btn btn-primary btn-lg id-open" style="float:right;">Device Flow Information</a>
                     </div>
-                  </nav>                
+                  </nav>
                   <section class="main-container">
                     <style>
                       .codebox {
@@ -31,7 +32,6 @@
                           height: 50;
                           width:50;
                       }
-                    </style>
                     </style>
                     <div class="container" >
                       <div class="row">
@@ -69,7 +69,7 @@
                     </div>
                     <br><br><br>
                     <br><br><br>
-                  <script type="text/javascript">
+                    <script type="text/javascript">
                     $( document ).ready(function() {
                         $.urlParam = function(name){
                             var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
@@ -78,10 +78,15 @@
                             }
                             return decodeURI(results[1]) || 0;
                         }
-                        
+
                         user_code = decodeURIComponent($.urlParam('user_code'));
+                        $("#deviceinfo").html(user_code);
                         console.log(user_code);
-                        if (user_code.length > 0) 
+                        if (user_code.includes("null"))
+                        {
+                          //do nothing
+                        }
+                        else
                         {
                           var res = user_code.split("");
                           var codestring = "";
@@ -140,6 +145,83 @@
                       }
                     }
                     </script>
+                     <section class="toggle-deviceid">
+                        <div class="formwrap2 px-4" style="text-align:left">
+                            <div class="icon2-close pos-a" style="text-align:center">
+                                <br>
+                                <button class="btn btn-transparent-dark btn-icon" type="button">
+                                    <i data-feather="x" style="color:white;"></i>
+                                </button>
+                            </div>
+                            <b>Step 2 - User Code Validation:</b><br><br>
+                            User enters the <u>User Code</u> on the website.<br><br>
+                            The <u>User Code</u> is used to pull the device information<br>
+                            from the previous step.<br><br>
+                            <pre><code id="deviceinfo">User Code</code></pre>
+                        </div>
+                        <div class="toggle-bg2"></div>
+                    </section>
+                    <script>
+                      $( document ).ready(function() {
+                          console.log( "ready!" );
+                          $('.id-open').on('click', function() {
+                              $('.toggle-deviceid, .formwrap2, .toggle-bg2').addClass('active');
+                              $('.icon2-close').addClass('open');
+                          });
+
+                          $('.icon2-close').on('click', function() {
+                              $('.toggle-deviceid, .formwrap2, .toggle-bg2').removeClass('active');
+                              $('.icon2-close').removeClass('open');
+                          });
+                      });
+                    </script>
+                    <style>
+                      .toggle-deviceid {
+                        left: -9999px;
+                        position: fixed;
+                        top: 0;
+                        height: 100%;
+                        z-index: 9999;
+                        transition: left .6s ease-in-out;
+                      }
+
+                      .toggle-deviceid.active {
+                          left: 0;
+                      }
+
+                      .toggle-deviceid .formwrap img {
+                          width: 900px;
+                      }
+
+                      .formwrap2 {
+                        background-color: #989898;
+                        max-width: 900px;
+                        height: 100%;
+                        float: left;
+                        box-shadow: -1px 0px 12px rgba(0, 0, 0, 0.1);
+                        color: white;
+                      }
+
+                      pre, code {
+                        font-family: monospace, monospace;
+                      }
+
+                      pre {
+                       white-space: pre-wrap;       /* css-3 */
+                       white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+                       white-space: -pre-wrap;      /* Opera 4-6 */
+                       white-space: -o-pre-wrap;    /* Opera 7 */
+                       word-wrap: break-word;       /* Internet Explorer 5.5+ */
+                      }
+
+                      pre > code {
+                        display: block;
+                        padding: 1rem;
+                        word-wrap: break-word;
+                        background:white;
+                      }
+
+                    </style>
                   </section>
                 </main>
             <div id="layoutDefault_footer">

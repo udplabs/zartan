@@ -14,6 +14,7 @@
                         {% else %}
                              <a class="navbar-brand text-primary" href="/index">{{config.settings.app_name}}</a><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><i data-feather="menu"></i></button>
                         {% endif %}
+                        <a href="#" class="btn btn-primary btn-lg id-open" style="float:right;">Device Flow Information</a>
                     </div>
                   </nav>
                   <section class="main-container">
@@ -37,6 +38,79 @@
                       </div>
                     </div>
                     <br><br><br><br><br>
+                    <section class="toggle-deviceid">
+                        <div class="formwrap2 px-4" style="text-align:left">
+                            <div class="icon2-close pos-a" style="text-align:center">
+                                <br>
+                                <button class="btn btn-transparent-dark btn-icon" type="button">
+                                    <i data-feather="x" style="color:white;"></i>
+                                </button>
+                            </div>
+                            <b>Step 4 - Successful Login and Token Handoff:</b><br><br>
+                            Okta returns the ID Token, Access Token, and Refresh Token, and Device ID.<br><br>
+                            This information is stored using the <u>Device Code</u>.<br>
+                            The device itself is still polling the API with the Device Code waiting for the Tokens.<br><br>
+                            <pre><code id="deviceinfo">{{deviceinfo}}</code></pre>
+                        </div>
+                        <div class="toggle-bg2"></div>
+                    </section>
+                    <script>
+                      $( document ).ready(function() {
+                          console.log( "ready!" );
+                          $('.id-open').on('click', function() {
+                              $('.toggle-deviceid, .formwrap2, .toggle-bg2').addClass('active');
+                              $('.icon2-close').addClass('open');
+                          });
+
+                          $('.icon2-close').on('click', function() {
+                              $('.toggle-deviceid, .formwrap2, .toggle-bg2').removeClass('active');
+                              $('.icon2-close').removeClass('open');
+                          });
+                      });
+                    </script>
+                    <style>
+                      .toggle-deviceid {
+                        left: -9999px;
+                        position: fixed;
+                        top: 0;
+                        height: 100%;
+                        z-index: 9999;
+                        transition: left .6s ease-in-out;
+                      }
+
+                      .toggle-deviceid.active {
+                          left: 0;
+                      }
+
+                      .toggle-deviceid .formwrap img {
+                          width: 900px;
+                      }
+
+                      .formwrap2 {
+                        background-color: #989898;
+                        max-width: 900px;
+                        height: 100%;
+                        float: left;
+                        box-shadow: -1px 0px 12px rgba(0, 0, 0, 0.1);
+                        color: white;
+                      }
+
+                      pre, code {
+                        font-family: monospace, monospace;
+                      }
+
+                      pre {
+                      }
+
+                      pre > code {
+                        display: block;
+                        padding: 1rem;
+                        word-wrap: break-word;
+                        background:white;
+                        overflow-x:scroll;
+                      }
+
+                    </style>
                   </section>
                 </main>
             <div id="layoutDefault_footer">
