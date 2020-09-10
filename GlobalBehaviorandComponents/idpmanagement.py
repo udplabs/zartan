@@ -8,6 +8,8 @@ from utils.okta import OktaAdmin, IDPUtil
 
 from GlobalBehaviorandComponents.validation import is_authenticated, get_userinfo
 
+import json
+
 logger = logging.getLogger(__name__)
 
 # set blueprint
@@ -24,11 +26,16 @@ gbac_manageidps_bp = Blueprint(
 def gbac_saml_idps():
     logger.debug("gbac_saml_idps()")
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
-    idp_list = okta_admin.get_idps()
+    idp_list = okta_admin.get_idps("SAML2")
 
+    # Grab the runtime details we care about and stuff them into a JSON object
+    # for easy display.
     for idp in idp_list:
-        if idp['type'] != 'SAML2':
-            idp_list.remove(idp)
+        detail = {
+            "acs_url": idp['_links']['acs']['href'],
+            "metadata_url": idp['_links']['metadata']['href']
+        }
+        idp["detailJSON"] = json.dumps(detail)
 
     logger.debug(idp_list)
     return render_template(

@@ -1,4 +1,4 @@
-name: CD (Manual)
+name: CD (All)
 
 on:
   workflow_dispatch:
@@ -11,20 +11,20 @@ on:
         description: 'EB Application Name'
         required: true
         default: 'udp-zartan'
-      ebEnvironmentName:
-        description: 'EB Environment Name'
-        required: true
-        default:  'stg-healthcare'
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ebEnvironment: [admin, credit, dealer, ecommerce, finance, healthcare, hospitality, streamingservice, travelagency]
+      max-parallel: 1
     steps:
     - name: Output inputs
       run: |
         echo "Deploy Tag Version: ${{ github.event.inputs.deployTagVersion }}"
         echo "EB Application Name: ${{ github.event.inputs.ebApplicationName }}"
-        echo "EB Environment Name: ${{ github.event.inputs.ebEnvironmentName }}"
+        echo "EB Environment Name: ${{ matrix.ebEnvironment }}"
 
     - name: Checkout source code
       uses: actions/checkout@v2
@@ -54,7 +54,7 @@ jobs:
         aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         region: us-east-2
         application_name: ${{ github.event.inputs.ebApplicationName }}
-        environment_name: ${{ github.event.inputs.ebEnvironmentName }}
+        environment_name: ${{ matrix.ebEnvironment }}
         version_label: ${{ github.event.inputs.deployTagVersion }}
         version_description: ${{ github.SHA }}
         deployment_package: deploy.zip
