@@ -21,6 +21,7 @@ streamingservice_views_bp = Blueprint('streamingservice_views_bp', __name__, tem
 
 
 @streamingservice_views_bp.route("/devicepage")
+@apply_remote_config
 def streamingservice_devicepage():
     logger.debug("streamingservice_devicepage()")
     client_id = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_deviceflow_clientid"]
@@ -86,6 +87,7 @@ def streamingservice_device():
 
 
 @streamingservice_views_bp.route("/token")
+@apply_remote_config
 def streamingservice_token():
     logger.debug("streamingservice_token()")
 
@@ -108,6 +110,7 @@ def streamingservice_token():
 
 
 @streamingservice_views_bp.route("/revoketoken", methods=["POST"])
+@apply_remote_config
 def streamingservice_revoketoken():
     logger.debug("streamingservice_revoketoken()")
 
@@ -125,6 +128,7 @@ def streamingservice_revoketoken():
 
 
 @streamingservice_views_bp.route("/token_check", methods=["POST"])
+@apply_remote_config
 def streamingservice_token_check():
     logger.debug("streamingservice_token_check()")
 
@@ -204,6 +208,7 @@ def streamingservice_device_activate():
 
 
 @streamingservice_views_bp.route("/device_validatecode", methods=["POST"])
+@apply_remote_config
 def streamingservice_device_validatecode():
     logger.debug("streamingservice_device_validatecode()")
 
@@ -241,6 +246,7 @@ def streamingservice_device_validatecode():
 
 
 @streamingservice_views_bp.route("/device_register")
+@apply_remote_config
 def streamingservice_device_register():
     logger.debug("streamingservice_device_register()")
     client_id = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_deviceflow_clientid"]
@@ -296,6 +302,7 @@ def streamingservice_device_register():
 
 
 @streamingservice_views_bp.route('/authorization-code/callback', methods=["POST"])
+@apply_remote_config
 def streamingservice_callback():
     """ handler for the oidc call back of the app """
     logger.debug("streamingservice_callback()")
@@ -379,6 +386,7 @@ def streamingservice_callback():
 
 
 @streamingservice_views_bp.route("/device_complete")
+@apply_remote_config
 def streamingservice_device_complete():
     logger.debug("streamingservice_device_complete()")
 
@@ -430,6 +438,7 @@ def streamingservice_device_complete():
 
 # Required for Login Landing Page
 @streamingservice_views_bp.route("/profile")
+@apply_remote_config
 @is_authenticated
 def streamingservice_profile():
     logger.debug("streamingservice_profile()")
@@ -442,6 +451,7 @@ def streamingservice_profile():
 
 
 @streamingservice_views_bp.route("/mydevices")
+@apply_remote_config
 @is_authenticated
 def streamingservice_mydevices():
     logger.debug("streamingservice_mydevices()")
@@ -474,6 +484,7 @@ def streamingservice_mydevices():
 
 
 @streamingservice_views_bp.route("/removedevice")
+@apply_remote_config
 @is_authenticated
 def streamingservice_removedevice():
     logger.debug("streamingservice_removedevice()")
