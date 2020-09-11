@@ -14,6 +14,7 @@
                         {% else %}
                              <a class="navbar-brand text-primary" href="/index">{{config.settings.app_name}}</a><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><i data-feather="menu"></i></button>
                         {% endif %}
+                        <a href="#" class="btn btn-primary btn-lg id-open" style="float:right;">Device Flow Information</a>
                     </div>
                 </nav>
                   <section class="main-container">
@@ -80,7 +81,7 @@
                         <div class="col-md-8 offset-md-2">
                           <div class="main col-12">
                             <div class="form-block center-block p-30 light-gray-bg border-clear">
-                              <div class="alert alert-primary" role="alert" id="codevalid">
+                              <div class="alert alert-primary" role="alert" id="codevalid" style="text-align:center">
                                   Code Found! Please login to enable your device.
                               </div>
                               <div id="sign-in-widget"></div>
@@ -147,10 +148,84 @@
                         signInWidget = new OktaSignIn(signInWidgetConfig);
                         signInWidget.renderEl({el: '#sign-in-widget'});
                     </script>
+                    <section class="toggle-deviceid">
+                        <div class="formwrap2 px-4" style="text-align:left">
+                            <div class="icon2-close pos-a" style="text-align:center">
+                                <br>
+                                <button class="btn btn-transparent-dark btn-icon" type="button">
+                                    <i data-feather="x" style="color:white;"></i>
+                                </button>
+                            </div>
+                            <b>STEP 3 - Login and Registration:</b><br><br>
+                            When the <u>User Code</u> is validated a newly created <u>State Code</u> ties the<br>
+                            device information to the login process.<br><br>
+                            The <u>State Code</u> is sent with the login information to Okta.<br><br>
+                            <u>State Code</u> is returned by Okta and upon successful login the <u>State Code</u><br>
+                            is used to tie the <u>Device ID</u> to the user account.<br><br>
+                            <pre><code id="deviceinfo">{{deviceinfo}}</code></pre>
+                        </div>
+                        <div class="toggle-bg2"></div>
+                    </section>
+                    <script>
+                      $('.id-open').on('click', function() {
+                          $('.toggle-deviceid, .formwrap2, .toggle-bg2').addClass('active');
+                          $('.icon2-close').addClass('open');
+                      });
+
+                      $('.icon2-close').on('click', function() {
+                          $('.toggle-deviceid, .formwrap2, .toggle-bg2').removeClass('active');
+                          $('.icon2-close').removeClass('open');
+                      });
+                    </script>
                     <style>
-                       .okta-sign-in-header {
+                      .okta-sign-in-header {
                          display: none;
-                       }
+                      }
+                      .toggle-deviceid {
+                        left: -9999px;
+                        position: fixed;
+                        top: 0;
+                        height: 100%;
+                        z-index: 9999;
+                        transition: left .6s ease-in-out;
+                      }
+
+                      .toggle-deviceid.active {
+                          left: 0;
+                      }
+
+                      .toggle-deviceid .formwrap img {
+                          width: 900px;
+                      }
+
+                      .formwrap2 {
+                        background-color: #989898;
+                        max-width: 900px;
+                        height: 100%;
+                        float: left;
+                        box-shadow: -1px 0px 12px rgba(0, 0, 0, 0.1);
+                        color: white;
+                      }
+
+                      pre, code {
+                        font-family: monospace, monospace;
+                      }
+
+                      pre {
+                       white-space: pre-wrap;       /* css-3 */
+                       white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+                       white-space: -pre-wrap;      /* Opera 4-6 */
+                       white-space: -o-pre-wrap;    /* Opera 7 */
+                       word-wrap: break-word;       /* Internet Explorer 5.5+ */
+                      }
+
+                      pre > code {
+                        display: block;
+                        padding: 1rem;
+                        word-wrap: break-word;
+                        background:white;
+                      }
+
                     </style>
                   </section>
                 </main>
