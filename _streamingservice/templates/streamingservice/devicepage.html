@@ -8,7 +8,7 @@
             <a href="#" class="btn btn-primary btn-lg id-open">Device Flow Information</a>
             <div class="background" id="background">
                 <div class="tv" id="tv">
-                    <a href="/index"><img src={{config.settings.app_logo}} border='0' style="max-height:100px;max-width:300px;height:auto;width:auto;margin: 250 0 0 450;position:absolute;"></a>
+                    <a href="/index"><img src={{config.settings.app_logo}} border='0' style="max-height:100px;max-width:300px;height:auto;width:auto;margin: 250 0 0 450;position:absolute;" onerror="this.style.display='none'"></a>
                     <div class="appbar" id="appbar">
                         <button class="action-button shadow animate blue" onclick="getcode()">{{appname}}</button>
                     </div>
