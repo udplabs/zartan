@@ -6,7 +6,7 @@ import logging.config
 from flask import render_template, url_for, redirect, session, request
 from flask import Blueprint
 from utils.okta import OktaAdmin, TokenUtil
-from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical, get_udp_ns_fieldname
+from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical, get_udp_ns_fieldname, apply_remote_config
 from utils.email import Email
 
 from GlobalBehaviorandComponents.validation import is_authenticated, get_userinfo
@@ -28,6 +28,7 @@ dealer_views_bp = Blueprint('dealer_views_bp', __name__, template_folder='templa
 
 # dealer landing page
 @dealer_views_bp.route("/profile")
+@apply_remote_config
 @is_authenticated
 def dealer_profile_get():
     logger.debug("dealer_profile()")
@@ -43,6 +44,7 @@ def dealer_profile_get():
 
 # dealer my applications
 @dealer_views_bp.route("/myapps", methods=["GET"])
+@apply_remote_config
 @is_authenticated
 def dealer_myapps_get():
     logger.debug("dealer_myapps_get()")
@@ -75,6 +77,7 @@ def dealer_myapps_get():
 
 
 @dealer_views_bp.route("/registration", methods=["GET"])
+@apply_remote_config
 def dealer_registration_get():
     logger.debug("dealer_registration()")
     CONFIG_GROUP_REGULAR = get_udp_ns_fieldname(CONFIG_REGULAR)
@@ -135,6 +138,7 @@ def dealer_registration_get():
 
 
 @dealer_views_bp.route("/registration", methods=["POST"])
+@apply_remote_config
 def dealer_registration_post():
     logger.debug("dealer_registration()")
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
@@ -207,6 +211,7 @@ def dealer_registration_post():
 
 
 @dealer_views_bp.route("/registration-state/<stateToken>", methods=["GET"])
+@apply_remote_config
 def dealer_registration_state_get(stateToken):
     logger.debug("dealer_registration_state_get()")
     user_id = stateToken
@@ -225,6 +230,7 @@ def dealer_registration_state_get(stateToken):
 
 
 @dealer_views_bp.route("/registration-completion", methods=["GET"])
+@apply_remote_config
 def dealer_registration_completion_get():
     logger.debug("dealer_registration_completion()")
     return render_template(
@@ -235,6 +241,7 @@ def dealer_registration_completion_get():
 
 
 @dealer_views_bp.route("/workflow-approvals", methods=["GET"])
+@apply_remote_config
 @is_authenticated
 def workflow_approvals_get():
     logger.debug("workflow_approvals()")
@@ -337,6 +344,7 @@ def workflow_approvals_post():
 
 @is_authenticated
 @dealer_views_bp.route("/workflow-requests", methods=["GET"])
+@apply_remote_config
 def workflow_requests_get():
     logger.debug("workflow_requests_get()")
     CONFIG_GROUP_LOCATION_STARTSWITH = get_udp_ns_fieldname(CONFIG_LOCATION)
