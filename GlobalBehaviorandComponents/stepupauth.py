@@ -4,7 +4,7 @@ import logging
 from flask import render_template, session, request
 from flask import Blueprint
 from utils.okta import OktaAuth
-from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical
+from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical, apply_remote_config
 
 logger = logging.getLogger(__name__)
 
@@ -13,6 +13,7 @@ gbac_stepupauth_bp = Blueprint('gbac_stepupauth_bp', __name__, template_folder='
 
 
 @gbac_stepupauth_bp.route("/mfa", methods=['POST'])
+@apply_remote_config
 def gbac_stepupauth_mfa():
     logger.debug("gbac_stepupauth_mfa()")
     idtoken = request.form['id_token']
