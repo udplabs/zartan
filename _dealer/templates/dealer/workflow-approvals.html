@@ -4,6 +4,21 @@
         <div class="main col-12">
             <div class="separator-2"></div>
 
+            {%if not workflow_list %}
+                <div class="d-flex align-items-center mb-5">
+                    <div class="icon-stack icon-stack-lg bg-primary text-white"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
+                    <div class="ml-3">
+                        <h2 class="mb-0">Account Access</h2>
+                        <p class="lead mb-0">Review Requests</p>
+                    </div>
+                </div>
+                <div class="separator-2"></div>
+                <div class="alert badge-secondary  fade show" role="alert">
+                      <strong>Message!</strong>
+                          Your queue is empty. There aren't any new items to approve.
+                </div>
+            {% else %}
+
             {% if error  %}
             <div class="alert badge-warning alert-dismissible fade show" role="alert">
               <strong>Holy guacamole!</strong> {{error}}
@@ -13,14 +28,6 @@
             </div>
             {% endif %}
 
-            {%if not workflow_list %}
-                <h1 class="page-title">Workflow Requests</h1>
-                <div class="separator-2"></div>
-                <div class="alert badge-secondary  fade show" role="alert">
-                      <strong>Message!</strong>
-                          Your queue is empty. There aren't any new items to approve.
-                </div>
-            {% else %}
             <form class="form-horizontal" method="POST" id="form_id">
 
             <section class="bg-light py-5">
@@ -55,8 +62,8 @@
                                             <div class="small">
                                                 <input type="hidden" id = "action_id" name="action" value="">
                                                 <input type="hidden" name="action_value" value="{{workflow.usr_grp}}">
-                                                <button type="button" onClick = "document.getElementById('action_id').value='approve'; checkmfa(runmyscript)" name="approve" class="btn btn-primary"  value="{{workflow.usr_grp}}"> Approve :: </button>
-                                                <button type="button" onClick = "document.getElementById('action_id').value='reject'; checkmfa(runmyscript)" name="reject" class="btn btn-primary"  value="{{workflow.usr_grp}}"> Reject ::</button>
+                                                <button type="button" onClick = "document.getElementById('action_id').value='approve'; checkmfa(runmyscript)" name="approve" class="btn btn-primary"  value="{{workflow.usr_grp}}"> Approve </button>
+                                                <button type="button" onClick = "document.getElementById('action_id').value='reject'; checkmfa(runmyscript)" name="reject" class="btn btn-primary"  value="{{workflow.usr_grp}}"> Reject </button>
                                             </div>
                                         </td>
                                     </tr>
