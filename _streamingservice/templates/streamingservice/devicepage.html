@@ -79,12 +79,12 @@
                                 </button>
                             </div>
                             <b>STEP 1 - Device Information from Host:</b><br><br>
-                            Device information is requested by the device from host and then stored locally.<br><br>
-                            Host also stores device information tied to <u>User Code</u> for use during the registration process.<br><br>
+                            Device information is requested by Device Authorization Endpoint and then stored locally.<br><br>
+                            Device Authorization Endpoint also stores device information tied to the <u>User Code</u> for use during the registration process.<br><br>
                             User code is displayed to user for registration.<br><br>
                             <pre><code id="deviceinfo"> No Device Information. Yet!</code></pre>
                             <br><br>
-                            <b>STEP 5 - Retrieve Token from Host:</b><br><br>
+                            <b>STEP 5 - Retrieve Token from Device Authorization Endpoint:</b><br><br>
                             The Device polls an API to retrive tokens using the <u>Device Code</u>.<br><br>
                             Tokens are stored locally for validation on a scheduled basis or on startup of the device.<br><br>
                             <pre><code id="deviceinfo2"></code></pre>
@@ -246,6 +246,7 @@
         for (i = 0; i < res.length; i++) {
             codestring = codestring + "<p class='codebox'>" + res[i] +"</p>";
         }
+        delete response.device_id;
         $("#deviceinfo").html(JSON.stringify(response, null, 4));
         $("#codebox").html(codestring);
         $("#appbar").hide();
@@ -304,6 +305,8 @@
             window.sessionStorage["device_id"] = response.device_id;
             $("#getcode").hide();
             $("#codecomplete").show();
+            delete response.device_id;
+            delete response.device_code;
             $("#deviceinfo2").html(JSON.stringify(response, null, 4));
             return true;
        }

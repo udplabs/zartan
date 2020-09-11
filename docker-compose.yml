@@ -4,6 +4,10 @@ services:
     build: .
     env_file:
       - .env
+    environment:
+      FLASK_DEBUG: 1
+      FLASK_ENV: development
     ports:
       - '8666:8666'
-    volumes: ['.:/app']
+    volumes:
+      - .:/app

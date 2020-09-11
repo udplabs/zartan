@@ -47,9 +47,12 @@
                                 </button>
                             </div>
                             <b>Step 4 - Successful Login and Token Handoff:</b><br><br>
-                            Okta returns the ID Token, Access Token, and Refresh Token, and Device ID.<br><br>
-                            This information is stored using the <u>Device Code</u>.<br>
-                            The device itself is still polling the API with the Device Code waiting for the Tokens.<br><br>
+                            Okta returns the ID Token, Access Token, and Refresh Token.<br><br>
+                            This information is stored using the <u>Device Code</u>.<br><br>
+                            The device itself is still polling the Device Authorization Endpoint with the <u>Device Code</u><br>
+                            waiting for the Tokens.<br><br>
+                            The Device Authorization Endpoint then returns the following:<br>
+                            ID Token, Access Token, Refresh Token.
                             <pre><code id="deviceinfo">{{deviceinfo}}</code></pre>
                         </div>
                         <div class="toggle-bg2"></div>
