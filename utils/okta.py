@@ -884,7 +884,7 @@ class OktaAdmin:
             idp_id=idp_id)
         return RestUtil.execute_get(url, okta_headers)
 
-    def get_idps(self, type_filter):
+    def get_idps(self, type_filter=None):
         self.logger.debug("OktaAdmin.get_idps(type_filter)")
         okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
         if type_filter is None:

@@ -5,6 +5,7 @@
     <body>
         <div class="main" id="main">
             <a href="#" class="btn btn-primary btn-lg cta-open">TV Controls</a>
+            <a href="#" class="btn btn-primary btn-lg id-open">Device Flow Information</a>
             <div class="background" id="background">
                 <div class="tv" id="tv">
                     <a href="/index"><img src={{config.settings.app_logo}} border='0' style="max-height:100px;max-width:300px;height:auto;width:auto;margin: 250 0 0 450;position:absolute;"></a>
@@ -13,6 +14,7 @@
                     </div>
                     <div class="getcode" id="getcode" style="display:none">
                         <div class="topbar" id="topbar" >
+                            <br>
                             <div class="row">
                                 <div class="col-md-6">
                                    <div class="card" style="background: none;">
@@ -24,8 +26,7 @@
                                             <div id="qrcode" style="text-align: -webkit-center;"></div>
                                             <br>
                                             2. When promopted enter the Activation Code located on the right of the screen.<br>
-                                            3. A "Success" message will appear on your computer or mobile device.<br>
-                                            4. Your device is now Active!<br><br>
+                                            3. Your device is now Active!
                                         </div>
                                     </div>
                                 </div>
@@ -44,7 +45,7 @@
                         </div>
                     </div>
                     <div class="getcode" id="codecomplete" style="display:none">
-                        <iframe id="tv" src="https://streamable.com/e/imsnba?autoplay=1" width="1184px" height="666" frameborder="0" allowfullscreen></iframe>
+                        <iframe id="tv" src="https://streamable.com/e/imsnba?autoplay=1" width="1184px" height="666" frameborder="0"></iframe>
                     </div>
                     <section class="toggle-form">
                       <div class="formwrap px-4" style="text-align:center">
@@ -69,12 +70,33 @@
                       </div>
                     <div class="toggle-bg"></div>
                     </section>
+                    <section class="toggle-deviceid">
+                        <div class="formwrap2 px-4" style="text-align:left">
+                            <div class="icon2-close pos-a" style="text-align:center">
+                                <br>
+                                <button class="btn btn-transparent-dark btn-icon" type="button">
+                                    <i data-feather="x" style="color:white;"></i>
+                                </button>
+                            </div>
+                            <b>STEP 1 - Device Information from Host:</b><br><br>
+                            Device information is requested by Device Authorization Endpoint and then stored locally.<br><br>
+                            Device Authorization Endpoint also stores device information tied to the <u>User Code</u> for use during the registration process.<br><br>
+                            User code is displayed to user for registration.<br><br>
+                            <pre><code id="deviceinfo"> No Device Information. Yet!</code></pre>
+                            <br><br>
+                            <b>STEP 5 - Retrieve Token from Device Authorization Endpoint:</b><br><br>
+                            The Device polls an API to retrive tokens using the <u>Device Code</u>.<br><br>
+                            Tokens are stored locally for validation on a scheduled basis or on startup of the device.<br><br>
+                            <pre><code id="deviceinfo2"></code></pre>
+                        </div>
+                        <div class="toggle-bg2"></div>
+                    </section>
                 </div>
             </div>
         </div>
         {% include '//components/template-footer-scripts.html' %}
-    
-        
+
+
         <div class="modal fade" id="tokenmodal" tabindex="-1" role="dialog" aria-labelledby="Token" style="display: none;" aria-hidden="true">
             <div class="modal-dialog modal-xl" role="document">
                 <div class="modal-content">
@@ -124,15 +146,28 @@
             }).catch(function() {
             });
         }
+
+        $('.id-open').on('click', function() {
+            $('.toggle-deviceid, .formwrap2, .toggle-bg2').addClass('active');
+            $('.icon2-close').addClass('open');
+        });
+
+        $('.icon2-close').on('click', function() {
+            $('.toggle-deviceid, .formwrap2, .toggle-bg2').removeClass('active');
+            $('.icon2-close').removeClass('open');
+        });
+
         $('.cta-open').on('click', function() {
             $('.toggle-form, .formwrap, .toggle-bg').addClass('active');
             $('.icon-close').addClass('open');
         });
+
     	$('.icon-close').on('click', function() {
             $('.toggle-form, .formwrap, .toggle-bg').removeClass('active');
             $('.icon-close').removeClass('open');
         });
     });
+
 
     function showidtoken() {
         var decoded = jwt_decode(window.sessionStorage["d_id_token"]);
@@ -140,7 +175,7 @@
         var jsonbody = JSON.stringify(decoded, null, 4)
         $("#tokenbody").text(jsonbody);
     }
-    
+
     function showaccesstoken() {
         var decoded = jwt_decode(window.sessionStorage["d_access_token"]);
         $("#tokentitle").text("Access Token");
@@ -191,6 +226,7 @@
         });
         console.log(response);
     }
+
     function getcode() {
         console.log( "getcode" );
 
@@ -210,6 +246,8 @@
         for (i = 0; i < res.length; i++) {
             codestring = codestring + "<p class='codebox'>" + res[i] +"</p>";
         }
+        delete response.device_id;
+        $("#deviceinfo").html(JSON.stringify(response, null, 4));
         $("#codebox").html(codestring);
         $("#appbar").hide();
         $("#getcode").show();
@@ -267,10 +305,14 @@
             window.sessionStorage["device_id"] = response.device_id;
             $("#getcode").hide();
             $("#codecomplete").show();
+            delete response.device_id;
+            delete response.device_code;
+            $("#deviceinfo2").html(JSON.stringify(response, null, 4));
             return true;
        }
        else
        {
+            $("#deviceinfo2").html("Authorization Pending")
             return false;
        }
        return false;
@@ -356,7 +398,6 @@
                 $("#appbar").show();
                 $("#getcode").hide();
                 $("#codecomplete").hide();
-                $('#tv').trigger({type: 'keypress', which: 75, keyCode: 75});
                 return true;
             }
     }
@@ -387,20 +428,20 @@
       return new Promise(checkCondition);
     }
 
-  
-      
+
+
     (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-    
-    
+
+
     var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
-    
+
     function InvalidCharacterError(message) {
       this.message = message;
     }
-    
+
     InvalidCharacterError.prototype = new Error();
     InvalidCharacterError.prototype.name = 'InvalidCharacterError';
-    
+
     function polyfill (input) {
       var str = String(input).replace(/=+$/, '');
       if (str.length % 4 == 1) {
@@ -422,13 +463,13 @@
       }
       return output;
     }
-    
-    
+
+
     module.exports = typeof window !== 'undefined' && window.atob && window.atob.bind(window) || polyfill;
-    
+
     },{}],2:[function(require,module,exports){
     var atob = require('./atob');
-    
+
     function b64DecodeUnicode(str) {
       return decodeURIComponent(atob(str).replace(/(.)/g, function (m, p) {
         var code = p.charCodeAt(0).toString(16).toUpperCase();
@@ -438,7 +479,7 @@
         return '%' + code;
       }));
     }
-    
+
     module.exports = function(str) {
       var output = str.replace(/-/g, "+").replace(/_/g, "/");
       switch (output.length % 4) {
@@ -453,31 +494,31 @@
         default:
           throw "Illegal base64url string!";
       }
-    
+
       try{
         return b64DecodeUnicode(output);
       } catch (err) {
         return atob(output);
       }
     };
-    
+
     },{"./atob":1}],3:[function(require,module,exports){
     'use strict';
-    
+
     var base64_url_decode = require('./base64_url_decode');
-    
+
     function InvalidTokenError(message) {
       this.message = message;
     }
-    
+
     InvalidTokenError.prototype = new Error();
     InvalidTokenError.prototype.name = 'InvalidTokenError';
-    
+
     module.exports = function (token,options) {
       if (typeof token !== 'string') {
         throw new InvalidTokenError('Invalid token specified');
       }
-    
+
       options = options || {};
       var pos = options.header === true ? 0 : 1;
       try {
@@ -486,13 +527,13 @@
         throw new InvalidTokenError('Invalid token specified: ' + e.message);
       }
     };
-    
+
     module.exports.InvalidTokenError = InvalidTokenError;
-    
+
     },{"./base64_url_decode":2}],4:[function(require,module,exports){
     (function (global){
     var jwt_decode = require('./lib/index');
-    
+
     //use amd or just throught to window object.
     if (typeof global.window.define == 'function' && global.window.define.amd) {
       global.window.define('jwt_decode', function () { return jwt_decode; });
@@ -500,7 +541,7 @@
       global.window.jwt_decode = jwt_decode;
     }
     }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-    
+
     },{"./lib/index":3}]},{},[4])
 
 </script>
@@ -508,6 +549,9 @@
 
 
 <style>
+
+
+
 h1 {
     color:white;
 }
@@ -555,6 +599,21 @@ html {
 body {
     display: table-cell;
     vertical-align: middle;
+}
+
+pre, code {
+  font-family: monospace, monospace;
+}
+
+pre {
+
+}
+
+pre > code {
+  display: block;
+  padding: 1rem;
+  background:white;
+  overflow-x:scroll;
 }
 
 div.card-body img {
@@ -641,6 +700,7 @@ div.card-body img {
 	position:relative;
 	top:1px;
 }
+
 .toggle-form {
   right: -9999px;
   position: fixed;
@@ -664,6 +724,31 @@ div.card-body img {
   box-shadow: -1px 0px 12px rgba(0, 0, 0, 0.1);
 }
 
+
+.toggle-deviceid {
+  left: -9999px;
+  position: fixed;
+  top: 0;
+  height: 100%;
+  z-index: 9999;
+  transition: left .6s ease-in-out;
+}
+.toggle-deviceid.active {
+    left: 0;
+}
+.toggle-deviceid .formwrap img {
+    width: 900px;
+}
+
+.formwrap2 {
+  background-color: #989898;
+  max-width: 900px;
+  height: 100%;
+  float: left;
+  box-shadow: -1px 0px 12px rgba(0, 0, 0, 0.1);
+  color: white;
+}
+
 .animate
 {
 	transition: all 0.1s;
@@ -676,7 +761,7 @@ div.card-body img {
   border-radius: 10px;
   font-size: 18px;
   color: #FFF;
-  text-decoration: none;	
+  text-decoration: none;
   width:175px;
   height:120px;
   display:inline-block;
@@ -703,5 +788,7 @@ div.card-body img {
 {
   outline:none;
 }
+
+
 
 </style>
