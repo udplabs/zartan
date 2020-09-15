@@ -45,6 +45,7 @@ def streamingservice_devicepage():
 
 
 @streamingservice_views_bp.route("/device")
+@apply_remote_config
 def streamingservice_device():
     logger.debug("streamingservice_device()")
 
