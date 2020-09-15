@@ -47,11 +47,11 @@ def gbac_login():
     logger.debug("gbac_login()")
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     loginmethod = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_loginmethod"]
-    
+
     if (loginmethod == "hosted-widget"):
         response = make_response(redirect(get_oauth_authorize_url(prompt="login")))
         return response
-        
+
     else:
         idplist = okta_admin.get_idps(None)
         facebook = ""
@@ -280,7 +280,7 @@ def gbac_id_tokenp():
     return json.dumps(decodedToken)
 
 
-def get_oauth_authorize_url(okta_session_token=None,prompt="none"):
+def get_oauth_authorize_url(okta_session_token=None, prompt="none"):
     logger.debug("get_oauth_authorize_url()")
     okta_auth = OktaAuth(session[SESSION_INSTANCE_SETTINGS_KEY])
 
@@ -294,7 +294,7 @@ def get_oauth_authorize_url(okta_session_token=None,prompt="none"):
         session["oidc_state"] = str(uuid.uuid4())
     else:
         session["oidc_state"] = session["state"]
-        
+
     if okta_session_token:
         auth_options["sessionToken"] = okta_session_token
 
