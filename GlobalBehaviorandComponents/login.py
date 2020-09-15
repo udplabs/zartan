@@ -46,40 +46,48 @@ def clear_session():
 def gbac_login():
     logger.debug("gbac_login()")
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
-    idplist = okta_admin.get_idps(None)
-    facebook = ""
-    google = ""
-    linkedin = ""
-    microsoft = ""
-    idp = ""
-    idptype = ""
-    for idp in idplist:
-        if idp["type"] == "FACEBOOK":
-            facebook = idp["id"]
-            idp = "true"
-        elif idp["type"] == "GOOGLE":
-            google = idp["id"]
-            idp = "true"
-        elif idp["type"] == "LINKEDIN":
-            linkedin = idp["id"]
-            idp = "true"
-        elif idp["type"] == "MICROSOFT":
-            microsoft = idp["id"]
-            idp = "true"
-        elif idp["type"] == "SAML2":
-            idptype = "SAML2"
-            idp = "true"
-    return render_template(
-        "/login.html",
-        templatename=get_app_vertical(),
-        config=session[SESSION_INSTANCE_SETTINGS_KEY],
-        state=str(uuid.uuid4()),
-        facebook=facebook,
-        google=google,
-        linkedin=linkedin,
-        microsoft=microsoft,
-        idp=idp,
-        idptype=idptype)
+    loginmethod = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_loginmethod"]
+
+    if (loginmethod == "hosted-widget"):
+        response = make_response(redirect(get_oauth_authorize_url(prompt="login")))
+        return response
+
+    else:
+        idplist = okta_admin.get_idps(None)
+        facebook = ""
+        google = ""
+        linkedin = ""
+        microsoft = ""
+        idp = ""
+        idptype = ""
+        for idp in idplist:
+            if idp["type"] == "FACEBOOK":
+                facebook = idp["id"]
+                idp = "true"
+            elif idp["type"] == "GOOGLE":
+                google = idp["id"]
+                idp = "true"
+            elif idp["type"] == "LINKEDIN":
+                linkedin = idp["id"]
+                idp = "true"
+            elif idp["type"] == "MICROSOFT":
+                microsoft = idp["id"]
+                idp = "true"
+            elif idp["type"] == "SAML2":
+                idptype = "SAML2"
+                idp = "true"
+
+        return render_template(
+            "/login.html",
+            templatename=get_app_vertical(),
+            config=session[SESSION_INSTANCE_SETTINGS_KEY],
+            state=str(uuid.uuid4()),
+            facebook=facebook,
+            google=google,
+            linkedin=linkedin,
+            microsoft=microsoft,
+            idp=idp,
+            idptype=idptype)
 
 
 @gbac_bp.route("/signup")
@@ -272,18 +280,20 @@ def gbac_id_tokenp():
     return json.dumps(decodedToken)
 
 
-def get_oauth_authorize_url(okta_session_token=None):
+def get_oauth_authorize_url(okta_session_token=None, prompt="none"):
     logger.debug("get_oauth_authorize_url()")
     okta_auth = OktaAuth(session[SESSION_INSTANCE_SETTINGS_KEY])
 
     auth_options = {
         "response_mode": "form_post",
-        "prompt": "none",
+        "prompt": prompt,
         "scope": "openid profile email"
     }
 
     if "state" not in session:
         session["oidc_state"] = str(uuid.uuid4())
+    else:
+        session["oidc_state"] = session["state"]
 
     if okta_session_token:
         auth_options["sessionToken"] = okta_session_token
