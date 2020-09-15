@@ -3,7 +3,7 @@ import datetime
 
 from flask import render_template, session, request, redirect, url_for
 from flask import Blueprint
-from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_udp_ns_fieldname
+from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_udp_ns_fieldname, apply_remote_config
 from utils.okta import TokenUtil, OktaAdmin
 from GlobalBehaviorandComponents.mfaenrollment import get_enrolled_factors
 
@@ -17,6 +17,7 @@ healthcare_views_bp = Blueprint('healthcare_views_bp', __name__, template_folder
 
 # Required for Login Landing Page
 @healthcare_views_bp.route("/profile")
+@apply_remote_config
 @is_authenticated
 def healthcare_profile():
     user_info = get_userinfo()
@@ -57,6 +58,7 @@ def healthcare_profile():
 
 
 @healthcare_views_bp.route("/acceptterms")
+@apply_remote_config
 @is_authenticated
 def healthcare_accept_terms():
     logger.debug("healthcare_accept_terms()")
@@ -87,6 +89,7 @@ def healthcare_accept_terms():
 
 
 @healthcare_views_bp.route("/account")
+@apply_remote_config
 @is_authenticated
 def healthcare_account():
     logger.debug("healthcare_account")
@@ -97,6 +100,7 @@ def healthcare_account():
 
 
 @healthcare_views_bp.route("/schedule")
+@apply_remote_config
 @is_authenticated
 def healthcare_schedule():
     logger.debug("healthcare_schedule")
@@ -131,6 +135,7 @@ def safe_get_dict(mydict, key):
 
 
 @healthcare_views_bp.route("/addschedule", methods=["POST"])
+@apply_remote_config
 @is_authenticated
 def healthcare_add_schedule():
     logger.debug("healthcare_add_schedule")
@@ -185,6 +190,7 @@ def healthcare_add_schedule():
 
 
 @healthcare_views_bp.route("/updateuserinfo", methods=["POST"])
+@apply_remote_config
 @is_authenticated
 def healthcare_user_update():
     logger.debug("healthcare_user_update")
@@ -225,6 +231,7 @@ def healthcare_user_update():
 
 
 @healthcare_views_bp.route("/clearconsent/<userid>")
+@apply_remote_config
 @is_authenticated
 def healthcare_clear_consent(userid):
     logger.debug("healthcare_clear_consent")
@@ -251,6 +258,7 @@ def healthcare_clear_consent(userid):
 
 
 @healthcare_views_bp.route("/healthrecord")
+@apply_remote_config
 @is_authenticated
 def healthcare_healthrecord():
     logger.debug("healthcare_healthrecord")

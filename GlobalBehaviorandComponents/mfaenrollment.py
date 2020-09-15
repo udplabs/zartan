@@ -3,7 +3,7 @@ import logging
 # import functions
 from flask import session, request, json
 from flask import Blueprint
-from utils.udp import SESSION_INSTANCE_SETTINGS_KEY
+from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, apply_remote_config
 from utils.okta import OktaAdmin, OktaAuth
 
 logger = logging.getLogger(__name__)
@@ -69,6 +69,7 @@ def get_enrolled_factors(user_id):
 
 
 @gbac_mfaenrollment_bp.route("/get_available_factors/<user_id>", methods=["GET"])
+@apply_remote_config
 def get_available_factors(user_id):
     print("get_available_factors()")
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
@@ -105,6 +106,7 @@ def get_available_factors(user_id):
 
 
 @gbac_mfaenrollment_bp.route('/get_available_factors_by_state/<state_token>', methods=["POST"])
+@apply_remote_config
 def get_available_factors_by_state(state_token):
     """ Get all factors available by State Token """
     print("get_available_factors_by_state()")
@@ -121,6 +123,7 @@ def get_available_factors_by_state(state_token):
 
 
 @gbac_mfaenrollment_bp.route("/enroll_push", methods=["POST"])
+@apply_remote_config
 def enroll_push():
     print("enroll_push()")
 
@@ -142,6 +145,7 @@ def enroll_push():
 
 
 @gbac_mfaenrollment_bp.route("/poll_for_push_enrollment", methods=["POST"])
+@apply_remote_config
 def poll_for_push_enrollment():
     print("poll_for_push_enrollment()")
 
@@ -161,6 +165,7 @@ def poll_for_push_enrollment():
 
 
 @gbac_mfaenrollment_bp.route("/enroll_totp", methods=["POST"])
+@apply_remote_config
 def enroll_totp():
     print("enroll_totp()")
 
@@ -181,6 +186,7 @@ def enroll_totp():
 
 
 @gbac_mfaenrollment_bp.route("/enroll_sms_voice", methods=["POST"])
+@apply_remote_config
 def enroll_sms_voice():
     print("enroll_sms_voice()")
 
@@ -202,6 +208,7 @@ def enroll_sms_voice():
 
 
 @gbac_mfaenrollment_bp.route("/enroll_question", methods=["POST"])
+@apply_remote_config
 def enroll_question():
     print("enroll_question()")
 
@@ -224,6 +231,7 @@ def enroll_question():
 
 
 @gbac_mfaenrollment_bp.route("/list_available_questions", methods=["POST"])
+@apply_remote_config
 def list_available_questions():
     print("list_available_questions()")
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
@@ -236,6 +244,7 @@ def list_available_questions():
 
 
 @gbac_mfaenrollment_bp.route("/activate_totp", methods=["POST"])
+@apply_remote_config
 def activate_totp():
     print("activate_totp()")
 
@@ -256,6 +265,7 @@ def activate_totp():
 
 
 @gbac_mfaenrollment_bp.route("/reset_factor/<user_id>/<factor_id>", methods=["GET"])
+@apply_remote_config
 def reset_factor(user_id, factor_id):
     print("reset_factor()")
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])

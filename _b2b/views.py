@@ -4,7 +4,7 @@ import logging
 # import functions
 from flask import render_template, session, request, redirect, url_for
 from flask import Blueprint
-from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical, get_udp_ns_fieldname
+from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical, get_udp_ns_fieldname, apply_remote_config
 from utils.okta import TokenUtil, OktaAdmin
 from utils.email import Email
 
@@ -18,6 +18,7 @@ b2b_views_bp = Blueprint('b2b_views_bp', __name__, template_folder='templates', 
 
 # Required for Login Landing Page
 @b2b_views_bp.route("/profile")
+@apply_remote_config
 @is_authenticated
 def b2b_profile():
     logger.debug("b2b_profile()")
@@ -36,8 +37,9 @@ def b2b_profile():
         applist=app_info)
 
 
-@is_authenticated
 @b2b_views_bp.route("/workflow-requests", methods=["GET"])
+@apply_remote_config
+@is_authenticated
 def b2b_requests_get():
     logger.debug("b2bworkflow_requests_get()")
 
@@ -88,8 +90,9 @@ def b2b_requests_get():
         _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
 
 
-@is_authenticated
 @b2b_views_bp.route("/workflow-requests", methods=["POST"])
+@apply_remote_config
+@is_authenticated
 def b2b_requests_post():
     logger.debug("b2bworkflow_requests_post()")
     user_info = get_userinfo()
@@ -120,6 +123,7 @@ def b2b_requests_post():
 
 
 @b2b_views_bp.route("/workflow-approvals", methods=["GET"])
+@apply_remote_config
 @is_authenticated
 def b2b_approvals_get():
     logger.debug("b2bworkflow_approvals()")
@@ -155,6 +159,7 @@ def b2b_approvals_get():
 
 
 @b2b_views_bp.route("/workflow-approvals", methods=["POST"])
+@apply_remote_config
 @is_authenticated
 def b2b_approvals_post():
     logger.debug("b2bworkflow_approvals()")

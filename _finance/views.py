@@ -3,7 +3,7 @@ import logging
 # import functions
 from flask import render_template, session, request
 from flask import Blueprint
-from utils.udp import SESSION_INSTANCE_SETTINGS_KEY
+from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, apply_remote_config
 from utils.okta import TokenUtil
 
 from GlobalBehaviorandComponents.validation import is_authenticated, get_userinfo
@@ -16,6 +16,7 @@ finance_views_bp = Blueprint('finance_views_bp', __name__, template_folder='temp
 
 # Required for Login Landing Page
 @finance_views_bp.route("/profile")
+@apply_remote_config
 @is_authenticated
 def finance_profile():
     logger.debug("finance_profile()")
@@ -29,6 +30,7 @@ def finance_profile():
 
 # Account Page
 @finance_views_bp.route("/account")
+@apply_remote_config
 @is_authenticated
 def finance_account():
     logger.debug("finance_account()")
