@@ -180,7 +180,7 @@ def streamingservice_token_check():
                             grant_type="refresh_token",
                             redirect_uri=responseurl,
                             scopes="openid profile email offline_access",
-                            device_id = device_id
+                            device_id=device_id
                         )
 
                         response = tokens
@@ -552,6 +552,7 @@ def get_oauth_token_from_login(code, grant_type, auth_options=None, headers=None
             url = "{url}&{key}={value}".format(url=url, key=key, value=auth_options[key])
 
     return RestUtil.execute_post(url, body, okta_headers)
+
 
 def get_authtoken(refresh_token, client_id, client_secret, grant_type, headers, redirect_uri, scopes, device_id):
     logger.debug("OktaAuth.get_oauth_token_from_refresh_token()")
