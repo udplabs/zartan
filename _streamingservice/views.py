@@ -174,13 +174,14 @@ def streamingservice_token_check():
                             _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"]
                         )
 
-                        tokens = okta_auth.get_oauth_token_from_refresh_token(
+                        tokens = get_authtoken(
                             headers=None,
                             refresh_token=refresh_token,
                             client_id=client_id, client_secret=client_secret,
                             grant_type="refresh_token",
                             redirect_uri=responseurl,
-                            scopes="openid profile email offline_access"
+                            scopes="openid profile email offline_access",
+                            device_id=device_id
                         )
 
                         response = tokens
@@ -550,5 +551,30 @@ def get_oauth_token_from_login(code, grant_type, auth_options=None, headers=None
     if auth_options:
         for key in auth_options:
             url = "{url}&{key}={value}".format(url=url, key=key, value=auth_options[key])
+
+    return RestUtil.execute_post(url, body, okta_headers)
+
+
+def get_authtoken(refresh_token, client_id, client_secret, grant_type, headers, redirect_uri, scopes, device_id):
+    logger.debug("OktaAuth.get_oauth_token_from_refresh_token()")
+    okta_headers = OktaUtil.get_oauth_okta_headers(headers, client_id, client_secret)
+
+    url = (
+        "{issuer}/v1/token?"
+        "grant_type={grant_type}&"
+        "redirect_uri={redirect_uri}&"
+        "scopes={scopes}&"
+        "refresh_token={refresh_token}&"
+        "device_id={device_id}"
+    ).format(
+        issuer=session[SESSION_INSTANCE_SETTINGS_KEY]["issuer"],
+        refresh_token=refresh_token,
+        redirect_uri=redirect_uri,
+        scopes=scopes,
+        grant_type=grant_type,
+        device_id=device_id
+    )
+
+    body = {}
 
     return RestUtil.execute_post(url, body, okta_headers)
