@@ -86,7 +86,7 @@ def ecommerce_shop():
 @apply_remote_config
 def ecommerce_product(product_id):
     logger.debug("ecommerce_product()")
-    products = requests.get(url=session[SESSION_INSTANCE_SETTINGS_KEY]["app_ecomm_products"])
+    products = requests.get(url=session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_ecomm_products"])
 
     return render_template(
         "ecommerce/product.html",
