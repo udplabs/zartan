@@ -4,7 +4,7 @@ import time
 
 from flask import session
 from flask import Blueprint
-from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_udp_ns_fieldname
+from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_udp_ns_fieldname, apply_remote_config
 from utils.okta import OktaAdmin, OktaUtil
 from utils.rest import RestUtil
 
@@ -17,6 +17,7 @@ gbac_idverification_bp = Blueprint('gbac_idverification_bp', __name__, template_
 
 
 @gbac_idverification_bp.route("/getverificationcode")
+@apply_remote_config
 @is_authenticated
 def gbac_idverification_getverificationcode():
     logger.debug("gbac_idverification_bp")
@@ -51,6 +52,7 @@ def gbac_idverification_getverificationcode():
 
 
 @gbac_idverification_bp.route("/updateidentity")
+@apply_remote_config
 @is_authenticated
 def gbac_idverification_updateidentity():
     logger.debug("gbac_idverification_updateidentity")
@@ -103,6 +105,7 @@ def gbac_idverification_updateidentity():
 
 
 @gbac_idverification_bp.route("/isverified")
+@apply_remote_config
 @is_authenticated
 def gbac_idverification_isverified():
     logger.debug("gbac_idverification_isverified")

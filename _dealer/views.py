@@ -289,6 +289,7 @@ def workflow_approvals_get():
 
 
 @dealer_views_bp.route("/workflow-approvals", methods=["POST"])
+@apply_remote_config
 @is_authenticated
 def workflow_approvals_post():
     logger.debug("workflow_approvals()")
@@ -342,9 +343,9 @@ def workflow_approvals_post():
     return redirect(url_for("dealer_views_bp.workflow_approvals_get", _external=True, _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"]))
 
 
-@is_authenticated
 @dealer_views_bp.route("/workflow-requests", methods=["GET"])
 @apply_remote_config
+@is_authenticated
 def workflow_requests_get():
     logger.debug("workflow_requests_get()")
     CONFIG_GROUP_LOCATION_STARTSWITH = get_udp_ns_fieldname(CONFIG_LOCATION)
@@ -413,8 +414,9 @@ def workflow_requests_get():
             _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
 
 
-@is_authenticated
 @dealer_views_bp.route("/workflow-requests", methods=["POST"])
+@apply_remote_config
+@is_authenticated
 def workflow_requests_post():
     logger.debug("workflow_requests_post()")
     user_info = get_userinfo()
