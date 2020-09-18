@@ -248,9 +248,9 @@ def ecommerce_accept_terms():
             message=message))
 
 
-@is_authenticated
 @ecommerce_views_bp.route("/workflow-requests", methods=["GET"])
 @apply_remote_config
+@is_authenticated
 def ecommerce_requests_get():
     logger.debug("workflow_requests_get()")
 
@@ -316,8 +316,9 @@ def ecommerce_requests_get():
         _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
 
 
-@is_authenticated
 @ecommerce_views_bp.route("/workflow-requests", methods=["POST"])
+@apply_remote_config
+@is_authenticated
 def ecommerce_requests_post():
     logger.debug("workflow_requests_post()")
     user_info = get_userinfo()
@@ -385,6 +386,7 @@ def ecommerce_approvals_get():
 
 
 @ecommerce_views_bp.route("/workflow-approvals", methods=["POST"])
+@apply_remote_config
 @is_authenticated
 def ecommerce_approvals_post():
     logger.debug("workflow_approvals()")

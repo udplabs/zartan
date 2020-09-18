@@ -3,7 +3,7 @@ import logging
 # import functions
 from flask import render_template, session, request, redirect, url_for
 from flask import Blueprint
-from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical
+from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical, apply_remote_config
 from utils.okta import OktaAdmin, IDPUtil
 
 from GlobalBehaviorandComponents.validation import is_authenticated, get_userinfo
@@ -22,6 +22,7 @@ gbac_manageidps_bp = Blueprint(
 
 
 @gbac_manageidps_bp.route("/managesamlidps")
+@apply_remote_config
 @is_authenticated
 def gbac_saml_idps():
     logger.debug("gbac_saml_idps()")
@@ -47,6 +48,7 @@ def gbac_saml_idps():
 
 
 @gbac_manageidps_bp.route("/managesamlidp")
+@apply_remote_config
 @is_authenticated
 def gbac_create_update_saml_idp_page():
     logger.debug("gbac_create_update_saml_idp_page()")
@@ -71,6 +73,7 @@ def gbac_create_update_saml_idp_page():
 
 
 @gbac_manageidps_bp.route("/updatesamlidp", methods=["POST"])
+@apply_remote_config
 @is_authenticated
 def gbac_update_saml_idp():
     logger.debug("gbac_update_saml_idp()")
@@ -139,6 +142,7 @@ def gbac_update_saml_idp():
 
 
 @gbac_manageidps_bp.route("/activatesamlidp")
+@apply_remote_config
 @is_authenticated
 def gbac_activatesamlidp():
     logger.debug("activatesamlidp()")
@@ -152,6 +156,7 @@ def gbac_activatesamlidp():
 
 
 @gbac_manageidps_bp.route("/deactivatesamlidp")
+@apply_remote_config
 @is_authenticated
 def gbac_deactivatesamlidp():
     logger.debug("deactivatesamlidp()")
@@ -165,6 +170,7 @@ def gbac_deactivatesamlidp():
 
 
 @gbac_manageidps_bp.route("/deletesamlidp")
+@apply_remote_config
 @is_authenticated
 def gbac_deletesamlidp():
     logger.debug("deletesamlidp()")
