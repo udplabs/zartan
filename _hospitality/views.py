@@ -3,7 +3,7 @@ import logging
 # import functions
 from flask import render_template, session, request
 from flask import Blueprint
-from utils.udp import SESSION_INSTANCE_SETTINGS_KEY
+from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, apply_remote_config
 from utils.okta import TokenUtil
 
 from GlobalBehaviorandComponents.validation import is_authenticated, get_userinfo
@@ -16,6 +16,7 @@ hospitality_views_bp = Blueprint('hospitality_views_bp', __name__, template_fold
 
 # Required for Login Landing Page
 @hospitality_views_bp.route("/profile")
+@apply_remote_config
 @is_authenticated
 def hospitality_profile():
     logger.debug("hospitality_profile()")

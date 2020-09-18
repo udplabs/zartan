@@ -4,7 +4,7 @@ import logging
 from random import randint
 from flask import render_template, session, redirect, url_for, request
 from flask import Blueprint
-from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical
+from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical, apply_remote_config
 from utils.okta import TokenUtil, OktaAdmin
 
 
@@ -18,6 +18,7 @@ admin_views_bp = Blueprint('admin_views_bp', __name__, template_folder='template
 
 # Required for Login Landing Page
 @admin_views_bp.route("/adminhome")
+@apply_remote_config
 @is_authenticated
 def admin_home():
     logger.debug("admin_home()")
@@ -25,6 +26,7 @@ def admin_home():
 
 
 @admin_views_bp.route("/profile")
+@apply_remote_config
 @is_authenticated
 def admin_profile():
     logger.debug("admin_profile()")
@@ -40,6 +42,7 @@ def admin_profile():
 
 
 @admin_views_bp.route("/users_advanced")
+@apply_remote_config
 @is_authenticated
 def admin_usersadvanced():
     logger.debug("admin_usersadvanced()")
@@ -63,6 +66,7 @@ def admin_usersadvanced():
 
 
 @admin_views_bp.route("/temporarypasscode")
+@apply_remote_config
 @is_authenticated
 def admin_temporarypasscode():
     logger.debug("admin_temporarypasscode()")
@@ -97,6 +101,7 @@ def random_with_N_digits(n):
 
 
 @admin_views_bp.route("/users_keysetup")
+@apply_remote_config
 @is_authenticated
 def admin_userskeysetup():
     logger.debug("users_keysetup()")
@@ -120,6 +125,7 @@ def admin_userskeysetup():
 
 
 @admin_views_bp.route("/addkey")
+@apply_remote_config
 @is_authenticated
 def admin_addkeytouser():
     logger.debug("admin_addkeytouser()")

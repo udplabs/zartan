@@ -21,6 +21,7 @@ streamingservice_views_bp = Blueprint('streamingservice_views_bp', __name__, tem
 
 
 @streamingservice_views_bp.route("/devicepage")
+@apply_remote_config
 def streamingservice_devicepage():
     logger.debug("streamingservice_devicepage()")
     client_id = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_deviceflow_clientid"]
@@ -44,6 +45,7 @@ def streamingservice_devicepage():
 
 
 @streamingservice_views_bp.route("/device")
+@apply_remote_config
 def streamingservice_device():
     logger.debug("streamingservice_device()")
 
@@ -86,6 +88,7 @@ def streamingservice_device():
 
 
 @streamingservice_views_bp.route("/token")
+@apply_remote_config
 def streamingservice_token():
     logger.debug("streamingservice_token()")
 
@@ -108,6 +111,7 @@ def streamingservice_token():
 
 
 @streamingservice_views_bp.route("/revoketoken", methods=["POST"])
+@apply_remote_config
 def streamingservice_revoketoken():
     logger.debug("streamingservice_revoketoken()")
 
@@ -125,6 +129,7 @@ def streamingservice_revoketoken():
 
 
 @streamingservice_views_bp.route("/token_check", methods=["POST"])
+@apply_remote_config
 def streamingservice_token_check():
     logger.debug("streamingservice_token_check()")
 
@@ -169,13 +174,14 @@ def streamingservice_token_check():
                             _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"]
                         )
 
-                        tokens = okta_auth.get_oauth_token_from_refresh_token(
+                        tokens = get_authtoken(
                             headers=None,
                             refresh_token=refresh_token,
                             client_id=client_id, client_secret=client_secret,
                             grant_type="refresh_token",
                             redirect_uri=responseurl,
-                            scopes="openid profile email offline_access"
+                            scopes="openid profile email offline_access",
+                            device_id=device_id
                         )
 
                         response = tokens
@@ -204,6 +210,7 @@ def streamingservice_device_activate():
 
 
 @streamingservice_views_bp.route("/device_validatecode", methods=["POST"])
+@apply_remote_config
 def streamingservice_device_validatecode():
     logger.debug("streamingservice_device_validatecode()")
 
@@ -241,6 +248,7 @@ def streamingservice_device_validatecode():
 
 
 @streamingservice_views_bp.route("/device_register")
+@apply_remote_config
 def streamingservice_device_register():
     logger.debug("streamingservice_device_register()")
     client_id = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_deviceflow_clientid"]
@@ -296,6 +304,7 @@ def streamingservice_device_register():
 
 
 @streamingservice_views_bp.route('/authorization-code/callback', methods=["POST"])
+@apply_remote_config
 def streamingservice_callback():
     """ handler for the oidc call back of the app """
     logger.debug("streamingservice_callback()")
@@ -379,6 +388,7 @@ def streamingservice_callback():
 
 
 @streamingservice_views_bp.route("/device_complete")
+@apply_remote_config
 def streamingservice_device_complete():
     logger.debug("streamingservice_device_complete()")
 
@@ -430,6 +440,7 @@ def streamingservice_device_complete():
 
 # Required for Login Landing Page
 @streamingservice_views_bp.route("/profile")
+@apply_remote_config
 @is_authenticated
 def streamingservice_profile():
     logger.debug("streamingservice_profile()")
@@ -442,6 +453,7 @@ def streamingservice_profile():
 
 
 @streamingservice_views_bp.route("/mydevices")
+@apply_remote_config
 @is_authenticated
 def streamingservice_mydevices():
     logger.debug("streamingservice_mydevices()")
@@ -474,6 +486,7 @@ def streamingservice_mydevices():
 
 
 @streamingservice_views_bp.route("/removedevice")
+@apply_remote_config
 @is_authenticated
 def streamingservice_removedevice():
     logger.debug("streamingservice_removedevice()")
@@ -538,5 +551,30 @@ def get_oauth_token_from_login(code, grant_type, auth_options=None, headers=None
     if auth_options:
         for key in auth_options:
             url = "{url}&{key}={value}".format(url=url, key=key, value=auth_options[key])
+
+    return RestUtil.execute_post(url, body, okta_headers)
+
+
+def get_authtoken(refresh_token, client_id, client_secret, grant_type, headers, redirect_uri, scopes, device_id):
+    logger.debug("OktaAuth.get_oauth_token_from_refresh_token()")
+    okta_headers = OktaUtil.get_oauth_okta_headers(headers, client_id, client_secret)
+
+    url = (
+        "{issuer}/v1/token?"
+        "grant_type={grant_type}&"
+        "redirect_uri={redirect_uri}&"
+        "scopes={scopes}&"
+        "refresh_token={refresh_token}&"
+        "device_id={device_id}"
+    ).format(
+        issuer=session[SESSION_INSTANCE_SETTINGS_KEY]["issuer"],
+        refresh_token=refresh_token,
+        redirect_uri=redirect_uri,
+        scopes=scopes,
+        grant_type=grant_type,
+        device_id=device_id
+    )
+
+    body = {}
 
     return RestUtil.execute_post(url, body, okta_headers)

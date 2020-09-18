@@ -3,7 +3,7 @@ import logging
 # import functions
 from flask import render_template, session, request
 from flask import Blueprint, redirect
-from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical
+from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical, apply_remote_config
 from utils.okta import TokenUtil, OktaAdmin
 
 from GlobalBehaviorandComponents.validation import is_authenticated, get_userinfo
@@ -16,6 +16,7 @@ credit_views_bp = Blueprint('credit_views_bp', __name__, template_folder='templa
 
 # Required for Login Landing Page
 @credit_views_bp.route("/profile")
+@apply_remote_config
 @is_authenticated
 def credit_profile():
     logger.debug("credit_profile()")
@@ -29,6 +30,7 @@ def credit_profile():
 
 # Account Page
 @credit_views_bp.route("/account")
+@apply_remote_config
 @is_authenticated
 def credit_account():
     logger.debug("credit_account()")
@@ -40,6 +42,7 @@ def credit_account():
 
 
 @credit_views_bp.route("/mycredit")
+@apply_remote_config
 @is_authenticated
 def credit_mycredit():
     logger.debug("credit_mycredit()")
@@ -59,6 +62,7 @@ def credit_mycredit():
 
 
 @credit_views_bp.route("/getmorecredit/<app_id>")
+@apply_remote_config
 @is_authenticated
 def credit_getmorecredit(app_id):
     logger.debug("credit_getmorecredit()")

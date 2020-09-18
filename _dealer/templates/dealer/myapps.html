@@ -60,21 +60,28 @@
                         <p class="lead mb-0">Applications</p>
                     </div>
                 </div>
-                <div class="card border-bottom">
-                    <div class="card-body">
-                        <div class="separator-2"></div>
-                        <div class="row">
-                        {% if apps|length > 0 %}
-                            {% for app in apps %}
-                              {% if app["_links"]["appLinks"] %}
-                                 <div class="col-4">
-                                 <a href="{{app._links.appLinks[0].href}}"  class="btn btn-default button" style="height:55px; width:300px; color: black; padding: 5px 11px; border: 1px solid; margin-top:2px; margin-bottom:2px; background-image: url('{{app._links.logo[0].href}}')">{{app.label}}</a>
-                                 </div>
-                              {% endif %}
-                            {% endfor %}
-                        {% endif %}
+                <div class="row">
+                  {% if apps|length > 0 %}
+                    {% for app in apps %}
+                      {% if app["_links"]["appLinks"] %}
+                        <div class="col-xxl-3 col-lg-4">
+                            <div class="card text-white mb-4">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center" style="height: 50px;">
+                                        <div class="mr-3">
+                                            <div class="text-lg font-weight-bold"><a class="small text-black stretched-link" href="{{app._links.appLinks[0].href}}" target="_blank">{{app.label}}</a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-primary d-flex align-items-center justify-content-between">
+                                    <a class="small text-white stretched-link" href="{{app._links.appLinks[0].href}}" target="_blank">Go To App</a>
+                                    <i class="fa fa-arrow-right"></i>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                     {% endif %}
+                    {% endfor %}
+                  {% endif %}
                 </div>
             </div>
         </section>
