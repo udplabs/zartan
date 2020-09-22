@@ -467,3 +467,53 @@ def ecommerce_emailWorkFlowRequest(group_id):
         return email_send
     else:
         return ''
+
+
+@ecommerce_views_bp.route("/updateuserinfo", methods=["POST"])
+@apply_remote_config
+@is_authenticated
+def ecommerce_user_update():
+    logger.debug("ecommerce_user_update")
+    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
+    user_id = request.form.get('user_id')
+    logging.debug(request.form.to_dict())
+
+    first_name = safe_get_dict(request.form, 'firstname')
+    last_name = safe_get_dict(request.form, 'lastname')
+    email = safe_get_dict(request.form, 'email')
+    mobile_phone = safe_get_dict(request.form, 'mobilePhone')
+    consent = safe_get_dict(request.form, 'nconsent')
+
+    user_data = {"profile": {
+        "firstName": first_name,
+        "lastName": last_name,
+        "email": email,
+        "mobilePhone": mobile_phone,
+        get_udp_ns_fieldname("consent"): consent,
+    }}
+
+    logging.debug(user_data)
+    user_update_response = okta_admin.update_user(user_id, user_data)
+    logging.debug(user_update_response)
+
+    if "error" in user_update_response:
+        message = "Error During Update: " + user_update_response
+    else:
+        message = "User Updated!"
+
+    return redirect(
+        url_for(
+            "ecommerce_views_bp.ecommerce_profile",
+            _external="True",
+            _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"],
+            user_id=user_id,
+            message=message))
+
+
+def safe_get_dict(mydict, key):
+    myval = ""
+    mydictval = mydict.get(key)
+    if mydictval:
+        if mydictval.strip() != "":
+            myval = mydictval.strip()
+    return myval
