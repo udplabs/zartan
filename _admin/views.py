@@ -70,8 +70,10 @@ def admin_usersadvanced():
 @is_authenticated
 def admin_temporarypasscode():
     logger.debug("admin_temporarypasscode()")
-    user_id = request.args.get('user_id')
+    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
 
+    user_id = request.args.get('user_id')
+    user = okta_admin.get_user(user_id)
     randcode = random_with_N_digits(6)
 
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
@@ -84,7 +86,9 @@ def admin_temporarypasscode():
         else:
             okta_admin.enroll_securityquestion(user_id, "favorite_security_question", str(randcode))
 
-    message = "Your Temporary Code is: {0}".format(str(randcode))
+    usersname = user["profile"]["firstName"] + " " + user["profile"]["lastName"]
+
+    message = "{0} - MFA Security Question Set to 'Favorite Security Question'. Users new code is: {1}".format(usersname, str(randcode))
 
     return redirect(
         url_for(
