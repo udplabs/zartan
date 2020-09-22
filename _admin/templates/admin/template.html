@@ -1,6 +1,13 @@
 <!--Do Not Remove any parts of this document unless you expect to not use out of the box behaviours-->
 <html lang="en">
     {% include '//components/template-header-meta-admin.html' %}
+    <script>
+        console.log(window.location.pathname);
+        if (window.location.pathname == "/login")
+        {
+            window.location.replace("/");
+        }
+    </script>
     <body class="nav-fixed">
         {% if user_info is defined %}
             {% include '//components/template-navigation-admin.html' %}
