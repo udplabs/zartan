@@ -20,7 +20,10 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-    
+      window.ga_debug = {trace: true};
+      gtag('set', 'user_properties', {
+        username: '{{ user_info.email }}'
+      });
       gtag('config', 'G-G9V6TER1KS');
     </script>
 </head>
