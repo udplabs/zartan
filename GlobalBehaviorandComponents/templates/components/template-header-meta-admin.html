@@ -12,12 +12,19 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-178628454-2"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      var dimensionValue = '{{ user_info.email }}';
-      ga('set', 'username', dimensionValue);
-      gtag('set', {'user_id': '{{ user_info.email }}'});
-      gtag('config', 'UA-178628454-2');
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-178628454-2', {
+            'custom_map': {'dimension1': 'username',
+            'dimension2': 'zartantype'
+          }
+        });
+      {% if user_info is defined %}
+        gtag('event', 'udpinfo', {'username': '{{ user_info.email }}', 'zartantype': '{{ config.settings.app_template  }}'});
+        gtag('set', {'user_id': '{{ user_info.email }}'});
+      {% else %}
+        gtag('event', 'udpinfo', {'username': '', 'zartantype': '{{ config.settings.app_template  }}'});
+      {% endif %}
     </script>
 </head>
