@@ -20,16 +20,27 @@
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
-        gtag('config', 'UA-178628454-2', {
-            'custom_map': {'dimension1': 'username',
-            'dimension2': 'zartantype'
-          }
-        });
-      {% if user_info is defined %}
-        gtag('event', 'udpinfo', {'username': '{{ user_info.email }}', 'zartantype': '{{ config.settings.app_template  }}'});
-        gtag('set', {'user_id': '{{ user_info.email }}'});
-      {% else %}
-        gtag('event', 'udpinfo', {'username': '', 'zartantype': '{{ config.settings.app_template  }}'});
-      {% endif %}
+        nusername = '';
+        {% if user_info is defined %}
+          nusername = '{{ user_info.email }}';
+        {% endif %}
+        var gtagConfig = {
+        		'user_id': nusername,
+        		'custom_map': {
+        			'dimension1': 'username',
+              'dimension2': 'zartantype',
+              'dimension3': 'companyname',
+              'dimension4': 'loginwidget'
+        		}
+        	}
+          gtag('config', 'UA-178628454-2', gtagConfig);
+
+        	gtag('event', 'udpinfo', {
+        	  'event_label': 'UDP Update',
+        		'username': nusername,
+        		'zartantype': '{{ config.settings.app_template  }}',
+        		'companyname': '{{ config.settings.app_name  }}',
+        		'loginwidget': '{{ config.settings.app_loginmethod  }}'
+        	});
     </script>
 </head>
