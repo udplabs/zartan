@@ -10,14 +10,14 @@
     <script src="https://cdn-zartan.s3.us-east-2.amazonaws.com/static/js/feather.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn-zartan.s3.us-east-2.amazonaws.com/static/js/jquery.min.js"></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-G9V6TER1KS"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-178628454-2"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('set', 'user_properties', {
-        username: '{{ user_info.email }}'
-      });
-      gtag('config', 'G-G9V6TER1KS');
+      var dimensionValue = '{{ user_info.email }}';
+      ga('set', 'username', dimensionValue);
+      gtag('set', {'user_id': '{{ user_info.email }}'});
+      gtag('config', 'UA-178628454-2');
     </script>
 </head>
