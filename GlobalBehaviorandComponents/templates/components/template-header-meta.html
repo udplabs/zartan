@@ -15,12 +15,32 @@
     <script src="https://cdn-zartan.s3.us-east-2.amazonaws.com/static/js/feather.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn-zartan.s3.us-east-2.amazonaws.com/static/js/jquery.min.js"></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-G9V6TER1KS"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-178628454-2"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-    
-      gtag('config', 'G-G9V6TER1KS');
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        nusername = '';
+        {% if user_info is defined %}
+          nusername = '{{ user_info.email }}';
+        {% endif %}
+        var gtagConfig = {
+        		'user_id': nusername,
+        		'custom_map': {
+        			'dimension1': 'username',
+              'dimension2': 'zartantype',
+              'dimension3': 'companyname',
+              'dimension4': 'loginwidget'
+        		}
+        	}
+          gtag('config', 'UA-178628454-2', gtagConfig);
+
+        	gtag('event', 'udpinfo', {
+        	  'event_label': 'UDP Update',
+        		'username': nusername,
+        		'zartantype': '{{ config.settings.app_template  }}',
+        		'companyname': '{{ config.settings.app_name  }}',
+        		'loginwidget': '{{ config.settings.app_loginmethod  }}'
+        	});
     </script>
 </head>
