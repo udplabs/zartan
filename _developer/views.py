@@ -21,13 +21,19 @@ developer_views_bp = Blueprint('developer_views_bp', __name__, template_folder='
 def developer_home():
     logger.debug("developer_home()")
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> WIP
     return render_template(
         "developer/developerhome.html",
         user_info=get_userinfo(),
         config=session[SESSION_INSTANCE_SETTINGS_KEY])
+<<<<<<< HEAD
 =======
     return render_template("developer/developerhome.html", user_info=get_userinfo(), config=session[SESSION_INSTANCE_SETTINGS_KEY])
 >>>>>>> Add developer portal vertical
+=======
+>>>>>>> WIP
 
 
 @developer_views_bp.route("/profile")
@@ -46,6 +52,9 @@ def developer_profile():
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> WIP
 # @developer_views_bp.route("/users_advanced")
 # @is_authenticated
 # def developer_usersadvanced():
@@ -154,6 +163,7 @@ def developer_profile():
 #     return message
 
 @developer_views_bp.route("/manage-apps")
+<<<<<<< HEAD
 @is_authenticated
 def developer_manage_api():
     logger.debug("developer_manage_apps()")
@@ -165,23 +175,17 @@ def developer_manage_api():
         config=session[SESSION_INSTANCE_SETTINGS_KEY])
 =======
 @developer_views_bp.route("/users_advanced")
+=======
+>>>>>>> WIP
 @is_authenticated
-def developer_usersadvanced():
-    logger.debug("developer_usersadvanced()")
-    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
-    user_groups = okta_admin.get_groups_by_name("everyone")
-    if len(user_groups) > 0:
-        # just grab the first one... there should only be one match for now
-        logger.debug(user_groups)
-        user_group = user_groups[0]
-
-    group_id = user_group["id"]
-    group_user_list = okta_admin.get_user_list_by_group_id(group_id)
+def developer_manage_api():
+    logger.debug("developer_manage_apps()")
 
     return render_template(
-        "/developer/users_advanced.html",
+        "/developer/manage_apps.html",
         templatename=get_app_vertical(),
         user_info=get_userinfo(),
+<<<<<<< HEAD
         userlist=group_user_list,
         config=session[SESSION_INSTANCE_SETTINGS_KEY],
         user_group=user_group)
@@ -271,3 +275,6 @@ def developer_addkeytouser():
 
     return message
 >>>>>>> Add developer portal vertical
+=======
+        config=session[SESSION_INSTANCE_SETTINGS_KEY])
+>>>>>>> WIP

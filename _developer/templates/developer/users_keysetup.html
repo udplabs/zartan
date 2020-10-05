@@ -29,12 +29,16 @@
                                         <td>{{ i['profile']['email']}}</td>
                                         <td style="text-align:center">{{ i['status'] }}</td>
 <<<<<<< HEAD
+<<<<<<< HEAD
                                         <td style="text-align:center"><a href="#" data-toggle="modal" data-target="#keycreate" onclick="adduserid('{{ i['id'] }}')"><i class="fa fa-key"></i></a></td>
 =======
                                         <td style="text-align:center"><a href="#" data-toggle="modal" data-target="#keycreate" onclick="adduserid('{{ i['id']}}')"><i class="fa fa-key"></i></a>
                                         
                                         </td>
 >>>>>>> Add developer portal vertical
+=======
+                                        <td style="text-align:center"><a href="#" data-toggle="modal" data-target="#keycreate" onclick="adduserid('{{ i['id'] }}')"><i class="fa fa-key"></i></a></td>
+>>>>>>> WIP
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -44,10 +48,14 @@
             </div>
         </section>
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
         
 >>>>>>> Add developer portal vertical
+=======
+
+>>>>>>> WIP
         <script>
             function adduserid(id) {
                 $("#userid").val(id);
@@ -74,10 +82,14 @@
             </div>
         </div>
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
         
 >>>>>>> Add developer portal vertical
+=======
+
+>>>>>>> WIP
         <script>
         function addkey() {
             factorProfileId = $("#factorprofileid").val();
@@ -86,6 +98,7 @@
             $.ajax({
                 url:'/admin/addkey',
                 type: "GET",
+<<<<<<< HEAD
 <<<<<<< HEAD
                 data:{
                     "factorProfileId": factorProfileId,
@@ -99,6 +112,13 @@
                     "userId": user_id
                 },    
 >>>>>>> Add developer portal vertical
+=======
+                data:{
+                    "factorProfileId": factorProfileId,
+                    "sharedSecret": seed,
+                    "userId": user_id
+                },
+>>>>>>> WIP
                 complete: function (response) {
                     alert(response.responseText);
                 },
