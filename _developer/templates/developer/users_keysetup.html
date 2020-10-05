@@ -28,9 +28,7 @@
                                         <td>{{ i['profile']['firstName']}} {{ i['profile']['lastName']}}</td>
                                         <td>{{ i['profile']['email']}}</td>
                                         <td style="text-align:center">{{ i['status'] }}</td>
-                                        <td style="text-align:center"><a href="#" data-toggle="modal" data-target="#keycreate" onclick="adduserid('{{ i['id']}}')"><i class="fa fa-key"></i></a>
-                                        
-                                        </td>
+                                        <td style="text-align:center"><a href="#" data-toggle="modal" data-target="#keycreate" onclick="adduserid('{{ i['id'] }}')"><i class="fa fa-key"></i></a></td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -39,7 +37,7 @@
                 </div>
             </div>
         </section>
-        
+
         <script>
             function adduserid(id) {
                 $("#userid").val(id);
@@ -65,7 +63,7 @@
                 </div>
             </div>
         </div>
-        
+
         <script>
         function addkey() {
             factorProfileId = $("#factorprofileid").val();
@@ -74,11 +72,11 @@
             $.ajax({
                 url:'/admin/addkey',
                 type: "GET",
-                data:{                
+                data:{
                     "factorProfileId": factorProfileId,
                     "sharedSecret": seed,
                     "userId": user_id
-                },    
+                },
                 complete: function (response) {
                     alert(response.responseText);
                 },
