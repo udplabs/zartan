@@ -183,7 +183,6 @@ function do_login(un, pw) {
     var authClient = new OktaAuth({
         url: '{{config.okta_org_name}}',
         clientId: '{{config.client_id}}',
-        redirectUri: '{{ config.redirect_uri}}',
         issuer: '{{config.issuer}}',
         pkce: false
     });
