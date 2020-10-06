@@ -178,14 +178,50 @@ function reset_password() {
 }
 
 function do_login(un, pw) {
-        console.log("dologin()");
+    var idplogin = false;
+
+    var authClient = new OktaAuth({
+        url: '{{config.okta_org_name}}',
+        clientId: '{{config.client_id}}',
+        redirectUri: '{{ config.redirect_uri}}',
+        issuer: '{{config.issuer}}',
+        pkce: false
+    });
+
+    authClient.webfinger({
+        resource: 'okta:acct:' + un
+    })
+    .then(function(res) {
+        console.log(res.links[0].properties["okta:idp:type"]);
+        
+        if (res.links[0].properties["okta:idp:type"] != "OKTA")
+        {
+            console.log("idp login")
+            idplogin = true;
+            mainurl = res.links[0].href
+            url =  mainurl.replace("#", "") + "&fromURI={{appurl}}";
+            console.log(url);
+            window.location.href = url;
+        }
+        else
+        {
+            final_login(un, pw);
+        }
+    })
+    .catch(function(err) {
+       final_login(un, pw)
+    });
+}
+
+function final_login(un, pw) {
+        console.log("final_login()");
 
         var authClient = new OktaAuth({
-            url: '{{config.okta_org_name}}',
-            clientId: '{{config.client_id}}',
-            redirectUri: '{{ config.redirect_uri}}',
-            issuer: '{{config.issuer}}',
-            pkce: false
+        url: '{{config.okta_org_name}}',
+        clientId: '{{config.client_id}}',
+        redirectUri: '{{ config.redirect_uri}}',
+        issuer: '{{config.issuer}}',
+        pkce: false
         });
 
         authClient.signIn({
@@ -210,16 +246,16 @@ function do_login(un, pw) {
                 });
             }
             else if (transaction.status === 'MFA_REQUIRED') {
-               console.log("MFA_REQUIRED");
-               $("#state").val(transaction.data.stateToken);
-               showwidget();
-               $("#exampleModalCenterTitle").text('Multi-Factor Validation');
+              console.log("MFA_REQUIRED");
+              $("#state").val(transaction.data.stateToken);
+              showwidget();
+              $("#exampleModalCenterTitle").text('Multi-Factor Validation');
             }
             else if (transaction.status === 'MFA_ENROLL') {
-               console.log("MFA_ENROLLMENT");
-               $("#state").val(transaction.data.stateToken);
-               showwidget();
-               $("#exampleModalCenterTitle").text('Multi-Factor Enrollment');
+              console.log("MFA_ENROLLMENT");
+              $("#state").val(transaction.data.stateToken);
+              showwidget();
+              $("#exampleModalCenterTitle").text('Multi-Factor Enrollment');
             }
             else {
                 throw 'We cannot handle the ' + transaction.status + ' status';
