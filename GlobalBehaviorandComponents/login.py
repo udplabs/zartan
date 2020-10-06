@@ -27,10 +27,19 @@ gbac_bp = Blueprint('gbac_bp', __name__, template_folder='templates', static_fol
 @check_zartan_config
 def gbac_main():
     logger.debug("gbac_main()")
+    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
+    appurl = ""
+    if session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_loginmethod"] == "custom-widget":
+        apps = okta_admin.get_applications_all()
+        for app in apps:
+            if app["id"] == session[SESSION_INSTANCE_SETTINGS_KEY]["client_id"]:
+                appurl = app["_links"]["appLinks"][0]["href"]
+
     return render_template(
         "{0}/index.html".format(get_app_vertical()),
         templatename=get_app_vertical(),
         user_info=get_userinfo(),
+        appurl=appurl,
         config=session[SESSION_INSTANCE_SETTINGS_KEY], state=str(uuid.uuid4()))
 
 
