@@ -84,6 +84,9 @@ def gbac_login():
             elif idp["type"] == "SAML2":
                 idptype = "SAML2"
                 idp = "true"
+            elif idp["type"] == "OIDC":
+                idptype = "OIDC"
+                idp = "true"
 
         return render_template(
             "/login.html",
@@ -243,7 +246,7 @@ def gbac_get_authorize_url():
     session_token = body["session_token"]
     session["state"] = str(uuid.uuid4())
 
-    oauth_authorize_url = get_oauth_authorize_url(session_token)
+    oauth_authorize_url = get_oauth_authorize_url(okta_session_token=session_token, prompt="none")
 
     response = {
         "authorize_url": oauth_authorize_url
@@ -288,15 +291,17 @@ def gbac_id_tokenp():
     return json.dumps(decodedToken)
 
 
-def get_oauth_authorize_url(okta_session_token=None, prompt="none"):
+def get_oauth_authorize_url(okta_session_token=None, prompt=None):
     logger.debug("get_oauth_authorize_url()")
     okta_auth = OktaAuth(session[SESSION_INSTANCE_SETTINGS_KEY])
 
     auth_options = {
         "response_mode": "form_post",
-        "prompt": prompt,
         "scope": "openid profile email"
     }
+
+    if prompt is not None:
+        auth_options["prompt"] = prompt
 
     if "state" not in session:
         session["oidc_state"] = str(uuid.uuid4())
