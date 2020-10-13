@@ -235,10 +235,7 @@ def gbac_get_authorize_url():
     session_token = body["session_token"]
     session["state"] = str(uuid.uuid4())
 
-    oauth_authorize_url = get_oauth_authorize_url(
-        okta_session_token=session_token, 
-        prompt="none"
-    )
+    oauth_authorize_url = get_oauth_authorize_url(okta_session_token=session_token, prompt="none")
 
     response = {
         "authorize_url": oauth_authorize_url

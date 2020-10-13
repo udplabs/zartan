@@ -148,7 +148,7 @@ def get_oauth_authorize_url(okta_session_token=None, prompt=None):
 
     if prompt is not None:
         auth_options["prompt"] = prompt
-        
+
     if "state" not in session:
         session["state"] = str(uuid.uuid4())
 
