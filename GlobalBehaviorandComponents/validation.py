@@ -137,16 +137,18 @@ def gvalidation_bp_error(error_message=""):
         error_message=Markup(error_message))
 
 
-def get_oauth_authorize_url(okta_session_token=None):
+def get_oauth_authorize_url(okta_session_token=None, prompt=None):
     logger.debug("get_oauth_authorize_url()")
     okta_auth = OktaAuth(session[SESSION_INSTANCE_SETTINGS_KEY])
 
     auth_options = {
         "response_mode": "form_post",
-        "prompt": "none",
         "scope": "openid profile email"
     }
 
+    if prompt is not None:
+        auth_options["prompt"] = prompt
+        
     if "state" not in session:
         session["state"] = str(uuid.uuid4())
 
