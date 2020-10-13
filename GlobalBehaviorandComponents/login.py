@@ -76,6 +76,9 @@ def gbac_login():
             elif idp["type"] == "SAML2":
                 idptype = "SAML2"
                 idp = "true"
+            elif idp["type"] == "OIDC":
+                idptype = "OIDC"
+                idp = "true"
 
         return render_template(
             "/login.html",
