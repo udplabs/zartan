@@ -181,7 +181,8 @@ def get_remote_config(udp_subdomain, udp_app_name):
 def get_domain_parts_from_request():
     logger.debug("get_domain_parts_from_request()")
 
-    domain_parts = request.host.split(".")
+    request_host = request.host
+    domain_parts = request_host.split(".")
 
     if len(domain_parts) >= 3:
         # Assume running in UDP
@@ -207,6 +208,8 @@ def get_domain_parts_from_request():
         "udp_app_name": udp_app_name,
         "remaining_domain": remaining_domain
     }
+
+    session[SESSION_INSTANCE_SETTINGS_KEY]["split_domain_parts"] = split_domain_parts
 
     return split_domain_parts
 
