@@ -27,9 +27,17 @@ gbac_bp = Blueprint('gbac_bp', __name__, template_folder='templates', static_fol
 @check_zartan_config
 def gbac_main():
     logger.debug("gbac_main()")
+    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
+    appurl = ""
+    if session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_loginmethod"] == "custom-widget":
+        apps = okta_admin.get_applications_all()
+        for app in apps:
+            if app["id"] == session[SESSION_INSTANCE_SETTINGS_KEY]["client_id"]:
+                appurl = app["_links"]["appLinks"][0]["href"]
     return render_template(
         "{0}/index.html".format(get_app_vertical()),
         templatename=get_app_vertical(),
+        appurl=appurl,
         user_info=get_userinfo(),
         config=session[SESSION_INSTANCE_SETTINGS_KEY], state=str(uuid.uuid4()))
 
@@ -75,6 +83,9 @@ def gbac_login():
                 idp = "true"
             elif idp["type"] == "SAML2":
                 idptype = "SAML2"
+                idp = "true"
+            elif idp["type"] == "OIDC":
+                idptype = "OIDC"
                 idp = "true"
 
         return render_template(
@@ -235,7 +246,7 @@ def gbac_get_authorize_url():
     session_token = body["session_token"]
     session["state"] = str(uuid.uuid4())
 
-    oauth_authorize_url = get_oauth_authorize_url(session_token)
+    oauth_authorize_url = get_oauth_authorize_url(okta_session_token=session_token, prompt="none")
 
     response = {
         "authorize_url": oauth_authorize_url
@@ -280,15 +291,17 @@ def gbac_id_tokenp():
     return json.dumps(decodedToken)
 
 
-def get_oauth_authorize_url(okta_session_token=None, prompt="none"):
+def get_oauth_authorize_url(okta_session_token=None, prompt=None):
     logger.debug("get_oauth_authorize_url()")
     okta_auth = OktaAuth(session[SESSION_INSTANCE_SETTINGS_KEY])
 
     auth_options = {
         "response_mode": "form_post",
-        "prompt": prompt,
         "scope": "openid profile email"
     }
+
+    if prompt is not None:
+        auth_options["prompt"] = prompt
 
     if "state" not in session:
         session["oidc_state"] = str(uuid.uuid4())
