@@ -1,0 +1,3 @@
+[submodule "utils/smartFHIRClient"]
+	path = utils/smartFHIRClient
+	url = https://github.com/dancinnamon-okta/client-py.git
