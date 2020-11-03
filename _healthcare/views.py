@@ -9,7 +9,7 @@ from GlobalBehaviorandComponents.mfaenrollment import get_enrolled_factors
 
 from GlobalBehaviorandComponents.validation import is_authenticated, get_userinfo
 
-#SMART/FHIR Libraries
+# SMART/FHIR Libraries
 from utils.smartFHIRClient.fhirclient import client
 from utils.smartFHIRClient.fhirclient.models.medicationrequest import MedicationRequest
 from utils.smartFHIRClient.fhirclient.models.claim import Claim
@@ -261,6 +261,7 @@ def healthcare_clear_consent(userid):
             user_id=userid,
             message=message))
 
+
 @healthcare_views_bp.route("/healthrecord")
 @apply_remote_config
 @is_authenticated
@@ -270,28 +271,29 @@ def healthcare_healthrecord():
         "healthcare/healthrecord.html",
         user_info=get_userinfo(),
         config=session[SESSION_INSTANCE_SETTINGS_KEY])
-        
+
+
 @healthcare_views_bp.route("/healthins")
 @apply_remote_config
 @is_authenticated
 def healthcare_healthins():
     logger.debug("healthcare_healthins")
-    
+
     # app setup
     smartClient = _get_smart()
-    accountLinked = False     
-    name=""
-    medications=[]
-    claims=[]
-  
-        
+    accountLinked = False
+    name = ""
+    medications = []
+    claims = []
+
+
     if smartClient.ready and smartClient.patient is not None:
         accountLinked = True
         smartClient.scope += ' patient_selection'
         name = smartClient.human_name(smartClient.patient.name[0] if smartClient.patient.name and len(smartClient.patient.name) > 0 else 'Unknown')
 
         logger.debug(smartClient.authorized_scopes)
-        
+
         if "patient/MedicationRequest.read" in smartClient.authorized_scopes:
             medSearch = MedicationRequest.where({'patient': smartClient.patient_id}).perform(smartClient.server)
             if medSearch.entry:
@@ -303,9 +305,9 @@ def healthcare_healthins():
                     }
                     if bundleEntry.resource.dosageInstruction:
                         medEntry["instructions"] = bundleEntry.resource.dosageInstruction[0].text
-                        
+
                     medications.append(medEntry)
-                
+
         if "patient/Claim.read" in smartClient.authorized_scopes:
             claimSearch = Claim.where({'patient': smartClient.patient_id}).perform(smartClient.server)
             if claimSearch.entry:
@@ -332,6 +334,7 @@ def healthcare_healthins():
         authorize_url=smartClient.authorize_url,
         config=session[SESSION_INSTANCE_SETTINGS_KEY])
 
+
 @healthcare_views_bp.route("/smartfhir_callback")
 @apply_remote_config
 @is_authenticated
@@ -342,7 +345,7 @@ def healthcare_smartfhir_callback():
         smartClient.handle_callback(request.url)
     except Exception as e:
         return """<h1>Authorization Error</h1><p>{0}</p><p><a href="/">Start over</a></p>""".format(e)
-        
+
     return redirect(
         url_for(
             "healthcare_views_bp.healthcare_healthins",
@@ -351,13 +354,14 @@ def healthcare_smartfhir_callback():
             user_id=None,
             message=None))
 
+
 @healthcare_views_bp.route("/newpatient")
 @apply_remote_config
 @is_authenticated
 def healthcare_newpatient():
     if 'fhir_state' in session:
         del session['fhir_state']
-    
+
     return redirect(
         url_for(
             "healthcare_views_bp.healthcare_healthrecord",
@@ -365,6 +369,7 @@ def healthcare_newpatient():
             _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"],
             user_id=None,
             message=None))
+
 
 def _save_state(state):
     session['fhir_state'] = state
