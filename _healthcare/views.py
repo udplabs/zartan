@@ -372,10 +372,9 @@ def _save_state(state):
 
 def _get_smart():
     smart_config = {
-        'app_id': session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_ins_fhir_clientid"], #'0oa3gvkmdRb5n52e91d6',
-        'app_secret': session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_ins_fhir_clientsecret"], #'Q9--hRWZFnMx9rMVYjnIik-ksS21vGUb-BjU4MzW',
-        'api_base': session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_ins_fhir_api_base"], #'https://mpwnxqqpp2.execute-api.us-east-1.amazonaws.com/dev',
-        'redirect_uri': session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_ins_fhir_redirect_uri"], #'http://localhost:8666/healthcare/smartfhir_callback',
+        'app_id': session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_ins_fhir_clientid"],
+        'api_base': session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_ins_fhir_api_base"],
+        'redirect_uri': session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_ins_fhir_redirect_uri"],
         'scope': 'launch/patient patient/Patient.read patient/MedicationRequest.read patient/Claim.read'
     }
     state = session.get('fhir_state')
