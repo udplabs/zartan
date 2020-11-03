@@ -286,7 +286,6 @@ def healthcare_healthins():
     medications = []
     claims = []
 
-
     if smartClient.ready and smartClient.patient is not None:
         accountLinked = True
         smartClient.scope += ' patient_selection'
@@ -301,7 +300,7 @@ def healthcare_healthins():
                     medEntry = {
                         "name": bundleEntry.resource.medicationCodeableConcept.text,
                         "dateIssued": bundleEntry.resource.authoredOn.date.strftime("%m/%d/%Y"),
-                        "instructions":""
+                        "instructions": ""
                     }
                     if bundleEntry.resource.dosageInstruction:
                         medEntry["instructions"] = bundleEntry.resource.dosageInstruction[0].text
