@@ -35,6 +35,10 @@ default_settings = {
         "app_deviceflow_clientid": os.getenv("APP_DEVICEFLOW_CLIENTID", ""),
         "app_deviceflow_clientsecret": os.getenv("APP_DEVICEFLOW_CLIENTSECRET", ""),
         "app_deviceflow_appname": os.getenv("APP_DEVICEFLOW_APPNAME", ""),
+        "app_ins_fhir_clientid": os.getenv("APP_INS_FHIR_CLIENTID", ""),
+        "app_ins_fhir_clientsecret": os.getenv("APP_INS_FHIR_CLIENTSECRET", ""),
+        "app_ins_fhir_api_base": os.getenv("APP_INS_FHIR_API_BASE", ""),
+        "app_ins_fhir_redirect_uri": os.getenv("APP_INS_FHIR_REDIRECT_URI", "")
     },
     "okta_api_token": os.getenv("OKTA_API_TOKEN", ""),
     "app_secret_key": os.getenv("SECRET_KEY", ""),

@@ -14,16 +14,6 @@ from utils.smartFHIRClient.fhirclient import client
 from utils.smartFHIRClient.fhirclient.models.medicationrequest import MedicationRequest
 from utils.smartFHIRClient.fhirclient.models.claim import Claim
 
-# app setup
-smart_config = {
-    'app_id': '0oa3gvkmdRb5n52e91d6',
-    'app_secret': 'Q9--hRWZFnMx9rMVYjnIik-ksS21vGUb-BjU4MzW',
-    'api_base': 'https://mpwnxqqpp2.execute-api.us-east-1.amazonaws.com/dev',
-    'redirect_uri': 'http://localhost:8666/healthcare/smartfhir_callback',
-    'scope': 'launch/patient patient/Patient.read patient/MedicationRequest.read patient/Claim.read'
-}
-
-
 logger = logging.getLogger(__name__)
 
 # set blueprint
@@ -286,6 +276,8 @@ def healthcare_healthrecord():
 @is_authenticated
 def healthcare_healthins():
     logger.debug("healthcare_healthins")
+    
+    # app setup
     smartClient = _get_smart()
     accountLinked = False     
     name=""
@@ -379,6 +371,13 @@ def _save_state(state):
 
 
 def _get_smart():
+    smart_config = {
+        'app_id': session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_ins_fhir_clientid"], #'0oa3gvkmdRb5n52e91d6',
+        'app_secret': session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_ins_fhir_clientsecret"], #'Q9--hRWZFnMx9rMVYjnIik-ksS21vGUb-BjU4MzW',
+        'api_base': session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_ins_fhir_api_base"], #'https://mpwnxqqpp2.execute-api.us-east-1.amazonaws.com/dev',
+        'redirect_uri': session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_ins_fhir_redirect_uri"], #'http://localhost:8666/healthcare/smartfhir_callback',
+        'scope': 'launch/patient patient/Patient.read patient/MedicationRequest.read patient/Claim.read'
+    }
     state = session.get('fhir_state')
     if state:
         return client.FHIRClient(state=state, save_func=_save_state)
