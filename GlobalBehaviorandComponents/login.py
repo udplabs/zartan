@@ -27,9 +27,17 @@ gbac_bp = Blueprint('gbac_bp', __name__, template_folder='templates', static_fol
 @check_zartan_config
 def gbac_main():
     logger.debug("gbac_main()")
+    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
+    appurl = ""
+    if session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_loginmethod"] == "custom-widget":
+        apps = okta_admin.get_applications_all()
+        for app in apps:
+            if app["id"] == session[SESSION_INSTANCE_SETTINGS_KEY]["client_id"]:
+                appurl = app["_links"]["appLinks"][0]["href"]
     return render_template(
         "{0}/index.html".format(get_app_vertical()),
         templatename=get_app_vertical(),
+        appurl=appurl,
         user_info=get_userinfo(),
         config=session[SESSION_INSTANCE_SETTINGS_KEY], state=str(uuid.uuid4()))
 
@@ -75,6 +83,9 @@ def gbac_login():
                 idp = "true"
             elif idp["type"] == "SAML2":
                 idptype = "SAML2"
+                idp = "true"
+            elif idp["type"] == "OIDC":
+                idptype = "OIDC"
                 idp = "true"
 
         return render_template(
