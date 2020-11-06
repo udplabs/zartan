@@ -140,3 +140,6 @@ output "issuer" {
 output "okta_app_oauth_id" {
   value = "${okta_app_oauth.healthcare.id}"
 }
+output "insurance_smart_app_redirect_uri" {
+  value = https://${local.app_domain}/healthcare/smartfhir_callback
+}
