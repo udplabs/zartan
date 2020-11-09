@@ -68,7 +68,7 @@ Open up a terminal/shell then:
 
     ```bash
     # e.g. using https
-    git clone https://github.com/udplabs/zartan.git
+    git clone --recursive https://github.com/udplabs/zartan.git
     ```
 
 2. After cloning, `cd` into the `zartan` folder
