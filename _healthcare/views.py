@@ -280,7 +280,7 @@ def healthcare_healthins():
     logger.debug("healthcare_healthins")
 
     # app setup
-    smartClient = _get_smart()
+    smartClient = _get_smart(request)
     accountLinked = False
     name = ""
     medications = []
@@ -339,7 +339,7 @@ def healthcare_healthins():
 @is_authenticated
 def healthcare_smartfhir_callback():
     logger.debug("healthcare_smartfhir_callback")
-    smartClient = _get_smart()
+    smartClient = _get_smart(request)
     try:
         smartClient.handle_callback(request.url)
     except Exception as e:
@@ -374,11 +374,11 @@ def _save_state(state):
     session['fhir_state'] = state
 
 
-def _get_smart():
+def _get_smart(request):
     smart_config = {
         'app_id': session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_ins_fhir_clientid"],
         'api_base': session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_ins_fhir_api_base"],
-        'redirect_uri': session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_ins_fhir_redirect_uri"],
+        'redirect_uri': request.url_root + "healthcare/smartfhir_callback",
         'scope': 'launch/patient patient/Patient.read patient/MedicationRequest.read patient/Claim.read'
     }
     state = session.get('fhir_state')
