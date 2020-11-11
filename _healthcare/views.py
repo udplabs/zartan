@@ -10,9 +10,9 @@ from GlobalBehaviorandComponents.mfaenrollment import get_enrolled_factors
 from GlobalBehaviorandComponents.validation import is_authenticated, get_userinfo
 
 # SMART/FHIR Libraries
-from utils.smartFHIRClient.fhirclient import client
-from utils.smartFHIRClient.fhirclient.models.medicationrequest import MedicationRequest
-from utils.smartFHIRClient.fhirclient.models.claim import Claim
+from utils.fhirclient import client
+from utils.fhirclient.models.medicationrequest import MedicationRequest
+from utils.fhirclient.models.claim import Claim
 
 logger = logging.getLogger(__name__)
 
