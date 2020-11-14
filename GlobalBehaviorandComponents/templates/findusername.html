@@ -1,0 +1,65 @@
+{% extends templatename+"/template.html" %}
+
+{% block content %}
+    <section class="bg-light py-5">
+    <div class="container">
+        <div class="d-flex align-items-center mb-5">
+            <div class="icon-stack icon-stack-lg bg-primary text-white"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
+            <div class="ml-3">
+                <h2 class="mb-0">Find Username</h2>
+            </div>
+        </div>
+        <div class="card border-bottom">
+            <div class="card-body">
+            <form action="/find-user" method="POST" >
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        Misplaced your username? Please enter your First Name and Last Name or your Phone Number. You will recieve an email with your username.
+                    </div>
+                    <div class="form-group col-md-6"><label class="small text-gray-600" for="firstname">First Name</label>
+                        <input class="form-control rounded-pill" name="firstname" id="firstname" type="text" required/>
+                    </div>
+                    <div class="form-group col-md-6"><label class="small text-gray-600" for="lastname">Last Name</label>
+                        <input class="form-control rounded-pill" name="lastname" id="lastname" type="text" required/>
+                    </div>
+
+                    <div class="form-group col-md-12 align-items-center justify-content-center" style="text-align:center">
+                       Or
+                    </div>
+
+                    <div class="form-group col-md-12"><label class="small text-gray-600" for="organization">Phone Number</label>
+                        <input class="form-control rounded-pill" name="phone" id="phone" type="phone" required/>
+                    </div>
+                    <button class="btn btn-primary btn-marketing btn-block rounded-pill mt-4" type="submit">Look Me Up</button>
+                </div>
+            </form>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+var firstname = document.querySelector('#firstname');
+firstname.addEventListener("input", function(e) {
+    $("#phone").prop('required', false);
+    console.log('fn');
+}, false);
+
+var lastname = document.querySelector('#lastname');
+lastname.addEventListener("input", function(e) {
+    $("#phone").prop('required', false);
+    console.log('ln');
+}, false);
+
+var phone = document.querySelector('#phone');
+phone.addEventListener("input", function(e) {
+    $("#firstname").prop('required', false);
+    $("#lastname").prop('required', false);
+    console.log('ph');
+}, false);
+
+
+</script>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
