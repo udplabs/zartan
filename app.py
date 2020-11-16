@@ -67,6 +67,9 @@ app.register_blueprint(gbac_manageidps_bp, url_prefix='/')
 from GlobalBehaviorandComponents.idverification import gbac_idverification_bp
 app.register_blueprint(gbac_idverification_bp, url_prefix='/')
 
+from GlobalBehaviorandComponents.progressiveprofile import gbac_progressiveprofile_bp
+app.register_blueprint(gbac_progressiveprofile_bp, url_prefix='/')
+
 # sample theme
 from _sample.views import sample_views_bp
 app.register_blueprint(sample_views_bp, url_prefix='/sample')

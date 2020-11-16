@@ -1,0 +1,78 @@
+<div class="modal fade" id="progressiveprofilingModal" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="progressiveprofileModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="ModalLabel">Update Profile</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="ModalBody">
+        <form action="/progressiveprofile" method="POST" id="progressiveprofileForm">
+        <div class="form-row">
+            <div class="form-group col-md-6"><label class="small text-gray-600" for="street">Address</label>
+                <input class="form-control rounded-pill" name="street" id="street" type="text" required="required"/>
+            </div>
+            <div class="form-group col-md-6"><label class="small text-gray-600" for="city">City</label>
+                <input class="form-control rounded-pill" name="city" id="city" type="text"  required="required"/>
+            </div>
+            <div class="form-group col-md-12"><label class="small text-gray-600" for="state">State</label>
+                <input class="form-control rounded-pill" name="state" id="state" type="text"  required="required" />
+            </div>
+            <div class="form-group col-md-12"><label class="small text-gray-600" for="postal">Postal Code</label>
+                <input class="form-control rounded-pill" name="postal" id="postal" type="text"  required="required" />
+                <input type="hidden" id="userid" name="userid" value="{{ user_info['sub'] }} ">
+            </div>
+            <button class="btn btn-primary btn-marketing btn-block rounded-pill mt-4" type="button" onclick="completeform()">Complete Form</button>
+        </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+    function completeform() {
+            var form = $("#progressiveprofileForm");
+            $.ajax({
+                url:'/progressiveprofile',
+                type: "POST",
+                data: form.serialize(),
+                complete: function (response) {
+                    alert(response);
+                },
+                error: function () {
+                    alert('Error on Update');
+                },
+            });
+        return false;
+    };
+
+    $(window).on('load',function(){
+        var form = $("#progressiveprofileForm");
+        $.ajax({
+            url:'/userprofile',
+            type: "POST",
+            data: form.serialize(),
+            complete: function (response) {
+                myresponse = JSON.parse(response.responseText);
+
+                if (myresponse['profile']['streetAddress'])
+                {
+                    //do nothing
+                }
+                else
+                {
+                    $('#progressiveprofilingModal').modal('show');
+                }
+            },
+            error: function () {
+            },
+        });
+
+        return false;
+    });
+</script>
+<!-- End Modal -->
