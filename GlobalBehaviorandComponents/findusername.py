@@ -70,7 +70,7 @@ def emailLogin(recipient, username):
 
     message = """
         You have requested to retrieve your username. <br /> <br />Your Username is: {username}<br /> <br />
-        <a href='https://www.vodkta.com'>Click Here to Login</a><br /> <br />If you did not request to retrieve
+        <br /> <br />If you did not request to retrieve
          your username, please contact us at your earliest convenience.
         """.format(username=username)
 

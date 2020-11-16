@@ -15,16 +15,18 @@
         <footer class="footer pt-10 pb-5 mt-auto bg-black footer-dark">
         {% endif %}
             <div class="container">
-                <div class="row">
-                    <div class="col-lg-3">
+                <div class="row align-items-start">
+                    <div class="col-md-6">
                         <div class="footer-brand">{{ config.settings.app_name }} </div>
                         <div class="mb-3">{{ config.settings.app_slogan }}</div>
                         <div class="icon-list-social mb-5">
                             <a class="icon-list-social-link" href="javascript:void(0);"><i class="fab fa-instagram"></i></a><a class="icon-list-social-link" href="javascript:void(0);"><i class="fab fa-facebook"></i></a><a class="icon-list-social-link" href="javascript:void(0);"><i class="fab fa-github"></i></a><a class="icon-list-social-link" href="javascript:void(0);"><i class="fab fa-twitter"></i></a>
                         </div>
                     </div>
-                    <div class="col-lg-9">
-                         {% include config.settings.app_template + '/navitems.html' %}
+                    <div class="col-md-6 text-md-right align-text-top">
+                         <a href="/">Home</a><br>
+                         <a href="/login">Login</a><br>
+                         <a href="/findusername">Find Username</a><br>
                     </div>
                 </div>
                 <hr class="my-5" />
