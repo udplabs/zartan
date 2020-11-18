@@ -7,6 +7,7 @@ from flask import Blueprint
 from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical, apply_remote_config
 from utils.okta import TokenUtil, OktaAuth
 
+from GlobalBehaviorandComponents.mfaenrollment import get_enrolled_factors
 from GlobalBehaviorandComponents.validation import is_authenticated, get_userinfo, FROM_URI_KEY
 
 logger = logging.getLogger(__name__)
@@ -41,11 +42,14 @@ def profile_bp():
 
         return redirect(oauth_authorize_url)
     else:
+        user_info = get_userinfo()
+        factors = get_enrolled_factors(user_info["sub"])
 
         return render_template(
             "/profile.html",
             templatename=get_app_vertical(),
             id_token=TokenUtil.get_id_token(request.cookies),
+            factors=factors,
             access_token=TokenUtil.get_access_token(request.cookies),
             user_info=get_userinfo(),
             config=session[SESSION_INSTANCE_SETTINGS_KEY])
