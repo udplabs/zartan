@@ -78,19 +78,14 @@ def healthcare_accept_terms():
 
     user_data = {"profile": {get_udp_ns_fieldname("consent"): consent}}
     user_update_response = okta_admin.update_user(user_id, user_data)
-
-    if user_update_response:
-        message = "Thank you for completing the Consent Form."
-    else:
-        message = "Error During consent"
+    logger.debug(user_update_response)
 
     return redirect(
         url_for(
             "healthcare_views_bp.healthcare_profile",
             _external="True",
             _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"],
-            user_id=user_id,
-            message=message))
+            user_id=user_id))
 
 
 @healthcare_views_bp.route("/account")
