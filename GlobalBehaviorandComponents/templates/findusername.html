@@ -14,7 +14,7 @@
             <form action="/find-user" method="POST" >
                 <div class="form-row">
                     <div class="form-group col-md-12">
-                        Misplaced your username? Please enter your First Name and Last Name or your Phone Number. You will recieve an email with your username.
+                        <b>Misplaced your username?</b><br>Please enter your First Name and Last Name or your Phone Number. You will recieve an email with your username.<br>
                     </div>
                     <div class="form-group col-md-6"><label class="small text-gray-600" for="firstname">First Name</label>
                         <input class="form-control rounded-pill" name="firstname" id="firstname" type="text" required/>
@@ -22,11 +22,9 @@
                     <div class="form-group col-md-6"><label class="small text-gray-600" for="lastname">Last Name</label>
                         <input class="form-control rounded-pill" name="lastname" id="lastname" type="text" required/>
                     </div>
-
                     <div class="form-group col-md-12 align-items-center justify-content-center" style="text-align:center">
                        Or
                     </div>
-
                     <div class="form-group col-md-12"><label class="small text-gray-600" for="organization">Phone Number</label>
                         <input class="form-control rounded-pill" name="phone" id="phone" type="phone" required/>
                     </div>
@@ -41,23 +39,18 @@
 var firstname = document.querySelector('#firstname');
 firstname.addEventListener("input", function(e) {
     $("#phone").prop('required', false);
-    console.log('fn');
 }, false);
 
 var lastname = document.querySelector('#lastname');
 lastname.addEventListener("input", function(e) {
     $("#phone").prop('required', false);
-    console.log('ln');
 }, false);
 
 var phone = document.querySelector('#phone');
 phone.addEventListener("input", function(e) {
     $("#firstname").prop('required', false);
     $("#lastname").prop('required', false);
-    console.log('ph');
 }, false);
-
-
 </script>
 {% endblock %}
 

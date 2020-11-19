@@ -41,7 +41,11 @@ def gbac_finduser_completion():
     email = ""
     login = ""
     if primaryPhone:
+        logging.debug("checking primaryPhone")
         user_response = okta_admin.get_user_list_by_search("profile.primaryPhone eq \"" + primaryPhone + "\"&limit=1")
+        if not user_response:
+            logging.debug("checking mobilePhone")
+            user_response = okta_admin.get_user_list_by_search("profile.mobilePhone eq \"" + primaryPhone + "\"&limit=1")
     else:
         user_response = okta_admin.get_user_list_by_search("profile.firstName eq \"" + firstName + "\" and profile.lastName eq \"" + lastName + "\"&limit=1")
 
@@ -69,8 +73,8 @@ def emailLogin(recipient, username):
     subject = "Your Username was Found"
 
     message = """
-        You have requested to retrieve your username. <br /> <br />Your Username is: {username}<br /> <br />
-        <br /> <br />If you did not request to retrieve
+        You have requested to retrieve your username. <br /><br /><br />Your Username is: {username}
+        <br /><br /><br />If you did not request to retrieve
          your username, please contact us at your earliest convenience.
         """.format(username=username)
 
