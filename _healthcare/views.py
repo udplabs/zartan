@@ -9,6 +9,11 @@ from GlobalBehaviorandComponents.mfaenrollment import get_enrolled_factors
 
 from GlobalBehaviorandComponents.validation import is_authenticated, get_userinfo
 
+# SMART/FHIR Libraries
+from utils.fhirclient import client
+from utils.fhirclient.models.medicationrequest import MedicationRequest
+from utils.fhirclient.models.claim import Claim
+
 logger = logging.getLogger(__name__)
 
 # set blueprint
@@ -73,19 +78,14 @@ def healthcare_accept_terms():
 
     user_data = {"profile": {get_udp_ns_fieldname("consent"): consent}}
     user_update_response = okta_admin.update_user(user_id, user_data)
-
-    if user_update_response:
-        message = "Thank you for completing the Consent Form."
-    else:
-        message = "Error During consent"
+    logger.debug(user_update_response)
 
     return redirect(
         url_for(
             "healthcare_views_bp.healthcare_profile",
             _external="True",
             _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"],
-            user_id=user_id,
-            message=message))
+            user_id=user_id))
 
 
 @healthcare_views_bp.route("/account")
@@ -266,3 +266,118 @@ def healthcare_healthrecord():
         "healthcare/healthrecord.html",
         user_info=get_userinfo(),
         config=session[SESSION_INSTANCE_SETTINGS_KEY])
+
+
+@healthcare_views_bp.route("/healthins")
+@apply_remote_config
+@is_authenticated
+def healthcare_healthins():
+    logger.debug("healthcare_healthins")
+
+    # app setup
+    smartClient = _get_smart(request)
+    accountLinked = False
+    name = ""
+    medications = []
+    claims = []
+
+    if smartClient.ready and smartClient.patient is not None:
+        accountLinked = True
+        smartClient.scope += ' patient_selection'
+        name = smartClient.human_name(smartClient.patient.name[0] if smartClient.patient.name and len(smartClient.patient.name) > 0 else 'Unknown')
+
+        logger.debug(smartClient.authorized_scopes)
+
+        if "patient/MedicationRequest.read" in smartClient.authorized_scopes:
+            medSearch = MedicationRequest.where({'patient': smartClient.patient_id}).perform(smartClient.server)
+            if medSearch.entry:
+                for bundleEntry in medSearch.entry:
+                    medEntry = {
+                        "name": bundleEntry.resource.medicationCodeableConcept.text,
+                        "dateIssued": bundleEntry.resource.authoredOn.date.strftime("%m/%d/%Y"),
+                        "instructions": ""
+                    }
+                    if bundleEntry.resource.dosageInstruction:
+                        medEntry["instructions"] = bundleEntry.resource.dosageInstruction[0].text
+
+                    medications.append(medEntry)
+
+        if "patient/Claim.read" in smartClient.authorized_scopes:
+            claimSearch = Claim.where({'patient': smartClient.patient_id}).perform(smartClient.server)
+            if claimSearch.entry:
+                for bundleEntry in claimSearch.entry:
+                    logger.info(bundleEntry.resource.item[0].productOrService.text)
+                    logger.info(bundleEntry.resource.provider.display)
+                    logger.info("{0} {1}".format(bundleEntry.resource.total.value, bundleEntry.resource.total.currency))
+                    logger.info(bundleEntry.resource.billablePeriod.start.date.strftime("%m/%d/%Y"))
+                    claimEntry = {
+                        "purpose": bundleEntry.resource.item[0].productOrService.text,
+                        "date": bundleEntry.resource.billablePeriod.start.date.strftime("%m/%d/%Y"),
+                        "payee": bundleEntry.resource.provider.display,
+                        "amount": "{value:.2f} {currency}".format(value=bundleEntry.resource.total.value, currency=bundleEntry.resource.total.currency)
+                    }
+                    claims.append(claimEntry)
+
+    return render_template(
+        "healthcare/healthins.html",
+        user_info=get_userinfo(),
+        patient_name=name,
+        medication_info=medications,
+        claim_info=claims,
+        account_linked=accountLinked,
+        authorize_url=smartClient.authorize_url,
+        config=session[SESSION_INSTANCE_SETTINGS_KEY])
+
+
+@healthcare_views_bp.route("/smartfhir_callback")
+@apply_remote_config
+@is_authenticated
+def healthcare_smartfhir_callback():
+    logger.debug("healthcare_smartfhir_callback")
+    smartClient = _get_smart(request)
+    try:
+        smartClient.handle_callback(request.url)
+    except Exception as e:
+        return """<h1>Authorization Error</h1><p>{0}</p><p><a href="/">Start over</a></p>""".format(e)
+
+    return redirect(
+        url_for(
+            "healthcare_views_bp.healthcare_healthins",
+            _external="True",
+            _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"],
+            user_id=None,
+            message=None))
+
+
+@healthcare_views_bp.route("/newpatient")
+@apply_remote_config
+@is_authenticated
+def healthcare_newpatient():
+    if 'fhir_state' in session:
+        del session['fhir_state']
+
+    return redirect(
+        url_for(
+            "healthcare_views_bp.healthcare_healthrecord",
+            _external="True",
+            _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"],
+            user_id=None,
+            message=None))
+
+
+def _save_state(state):
+    session['fhir_state'] = state
+
+
+def _get_smart(request):
+    smart_config = {
+        'app_id': session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_ins_fhir_clientid"],
+        'api_base': session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_ins_fhir_api_base"],
+        'redirect_uri': request.url_root + "healthcare/smartfhir_callback",
+        'scope': 'launch/patient patient/Patient.read patient/MedicationRequest.read patient/Claim.read'
+    }
+    state = session.get('fhir_state')
+    if state:
+        return client.FHIRClient(state=state, save_func=_save_state)
+    else:
+        return client.FHIRClient(settings=smart_config, save_func=_save_state)

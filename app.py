@@ -55,6 +55,9 @@ app.register_blueprint(gbac_profile_bp, url_prefix='/')
 from GlobalBehaviorandComponents.registration import gbac_registration_bp
 app.register_blueprint(gbac_registration_bp, url_prefix='/')
 
+from GlobalBehaviorandComponents.findusername import gbac_findusername_bp
+app.register_blueprint(gbac_findusername_bp, url_prefix='/')
+
 from GlobalBehaviorandComponents.validation import gvalidation_bp, get_userinfo
 app.register_blueprint(gvalidation_bp, url_prefix='/')
 
@@ -66,6 +69,9 @@ app.register_blueprint(gbac_manageidps_bp, url_prefix='/')
 
 from GlobalBehaviorandComponents.idverification import gbac_idverification_bp
 app.register_blueprint(gbac_idverification_bp, url_prefix='/')
+
+from GlobalBehaviorandComponents.progressiveprofile import gbac_progressiveprofile_bp
+app.register_blueprint(gbac_progressiveprofile_bp, url_prefix='/')
 
 # sample theme
 from _sample.views import sample_views_bp

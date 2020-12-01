@@ -1,0 +1,105 @@
+{% extends "healthcare/template.html" %}
+
+{% block content %}
+<section class="bg-light py-5">
+        <div class="container">
+            <div class="card mb-1">
+				{% if not account_linked %}
+				<div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4" style="margin:20px;">
+					<div class="row">
+						<div class="col-sm-12 col-md-6">
+							<div class="dataTables_length font-italic font-weight-light" id="dataTable_length">
+								Sample patient records hosted by <a href="https://hapi.fhir.org" target="_blank">https://hapi.fhir.org</a>
+							</div>
+						</div>
+						<div class="col-sm-12 col-md-6"></div>
+					</div>
+					<div class="row">
+						<div class="col-sm-12 col-md-6">
+							<div class="dataTables_length font-italic font-weight-light" id="dataTable_length">
+								For demo credentials, please see the help guide within the unified demo platform.
+							</div>
+						</div>
+						<div class="col-sm-12 col-md-6"></div>
+					</div>
+				</div>
+				<div class="card-header">
+					To view your healthcare information, you must grant this site access to your health insurance account.&nbsp;&nbsp;
+					<button type="button" onclick="window.location='{{ authorize_url }}'" class="btn btn-primary">&nbsp;Click here to link your insurance account&nbsp;</button>
+				</div>
+				{% else %}
+                <div class="card-header">
+					Health Overview for {{ patient_name }}&nbsp;&nbsp;
+					<button type="button" onclick="window.location='{{ authorize_url }}'" class="btn btn-primary">&nbsp;Select a different patient&nbsp;</button>
+				</div>
+                <div class="card-body">
+                    <div class="datatable">
+                        <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4" style="margin-bottom:20px;">
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="dataTables_length font-italic font-weight-light" id="dataTable_length">
+										Sample patient records hosted by <a href="https://hapi.fhir.org" target="_blank">https://hapi.fhir.org</a>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-md-6"></div>
+                            </div>
+                        </div>
+                        <div class="row" id="healthinfo">
+                            <div class="col-sm-12">
+								<div class="card mb-4">
+                                    <div class="card-header">Your Insurance Claims</div>
+                                    <div class="card-body">
+										<table class="table table-bordered table-hover dataTable" id="dataTable" width="100%" cellspacing="0" role="grid" aria-describedby="dataTable_info" style="width: 100%;">
+											<thead>
+											   <tr>
+													<th rowspan="1" colspan="1">Date</th><th rowspan="1" colspan="1">Service Provider</th><th rowspan="1" colspan="1">Purpose</th><th rowspan="1" colspan="1">Amount</th>
+												</tr>
+											</thead>
+											<tbody>
+												{% for entry in claim_info %}
+													<tr>
+														<td>{{ entry.date }}</td>
+														<td>{{ entry.payee }}</td>
+														<td>{{ entry.purpose }}</td>
+														<td>{{ entry.amount }}</td>
+													</tr>
+												{% endfor %}
+											</tbody>
+										</table>
+									</div>
+                                </div>
+								<div class="card mb-4">
+                                    <div class="card-header">Your Covered Medications</div>
+                                    <div class="card-body">
+                                    <table class="table table-bordered table-hover dataTable" id="dataTable" width="100%" cellspacing="0" role="grid" aria-describedby="dataTable_info" style="width: 100%;">
+                                        <thead>
+                                           <tr><th rowspan="1" colspan="1">Medication Details</th><th rowspan="1" colspan="1">Notes</th><th rowspan="1" colspan="1">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+											{% for entry in medication_info %}
+												<tr role="row">
+													<td>{{ entry.name }}</td>
+													<td>{{ entry.instructions }}</td>
+													<td>{{ entry.dateIssued }}</td>
+												</tr>
+											{% endfor %}
+                                        </tbody>
+                                    </table>
+                                    </div>
+                                </div>  
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 col-md-5"></div>
+                        </div>
+                    </div>
+                </div>
+				{% endif %}
+            </div>
+        </div>
+</section>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

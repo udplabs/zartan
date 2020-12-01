@@ -1,4 +1,5 @@
 Flask>=1.1.2
 requests>=2.23.0
 python-dotenv==0.13.0
-cryptography==2.9.2
+cryptography==3.2
+isodate>=0.5

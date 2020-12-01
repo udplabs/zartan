@@ -942,6 +942,27 @@ class OktaAdmin:
             idp_id=idp_id)
         return RestUtil.execute_delete(url, {}, okta_headers)
 
+    def send_push(self, user_id, factor_id, headers=None):
+        self.logger.debug("send_code()")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+
+        url = "{0}/api/v1/users/{1}/factors/{2}/verify".format(self.okta_config["okta_org_name"], user_id, factor_id)
+        body = {
+        }
+
+        return RestUtil.execute_post(url, body, okta_headers)
+
+    def verify_push(self, user_id, factor_id, code, headers=None):
+        self.logger.debug("verify_code()")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+
+        url = "{0}/api/v1/users/{1}/factors/{2}/verify".format(self.okta_config["okta_org_name"], user_id, factor_id)
+        body = {
+            "passCode": code
+        }
+
+        return RestUtil.execute_post(url, body, okta_headers)
+
 
 class OktaUtil:
 

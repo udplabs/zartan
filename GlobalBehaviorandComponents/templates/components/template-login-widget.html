@@ -33,8 +33,8 @@
                     <a value="press" class="dropdown-item" href="#" onclick="changelanguage('sv')">Swedish</a>
                     <a value="press" class="dropdown-item" href="#" onclick="changelanguage('th')">Thai</a>
                     <a value="press" class="dropdown-item" href="#" onclick="changelanguage('tr')">Turkish</a>
-                    <a value="press" class="dropdown-item" href="#" onclick="changelanguage('zh-TW')">Ukrainian</a>
-                    <a value="press" class="dropdown-item" href="#" onclick="changelanguage('zh-CN)">Chinese (PRC)</a>
+                    <a value="press" class="dropdown-item" href="#" onclick="changelanguage('uk')">Ukrainian</a>
+                    <a value="press" class="dropdown-item" href="#" onclick="changelanguage('zh-CN')">Chinese (PRC)</a>
                     <a value="press" class="dropdown-item" href="#" onclick="changelanguage('zh-TW')">Chinese (Taiwan)</a>
                 </div>
             </div>
@@ -112,7 +112,7 @@
                       },
                       i18n: {
                         en: {
-                          'primaryauth.title': 'Sign in to {{config.settings.app_name}}'
+                          'primaryauth.title': 'Sign in to {{config.settings.app_name|safe}}'
                         }
                       },
                       features: {

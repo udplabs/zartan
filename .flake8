@@ -1,6 +1,6 @@
 [flake8]
 ignore = E266, E402
-exclude = .c9/*, .git/*, .~c9*, venv/*
+exclude = .c9/*, .git/*, .~c9*, venv/*, utils/fhirclient/*
 max-line-length = 160
 max-complexity = 10
 statistics = True

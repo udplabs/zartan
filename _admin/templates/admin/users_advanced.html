@@ -19,7 +19,8 @@
                                     <th>Name</th>
                                     <th>Email</th>
                                     <th style="text-align:center">User Status</th>
-                                    <th style="text-align:center">Temporary Passcode</th>
+                                    <th style="text-align:center">Temporary MFA Passcode</th>
+                                    <th style="text-align:center">User Verification Passcode</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -29,6 +30,7 @@
                                         <td>{{ i['profile']['email']}}</td>
                                         <td style="text-align:center">{{ i['status'] }}</td>
                                         <td style="text-align:center"><a href="temporarypasscode?user_id={{ i.id}}"><i class="fa fa-clock"></i></a></td>
+                                        <td style="text-align:center"><a href="#" onclick="getfactors('{{ i['profile']['firstName']}} {{ i['profile']['lastName']}}','{{ i['id']}}')"><i class="fa fa-key"></i></a></td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -37,6 +39,128 @@
                 </div>
             </div>
         </section>
+
+        <!-- Modal -->
+        <div class="modal fade" id="validateuser" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="ValidateModalLabel">Validate User</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    </div>
+                    <div class="modal-body">
+                            <div id="selectverification" class="form-group">
+                                <label for="factordropdown">Select a Factor: (This sample supports SMS and Email)</label>
+                                <select class="form-control" id="factordropdown">
+                                </select><br>
+                                <button class="btn btn-primary" type="button" onclick="sendFactor()">Send Code</button>
+                            </div>
+                            <div id="inputverification" class="form-group" style="display: none;">
+                                <div class="form-group"><label for="userCode">Enter User's Code</label>
+                                <input class="form-control" id="userCode" type="text"></div>
+                                <div id="apiResponse" class="alert alert-primary" role="alert" style="display: none;">
+                                </div>
+                                <button class="btn btn-primary" type="button" onclick="verifyFactor()">Verify User Code</button>
+                                <button class="btn btn-primary" type="button" onclick="gobackFactor()">Back</button>
+                            </div>
+                            <div id="completeverification" class="form-group" style="display: none;">
+                               User is Verified!
+                            </div>
+                            <input type="hidden" id="userid">
+
+                    </div>
+                    <div class="modal-footer"><button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button></div>
+                </div>
+            </div>
+        </div>
+
+         <script>
+            function getfactors(name, id) {
+                $.ajax({
+                    url:'/admin/getfactors?user_id='+id,
+                    type: "GET",
+                    complete: function (response) {
+                        factors = JSON.parse(response.responseText);
+                        dropdownhtml = "";
+                        for (let step = 0; step < factors.length; step++)
+                        {
+                            console.log(factors[step]._links.verify);
+                            if (factors[step].factorType == "sms" && factors[step].status == "ACTIVE")
+                            {
+                                dropdownhtml = dropdownhtml + "<option id='verifysms' value='" + factors[step].id + "'>SMS</option>"
+                            }
+                            else if (factors[step].factorType == "email" && factors[step].status == "ACTIVE")
+                            {
+                                dropdownhtml = dropdownhtml + "<option id='verifyemail' value='" + factors[step].id  + "'>Email</option>"
+                            }
+                        }
+                        $("#ValidateModalLabel").html("Validate User: "+ name);
+                        $("#factordropdown").html(dropdownhtml);
+                        $("#userid").val(id);
+                        $("#validateuser").modal("show");
+                    },
+                    error: function () {
+                        alert('No Factors Exist');
+                    },
+                });
+            return false;
+            };
+
+            function sendFactor() {
+                factorid = $("#factordropdown").val();
+                user_id = $("#userid").val();
+                $.ajax({
+                    url:'/admin/sendfactor?user_id='+ user_id +"&factor_id=" + factorid,
+                    type: "GET",
+                    complete: function (response) {
+                        myresponse = JSON.parse(response.responseText);
+                        alert("Code Sent");
+                        $("#selectverification").hide();
+                        $("#inputverification").show();
+                    },
+                    error: function () {
+                        myresponse = JSON.parse(response.responseText);
+                        alert(myresponse.errorSummary);
+                    },
+                });
+            };
+
+            function verifyFactor() {
+                verifyCode = $("#userCode").val();
+                factorid = $("#factordropdown").val();
+                user_id = $("#userid").val();
+                $.ajax({
+                    url:'/admin/verifyfactor?user_id='+ user_id +"&factor_id=" + factorid + "&code=" + verifyCode,
+                    type: "GET",
+                    complete: function (response) {
+                        myresponse = JSON.parse(response.responseText);
+                        if (myresponse.hasOwnProperty('errorSummary'))
+                        {
+                            $("#apiResponse").html(myresponse.errorSummary);
+                            $("#apiResponse").show();
+                        }
+                        else
+                        {
+                            $("#selectverification").hide();
+                            $("#inputverification").hide();
+                            $("#completeverification").show();
+                        }
+                    },
+                    error: function () {
+                        myresponse = JSON.parse(response.responseText);
+                        alert(myresponse.errorSummary);
+                    },
+                });
+            };
+
+            function gobackFactor() {
+                $("#selectverification").show();
+                $("#inputverification").hide();
+                $("#completeverification").hide();
+            };
+
+
+        </script>
 {% endblock %}
 
 {% block footer %}

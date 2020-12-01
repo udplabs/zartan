@@ -6,6 +6,7 @@
                             <li class="nav-item"><a class="nav-link active" id="overview-pill" href="#overviewPill" data-toggle="tab" role="tab" aria-controls="overview" aria-selected="true">Profile</a></li>
                             <li class="nav-item"><a class="nav-link" id="idtoken1" href="#idtokenPill" data-toggle="tab" role="tab" aria-controls="idtoken" aria-selected="false">ID Token</a></li>
                             <li class="nav-item"><a class="nav-link" id="accesstoken1" href="#accesstokenPill" data-toggle="tab" role="tab" aria-controls="accesstoken" aria-selected="false">Access Token</a></li>
+                            <li class="nav-item"><a class="nav-link" id="factors1" href="#factorsPill" data-toggle="tab" role="tab" aria-controls="factors" aria-selected="false">Factors</a></li>
                         </ul>
                         <button type="button" class="btn btn-secondary ml-auto" onclick="window.location.href = '/profile?refreshtoken=true';">Refresh Token</button>
                     </div>
@@ -43,6 +44,9 @@
                             <div class="tab-pane fade" id="accesstokenPill" role="tabpanel" aria-labelledby="accesstoken1-pill">
                                 <h5 class="card-title">Access Token</h5>
                                 <p class="card-text"><div id="accesstoken"></div></p>
+                            </div>
+                            <div class="tab-pane fade" id="factorsPill" role="tabpanel" aria-labelledby="factors1-pill">
+                                {% include '/components/template-mfaenrollment.html' %}
                             </div>
                         </div>
                     </div>

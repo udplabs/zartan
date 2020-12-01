@@ -1,4 +1,5 @@
 import logging
+import json
 
 # import functions
 from random import randint
@@ -155,3 +156,42 @@ def admin_addkeytouser():
     message = "Your Key is Setup"
 
     return message
+
+
+@admin_views_bp.route("/getfactors")
+@apply_remote_config
+def admin_getfactors():
+    logger.debug("admin_userverification()")
+    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
+
+    user_id = request.args.get('user_id')
+    listfactors = okta_admin.list_enrolled_factors(user_id)
+
+    return json.dumps(listfactors)
+
+
+@admin_views_bp.route("/sendfactor")
+@apply_remote_config
+def admin_sendfactor():
+    logger.debug("admin_sendfactor()")
+    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
+
+    user_id = request.args.get('user_id')
+    factor_id = request.args.get('factor_id')
+
+    response = okta_admin.send_push(user_id, factor_id)
+    return json.dumps(response)
+
+
+@admin_views_bp.route("/verifyfactor")
+@apply_remote_config
+def admin_verifyfactor():
+    logger.debug("admin_verifyfactor()")
+    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
+
+    user_id = request.args.get('user_id')
+    factor_id = request.args.get('factor_id')
+    code = request.args.get('code')
+
+    response = okta_admin.verify_push(user_id, factor_id, code)
+    return json.dumps(response)
