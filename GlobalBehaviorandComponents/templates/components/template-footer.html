@@ -1,4 +1,4 @@
- 
+
     <section id="footersection">
         <br /><br />
         {% if color=="white" %}
@@ -31,8 +31,9 @@
                 </div>
                 <hr class="my-5" />
                 <div class="row align-items-center">
-                    <div class="col-md-6 small">Copyright &copy; {{ config.settings.app_name }}</div>
+                    <div class="col-md-6 small">Copyright &copy; {{ config.settings.app_name }} &middot; {{ config.app_version }}</div>
                     <div class="col-md-6 text-md-right small">
+                        &middot;
                         <a href="javascript:void(0);">Privacy Policy</a>
                         &middot;
                         <a href="javascript:void(0);">Terms &amp; Conditions</a>
@@ -44,28 +45,28 @@
         </footer>
      <script type="text/javascript">
         // Made this script to inherit the background color of the section above
-        try 
+        try
         {
             var parentclass = $('section').first().attr('class');
             var regex = /bg[^\s]+/;
             var bgclass = parentclass.match(regex);
             $("#footersection").addClass(bgclass[0]);
         }
-        catch(err) 
+        catch(err)
         {
             console.log("no section defined");
         }
     </script>
      <script type="text/javascript">
         // Made this script to inherit the background color of the section above
-        try 
+        try
         {
             var parentclass = $('section').first().attr('class');
             var regex = /bg[^\s]+/;
             var bgclass = parentclass.match(regex);
             $("#layoutDefault_content").addClass(bgclass[0]);
         }
-        catch(err) 
+        catch(err)
         {
             console.log("no section defined");
         }

@@ -3,6 +3,13 @@ import os
 from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 
+from . import __version__
+
+
+def get_app_version():
+    return __version__
+
+
 default_settings = {
     "client_id": os.getenv("OKTA_CLIENT_ID", ""),
     "client_secret": os.getenv("OKTA_CLIENT_SECRET", ""),
@@ -40,5 +47,6 @@ default_settings = {
     },
     "okta_api_token": os.getenv("OKTA_API_TOKEN", ""),
     "app_secret_key": os.getenv("SECRET_KEY", ""),
-    "app_scheme": os.getenv("APP_SCHEME", "https")
+    "app_scheme": os.getenv("APP_SCHEME", "https"),
+    "app_version": get_app_version(),
 }
