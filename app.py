@@ -179,7 +179,7 @@ def oidc_callback_handler():
         if ("The client specified not to prompt, but the client app requires re-authentication or MFA." == request.form["error_description"]):
             has_app_level_mfa_policy = True
 
-        # Error occured with Accessing the app instance
+        # Error occurred with Accessing the app instance
         if has_app_level_mfa_policy:
             error_message = "Failed to Authenticate.  Please remove App Level MFA Policy and use a Global MFA Policy. Error: {0} - {1}".format(
                 request.form["error"],
@@ -204,7 +204,7 @@ def get_post_login_landing_page_url():
     logger.debug("get_post_login_landing_page_url()")
     app_landing_page_url = ""
 
-    # Pull from Confg
+    # Pull from Config
     hosturl = request.host_url.replace("http://", "{0}://".format(session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"]))
 
     if session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_post_login_landing_url"]:
@@ -214,7 +214,7 @@ def get_post_login_landing_page_url():
     else:
         app_landing_page_url = hosturl + "profile"
 
-    # Check for from from_uri... this always overrides the config
+    # Check for from_uri key, this always overrides the config
     if FROM_URI_KEY in session:
         if session[FROM_URI_KEY]:
             app_landing_page_url = session[FROM_URI_KEY]

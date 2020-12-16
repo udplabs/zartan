@@ -36,6 +36,19 @@ jobs:
         git tag --list
         git checkout tags/${{ github.event.inputs.deployTagVersion }} -b ${{ github.event.inputs.deployTagVersion }}-branch
 
+    - name: Update Version Meta File
+      if: ${{ success() }}
+      run: |
+        # from refs/tags/v1.2.3 get 1.2.3
+        VERSION=$(echo $GITHUB_REF | sed 's#.*/v##')
+        PLACEHOLDER='__version__ = "develop"'
+        VERSION_FILE='config/__init__.py'
+
+        # ensure the placeholder is there. If grep doesn't find the placeholder
+        # it exits with exit code 1 and github actions aborts the build.
+        grep "$PLACEHOLDER" "$VERSION_FILE"
+        sed -i "s/$PLACEHOLDER/__version__ = \"${VERSION}\"/g" "$VERSION_FILE"
+
     - name: Generate deployment package
       if: ${{ success() }}
       run: |
