@@ -97,7 +97,7 @@
                   }
                   </script>
                   <input name="language" id="language" class="form-control" type="hidden" value="en">
-                  
+
                   <div id="sign-in-widget"></div>
                   <script type="text/javascript">
                    signInWidgetConfig = {
@@ -126,7 +126,8 @@
                         multiOptionalFactorEnroll: true,  // Allow users to enroll in multiple optional factors before finishing the authentication flow.
                         selfServiceUnlock: true,          // Will enable unlock in addition to forgotten password
                         smsRecovery: true,                // Enable SMS-based account recovery
-                        callRecovery: true               // Enable voice call-based account recovery
+                        callRecovery: true,               // Enable voice call-based account recovery
+                        webauthn: true                    // Enable Webauthn and disable Windows Hello
                       },
                       {% if idp %}
                       {% if idptype %}

@@ -264,6 +264,23 @@ def activate_totp():
     return json.dumps(response)
 
 
+@gbac_mfaenrollment_bp.route("/activate_webauthn", methods=["POST"])
+@apply_remote_config
+def activate_webauthn():
+    print("activate_webauthn()")
+
+    body = request.get_json()
+    factor_id = body["factor_id"]
+    user_id = body["user_id"]
+    attestation = body["attestation"]
+    clientData = body["clientData"]
+
+    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
+    response = okta_admin.activate_webauthn(user_id, factor_id, attestation, clientData)
+    print(response)
+    return json.dumps(response)
+
+
 @gbac_mfaenrollment_bp.route("/reset_factor/<user_id>/<factor_id>", methods=["GET"])
 @apply_remote_config
 def reset_factor(user_id, factor_id):
