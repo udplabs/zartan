@@ -184,6 +184,25 @@ def enroll_totp():
 
     return json.dumps(response)
 
+@gbac_mfaenrollment_bp.route("/enroll_webauthn", methods=["POST"])
+@apply_remote_config
+def enroll_webauthn():
+    print("enroll_webauthn()")
+
+    body = request.get_json()
+    factor_type = body["factor_type"]
+    provider = body["provider"]
+
+    if "stateToken" in body:
+        okta_auth = OktaAuth(session[SESSION_INSTANCE_SETTINGS_KEY])
+        state_token = body["state_token"]
+        response = okta_auth.enroll_webauthn(state_token, factor_type, provider)
+    else:
+        okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
+        user_id = body["user_id"]
+        response = okta_admin.enroll_webauthn(user_id, factor_type, provider)
+
+    return json.dumps(response)
 
 @gbac_mfaenrollment_bp.route("/enroll_sms_voice", methods=["POST"])
 @apply_remote_config
