@@ -283,7 +283,7 @@ def healthcare_healthins():
 
     if smartClient.ready and smartClient.patient is not None:
         accountLinked = True
-        smartClient.scope += ' patient_selection'
+        smartClient.scope =  smartClient.scope.replace(' skip_patient_selection', '')
         name = smartClient.human_name(smartClient.patient.name[0] if smartClient.patient.name and len(smartClient.patient.name) > 0 else 'Unknown')
 
         logger.debug(smartClient.authorized_scopes)
@@ -374,7 +374,7 @@ def _get_smart(request):
         'app_id': session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_ins_fhir_clientid"],
         'api_base': session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_ins_fhir_api_base"],
         'redirect_uri': request.url_root + "healthcare/smartfhir_callback",
-        'scope': 'launch/patient patient/Patient.read patient/MedicationRequest.read patient/Claim.read'
+        'scope': 'launch/patient patient/Patient.read patient/MedicationRequest.read patient/Claim.read skip_patient_selection'
     }
     state = session.get('fhir_state')
     if state:
