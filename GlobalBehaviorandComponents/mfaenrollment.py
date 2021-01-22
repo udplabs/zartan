@@ -17,6 +17,7 @@ def get_enrolled_factors(user_id):
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
 
     enrolled_factors = okta_admin.list_enrolled_factors(user_id)
+    logger.debug(enrolled_factors);
     factors = []
     for f in enrolled_factors:
         factor = {}
@@ -44,8 +45,15 @@ def get_enrolled_factors(user_id):
             if "profile" in f:
                 factor["profile"] = f["profile"]["name"]
             else:
-                factor["profile"] = None
+                factor["profile"] = "Not Defined"
             factor["sortOrder"] = 10
+        elif (factorType == "webauthn"):
+            factor["name"] = "WebAuthn"
+            if "profile" in f:
+                factor["profile"] = f["profile"]["authenticatorName"]
+            else:
+                factor["profile"] = "Not Defined"
+            factor["sortOrder"] = 15   
         elif (factorType == "sms"):
             factor["name"] = "SMS"
             factor["profile"] = f["profile"]["phoneNumber"]
