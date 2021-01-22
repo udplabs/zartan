@@ -15,65 +15,92 @@ gbac_mfaenrollment_bp = Blueprint('gbac_mfaenrollment_bp', __name__, template_fo
 def get_enrolled_factors(user_id):
     print("get_enrolled_factors()")
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
-
     enrolled_factors = okta_admin.list_enrolled_factors(user_id)
-    logger.debug(enrolled_factors);
+
     factors = []
+
     for f in enrolled_factors:
+        logger.debug(f)
+        # logger.debug(f["factorType"])
         factor = {}
         factor["id"] = f["id"]
-        # default the name to the type, just in case
-        factor["name"] = f["factorType"]
         factor["type"] = f["factorType"]
         factor["provider"] = f["provider"]
         factor["vendor"] = f["vendorName"]
-        # factor["profile"] = f["profile"]
-        factor["sortOrder"] = 100
-        factorType = factor["type"]
-        provider = factor["provider"]
 
-        if (factorType == "token:software:totp"):
-            if (provider == "GOOGLE"):
-                factor["name"] = "Google Authenticator"
-                factor["profile"] = f["profile"]["credentialId"]
-                factor["sortOrder"] = 20
-            elif (provider == "OKTA"):
-                # don't list Okta Verify OTP
-                continue
-        elif (factorType == "push"):
-            factor["name"] = "Okta Verify"
-            if "profile" in f:
-                factor["profile"] = f["profile"]["name"]
-            else:
-                factor["profile"] = "Not Defined"
-            factor["sortOrder"] = 10
-        elif (factorType == "webauthn"):
-            factor["name"] = "WebAuthn"
-            if "profile" in f:
-                factor["profile"] = f["profile"]["authenticatorName"]
-            else:
-                factor["profile"] = "Not Defined"
-            factor["sortOrder"] = 15   
-        elif (factorType == "sms"):
-            factor["name"] = "SMS"
-            factor["profile"] = f["profile"]["phoneNumber"]
-            factor["sortOrder"] = 30
-        elif (factorType == "call"):
-            factor["name"] = "Voice Call"
-            factor["profile"] = f["profile"]["phoneNumber"]
-            factor["sortOrder"] = 40
-        elif (factorType == "question"):
-            factor["name"] = "Security Question"
-            factor["profile"] = f["profile"]["questionText"]
-            factor["sortOrder"] = 50
-        else:
-            # don't list Okta Verify OTP
-            continue
+        switcher = {
+            'token:software:totp': totp,
+            'push': push,
+            'webauthn': webauthn,
+            'sms': sms,
+            'call': call,
+            'question': question
+        }
 
-        factors.append(factor)
+        myfactor = switcher.get(f["factorType"])
 
-    # return the sorted array
-    return sorted(factors, key=lambda i: i["sortOrder"])
+        if myfactor is not None:
+            factor = myfactor(factor, f)
+
+        if factor is not None:
+            factors.append(factor)
+
+    return factors
+
+
+def totp(factor, f):
+    logger.debug("TOTP")
+    provider = f["provider"]
+    if (provider == "GOOGLE"):
+        factor["name"] = "Google Authenticator"
+        factor["profile"] = f["profile"]["credentialId"]
+        factor["sortOrder"] = 20
+    else:
+        factor = None
+    return factor
+
+
+def push(factor, f):
+    logger.debug("Push")
+    factor["name"] = "Okta Verify"
+    if "status" in f:
+        factor["profile"] = f["status"]
+    else:
+        factor["profile"] = "Not Defined"
+
+    factor["sortOrder"] = 10
+    return factor
+
+
+def webauthn(factor, f):
+    logger.debug("WebAuth")
+    factor["name"] = "WebAuthn"
+    factor["profile"] = f["profile"]["authenticatorName"]
+    factor["sortOrder"] = 15
+    return factor
+
+
+def sms(factor, f):
+    logger.debug("SMS")
+    factor["name"] = "SMS"
+    factor["profile"] = f["profile"]["phoneNumber"]
+    factor["sortOrder"] = 30
+    return factor
+
+
+def call(factor, f):
+    logger.debug("Call")
+    factor["name"] = "Voice Call"
+    factor["profile"] = f["profile"]["phoneNumber"]
+    factor["sortOrder"] = 40
+    return factor
+
+
+def question(factor, f):
+    logger.debug("Question")
+    factor["name"] = "Security Question"
+    factor["profile"] = f["profile"]["questionText"]
+    factor["sortOrder"] = 50
 
 
 @gbac_mfaenrollment_bp.route("/get_available_factors/<user_id>", methods=["GET"])
