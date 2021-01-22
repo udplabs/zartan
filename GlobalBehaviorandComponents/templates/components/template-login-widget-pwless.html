@@ -11,18 +11,18 @@
                     #okta-sign-in.auth-container .button-primary
                     {
                       background-color: {{config.settings.app_primary_color}};
-                      background: -webkit-gradient(linear,left top,left bottom,from({{config.settings.app_secondary_color}}),to({{config.settings.app_primary_color}}));
-                      background: -webkit-linear-gradient({{config.settings.app_secondary_color}},{{config.settings.app_primary_color}});
-                      background: linear-gradient({{config.settings.app_secondary_color}},{{config.settings.app_primary_color}});
+                      background: -webkit-gradient(linear,left top,left bottom,from({{config.settings.app_primary_color}}),to({{config.settings.app_primary_color}}));
+                      background: -webkit-linear-gradient({{config.settings.app_primary_color}},{{config.settings.app_primary_color}});
+                      background: linear-gradient({{config.settings.app_primary_color}},{{config.settings.app_primary_color}});
                       border-color: {{config.settings.app_primary_color}} {{config.settings.app_primary_color}} {{config.settings.app_primary_color}};
                     }
 
                     #okta-sign-in.auth-container .button-primary:active, #okta-sign-in.auth-container .button-primary:focus, #okta-sign-in.auth-container .button-primary:hover
                     {
                       background-color: {{config.settings.app_primary_color}};
-                      background: -webkit-gradient(linear,left top,left bottom,from({{config.settings.app_primary_color}}),to({{config.settings.app_secondary_color}}));
-                      background: -webkit-linear-gradient({{config.settings.app_primary_color}},{{config.settings.app_secondary_color}});
-                      background: linear-gradient({{config.settings.app_primary_color}},{{config.settings.app_secondary_color}});
+                      background: -webkit-gradient(linear,left top,left bottom,from({{config.settings.app_primary_color}}),to({{config.settings.app_primary_color}}));
+                      background: -webkit-linear-gradient({{config.settings.app_primary_color}},{{config.settings.app_primary_color}});
+                      background: linear-gradient({{config.settings.app_primary_color}},{{config.settings.app_primary_color}});
                       border-color: {{config.settings.app_primary_color}} {{config.settings.app_primary_color}} {{config.settings.app_primary_color}};
                     }
 
@@ -33,7 +33,7 @@
 
                     #okta-sign-in .focused-input, #okta-sign-in .link.help:focus
                     {
-                      box-shadow: 0 0 8px {{config.settings.app_secondary_color}};
+                      box-shadow: 0 0 8px {{config.settings.app_primary_color}};
                     }
 
                     #okta-sign-in .registration-container .registration-link
@@ -45,7 +45,7 @@
                     #okta-sign-in.auth-container .button.button-primary.link-button-disabled
                     {
                         color: #fff;
-                        background-color: {{config.settings.app_secondary_color}};
+                        background-color: {{config.settings.app_primary_color}};
                         border-color: {{config.settings.app_primary_color}};
                         background-image: none;
                         box-shadow: none
@@ -80,6 +80,7 @@
                         responseMode: 'form_post',
                         state: '{{state}}',
                         display: 'page',
+                        pkce: false,
                         scopes: ['openid', 'profile', 'email']
                       },
                     }).renderEl(

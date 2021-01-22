@@ -184,6 +184,7 @@ def enroll_totp():
 
     return json.dumps(response)
 
+
 @gbac_mfaenrollment_bp.route("/enroll_webauthn", methods=["POST"])
 @apply_remote_config
 def enroll_webauthn():
@@ -203,6 +204,7 @@ def enroll_webauthn():
         response = okta_admin.enroll_webauthn(user_id, factor_type, provider)
 
     return json.dumps(response)
+
 
 @gbac_mfaenrollment_bp.route("/enroll_sms_voice", methods=["POST"])
 @apply_remote_config

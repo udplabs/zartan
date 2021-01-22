@@ -100,6 +100,7 @@
 
                   <div id="sign-in-widget"></div>
                   <script type="text/javascript">
+                   console.log("Starting");
                    signInWidgetConfig = {
                       baseUrl: "{{config.okta_org_name}}",
                       logo: "{{config.settings.app_logo}}",
@@ -158,31 +159,37 @@
                         responseMode: 'form_post',
                         state: '{{state}}',
                         display: 'page',
+                        pkce: false,
                         scopes: ['openid', 'profile', 'email'] },
-                     transformUsername: function (username, operation) {
-                        if (isNaN(username))
-                         {
+                        transformUsername: function (username, operation) {
+                          if (isNaN(username))
+                          {
                            return username;
-                         }
-                         else
-                         {
-                          nname = "";
-                          $.ajax({
-                              'async': false,
-                              'type': "GET",
-                              'url': "/get_username/"+username,
-                              'success': function (data) {
-                                 nname = data;
-                              }
-                            });
-                            console.log(nname);
-                            return nname;
+                          }
+                          else
+                          {
+                            nname = "";
+                            $.ajax({
+                                'async': false,
+                                'type': "GET",
+                                'url': "/get_username/"+username,
+                                'success': function (data) {
+                                   nname = data;
+                                }
+                              });
+                              console.log(nname);
+                              return nname;
                           }
                       },
                     };
 
+
                     signInWidget = new OktaSignIn(signInWidgetConfig);
-                    signInWidget.renderEl({el: '#sign-in-widget'});
+                    signInWidget.showSignInAndRedirect({
+                      el: '#sign-in-widget'
+                    }).catch(function(error) {
+                      // Handle error
+                    });
                   </script>
                 </div>
               </div>
