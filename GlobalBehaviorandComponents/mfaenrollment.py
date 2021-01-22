@@ -20,7 +20,6 @@ def get_enrolled_factors(user_id):
     factors = []
 
     for f in enrolled_factors:
-        logger.debug(f)
         # logger.debug(f["factorType"])
         factor = {}
         factor["id"] = f["id"]
