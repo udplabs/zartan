@@ -55,6 +55,9 @@ $ docker-compose stop
 
 # Clean up
 $ docker-compose down
+
+# Rebuild and start container, if you happen to update requirements.txt.
+$ docker-compose up --build
 ```
 
 ## Authors
