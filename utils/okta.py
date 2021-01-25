@@ -708,6 +708,22 @@ class OktaAdmin:
 
         return RestUtil.execute_post(url, body, okta_headers)
 
+    # Okta WebAuthn
+    def enroll_webauthn(self, user_id, factor_type, provider, headers=None):
+        self.logger.debug("enroll_webauthn()")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+
+        url = "{0}/api/v1/users/{1}/factors".format(
+            self.okta_config["okta_org_name"],
+            user_id
+        )
+        body = {
+            "factorType": factor_type,
+            "provider": provider
+        }
+
+        return RestUtil.execute_post(url, body, okta_headers)
+
     # Okta Verify Enroll Security Question
     def enroll_securityquestion(self, user_id, question, answer, headers=None):
         self.logger.debug("enroll_securityquestion()")
@@ -794,6 +810,24 @@ class OktaAdmin:
         )
         body = {
             "passCode": pass_code
+        }
+
+        return RestUtil.execute_post(url, body, okta_headers)
+
+    # used by SMS, voice, Google Authenticator and Okta Verify OTP factors
+    def activate_webauthn(self, user_id, factor_id, attestation, clientData, headers=None):
+        self.logger.debug("activate_webauthn()")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+
+        url = "{0}/api/v1/users/{1}/factors/{2}/lifecycle/activate".format(
+            self.okta_config["okta_org_name"],
+            user_id,
+            factor_id
+        )
+
+        body = {
+            "attestation": attestation,
+            "clientData": clientData
         }
 
         return RestUtil.execute_post(url, body, okta_headers)

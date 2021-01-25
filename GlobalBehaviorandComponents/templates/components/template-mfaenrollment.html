@@ -89,6 +89,94 @@
           </button>
         </div>
 
+        <!-- security question -->
+        <div class="form-group" id="_mfaEnrollWebAuthn">
+          <input type="hidden" id="_mfaWebAuthnResponse"/>
+          <button type="button" id="_mfaEnrollWebAuthn" onclick="registerWebauthn()" class="btn btn-primary mr-2 my-1">
+            Submit
+          </button>
+          <script>
+          function registerWebauthn()
+          {
+            webauthnresponse = JSON.parse($("#_mfaWebAuthnResponse").val());
+            // Convert activation object's challenge and user id from string to binary
+            user_id = webauthnresponse._embedded.activation.user.id;
+            factor_id = webauthnresponse.id;
+
+            webauthnresponse._embedded.activation.challenge = strToBin(webauthnresponse._embedded.activation.challenge);
+            webauthnresponse._embedded.activation.user.id = strToBin(webauthnresponse._embedded.activation.user.id);
+
+            //console.log(webauthnresponse._embedded.activation);
+            // navigator.credentials is a global object on WebAuthn-supported clients, used to access WebAuthn API
+            navigator.credentials.create({
+              publicKey: webauthnresponse._embedded.activation
+            })
+            .then(function (newCredential) {
+
+              // Get attestation and clientData from callback result, convert from binary to string
+              var attestation = binToStr(newCredential.response.attestationObject);
+              var clientData = binToStr(newCredential.response.clientDataJSON);
+              console.log(attestation);
+              console.log(clientData);
+              var payload = {
+                  "attestation": attestation,
+                  "clientData": clientData,
+                  "user_id": user_id,
+                  "factor_id": factor_id
+              };
+              console.log(payload);
+              $.ajax({
+                  url: "/activate_webauthn",
+                  type: "POST",
+                  contentType: "application/json; charset=utf-8",
+                  data: JSON.stringify(payload),
+                  success: data => {
+                      var webauthnresponse = JSON.parse(data);
+                      console.log(webauthnresponse);
+                      if (webauthnresponse.hasOwnProperty('errorSummary'))
+                      {
+                        $("#_mfaEnrollStatusMessage").text(webauthnresponse.errorSummary);
+                      }
+                      else
+                      {
+                         $("#_mfaEnrollStatusMessage").text("Enrollment Complete");
+                         $("#_mfaEnrollWebAuthn").hide();
+                      }
+                      _finishEnrollment();
+                  },
+                  error: function(xhr, status, error) {
+                       $("#_mfaEnrollStatusMessage").text("Status: " + status + ", message: " + error);
+                      _finishEnrollment();
+                  }
+              });
+
+            });
+          }
+
+          function getStringHash(str) {
+            let hash = 5381;
+            let i = str.length;
+
+            while (i) {
+              hash = (hash * 33) ^ str.charCodeAt(--i);
+            }
+            return hash >>> 0;
+          };
+
+          function base64UrlSafeToBase64(str) {
+            return str.replace(new RegExp('_', 'g'), '/').replace(new RegExp('-', 'g'), '+');
+          };
+
+          function binToStr(bin) {
+            return btoa(new Uint8Array(bin).reduce((s, byte) => s + String.fromCharCode(byte), ''));
+          };
+
+          function strToBin(str) {
+            return Uint8Array.from(atob(this.base64UrlSafeToBase64(str)), c => c.charCodeAt(0));
+          };
+          </script>
+        </div>
+
         <div class="form-group" id="_mfaEnrollStatusForm">
           <span id="_mfaEnrollStatusMessage"></span>
         </div>
