@@ -36,8 +36,7 @@ def get_enrolled_factors(user_id):
             'question': question
         }
 
-        logger.debug(f["status"] )
-        if f["status"] == "ACTIVE" :
+        if f["status"] == "ACTIVE":
             myfactor = switcher.get(f["factorType"])
         else:
             myfactor = None
@@ -78,10 +77,8 @@ def webauthn(factor, f):
     logger.debug(f)
     factor["name"] = "WebAuthn"
     factor["profile"] = f["profile"]["authenticatorName"]
-    #factor["profile"] = "WebAuthn"
     factor["sortOrder"] = 15
     return factor
-
 
 
 def sms(factor, f):
@@ -106,6 +103,7 @@ def question(factor, f):
     factor["profile"] = f["profile"]["questionText"]
     factor["sortOrder"] = 50
     return factor
+
 
 @gbac_mfaenrollment_bp.route("/get_available_factors/<user_id>", methods=["GET"])
 @apply_remote_config
