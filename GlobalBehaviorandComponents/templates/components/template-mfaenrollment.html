@@ -9,7 +9,7 @@
                 <td><a href="#" class="clickable deleteable" class="btn btn-primary btn-sm" data-id="{{ factor['id'] }}">Remove</a></td>
           </tr>
           {% endfor %}
-       
+
         </table>
     </div>
     <div class="card-footer">
@@ -132,7 +132,6 @@
                   data: JSON.stringify(payload),
                   success: data => {
                       var webauthnresponse = JSON.parse(data);
-                      console.log(webauthnresponse);
                       if (webauthnresponse.hasOwnProperty('errorSummary'))
                       {
                         $("#_mfaEnrollStatusMessage").text(webauthnresponse.errorSummary);
@@ -149,6 +148,11 @@
                       _finishEnrollment();
                   }
               });
+
+            })
+            .catch(function (err) {
+                       $("#_mfaEnrollStatusMessage").text("Status: Machine already registered:");
+                      _finishEnrollment();
 
             });
           }

@@ -20,7 +20,7 @@ def get_enrolled_factors(user_id):
     factors = []
 
     for f in enrolled_factors:
-        # logger.debug(f["factorType"])
+        logger.debug(f["factorType"])
         factor = {}
         factor["id"] = f["id"]
         factor["type"] = f["factorType"]
@@ -36,12 +36,14 @@ def get_enrolled_factors(user_id):
             'question': question
         }
 
-        myfactor = switcher.get(f["factorType"])
+        logger.debug(f["status"] )
+        if f["status"] == "ACTIVE" :
+            myfactor = switcher.get(f["factorType"])
+        else:
+            myfactor = None
 
         if myfactor is not None:
             factor = myfactor(factor, f)
-
-        if factor is not None:
             factors.append(factor)
 
     return factors
@@ -73,10 +75,13 @@ def push(factor, f):
 
 def webauthn(factor, f):
     logger.debug("WebAuth")
+    logger.debug(f)
     factor["name"] = "WebAuthn"
     factor["profile"] = f["profile"]["authenticatorName"]
+    #factor["profile"] = "WebAuthn"
     factor["sortOrder"] = 15
     return factor
+
 
 
 def sms(factor, f):
@@ -100,7 +105,7 @@ def question(factor, f):
     factor["name"] = "Security Question"
     factor["profile"] = f["profile"]["questionText"]
     factor["sortOrder"] = 50
-
+    return factor
 
 @gbac_mfaenrollment_bp.route("/get_available_factors/<user_id>", methods=["GET"])
 @apply_remote_config
@@ -112,7 +117,7 @@ def get_available_factors(user_id):
     factors = []
     logging.debug(available_factors)
     for f in available_factors:
-        if f["status"] == "NOT_SETUP":
+        if f["status"] == "NOT_SETUP" or f["factorType"] == "webauthn":
             factorType = f["factorType"]
             provider = f["provider"]
 
