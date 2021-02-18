@@ -11,6 +11,10 @@
 
 Zartan is a master of make-up and disguise and so is this demo platform. :tada::unicorn::rainbow:
 
+## Disclaimer :warning:
+
+This project serves as a Sample Application, that you can tweak or completely re-purpose. It is community-supported and is maintained by members of the Okta team for developers and other IT professionals. Zartan is not an official Okta product and does not qualify for any Okta support. Okta makes no warranties regarding this project. Anyone who chooses to use this project must ensure that their implementation meets any applicable legal obligations including any Okta terms and conditions.
+
 ## Requirements
 
 * Python >= 3.7+
