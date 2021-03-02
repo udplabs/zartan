@@ -1,0 +1,31 @@
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>App Type</th>
+                            <th>View</th>
+                            <th>Delete</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% if applist|length > 0 %}
+                            {% for i in applist %}
+                                {% set oauthinfo = i.settings.oauthClient%}
+                                {% if oauthinfo is defined %}
+                                    {% if oauthinfo.application_type == 'service' %}
+                                      <tr>
+                                        <td>{{ i['label'] }}</td>
+                                        <td>{{ oauthinfo.application_type }}</td>
+                                        <td>
+                                            <a href="/editapps?appid={{ i['id'] }}">View</a>
+                                        </td>
+                                        <td>
+                                         <a href="/deleteapps?appid={{ i['id'] }}">Delete</a>
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                        </tbody>
+                    </table>
