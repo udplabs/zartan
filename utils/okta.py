@@ -525,13 +525,13 @@ class OktaAdmin:
 
         return RestUtil.execute_put(url, body, okta_headers)
 
-    def assign_user_to_application(self, user_id, user_email, app_id, ):
+    def assign_user_to_application(self, user_id, user_email, app_id):
         self.logger.debug("OktaAdmin.assign_user_to_application")
 
         okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
         url = "{base_url}/api/v1/apps/{app_id}/users".format(
             base_url=self.okta_config["okta_org_name"],
-            app_id=self.okta_config["client_id"])
+            app_id=app_id)
 
         body = {
             "id": user_id,
@@ -542,6 +542,56 @@ class OktaAdmin:
         }
 
         return RestUtil.execute_post(url, body, okta_headers)
+
+    def create_clientcredential_application(self, app_name):
+        self.logger.debug("OktaAdmin.get_applications_by_id(app_id)")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/apps".format(
+            base_url=self.okta_config["okta_org_name"])
+
+        body = {
+            "name": "oidc_client",
+            "label": app_name,
+            "signOnMode": "OPENID_CONNECT",
+            "credentials": {
+                "oauthClient": {
+                    "token_endpoint_auth_method": "client_secret_post"
+                }
+            },
+            "settings": {
+                "oauthClient": {
+                    "client_uri": "",
+                    "logo_uri": "",
+                    "redirect_uris": [],
+                    "response_types":
+                    [
+                        "token"
+                    ],
+                    "grant_types":
+                    [
+                        "client_credentials"
+                    ],
+                    "application_type": "service"
+                }
+            }
+        }
+        return RestUtil.execute_post(url, body, okta_headers)
+
+    def delete_application(self, app_id):
+        self.logger.debug("OktaAdmin.delete_application(app_id)")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/apps/{appid}/lifecycle/deactivate".format(
+            base_url=self.okta_config["okta_org_name"],
+            appid=app_id)
+
+        body = {}
+        RestUtil.execute_post(url, body, okta_headers)
+
+        url = "{base_url}/api/v1/apps/{appid}".format(
+            base_url=self.okta_config["okta_org_name"],
+            appid=app_id)
+
+        return RestUtil.execute_delete(url, body, okta_headers)
 
     def get_applications_by_id(self, app_id):
         self.logger.debug("OktaAdmin.get_applications_by_id(app_id)")
