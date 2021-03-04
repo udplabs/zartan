@@ -41,7 +41,10 @@
                           		  </div>
                           			<input name="phonenumber" class="form-control" placeholder="Phone number" type="text" value="{{ user_info2['profile']['mobilePhone'] if user_info2['profile']|length > 1 else '' }}">
                               </div> 
+
                               <input name="group_id" class="form-control" type="hidden" value="{{ group_id }}">
+                              <input name="parent_id" class="form-control" type="hidden" value="{{ parent_id }}">
+                              <input name="linked_name" class="form-control" type="hidden" value="{{ linked_name }}">
                               <input name="user_id" class="form-control" type="hidden" value="{{ user_info2['id'] if user_info2['profile']|length > 1 else '' }}">
                               <div class="form-group">
                               <button type="submit" class="btn btn-primary btn-block"> {{ 'Update Account' if user_info2['profile']|length > 1 else 'Create Account' }}</button>

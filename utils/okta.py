@@ -543,6 +543,69 @@ class OktaAdmin:
 
         return RestUtil.execute_post(url, body, okta_headers)
 
+    def get_user_schemas(self):
+        self.logger.debug("OktaAdmin.get_user_schemas()")
+
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/meta/schemas/user/linkedObjects".format(
+            base_url=self.okta_config["okta_org_name"])
+
+        return RestUtil.execute_get(url, okta_headers)
+
+    def create_schema(self, pname, ptitle, pdesc, aname, atitle, adesc):
+        self.logger.debug("OktaAdmin.create_schema()")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/meta/schemas/user/linkedObjects".format(
+            base_url=self.okta_config["okta_org_name"])
+
+        body = {
+            'primary': {
+                'name': pname,
+                'title': ptitle,
+                'description': pdesc,
+                'type': 'USER'
+            },
+            'associated': {
+                'name': aname,
+                'title': atitle,
+                'description': adesc,
+                'type': 'USER'
+            }
+        }
+        return RestUtil.execute_post(url, body, okta_headers)
+
+    def delete_user_schemas(self, name):
+        self.logger.debug("OktaAdmin.get_user_schemas()")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/meta/schemas/user/linkedObjects/{name}".format(
+            base_url=self.okta_config["okta_org_name"],
+            name=name)
+
+        return RestUtil.execute_delete(url=url, body=None, headers=okta_headers)
+
+    def get_linked_users(self, userid, name):
+        self.logger.debug("OktaAdmin.get_user_schemas()")
+
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/users/{userid}/linkedObjects/{name}".format(
+            base_url=self.okta_config["okta_org_name"],
+            name=name,
+            userid=userid)
+
+        return RestUtil.execute_get(url, okta_headers)
+
+    def create_linked_users(self, userid, parentid, name):
+        self.logger.debug("OktaAdmin.get_user_schemas()")
+
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/users/{userid}/linkedObjects/{name}/{parentid}".format(
+            base_url=self.okta_config["okta_org_name"],
+            name=name,
+            userid=userid,
+            parentid=parentid)
+
+        return RestUtil.execute_put(url=url, body=None, headers=okta_headers)
+
     def create_clientcredential_application(self, app_name):
         self.logger.debug("OktaAdmin.get_applications_by_id(app_id)")
         okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)

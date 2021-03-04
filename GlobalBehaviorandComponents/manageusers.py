@@ -111,7 +111,7 @@ def gbac_user_resetpassword():
     return redirect(url_for("gbac_manageusers_bp.gbac_users", _external="True", _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"], message=message))
 
 
-@gbac_manageusers_bp.route("/manageusercreateupdate")
+@gbac_manageusers_bp.route("/manageuserscreateupdate")
 @apply_remote_config
 @is_authenticated
 def gbac_create_update_page():
@@ -120,13 +120,17 @@ def gbac_create_update_page():
     user_id = request.args.get('user_id')
     user_info2 = okta_admin.get_user(user_id)
     group_id = request.args.get('group_id')
+    parent_id = request.args.get('parent_id')
+    linked_name = request.args.get('linked_name')
 
     return render_template(
-        "/manageusercreateupdate.html",
+        "/manageuserscreateupdate.html",
         templatename=get_app_vertical(),
         user_info=get_userinfo(),
         user_info2=user_info2,
         group_id=group_id,
+        parent_id=parent_id,
+        linked_name=linked_name,
         config=session[SESSION_INSTANCE_SETTINGS_KEY])
 
 
@@ -141,6 +145,8 @@ def gbac_user_create():
     email = request.form.get('email')
     login = request.form.get('email')
     mobile_phone = request.form.get('phonenumber')
+    parent_id = request.form.get('parent_id')
+    linked_name = request.form.get('linked_name')
     user_data = {"profile": {"firstName": first_name, "lastName": last_name, "email": email, "login": login, "mobilePhone": mobile_phone}}
 
     group_id = request.form.get('group_id')
@@ -149,16 +155,21 @@ def gbac_user_create():
         logging.debug(group_id)
         if group_id == "None":
             # do nothing
-            message = "User {0} {1} was Created".format(first_name, last_name)
+            msg = "User {0} {1} was Created".format(first_name, last_name)
         else:
             user_group_response = okta_admin.assign_user_to_group(group_id, user_create_response['id'])
             if "errorCode" not in user_group_response:
-                message = "User {0} {1} was Created".format(first_name, last_name)
+                msg = "User {0} {1} was Created".format(first_name, last_name)
             else:
-                message = "Error During Create - " + str(user_group_response["errorCauses"][0]["errorSummary"])
+                msg = "Error During Create - " + str(user_group_response["errorCauses"][0]["errorSummary"])
     else:
-        message = "Error During Create - " + str(user_create_response["errorCauses"][0]["errorSummary"])
-    return redirect(url_for("gbac_manageusers_bp.gbac_users", _external="True", _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"], message=message))
+        msg = "Error During Create - " + str(user_create_response["errorCauses"][0]["errorSummary"])
+
+    if parent_id:
+        okta_admin.create_linked_users(user_create_response['id'], parent_id, linked_name)
+        return redirect(url_for("gbac_lo_bp.gbac_linkedobjects", _external="True", _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"], message=msg))
+
+    return redirect(url_for("gbac_manageusers_bp.gbac_users", _external="True", _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"], message=msg))
 
 
 @gbac_manageusers_bp.route("/updateuserinfo", methods=["POST"])
