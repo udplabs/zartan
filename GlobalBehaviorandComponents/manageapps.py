@@ -46,7 +46,7 @@ def gbac_apps_edit():
     logger.debug(appinfo)
 
     return render_template(
-        "/manageappcreateupdate.html",
+        "/manageappscreateupdate.html",
         templatename=get_app_vertical(),
         user_info=get_userinfo(),
         config=session[SESSION_INSTANCE_SETTINGS_KEY],
@@ -63,7 +63,7 @@ def gbac_apps_create():
     # okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
 
     return render_template(
-        "/manageappcreateupdate.html",
+        "/manageappscreateupdate.html",
         templatename=get_app_vertical(),
         user_info=get_userinfo(),
         config=session[SESSION_INSTANCE_SETTINGS_KEY])
