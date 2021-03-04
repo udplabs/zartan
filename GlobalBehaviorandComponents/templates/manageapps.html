@@ -1,0 +1,29 @@
+{% extends templatename+"/template.html" %}
+
+{% block header %}
+{% endblock %}
+
+
+{% block content %}
+ <section class="bg-light py-5">
+    <div class="container">
+        <div class="d-flex align-items-center mb-5">
+            <div class="icon-stack icon-stack-lg bg-primary text-white"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
+            <div class="ml-3">
+                <h2 class="mb-0">Manage API Clients</h2>
+            </div>
+        </div>
+        <div class="card border-bottom">
+             <div class="card-header">
+                <button type="button" class="btn align-items-right btn-primary ml-auto" onclick="window.location.href = '/createapps';">Create App</button>
+            </div>
+            <div class="card-body">
+            {% include '/components/template-manageapps.html' %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

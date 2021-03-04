@@ -77,9 +77,6 @@
                             <a class="nav-link" href="/{{ config.settings.app_template }}/users_keysetup">Key Management</a>
                         </nav>
                     </div>
-
-
-
                     <a class="nav-link" href="javascript:void(0);" data-toggle="collapse" data-target="#collapseIDPs" aria-expanded="true" aria-controls="collapseIDPs">
                        <div class="nav-link-icon"><i data-feather="link"></i></div>
                        IDP Management
@@ -90,7 +87,16 @@
                            <a class="nav-link" href="/managesamlidps">Manage SAML IDPs</a>
                        </nav>
                    </div>
-
+                   <a class="nav-link" href="javascript:void(0);" data-toggle="collapse" data-target="#collapseApps" aria-expanded="true" aria-controls="collapseApps">
+                       <div class="nav-link-icon"><i data-feather="link"></i></div>
+                       App Management
+                       <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                   </a>
+                   <div class="collapse show" id="collapseApps" data-parent="#accordionSidenav">
+                       <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
+                           <a class="nav-link" href="/manageapps">Service API's</a>
+                       </nav>
+                   </div>
 
                 </div>
             </div>
