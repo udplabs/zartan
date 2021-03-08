@@ -9,16 +9,23 @@ from GlobalBehaviorandComponents.mfaenrollment import get_enrolled_factors
 
 from GlobalBehaviorandComponents.validation import is_authenticated, get_userinfo
 
+#Filesystem cache
+#from flask_caching import Cache
+
 # SMART/FHIR Libraries
 from utils.fhirclient import client
 from utils.fhirclient.models.medicationrequest import MedicationRequest
 from utils.fhirclient.models.claim import Claim
+import uuid
+import cachetools
+
+#Server side cache for storing our FHIR tokens (to avoid making our session too big).
+fhirStore = cachetools.TTLCache(maxsize=1000 * 1000, ttl=60 * 60 * 6)
 
 logger = logging.getLogger(__name__)
 
 # set blueprint
 healthcare_views_bp = Blueprint('healthcare_views_bp', __name__, template_folder='templates', static_folder='static', static_url_path='static')
-
 
 # Required for Login Landing Page
 @healthcare_views_bp.route("/profile")
@@ -337,9 +344,12 @@ def healthcare_smartfhir_callback():
     smartClient = _get_smart(request)
     try:
         smartClient.handle_callback(request.url)
+        logger.info(smartClient.state)
+        _save_state(smartClient.state)
+
     except Exception as e:
         return """<h1>Authorization Error</h1><p>{0}</p><p><a href="/">Start over</a></p>""".format(e)
-
+    
     return redirect(
         url_for(
             "healthcare_views_bp.healthcare_healthins",
@@ -353,8 +363,8 @@ def healthcare_smartfhir_callback():
 @apply_remote_config
 @is_authenticated
 def healthcare_newpatient():
-    if 'fhir_state' in session:
-        del session['fhir_state']
+    if 'fhir_session_id' in session:
+        del session['fhir_session_id']
 
     return redirect(
         url_for(
@@ -366,8 +376,15 @@ def healthcare_newpatient():
 
 
 def _save_state(state):
-    session['fhir_state'] = state
-
+    sessionId = session.get('fhir_session_id')
+    logger.info('Saving FHIR State')
+    logger.info(state)
+    if sessionId:
+        fhirStore[sessionId] = state
+    else:
+        newSessionId = str(uuid.uuid1())
+        session['fhir_session_id'] = newSessionId
+        fhirStore[newSessionId] = state
 
 def _get_smart(request):
     smart_config = {
@@ -376,8 +393,20 @@ def _get_smart(request):
         'redirect_uri': request.url_root + "healthcare/smartfhir_callback",
         'scope': 'launch/patient patient/Patient.read patient/MedicationRequest.read patient/Claim.read skip_patient_selection'
     }
-    state = session.get('fhir_state')
-    if state:
-        return client.FHIRClient(state=state, save_func=_save_state)
+    sessionId = session.get('fhir_session_id')
+    if sessionId:
+        
+        fhirState = fhirStore.get(sessionId)
+
+        if fhirState:
+            logger.info('Existing fhir data found!')
+            logger.info(fhirState)
+            return client.FHIRClient(state=fhirState)
+        else:
+            logger.info('No FHIR Data Found!')
+            return client.FHIRClient(settings=smart_config, save_func=_save_state)
+        
     else:
+        logger.info('No FHIR Data Found!')
         return client.FHIRClient(settings=smart_config, save_func=_save_state)
+
