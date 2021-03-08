@@ -9,9 +9,6 @@ from GlobalBehaviorandComponents.mfaenrollment import get_enrolled_factors
 
 from GlobalBehaviorandComponents.validation import is_authenticated, get_userinfo
 
-#Filesystem cache
-#from flask_caching import Cache
-
 # SMART/FHIR Libraries
 from utils.fhirclient import client
 from utils.fhirclient.models.medicationrequest import MedicationRequest
@@ -19,13 +16,14 @@ from utils.fhirclient.models.claim import Claim
 import uuid
 import cachetools
 
-#Server side cache for storing our FHIR tokens (to avoid making our session too big).
+# Server side cache for storing our FHIR tokens (to avoid making our session too big).
 fhirStore = cachetools.TTLCache(maxsize=1000 * 1000, ttl=60 * 60 * 6)
 
 logger = logging.getLogger(__name__)
 
 # set blueprint
 healthcare_views_bp = Blueprint('healthcare_views_bp', __name__, template_folder='templates', static_folder='static', static_url_path='static')
+
 
 # Required for Login Landing Page
 @healthcare_views_bp.route("/profile")
@@ -290,7 +288,7 @@ def healthcare_healthins():
 
     if smartClient.ready and smartClient.patient is not None:
         accountLinked = True
-        smartClient.scope =  smartClient.scope.replace(' skip_patient_selection', '')
+        smartClient.scope = smartClient.scope.replace(' skip_patient_selection', '')
         name = smartClient.human_name(smartClient.patient.name[0] if smartClient.patient.name and len(smartClient.patient.name) > 0 else 'Unknown')
 
         logger.debug(smartClient.authorized_scopes)
@@ -349,7 +347,7 @@ def healthcare_smartfhir_callback():
 
     except Exception as e:
         return """<h1>Authorization Error</h1><p>{0}</p><p><a href="/">Start over</a></p>""".format(e)
-    
+
     return redirect(
         url_for(
             "healthcare_views_bp.healthcare_healthins",
@@ -386,6 +384,7 @@ def _save_state(state):
         session['fhir_session_id'] = newSessionId
         fhirStore[newSessionId] = state
 
+
 def _get_smart(request):
     smart_config = {
         'app_id': session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_ins_fhir_clientid"],
@@ -395,7 +394,7 @@ def _get_smart(request):
     }
     sessionId = session.get('fhir_session_id')
     if sessionId:
-        
+
         fhirState = fhirStore.get(sessionId)
 
         if fhirState:
@@ -405,8 +404,7 @@ def _get_smart(request):
         else:
             logger.info('No FHIR Data Found!')
             return client.FHIRClient(settings=smart_config, save_func=_save_state)
-        
+
     else:
         logger.info('No FHIR Data Found!')
         return client.FHIRClient(settings=smart_config, save_func=_save_state)
-
