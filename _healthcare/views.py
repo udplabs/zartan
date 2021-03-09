@@ -15,9 +15,12 @@ from utils.fhirclient.models.medicationrequest import MedicationRequest
 from utils.fhirclient.models.claim import Claim
 import uuid
 import cachetools
+import threading
 
 # Server side cache for storing our FHIR tokens (to avoid making our session too big).
 fhirStore = cachetools.TTLCache(maxsize=1000 * 1000, ttl=60 * 60 * 6)
+fhirStoreLock = threading.Lock()
+
 
 logger = logging.getLogger(__name__)
 
@@ -378,11 +381,13 @@ def _save_state(state):
     logger.info('Saving FHIR State')
     logger.info(state)
     if sessionId:
-        fhirStore[sessionId] = state
+        with fhirStoreLock:
+            fhirStore[sessionId] = state
     else:
         newSessionId = str(uuid.uuid1())
         session['fhir_session_id'] = newSessionId
-        fhirStore[newSessionId] = state
+        with fhirStoreLock:
+            fhirStore[newSessionId] = state
 
 
 def _get_smart(request):
@@ -394,8 +399,8 @@ def _get_smart(request):
     }
     sessionId = session.get('fhir_session_id')
     if sessionId:
-
-        fhirState = fhirStore.get(sessionId)
+        with fhirStoreLock:
+            fhirState = fhirStore.get(sessionId)
 
         if fhirState:
             logger.info('Existing fhir data found!')
