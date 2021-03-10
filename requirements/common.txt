@@ -3,3 +3,4 @@ requests>=2.23.0
 python-dotenv==0.13.0
 cryptography==3.2
 isodate>=0.5
+cachetools>=4.2.1
