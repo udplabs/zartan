@@ -32,9 +32,9 @@
                             {% endif %}
                             <h2 class="mr-2" style="margin-top:8px">{{ group_title }}</h2>
                             {% if group_title|trim == "All users in your organization"  %}
-                                <button type="button" class="btn btn-secondary ml-auto" onclick="window.location.href = 'manageusercreateupdate';">Create User</button>
+                                <button type="button" class="btn btn-secondary ml-auto" onclick="window.location.href = 'manageuserscreateupdate';">Create User</button>
                             {% else %}
-                                <button type="button" class="btn btn-secondary ml-auto" onclick="window.location.href = 'manageusercreateupdate?group_id={{user_group['id']}}';">Create User in {{ group_title }}</button>
+                                <button type="button" class="btn btn-secondary ml-auto" onclick="window.location.href = 'manageuserscreateupdate?group_id={{user_group['id']}}';">Create User in {{ group_title }}</button>
                             {% endif %}
                         </div>
                         <br>
@@ -56,7 +56,7 @@
                                         <td>{{ i['profile']['firstName']|truncate(15, True) if i['profile']['firstName'] else '' }} {{ i['profile']['lastName']|truncate(15, True) if i['profile']['lastName'] else '' }}</td>
                                         <td>{{ i['profile']['email']|truncate(30, True) }}</td>
                                         <td style="text-align:center">{{ i['status'] }}</td>
-                                        <td style="text-align:center"><a href="manageusercreateupdate?user_id={{ i.id}}"><i class="fa fa-edit"></i></a></td>
+                                        <td style="text-align:center"><a href="manageuserscreateupdate?user_id={{ i.id}}"><i class="fa fa-edit"></i></a></td>
                                         {% if i['status'] == 'ACTIVE' or i['status'] == 'RECOVERY'  %}
                                                <td style="text-align:center"><a href="suspenduser?user_id={{ i.id}}"><i class="fa fa-toggle-on"></i></a></td>
                                         {% else %}
