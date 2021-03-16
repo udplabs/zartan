@@ -3,7 +3,11 @@
                 <li class="nav-item"><a class="nav-link" href="/index">Home</a></li>
                 <li class="nav-item dropdown dropdown-xl no-caret">
                     <a class="nav-link dropdown-toggle" href="/ecommerce/shop" role="button">Shop</a>
+                    {% if config.settings.useProgressiveProfiling == "True" %}
+                    <a class="nav-link dropdown-toggle" href="/ecommerce/registration" role="button">Register</a>
+                    {% else %}
                     <a class="nav-link dropdown-toggle" href="/registration" role="button">Register</a>
+                    {% endif %}
                     <a class="nav-link dropdown-toggle" href="/ecommerce/apply" role="button">Apply for Financing</a>
                 </li>
             </ul>

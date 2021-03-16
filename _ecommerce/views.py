@@ -111,6 +111,69 @@ def ecommerce_checkout():
     return render_template("ecommerce/checkout.html", user=user, user_info=get_userinfo(), config=session[SESSION_INSTANCE_SETTINGS_KEY], _scheme="https")
 
 
+# Required for Registration Page
+@ecommerce_views_bp.route("/registration")
+@apply_remote_config
+def ecommerce_registration():
+    logger.debug("ecommerce_registration()")
+    return render_template(
+        "ecommerce/pp_registration.html",
+        templatename=get_app_vertical(),
+        config=session[SESSION_INSTANCE_SETTINGS_KEY],
+        _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
+
+
+@ecommerce_views_bp.route("/registration-completion", methods=["POST"])
+@apply_remote_config
+def ecommerce_registration_completion():
+    logger.debug("ecommerce_registration_completion()")
+
+    user_data = {
+        "profile": {
+            "email": request.form.get('email'),
+            "login": request.form.get('email')
+        }
+    }
+
+    logger.debug(user_data)
+    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
+    user_create_response = okta_admin.create_user(user=user_data, activate_user='false')
+    logger.debug(user_create_response)
+
+    if "id" not in user_create_response:
+        error_message = "Failed to get a valid response from Okta Create User: user_data:{0} user_create_response:{1}".format(user_data, user_create_response)
+        logger.error(error_message)
+
+        return render_template(
+            "/error.html",
+            templatename=get_app_vertical(),
+            config=session[SESSION_INSTANCE_SETTINGS_KEY],
+            error_message=error_message)
+
+    activation_link = ""
+    if request.form.get('noemail').lower() == 'true':
+        logger.debug("no email will be sent")
+        activation_link = url_for(
+            "gbac_registration_bp.gbac_registration_state_get",
+            stateToken=user_create_response["id"],
+            _external=True,
+            _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
+    else:
+        logger.debug("email sent")
+        ecommerce_email_registration(
+            recipient={"address": request.form.get('email')},
+            token=user_create_response["id"])
+
+    return render_template(
+        "/registration-completion.html",
+        email=request.form.get('email'),
+        activationlink=activation_link,
+        noemail=request.form.get('noemail').lower(),
+        templatename=get_app_vertical(),
+        config=session[SESSION_INSTANCE_SETTINGS_KEY],
+        _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
+
+
 # Apply Credit Page
 @ecommerce_views_bp.route("/apply")
 @apply_remote_config
@@ -508,6 +571,25 @@ def ecommerce_user_update():
             _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"],
             user_id=user_id,
             message=message))
+
+
+# EMail user and admin when a new user registers successfully
+def ecommerce_email_registration(recipient, token):
+    logger.debug("ecommerce_email_registration()")
+    app_title = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_name"]
+    activation_link = url_for(
+        "gbac_registration_bp.gbac_registration_state_get",
+        stateToken=token,
+        _external=True,
+        _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
+    subject = "Welcome to the {app_title}".format(app_title=session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_name"])
+
+    message = """
+        Thank you for Applying for {app_title}! <br /> <br />Click this link to activate your account. <br /><br />
+        <a href='{activation_link}'>Click Here to Activate Account</a>
+        """.format(app_title=app_title, activation_link=activation_link)
+    test = Email.send_mail(subject=subject, message=message, recipients=[recipient])
+    logger.debug(test)
 
 
 def safe_get_dict(mydict, key):
