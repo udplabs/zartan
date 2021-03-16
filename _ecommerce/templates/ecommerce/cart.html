@@ -88,6 +88,27 @@
         arrayList.push(cartitem);
 
         newproducts = JSON.stringify(arrayList);
+
+        let guestUserId = getCookieValue("username");
+
+        if(!guestUserId) {
+
+            const httpRequest = new XMLHttpRequest();
+            httpRequest.open("GET", "/ecommerce/create-guest");
+
+            httpRequest.onreadystatechange = function() {
+                if (httpRequest.readyState == 4) {
+                    console.log(httpRequest.responseText);
+                    let jsonResults = JSON.parse(httpRequest.responseText);
+                    document.cookie = "username=" + jsonResults.profile.login + ";  path=/;";
+                }
+            }
+            httpRequest.setRequestHeader("Access-Control-Allow-Origin","*");
+            httpRequest.responseType="text";
+
+            httpRequest.send();
+        }
+
         window.sessionStorage["products"] = newproducts;
         cart();
     }
@@ -127,4 +148,5 @@
         }
         return arrayList;
     }
+
 </script>

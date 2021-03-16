@@ -2,6 +2,7 @@ import json
 import logging
 import datetime
 import requests
+import uuid
 
 # import functions
 from flask import render_template, session, request, redirect, url_for
@@ -127,17 +128,25 @@ def ecommerce_registration():
 @apply_remote_config
 def ecommerce_registration_completion():
     logger.debug("ecommerce_registration_completion()")
-
+    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
+    user_create_response = None
     user_data = {
-        "profile": {
-            "email": request.form.get('email'),
-            "login": request.form.get('email')
-        }
-    }
+        "profile": {}
+    };
+
+    if "guestUserId" in request.form:
+        user_data = okta_admin.get_user(request.form.get('guestUserId'))
+
+    user_data["profile"]["email"] = request.form.get('email')
+    user_data["profile"]["login"] = request.form.get('email')
 
     logger.debug(user_data)
-    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
-    user_create_response = okta_admin.create_user(user=user_data, activate_user='false')
+
+    if "id" in user_data:
+        user_create_response = okta_admin.update_user(user_id=user_data["id"], user=user_data)
+    else:
+        user_create_response = okta_admin.create_user(user=user_data, activate_user='false')
+
     logger.debug(user_create_response)
 
     if "id" not in user_create_response:
@@ -165,13 +174,34 @@ def ecommerce_registration_completion():
             token=user_create_response["id"])
 
     return render_template(
-        "/registration-completion.html",
+        "ecommerce/registration-completion.html",
         email=request.form.get('email'),
         activationlink=activation_link,
         noemail=request.form.get('noemail').lower(),
         templatename=get_app_vertical(),
         config=session[SESSION_INSTANCE_SETTINGS_KEY],
         _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
+
+
+# Create Guest Account
+@ecommerce_views_bp.route("/create-guest")
+@apply_remote_config
+def ecommerce_create_guest_account():
+    logger.debug("ecommerce_create_guest_account()")
+    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
+    guest_user_id = str(uuid.uuid4())
+
+    user_data = {
+        "profile": {
+            "email": "{id}@guestuseraccount.com".format(id=guest_user_id),
+            "login": guest_user_id
+        }
+    }
+
+    logger.debug(user_data)
+    response = okta_admin.create_user(user=user_data)
+    logger.debug(response)
+    return response
 
 
 # Apply Credit Page
