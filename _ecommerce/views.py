@@ -132,7 +132,7 @@ def ecommerce_registration_completion():
     user_create_response = None
     user_data = {
         "profile": {}
-    };
+    }
 
     if "guestUserId" in request.form:
         user_data = okta_admin.get_user(request.form.get('guestUserId'))
@@ -265,9 +265,6 @@ def ecommerce_order_post():
     response = okta_admin.update_user(user_id=user_info["sub"], user=user_data)
     logger.debug(response)
 
-
-    user = okta_admin.get_user(user_info["sub"])
-    user_id = user["id"]
     # /ecommerce/order?message=Order Complete
     # return render_template("ecommerce/order.html", user=user, user_info=get_userinfo(), config=session[SESSION_INSTANCE_SETTINGS_KEY], _scheme="https")
     return redirect(
