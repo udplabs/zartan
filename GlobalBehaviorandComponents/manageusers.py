@@ -165,7 +165,7 @@ def gbac_user_create():
     else:
         msg = "Error During Create - " + str(user_create_response["errorCauses"][0]["errorSummary"])
 
-    if parent_id is not None:
+    if not parent_id == "None":
         logger.debug("ParentID Found")
         okta_admin.create_linked_users(user_create_response['id'], parent_id, linked_name)
         return redirect(url_for("gbac_lo_bp.gbac_linkedobjects", _external="True", _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"], message=msg))
