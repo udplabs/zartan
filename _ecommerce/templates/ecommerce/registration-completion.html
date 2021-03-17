@@ -38,8 +38,10 @@
 </div>
 </section>
 <script>
+    {% if config.settings.useProgressiveProfiling == "True" %}
     document.cookie = "username=; path=/;";
     console.log("remove guest cookie");
+    {% endif %}
 </script>
 {% endblock %}
 

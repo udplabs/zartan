@@ -218,7 +218,7 @@ def ecommerce_apply():
 
 
 # Order Page
-@ecommerce_views_bp.route("/order")
+@ecommerce_views_bp.route("/order", methods=["GET"])
 @apply_remote_config
 @is_authenticated
 def ecommerce_order():
@@ -228,6 +228,54 @@ def ecommerce_order():
     user = okta_admin.get_user(user_info["sub"])
 
     return render_template("ecommerce/order.html", user=user, user_info=get_userinfo(), config=session[SESSION_INSTANCE_SETTINGS_KEY], _scheme="https")
+
+
+# Order Page
+@ecommerce_views_bp.route("/order_post", methods=["POST"])
+@apply_remote_config
+@is_authenticated
+def ecommerce_order_post():
+    logger.debug("ecommerce_order_post()")
+    user_info = get_userinfo()
+    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
+
+    logger.debug(request)
+    firstname = request.form.get("firstName")
+    lastname = request.form.get("lastName")
+    email = request.form.get("email")
+    streetAddress = request.form.get("address")
+    city = request.form.get("city")
+    state = request.form.get("state")
+    zipCode = request.form.get("zip")
+    countryCode = request.form.get("country")
+
+    user_data = {
+        "profile": {
+            "firstName": firstname,
+            "lastName": lastname,
+            "email": email,
+            "streetAddress": streetAddress,
+            "city": city,
+            "state": state,
+            "zipCode": zipCode,
+            "countryCode": countryCode
+        }
+    }
+    logger.debug(user_data)
+    response = okta_admin.update_user(user_id=user_info["sub"], user=user_data)
+    logger.debug(response)
+
+
+    user = okta_admin.get_user(user_info["sub"])
+    user_id = user["id"]
+    # /ecommerce/order?message=Order Complete
+    # return render_template("ecommerce/order.html", user=user, user_info=get_userinfo(), config=session[SESSION_INSTANCE_SETTINGS_KEY], _scheme="https")
+    return redirect(
+        url_for(
+            "ecommerce_views_bp.ecommerce_order",
+            _external="True",
+            _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"],
+            message="Order Complete"))
 
 
 # updateuser Page

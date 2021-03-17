@@ -89,6 +89,8 @@
 
         newproducts = JSON.stringify(arrayList);
 
+        {% if config.settings.useProgressiveProfiling == "True" %}
+        {% if not user_info %}
         let guestUserId = getCookieValue("username");
 
         if(!guestUserId) {
@@ -108,6 +110,8 @@
 
             httpRequest.send();
         }
+        {% endif %}
+        {% endif %}
 
         window.sessionStorage["products"] = newproducts;
         cart();
