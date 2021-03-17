@@ -2,6 +2,11 @@
 <html lang="en">
     {% include '//components/template-header-meta.html' %}
     <body>
+        <script>
+            const getCookieValue = (name) => (
+                document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')?.pop() || ''
+            )
+        </script>
         <div id="layoutDefault">
             <div id="layoutDefault_content">
                 <main>

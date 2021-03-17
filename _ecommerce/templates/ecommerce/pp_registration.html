@@ -1,0 +1,40 @@
+{% extends templatename+"/template.html" %}
+
+{% block content %}
+<section class="bg-light py-5">
+    <div class="container">
+        <div class="d-flex align-items-center mb-5">
+            <div class="icon-stack icon-stack-lg bg-primary text-white"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
+            <div class="ml-3">
+                <h2 class="mb-0">User Registration</h2>
+            </div>
+        </div>
+        <div class="card border-bottom">
+            <div class="card-body">
+                <form action="registration-completion" method="POST">
+
+                    <div class="form-row">
+                        <div class="form-group col-md-12"><label class="small text-gray-600" for="email">Email address</label>
+                            <input class="form-control rounded-pill" name="email" id="email" type="email"  required="required" />
+                        </div>
+
+                        <button class="btn btn-primary btn-marketing btn-block rounded-pill mt-4" type="submit">Sign Up Now</button>
+                        <input id="noemail" name="noemail" type="hidden" value="{{ request.args.get('noemail') }}" />
+                        <input id="guestUserId" name="guestUserId" type="hidden" />
+                    </div>
+
+                    <script>
+                        let guestUserId = getCookieValue("username");
+                        console.log("guestUserId: " + guestUserId);
+                        document.getElementById("guestUserId").value = guestUserId;
+                    </script>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
