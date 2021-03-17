@@ -40,7 +40,9 @@ jobs:
       if: ${{ success() }}
       run: |
         # from refs/tags/v1.2.3 get 1.2.3
-        VERSION=$(echo $GITHUB_REF | sed 's#.*/v##')
+        # //TODO: Debug the issue with sed
+        # VERSION=$(echo $GITHUB_REF | sed 's#.*/v##')
+        VERSION=${{ github.event.inputs.deployTagVersion }}
         PLACEHOLDER='__version__ = "develop"'
         VERSION_FILE='config/__init__.py'
 
