@@ -72,6 +72,38 @@ resource "okta_auth_server_policy_rule" "streamingservice" {
   grant_type_whitelist = ["authorization_code"]
   scope_whitelist      = ["*"]
 }
+resource "okta_user_type" "device" {
+  name   = "device"
+  display_name = "Device"
+  description = "Device"
+}
+resource "okta_user_schema" "deviceid" {
+  index       = "device_id"
+  title       = "Device ID"
+  type        = "string"
+  description = "Device ID"
+  master      = "OKTA"
+  scope       = "SELF"
+  user_type   = "${data.okta_user_type.device.id}"
+}
+resource "okta_user_schema" "devicetype" {
+  index       = "device_type"
+  title       = "Device Type"
+  type        = "string"
+  description = "Device Type"
+  master      = "OKTA"
+  scope       = "SELF"
+  user_type   = "${data.okta_user_type.device.id}"
+}
+resource "okta_user_schema" "deviceinfocompleted" {
+  index       = "device_info_completed"
+  title       = "Device Info Completed"
+  type        = "string"
+  description = "Device Info Completed"
+  master      = "OKTA"
+  scope       = "SELF"
+  user_type   = "${data.okta_user_type.device.id}"
+}
 output "client_id" {
   value = "${okta_app_oauth.streamingservice.client_id}"
 }
@@ -89,15 +121,4 @@ output "issuer" {
 }
 output "okta_app_oauth_id" {
   value = "${okta_app_oauth.streamingservice.id}"
-}
-resource "okta_app_user_schema" "customfield1" {
-  app_id      = "${okta_app_oauth.networktv.id}"
-  index       = "${local.nodash_subdomain}_${var.demo_app_name}_authorized_devices"
-  title       = "${var.udp_subdomain}_${var.demo_app_name}_authorized_devices"
-  type        = "array"
-  array_type  = "string"
-  description = "Authorized Devices"
-  master      = "OKTA"
-  scope       = "SELF"
-  permissions = "READ_WRITE"
 }

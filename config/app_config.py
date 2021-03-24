@@ -42,6 +42,8 @@ default_settings = {
         "app_deviceflow_clientid": os.getenv("APP_DEVICEFLOW_CLIENTID", ""),
         "app_deviceflow_clientsecret": os.getenv("APP_DEVICEFLOW_CLIENTSECRET", ""),
         "app_deviceflow_appname": os.getenv("APP_DEVICEFLOW_APPNAME", ""),
+        "app_deviceflow_applogo": os.getenv("APP_DEVICEFLOW_APPLOGO", ""),
+        "app_deviceflow_deviceobject": os.getenv("APP_DEVICEFLOW_DEVICEOBJECT", ""),
         "app_ins_fhir_clientid": os.getenv("APP_INS_FHIR_CLIENTID", "0oa3gvkmdRb5n52e91d6"),
         "app_ins_fhir_api_base": os.getenv("APP_INS_FHIR_API_BASE", "https://7zj8l72c27.execute-api.us-east-1.amazonaws.com/prd")
     },

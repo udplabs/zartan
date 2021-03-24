@@ -8,9 +8,34 @@
             <a href="#" class="btn btn-primary btn-lg id-open">Device Flow Information</a>
             <div class="background" id="background">
                 <div class="tv" id="tv">
-                    <a href="/index"><img src={{config.settings.app_logo}} border='0' style="max-height:100px;max-width:300px;height:auto;width:auto;margin: 250 0 0 450;position:absolute;" onerror="this.style.display='none'"></a>
                     <div class="appbar" id="appbar">
+                        {% if applogo is defined %}
+                        <button class="appbutton" id="imgbutton1" onclick="getcode()"><img src="{{applogo}}"></button>
+                        <style>
+                        .appbutton {
+                            padding: 0 !important;
+                            margin-top: 5px !important;
+                            vertical-align: top !important;
+                            border-radius: 20px !important;
+                            border: 0 !important;
+                            background: none !important;
+                        }
+                        
+                        .appbutton:focus {
+                            outline: none !important;
+                            border: none !important;
+                        }
+                        
+                        #imgbutton1 img {
+                            width: 140px;
+                            padding: 0;
+                            margin: 0;
+                            border-radius: 20px;
+                        }
+                        </style>
+                        {% else %}
                         <button class="action-button shadow animate blue" onclick="getcode()">{{appname}}</button>
+                        {% endif %}
                     </div>
                     <div class="getcode" id="getcode" style="display:none">
                         <div class="topbar" id="topbar" >
