@@ -1,38 +1,49 @@
-{% extends "streamingservice/template.html" %}
+{% extends templatename+"/template.html" %}
 
 {% block content %}
-               <section class="bg-light py-5">
+        <section class="bg-light py-5">
             <div class="container">
                 <div class="d-flex align-items-center mb-5">
                     <div class="icon-stack icon-stack-lg bg-primary text-white"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
                     <div class="ml-3">
-                        <h2 class="mb-0">Account</h2>
-                        <p class="lead mb-0">Your Devices</p>
+                        <h2 class="mb-0">Device Management</h2>
                     </div>
                 </div>
-                <div class="card border-bottom">
+                {% if nfamily %}
+                {% for family in nfamily %}
+                <div class="card card-header-actions mx-auto">
+                    <div class="card-header">
+                        Manage Devices
+                    </div>
                     <div class="card-body">
-                        <div class="separator-2"></div>
-                            <table class="table table-striped">
-                                <thead>
+                        <table class="table table-striped">
+                            <thead>
                                 <tr>
                                     <th>Device Type</th>
                                     <th>Device ID</th>
-                                    <th style="text-align:center">Remove</th>
+                                    <th style="text-align:center">User Status</th>
+                                    <th style="text-align:center">Suspend</th>
                                 </tr>
-                                </thead>
-                                <tbody>
-                                {% for i in devices %}
+                            </thead>
+                            <tbody>
+                                {% for i in family.users %}
                                      <tr>
-                                        <td>Television</td>
-                                        <td>{{i}}</td>
-                                        <td style="text-align:center"><a href="removedevice?device_id={{ i }}"><i class="fa fa-times-circle"></i></a></td>
+                                        <td>{{ i['profile']['device_type'] }}</td>
+                                        <td>{{ i['profile']['device_id'] }}</td>
+                                        <td style="text-align:center">{{ i['status'] }}</td>
+                                        {% if i['status'] == 'ACTIVE' or i['status'] == 'RECOVERY'  %}
+                                               <td style="text-align:center"><a href="suspenddevice?user_id={{ i.id}}"><i class="fa fa-toggle-on"></i></a></td>
+                                        {% else %}
+                                               <td style="text-align:center"><a href="unsuspenddevice?user_id={{ i.id}}"><i class="fa fa-toggle-off"></i></a></td>
+                                        {% endif %}
                                     </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
                     </div>
-                </div>
+                </div> <br>   
+                {% endfor %}   
+                {% endif %}
             </div>
         </section>
 {% endblock %}

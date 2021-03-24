@@ -4,3 +4,4 @@ python-dotenv==0.13.0
 cryptography==3.3.2
 isodate>=0.5
 cachetools>=4.2.1
+device-detector>=0.10

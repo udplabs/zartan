@@ -4,13 +4,13 @@ import string
 import uuid
 import json
 
-
 # import functions
 from flask import render_template, session, request
 from flask import Blueprint, url_for, redirect
-from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical, get_udp_ns_fieldname, apply_remote_config
+from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical, apply_remote_config
 from utils.okta import TokenUtil, OktaAdmin, OktaAuth, OktaUtil, PKCE
 from utils.rest import RestUtil
+from device_detector import DeviceDetector
 
 from GlobalBehaviorandComponents.validation import is_authenticated, get_userinfo, gvalidation_bp_error, check_okta_api_token, check_zartan_config
 
@@ -26,6 +26,7 @@ def streamingservice_devicepage():
     logger.debug("streamingservice_devicepage()")
     client_id = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_deviceflow_clientid"]
     appname = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_deviceflow_appname"]
+    applogo = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_deviceflow_applogo"]
 
     id_token = ""
     access_token = ""
@@ -41,6 +42,7 @@ def streamingservice_devicepage():
         reset_tokens=reset_tokens,
         client_id=client_id,
         appname=appname,
+        applogo=applogo,
         config=session[SESSION_INSTANCE_SETTINGS_KEY])
 
 
@@ -132,31 +134,45 @@ def streamingservice_revoketoken():
 @apply_remote_config
 def streamingservice_token_check():
     logger.debug("streamingservice_token_check()")
+    response = "false"
+    try:
+        access_token = request.form['access_token']
+        id_token = request.form['id_token']
+        refresh_token = request.form['refresh_token']
+        device_id = request.form['device_id']
+        client_id = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_deviceflow_clientid"]
+        client_secret = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_deviceflow_clientsecret"]
+        okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
+        okta_auth = OktaAuth(session[SESSION_INSTANCE_SETTINGS_KEY])
 
-    access_token = request.form['access_token']
-    id_token = request.form['id_token']
-    refresh_token = request.form['refresh_token']
-    device_id = request.form['device_id']
-    client_id = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_deviceflow_clientid"]
-    client_secret = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_deviceflow_clientsecret"]
-    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
-    okta_auth = OktaAuth(session[SESSION_INSTANCE_SETTINGS_KEY])
+        isactiveID = okta_auth.introspect_with_clientid(id_token, client_id=client_id, client_secret=client_secret, token_type_hint="idtoken")
 
-    isactiveID = okta_auth.introspect_with_clientid(id_token, client_id=client_id, client_secret=client_secret, token_type_hint="idtoken")
+        devices_list = okta_admin.get_user_list_by_search("profile.login+eq+%22" + device_id + "@okta.com" + "%22")
+        device_info = devices_list[0]
 
-    if isactiveID["active"]:
-        id_token_info = TokenUtil.get_claims_from_token(id_token)
-        user_app_profile = okta_admin.get_user_application_by_client_id(user_id=id_token_info["sub"], client_id=client_id)
+        if isactiveID["active"]:
+            id_token_info = TokenUtil.get_claims_from_token(id_token)
+            linkeddevices = okta_admin.get_linked_users(userid=id_token_info["sub"], name="device")
+            ua = request.headers.get('User-Agent')
+            # Parse UA string and load data to dict of 'os', 'client', 'device' keys
+            device = DeviceDetector(ua).parse()
+            logger.debug(device.device_brand_name())
+            logger.debug(device.device_brand())
+            logger.debug(device.device_model())
 
-        if get_udp_ns_fieldname("authorized_devices") in user_app_profile["profile"]:
-            devices = user_app_profile["profile"][get_udp_ns_fieldname("authorized_devices")]
-
-            if device_id in devices:
-                isactiveAT = okta_auth.introspect_with_clientid(access_token, client_id=client_id, client_secret=client_secret, token_type_hint="access_token")
+            isactiveAT = okta_auth.introspect_with_clientid(access_token, client_id=client_id, client_secret=client_secret, token_type_hint="access_token")
+            if device_info["id"] in json.dumps(linkeddevices) and device_info["status"] == "ACTIVE":
+                if "device_info_completed" not in device_info["profile"]:
+                    user_data = {
+                        "profile": {
+                            "device_info_completed": "true",
+                            "device_type": device.device_brand_name() + " " + device.device_type().title(),
+                        }
+                    }
+                    okta_admin.update_user(user_id=device_info["id"], user=user_data)
 
                 if isactiveAT["active"]:
                     response = "true"
-
                 else:
                     isactiveRT = okta_auth.introspect_with_clientid(
                         refresh_token,
@@ -183,7 +199,6 @@ def streamingservice_token_check():
                             scopes="openid profile email offline_access",
                             device_id=device_id
                         )
-
                         response = tokens
                     else:
                         response = "false"
@@ -191,10 +206,8 @@ def streamingservice_token_check():
                 response = "false"
         else:
             response = "false"
-    else:
-        response = "false"
-
-    return response
+    finally:
+        return response
 
 
 @streamingservice_views_bp.route("/device_activate")
@@ -394,36 +407,52 @@ def streamingservice_device_complete():
 
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
 
-    client_id = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_deviceflow_clientid"]
+    parent_id = request.args.get('user_id')
+    device_id = request.args.get('device_id')
+    first_name = "User"
+    last_name = "Device"
+    login = device_id + "@okta.com"
+    linked_name = "device_owner"
 
-    user_id = request.args.get('user_id')
+    uppercase_letters = string.ascii_uppercase
+    lowercase_letters = string.ascii_lowercase
+    numbers = string.digits
+    password = ''.join(random.choice(uppercase_letters) for i in range(4)) + \
+        ''.join(random.choice(lowercase_letters) for i in range(4)) + \
+        ''.join(random.choice(numbers) for i in range(4))
 
-    if user_id is not None:
-        user_app_profile = okta_admin.get_user_application_by_client_id(user_id=user_id, client_id=client_id)
-        devices = []
-        if get_udp_ns_fieldname("authorized_devices") in user_app_profile["profile"]:
-            devices = user_app_profile["profile"][get_udp_ns_fieldname("authorized_devices")]
-            if devices is None:
-                devices = []
-        else:
-            devices = []
-
-        device_id = request.args.get('device_id')
-        devices.append(device_id)
-        user_data = {
-            "profile": {
-                get_udp_ns_fieldname("authorized_devices"): devices
-            }
+    user_data = {
+        "profile": {
+            "firstName": first_name,
+            "lastName": last_name,
+            "email": login,
+            "login": login,
+            "device_id": device_id
+        },
+        "credentials": {
+            "password": {"value": password}
+        },
+        "groupIds": [],
+        "type": {
+            "id": session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_deviceflow_deviceobject"]
         }
-        okta_admin.update_application_user_profile_by_clientid(user_id=user_id, app_user_profile=user_data, client_id=client_id)
+    }
+
+    user_create_response = okta_admin.create_user(user_data, activate_user=True)
+    logger.debug(user_create_response)
+    if not parent_id == "None":
+        logger.debug("ParentID Found")
+        okta_admin.create_linked_users(user_create_response['id'], parent_id, linked_name)
 
         url = "https://sngfyrr4b2.execute-api.us-east-2.amazonaws.com/default/prd-zartan-devicetoken?device_code=" + request.args.get('device_code')
         headers = {
             "x-api-key": session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["aws_api_key"],
         }
+
         s3response = RestUtil.execute_get(url, headers=headers)
         del s3response['device_id']
         del s3response['device_code']
+
         return render_template(
             "streamingservice/device_complete.html",
             config=session[SESSION_INSTANCE_SETTINGS_KEY],
@@ -444,6 +473,35 @@ def streamingservice_device_complete():
 @is_authenticated
 def streamingservice_profile():
     logger.debug("streamingservice_profile()")
+    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
+    schemas = okta_admin.get_user_schemas()
+
+    create_device_owner = True
+    create_streaming_owner = True
+
+    for schema in schemas:
+        if "device_owner" in schema["primary"]["name"]:
+            create_device_owner = False
+        if "streaming_owner" in schema["primary"]["name"]:
+            create_streaming_owner = False
+
+    if create_device_owner:
+        okta_admin.create_schema(
+            pname="device_owner",
+            ptitle="Device Owner",
+            pdesc="Device Owner",
+            aname="device", atitle="Device",
+            adesc="Device")
+
+    if create_streaming_owner:
+        okta_admin.create_schema(
+            pname="streaming_owner",
+            ptitle="Streaming Owner",
+            pdesc="Streaming Owner",
+            aname="streaming_member",
+            atitle="Streaming Member",
+            adesc="Streaming Member")
+
     return render_template(
         "streamingservice/profile.html",
         user_info=get_userinfo(),
@@ -452,78 +510,208 @@ def streamingservice_profile():
         config=session[SESSION_INSTANCE_SETTINGS_KEY])
 
 
+@streamingservice_views_bp.route("/familymembers")
+@apply_remote_config
+@is_authenticated
+def streamingservice_familymembers():
+    logger.debug("streamingservice_familymembers()")
+    user_info = get_userinfo()
+    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
+
+    schemas = okta_admin.get_user_schemas()
+    nfamily = ""
+    logger.debug(schemas)
+    if schemas:
+        family = "["
+        for schema in schemas:
+            if schema['primary']['name'] == "streaming_owner":
+                family = family + "{" + \
+                    "\"pname\":\"" + schema['primary']['name'] + "\"," + \
+                    "\"ptitle\":\"" + schema['primary']['title'] + "\"," + \
+                    "\"aname\":\"" + schema['associated']['name'] + "\"," + \
+                    "\"atitle\":\"" + schema['associated']['title'] + "\"," + \
+                    "\"users\": [ "
+
+                users = okta_admin.get_linked_users(user_info['sub'], schema['associated']['name'])
+
+                for user in users:
+                    userid = user['_links']['self']['href'].rsplit('/', 1)[-1]
+                    associateduser = okta_admin.get_user(userid)
+                    family = family + json.dumps(associateduser) + ","
+                family = family[:-1] + "]},"
+
+        family = family[:-1] + "]"
+        logger.debug(family)
+        nfamily = json.loads(family)
+
+    return render_template(
+        "streamingservice/familymembers.html",
+        templatename=get_app_vertical(),
+        user_info=get_userinfo(),
+        config=session[SESSION_INSTANCE_SETTINGS_KEY],
+        nfamily=nfamily)
+
+
+@streamingservice_views_bp.route("/createusers")
+@apply_remote_config
+@is_authenticated
+def streamingservice_create_page():
+    logger.debug("streamingservice")
+    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
+    user_id = request.args.get('user_id')
+    user_info2 = okta_admin.get_user(user_id)
+    parent_id = request.args.get('parent_id')
+    linked_name = request.args.get('linked_name')
+
+    return render_template(
+        "streamingservice/createusers.html",
+        templatename=get_app_vertical(),
+        user_info=get_userinfo(),
+        user_info2=user_info2,
+        parent_id=parent_id,
+        linked_name=linked_name,
+        config=session[SESSION_INSTANCE_SETTINGS_KEY])
+
+
+@streamingservice_views_bp.route("/createuser", methods=["POST"])
+@apply_remote_config
+def streamingservice_user_create():
+    logger.debug("streamingservice_user_create")
+
+    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
+    first_name = request.form.get('firstname')
+    last_name = request.form.get('lastname')
+    email = request.form.get('email')
+    login = request.form.get('email')
+    mobile_phone = request.form.get('phonenumber')
+    parent_id = request.form.get('parent_id')
+    linked_name = request.form.get('linked_name')
+    user_data = {"profile": {"firstName": first_name, "lastName": last_name, "email": email, "login": login, "mobilePhone": mobile_phone}}
+    user_create_response = okta_admin.create_user(user_data, True)
+
+    if "errorCode" not in user_create_response:
+        msg = "User {0} {1} was Created".format(first_name, last_name)
+    else:
+        msg = "Error During Create - " + str(user_create_response["errorCauses"][0]["errorSummary"])
+
+    okta_admin.create_linked_users(user_create_response['id'], parent_id, linked_name)
+    return redirect(url_for(
+        "streamingservice_views_bp.streamingservice_familymembers",
+        _external="True",
+        _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"],
+        message=msg))
+
+
+@streamingservice_views_bp.route("/updateuser", methods=["POST"])
+@apply_remote_config
+@is_authenticated
+def streamingservice_user_update():
+    logger.debug("gbac_user_update")
+    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
+    user_id = request.form.get('user_id')
+    first_name = request.form.get('firstname')
+    last_name = request.form.get('lastname')
+    email = request.form.get('email')
+    mobile_phone = request.form.get('phonenumber')
+
+    user_data = {"profile": {"firstName": first_name, "lastName": last_name, "email": email, "mobilePhone": mobile_phone}}
+    user_update_response = okta_admin.update_user(user_id, user_data)
+
+    if user_update_response:
+        message = "User {0} {1} was Updated".format(first_name, last_name)
+    else:
+        message = "Error During Update"
+
+    return redirect(
+        url_for(
+            "streamingservice_views_bp.streamingservice_familymembers",
+            _external="True",
+            _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"],
+            user_id=user_id,
+            message=message))
+
+
 @streamingservice_views_bp.route("/mydevices")
 @apply_remote_config
 @is_authenticated
 def streamingservice_mydevices():
     logger.debug("streamingservice_mydevices()")
-
     user_info = get_userinfo()
-    user_id = user_info["sub"]
-
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
 
-    client_id = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_deviceflow_clientid"]
+    schemas = okta_admin.get_user_schemas()
+    nfamily = ""
+    logger.debug(schemas)
+    if schemas:
+        family = "["
+        for schema in schemas:
+            if schema['primary']['name'] == "device_owner":
+                family = family + "{" + \
+                    "\"pname\":\"" + schema['primary']['name'] + "\"," + \
+                    "\"ptitle\":\"" + schema['primary']['title'] + "\"," + \
+                    "\"aname\":\"" + schema['associated']['name'] + "\"," + \
+                    "\"atitle\":\"" + schema['associated']['title'] + "\"," + \
+                    "\"users\": [ "
 
-    user_app_profile = okta_admin.get_user_application_by_client_id(user_id=user_id, client_id=client_id)
-    devices = []
+                users = okta_admin.get_linked_users(user_info['sub'], schema['associated']['name'])
 
-    if get_udp_ns_fieldname("authorized_devices") in user_app_profile["profile"]:
-        devices = user_app_profile["profile"][get_udp_ns_fieldname("authorized_devices")]
+                for user in users:
+                    userid = user['_links']['self']['href'].rsplit('/', 1)[-1]
+                    associateduser = okta_admin.get_user(userid)
+                    family = family + json.dumps(associateduser) + ","
+                family = family[:-1] + "]},"
 
-        if devices is None:
-            devices = []
-    else:
-        devices = []
-
-    logger.debug(devices)
+        family = family[:-1] + "]"
+        logger.debug(family)
+        nfamily = json.loads(family)
 
     return render_template(
         "streamingservice/mydevices.html",
         user_info=get_userinfo(),
-        devices=devices,
+        nfamily=nfamily,
+        templatename=get_app_vertical(),
         config=session[SESSION_INSTANCE_SETTINGS_KEY])
 
 
-@streamingservice_views_bp.route("/removedevice")
+@streamingservice_views_bp.route("/suspenddevice")
 @apply_remote_config
 @is_authenticated
-def streamingservice_removedevice():
-    logger.debug("streamingservice_removedevice()")
-
-    user_info = get_userinfo()
-    user_id = user_info["sub"]
-    device_id = request.args.get('device_id')
+def streamingservice_device_suspend():
+    logger.debug("streamingservice_device_suspend()")
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
+    user_id = request.args.get('user_id')
+    suspend_user = okta_admin.suspend_user(user_id)
 
-    client_id = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_deviceflow_clientid"]
-
-    user_app_profile = okta_admin.get_user_application_by_client_id(user_id=user_id, client_id=client_id)
-    devices = []
-
-    if get_udp_ns_fieldname("authorized_devices") in user_app_profile["profile"]:
-        devices = user_app_profile["profile"][get_udp_ns_fieldname("authorized_devices")]
-
-        if devices is None:
-            devices = []
-        else:
-            devices.remove(device_id)
+    if not suspend_user:
+        message = "Device Suspended"
     else:
-        devices = []
+        message = "Error During Suspension"
 
-    user_data = {
-        "profile": {
-            get_udp_ns_fieldname("authorized_devices"): devices
-        }
-    }
-    okta_admin.update_application_user_profile_by_clientid(user_id=user_id, app_user_profile=user_data, client_id=client_id)
-
-    redirect_url = url_for(
+    return redirect(url_for(
         "streamingservice_views_bp.streamingservice_mydevices",
-        _external=True,
-        _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
+        _external="True",
+        _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"],
+        message=message))
 
-    return redirect(redirect_url)
+
+@streamingservice_views_bp.route("/unsuspenddevice")
+@apply_remote_config
+@is_authenticated
+def streamingservice_device_unsuspend():
+    logger.debug("streamingservice_device_unsuspend()")
+    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
+    user_id = request.args.get('user_id')
+    unsuspend_user = okta_admin.unsuspend_user(user_id)
+
+    if not unsuspend_user:
+        message = "Device Un-Suspended"
+    else:
+        message = "Error During Un-Suspension"
+
+    return redirect(url_for(
+        "streamingservice_views_bp.streamingservice_mydevices",
+        _external="True",
+        _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"], message=message))
 
 
 def get_oauth_token_from_login(code, grant_type, auth_options=None, headers=None):
