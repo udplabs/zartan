@@ -14,7 +14,6 @@
                         {% else %}
                              <a class="navbar-brand text-primary" href="/index">{{config.settings.app_name}}</a><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><i data-feather="menu"></i></button>
                         {% endif %}
-                        <a href="#" class="btn btn-primary btn-lg id-open" style="float:right;">Device Flow Information</a>
                     </div>
                 </nav>
                   <section class="main-container">
@@ -84,6 +83,7 @@
                               <div class="alert alert-primary" role="alert" id="codevalid" style="text-align:center">
                                   Code Found! Please login to enable your device.
                               </div>
+                              <a href="#" class="txt-primary id-open"><b>Device Flow Information</b></a>
                               <div id="sign-in-widget"></div>
                             </div>
                           </div>
@@ -180,8 +180,24 @@
                     </script>
                     <style>
                       .okta-sign-in-header {
-                         display: none;
+                        display: none;
                       }
+                      
+                      @media (max-width:480px)
+                      {
+                        #okta-sign-in {
+                          min-width: 0px !important;
+                        }
+                      }
+                      
+                      @media (max-device-width: 480px)
+                      {
+                        #okta-sign-in .auth-content  {
+                          padding-left: 0px !important;
+                          padding-right: 0px !important;
+                        }
+                      }
+                      
                       .toggle-deviceid {
                         left: -9999px;
                         position: fixed;
