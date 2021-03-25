@@ -14,7 +14,7 @@
                         {% else %}
                              <a class="navbar-brand text-primary" href="/index">{{config.settings.app_name}}</a><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><i data-feather="menu"></i></button>
                         {% endif %}
-                        <a href="#" class="btn btn-primary btn-lg id-open" style="float:right;">Device Flow Information</a>
+                        
                     </div>
                   </nav>
                   <section class="main-container">
@@ -38,6 +38,7 @@
                         <div class="col-md-8 offset-md-2">
                           <div class="main col-12">
                             <div class="form-block center-block p-30 light-gray-bg border-clear">
+                              <a href="#" class="text-primary id-open"><b>Device Flow Information</b></a>
                               <br><br>
                               <div class="card" id="codecard">
                                 <div class="card-header">Enter Code Here</div>
@@ -51,7 +52,7 @@
                                     <input class="codebox" id="codeinput2" onKeyup="this.value = this.value.toUpperCase();autotab(this, 'codeinput3', 'codeinput1')" type="text" maxlength="1">
                                     <input class="codebox" id="codeinput3" onKeyup="this.value = this.value.toUpperCase();autotab(this, 'codeinput4', 'codeinput2')" type="text" maxlength="1">
                                     <input class="codebox" id="codeinput4" onKeyup="this.value = this.value.toUpperCase();autotab(this, 'codeinput6', 'codeinput3')" type="text" maxlength="1">
-                                    <input class="codebox" id="codeinput5" type="text" value="-" readonly>
+                                    <input class="codebox content-to-hide" id="codeinput5" type="text" value="-" readonly><div class=".content-to-show" style="display: none;"><br></div>
                                     <input class="codebox" id="codeinput6" onKeyup="this.value = this.value.toUpperCase();autotab(this, 'codeinput7', 'codeinput4')" type="text" maxlength="1">
                                     <input class="codebox" id="codeinput7" onKeyup="this.value = this.value.toUpperCase();autotab(this, 'codeinput8', 'codeinput6')" type="text" maxlength="1">
                                     <input class="codebox" id="codeinput8" onKeyup="this.value = this.value.toUpperCase();autotab(this, 'codeinput9', 'codeinput7')" type="text" maxlength="1">
@@ -59,6 +60,17 @@
                                     <br><br>
                                     <button class="btn btn-primary" type="button" onclick="submitcode()">Submit Code</button>
                                   </div>
+                                  <style>
+                                    @media (max-width:450px)
+                                    {                  
+                                       .content-to-hide {
+                                          display: none;
+                                       }
+                                       .content-to-show {
+                                          display: inline;
+                                       }
+                                    }
+                                  </style>
                                   <br><br><br>
                                 </div>
                               </div>
