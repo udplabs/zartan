@@ -23,12 +23,16 @@ def developer_home():
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> WIP
+=======
+>>>>>>> Cleanup Developer Setup
     return render_template(
         "developer/developerhome.html",
         user_info=get_userinfo(),
         config=session[SESSION_INSTANCE_SETTINGS_KEY])
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
     return render_template("developer/developerhome.html", user_info=get_userinfo(), config=session[SESSION_INSTANCE_SETTINGS_KEY])
@@ -38,6 +42,8 @@ def developer_home():
 =======
     return render_template("developer/developerhome.html", user_info=get_userinfo(), config=session[SESSION_INSTANCE_SETTINGS_KEY])
 >>>>>>> Rebase and Cleanup
+=======
+>>>>>>> Cleanup Developer Setup
 
 
 @developer_views_bp.route("/profile")
@@ -55,11 +61,16 @@ def developer_profile():
         _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
 >>>>>>> WIP
+=======
+=======
+
+>>>>>>> Cleanup Developer Setup
 # @developer_views_bp.route("/users_advanced")
 # @is_authenticated
 # def developer_usersadvanced():
@@ -167,8 +178,12 @@ def developer_profile():
 
 #     return message
 
+<<<<<<< HEAD
 =======
 >>>>>>> Rebase and Cleanup
+=======
+>>>>>>> WIP
+>>>>>>> Cleanup Developer Setup
 @developer_views_bp.route("/manage-apps")
 <<<<<<< HEAD
 @is_authenticated
