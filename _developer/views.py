@@ -22,6 +22,7 @@ def developer_home():
     logger.debug("developer_home()")
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> WIP
     return render_template(
@@ -34,6 +35,9 @@ def developer_home():
 >>>>>>> Add developer portal vertical
 =======
 >>>>>>> WIP
+=======
+    return render_template("developer/developerhome.html", user_info=get_userinfo(), config=session[SESSION_INSTANCE_SETTINGS_KEY])
+>>>>>>> Rebase and Cleanup
 
 
 @developer_views_bp.route("/profile")
@@ -50,6 +54,7 @@ def developer_profile():
         config=session[SESSION_INSTANCE_SETTINGS_KEY],
         _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
 
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -162,6 +167,8 @@ def developer_profile():
 
 #     return message
 
+=======
+>>>>>>> Rebase and Cleanup
 @developer_views_bp.route("/manage-apps")
 <<<<<<< HEAD
 @is_authenticated
