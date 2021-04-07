@@ -1,11 +1,9 @@
 import logging
 
-from random import randint
-from flask import render_template, session, redirect, url_for, request
+from flask import render_template, session, request
 from flask import Blueprint
 from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical
-from utils.okta import TokenUtil, OktaAdmin
-
+from utils.okta import TokenUtil
 
 from GlobalBehaviorandComponents.validation import is_authenticated, get_userinfo
 
