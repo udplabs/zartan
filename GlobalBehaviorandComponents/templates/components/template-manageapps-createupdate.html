@@ -4,6 +4,7 @@
                             <button class="btn btn-primary dropdown-toggle" id="dropdownMenuButton" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Application Type</button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                 <a class="dropdown-item" href="#!" onclick="show_apiservicecreate();">API Service</a>
+                                <a class="dropdown-item" href="#!" onclick="show_oidccreate();">OpenID Connect App</a>
                             </div>
                         </div>
                         </table>
@@ -22,23 +23,60 @@
                         <input class="form-control" id="clientsecret" type="text"></div>
                         <button class="btn btn-primary" type="button" onclick="window.location.href = '/manageapps';">Complete</button>
                     </div>
+                    <div id="oidccreate" style="display: none;">
+                        <div class="form-group"><label for="oidcappname">OpenID Connect Application Name</label>
+                        <input class="form-control" id="oidcappname" type="text"></div>
+                        <div class="form-group"><label for="oidcNewloginredirecturi">Login redirect URIs</label>
+                        <input class="form-control" id="oidcNewloginredirecturi" type="text"></div>
+                        <button class="btn btn-primary" type="button" onclick="show_oidcudpate();">Create Application</button>
+                    </div>
+                    <div id="oidcupdate" style="display: none;">
+                        <div class="form-group"><label for="oidcapplabel">Application Name</label>
+                        <input class="form-control" id="oidcapplabel" type="text"></div>
+                        <div class="form-group"><label for="oidcclientid">Client ID</label>
+                        <input class="form-control" id="oidcclientid" type="text" disabled></div>
+                        <div class="form-group"><label for="oidcclientsecret">Client Secret</label>
+                        <input class="form-control" id="oidcclientsecret" type="text" disabled></div>
+                        <div class="form-group"><label for="oidcloginredirecturi">Login redirect URIs</label>
+                        <input class="form-control" id="oidcloginredirecturi" type="text"></div>
+                        <button class="btn btn-primary" type="button" onclick="update_oidcapp();">Update</button>
+                        <button class="btn btn-primary" type="button" onclick="window.location.href = '/manageapps';">Complete</button>
+                    </div>
                     <script>
                     function show_apiservicecreate() {
                         $("#apiservicecreate").show();
                         $("#apiserviceudpate").hide();
+                        $("#oidccreate").hide();
+                        $("#oidcupdate").hide();
                         $("#applabel").val("");
                         $("#clientid").val("");
                         $("#clientsecret").val("");
                     }
 
                     function show_apiserviceudpate() {
-                        create_apiserice();
+                        create_apiservice();
                         $("#start").hide();
                         $("#apiserviceudpate").show();
                         $("#apiservicecreate").hide();
                     }
 
-                    function create_apiserice()
+                    function show_oidccreate() {
+                        $("#oidccreate").show();
+                        $("#oidcupdate").hide();
+                        $("#apiservicecreate").hide();
+                        $("#apiserviceudpate").hide();
+                        $("#applabel").val("");
+                        $("#clientid").val("");
+                        $("#clientsecret").val("");
+                    }
+
+                    function show_oidcudpate() {
+                        create_oidcapp();
+                        $("#oidccreate").hide();
+                        $("#oidcupdate").show();
+                    }
+
+                    function create_apiservice()
                     {
                         $.ajax({
                             url:'/createclientcredentialapp?appname=' + $("#appname").val(),
@@ -54,9 +92,44 @@
                             },
                         });
                     }
-                    
+
+                    function create_oidcapp()
+                    {
+                        $.ajax({
+                            url:'/createoidcapp?appname=' + $("#oidcappname").val() +'&loginredirecturi='+$("#oidcNewloginredirecturi").val(),
+                            type: "GET",
+                            complete: function (response) {
+                                appresponse = JSON.parse(response.responseText);
+                                $("#oidcapplabel").val(appresponse.label);
+                                $("#oidcclientid").val(appresponse.credentials.oauthClient.client_id);
+                                $("#oidcclientsecret").val(appresponse.credentials.oauthClient.client_secret);
+                                $("#oidcloginredirecturi").val(appresponse.settings.oauthClient.redirect_uris);
+                            },
+                            error: function () {
+                                alert('Error During Creation Process');
+                            },
+                        });
+                    }
+
+                    function update_oidcapp()
+                    {
+                        
+                        $.ajax({
+                            url:'/updateapps?oidcapplabel=' + $("#oidcapplabel").val() +'&oidcloginredirecturi='+$("#oidcloginredirecturi").val() + '&oidcclientid=' + $("#oidcclientid").val(),
+                            type: "GET",
+                            complete: function (response) {
+                                appresponse = JSON.parse(response.responseText);
+                            },
+                            error: function () {
+                                alert('Error During Creation Process');
+                            },
+                        });
+                        window.location.href = '/manageapps';
+                    }
+
                     </script>
-                    {% if appinfo is defined %}
+                    {% if appinfo %}
+                    {% if appinfo.settings.oauthClient.application_type == "service" %}
                     <script>
                         $("#start").hide();
                         $("#apiservicecreate").hide();
@@ -65,4 +138,16 @@
                         $("#clientid").val("{{appinfo.credentials.oauthClient.client_id}}");
                         $("#clientsecret").val("******************************");
                     </script>
+                    {% endif %}
+                    {% if appinfo.settings.oauthClient.application_type == "web" %}
+                    <script>
+                        $("#start").hide();
+                        $("#oidccreate").hide();
+                        $("#oidcupdate").show();
+                        $("#oidcapplabel").val("{{appinfo.label}}");
+                        $("#oidcclientid").val("{{appinfo.credentials.oauthClient.client_id}}");
+                        $("#oidcclientsecret").val("******************************");
+                        $("#oidcloginredirecturi").val("{{appinfo.settings.oauthClient.redirect_uris[0]}}");
+                    </script>
+                    {% endif %}
                     {% endif %}

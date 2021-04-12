@@ -3,6 +3,7 @@
                         <tr>
                             <th>Name</th>
                             <th>App Type</th>
+                            <th>Status</th>
                             <th>View</th>
                             <th>Delete</th>
                         </tr>
@@ -12,10 +13,10 @@
                             {% for app in applist %}
                                 {% set oauthinfo = app.settings.oauthClient%}
                                 {% if oauthinfo is defined %}
-                                    {% if oauthinfo.application_type == 'service' %}
-                                      <tr>
+                                    <tr>
                                         <td>{{ app['label'] }}</td>
                                         <td>{{ oauthinfo.application_type }}</td>
+                                        <td>{{ app['status'] }}</td>
                                         <td>
                                             <a href="/editapps?appid={{ app['id'] }}">View</a>
                                         </td>
@@ -23,7 +24,6 @@
                                          <a href="/deleteapps?appid={{ app['id'] }}">Delete</a>
                                         </td>
                                     </tr>
-                                    {% endif %}
                                 {% endif %}
                             {% endfor %}
                         {% endif %}

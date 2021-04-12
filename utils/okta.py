@@ -543,8 +543,32 @@ class OktaAdmin:
 
         return RestUtil.execute_post(url, body, okta_headers)
 
-    def get_user_schemas(self):
-        self.logger.debug("OktaAdmin.get_user_schemas()")
+    def assign_group_to_application(self, group_id, app_id):
+        self.logger.debug("OktaAdmin.assign_user_to_application")
+
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/apps/{app_id}/groups/{group_id}".format(
+            base_url=self.okta_config["okta_org_name"],
+            app_id=app_id,
+            group_id=group_id)
+
+        body = {
+        }
+
+        return RestUtil.execute_put(url, body, okta_headers)
+
+    def get_user_schemas(self, user_type_id):
+        self.logger.debug("OktaAdmin.get_user_schemas")
+
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/user/types/{user_type_id}/schemas".format(
+            base_url=self.okta_config["okta_org_name"],
+            user_type_id=user_type_id)
+
+        return RestUtil.execute_get(url, okta_headers)
+
+    def get_user_schemas_linkedobject(self):
+        self.logger.debug("OktaAdmin.get_user_schemas_linkedobject()")
 
         okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
         url = "{base_url}/api/v1/meta/schemas/user/linkedObjects".format(
@@ -552,8 +576,8 @@ class OktaAdmin:
 
         return RestUtil.execute_get(url, okta_headers)
 
-    def create_schema(self, pname, ptitle, pdesc, aname, atitle, adesc):
-        self.logger.debug("OktaAdmin.create_schema()")
+    def create_schema_linkedobject(self, pname, ptitle, pdesc, aname, atitle, adesc):
+        self.logger.debug("OktaAdmin.create_schema_linkedobject")
         okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
         url = "{base_url}/api/v1/meta/schemas/user/linkedObjects".format(
             base_url=self.okta_config["okta_org_name"])
@@ -575,7 +599,7 @@ class OktaAdmin:
         return RestUtil.execute_post(url, body, okta_headers)
 
     def delete_user_schemas(self, name):
-        self.logger.debug("OktaAdmin.get_user_schemas()")
+        self.logger.debug("OktaAdmin.delete_user_schemas")
         okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
         url = "{base_url}/api/v1/meta/schemas/user/linkedObjects/{name}".format(
             base_url=self.okta_config["okta_org_name"],
@@ -584,7 +608,7 @@ class OktaAdmin:
         return RestUtil.execute_delete(url=url, body=None, headers=okta_headers)
 
     def get_linked_users(self, userid, name):
-        self.logger.debug("OktaAdmin.get_user_schemas()")
+        self.logger.debug("OktaAdmin.get_linked_users")
 
         okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
         url = "{base_url}/api/v1/users/{userid}/linkedObjects/{name}".format(
@@ -595,7 +619,7 @@ class OktaAdmin:
         return RestUtil.execute_get(url, okta_headers)
 
     def create_linked_users(self, userid, parentid, name):
-        self.logger.debug("OktaAdmin.get_user_schemas()")
+        self.logger.debug("OktaAdmin.create_linked_users")
 
         okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
         url = "{base_url}/api/v1/users/{userid}/linkedObjects/{name}/{parentid}".format(
@@ -606,8 +630,183 @@ class OktaAdmin:
 
         return RestUtil.execute_put(url=url, body=None, headers=okta_headers)
 
-    def create_clientcredential_application(self, app_name):
-        self.logger.debug("OktaAdmin.get_applications_by_id(app_id)")
+    def create_auth_server(self, auth_server_name, app_server_description):
+        self.logger.debug("OktaAdmin.create_auth_server")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/authorizationServers".format(
+            base_url=self.okta_config["okta_org_name"])
+        body = {
+            "name": auth_server_name,
+            "description": app_server_description,
+            "audiences": [
+                "http://demo-env"
+            ]
+        }
+        return RestUtil.execute_post(url, body, okta_headers)
+
+    def get_auth_server(self):
+        self.logger.debug("OktaAdmin.get_auth_server")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/authorizationServers".format(base_url=self.okta_config["okta_org_name"])
+
+        return RestUtil.execute_get(url, okta_headers)
+
+    def create_auth_server_policy(self, auth_server_id):
+        self.logger.debug("OktaAdmin.create_auth_server_policy")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/authorizationServers/{authserverid}/policies".format(
+            base_url=self.okta_config["okta_org_name"], authserverid=auth_server_id)
+
+        body = {
+            "type": "OAUTH_AUTHORIZATION_POLICY",
+            "status": "ACTIVE",
+            "name": "Default Policy",
+            "description": "Generated by UDP",
+            "priority": 1,
+            "conditions": {
+                "clients": {
+                    "include": [
+                        "ALL_CLIENTS"
+                    ]
+                }
+            }
+        }
+        return RestUtil.execute_post(url, body, okta_headers)
+
+    def create_auth_server_policy_rule(self, auth_server_id, auth_server_policy_id):
+        self.logger.debug("OktaAdmin.create_auth_server_policy_rule")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/authorizationServers/{authServerId}/policies/{policyId}/rules".format(
+            base_url=self.okta_config["okta_org_name"],
+            authServerId=auth_server_id,
+            policyId=auth_server_policy_id)
+
+        body = {
+            "type": "RESOURCE_ACCESS",
+            "name": "Default Policy Rule",
+            "priority": 1,
+            "conditions": {
+                "people": {
+                    "groups": {
+                        "include": [
+                            "EVERYONE"
+                        ]
+                    }
+                },
+                "grantTypes": {
+                    "include": [
+                        "implicit",
+                        "client_credentials",
+                        "authorization_code",
+                        "password"
+                    ]
+                },
+                "scopes": {
+                    "include": [
+                        "*"
+                    ]
+                }
+            },
+            "actions": {
+                "token": {
+                    "accessTokenLifetimeMinutes": 60,
+                    "refreshTokenLifetimeMinutes": 0,
+                    "refreshTokenWindowMinutes": 10080
+                }
+            }
+        }
+        return RestUtil.execute_post(url, body, okta_headers)
+
+    def create_trusted_origin(self, name, origin):
+        self.logger.debug("OktaAdmin.create_trusted_origin")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/trustedOrigins".format(base_url=self.okta_config["okta_org_name"])
+
+        body = {
+            "name": name,
+            "origin": origin,
+            "scopes": [
+                {
+                    "type": "CORS"
+                },
+                {
+                    "type": "REDIRECT"
+                }
+            ]
+        }
+        return RestUtil.execute_post(url, body, okta_headers)
+
+    def update_trusted_origin(self, id, name, origin):
+        self.logger.debug("OktaAdmin.update_trusted_origin")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        trustedOrigin = self.get_trusted_origin(id=id)
+        url = "{base_url}/api/v1/trustedOrigins/{id}".format(base_url=self.okta_config["okta_org_name"], id=id)
+
+        trustedOrigin["name"] = name
+        trustedOrigin["origin"] = origin
+
+        return RestUtil.execute_put(url, trustedOrigin, okta_headers)
+
+    def get_trusted_origin(self, id=''):
+        self.logger.debug("OktaAdmin.get_trusted_origin")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/trustedOrigins/{id}?limit=100".format(base_url=self.okta_config["okta_org_name"], id=id)
+
+        return RestUtil.execute_get(url, okta_headers)
+
+    def create_user_type(self, name, displayname, description):
+        self.logger.debug("OktaAdmin.create_user_type")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/meta/types/user".format(base_url=self.okta_config["okta_org_name"])
+
+        body = {
+            "description": description,
+            "displayName": displayname,
+            "name": name
+        }
+        return RestUtil.execute_post(url, body, okta_headers)
+
+    def get_user_types(self):
+        self.logger.debug("OktaAdmin.create_user_type")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/meta/types/user".format(base_url=self.okta_config["okta_org_name"])
+
+        return RestUtil.execute_get(url, okta_headers)
+
+    def create_user_type_string(self, type_id, type_name, title, description, required):
+        self.logger.debug("OktaAdmin.create_user_type_string")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/user/schemas/{typeId}".format(
+            base_url=self.okta_config["okta_org_name"],
+            typeId=type_id)
+
+        body = {
+            "definitions": {
+                "custom": {
+                    "id": type_id,
+                    "type": "object",
+                    "properties": {
+                        type_name: {
+                            "title": title,
+                            "description": description,
+                            "type": "string",
+                            "required": required,
+                            "permissions": [
+                                {
+                                    "principal": "SELF",
+                                    "action": "READ_WRITE"
+                                }
+                            ]
+                        }
+                    },
+                    "required": []
+                }
+            }
+        }
+        return RestUtil.execute_post(url, body, okta_headers)
+
+    def create_clientcredential_application(self, app_name, createdby):
+        self.logger.debug("OktaAdmin.create_clientcredential_application")
         okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
         url = "{base_url}/api/v1/apps".format(
             base_url=self.okta_config["okta_org_name"])
@@ -636,9 +835,67 @@ class OktaAdmin:
                     ],
                     "application_type": "service"
                 }
+            },
+            "profile": {
+                "createdby": createdby
             }
         }
         return RestUtil.execute_post(url, body, okta_headers)
+
+    def create_web_application(self, app_name, redirect_uris, createdby):
+        self.logger.debug("OktaAdmin.create_web_application")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/apps".format(
+            base_url=self.okta_config["okta_org_name"])
+
+        body = {
+            "name": "oidc_client",
+            "label": app_name,
+            "signOnMode": "OPENID_CONNECT",
+            "credentials": {
+                "oauthClient": {
+                    "token_endpoint_auth_method": "client_secret_basic"
+                }
+            },
+            "settings": {
+                "oauthClient": {
+                    "client_uri": "",
+                    "logo_uri": "",
+                    "redirect_uris": [
+                        redirect_uris
+                    ],
+                    "response_types":
+                    [
+                        "code"
+                    ],
+                    "grant_types":
+                    [
+                        "authorization_code"
+                    ],
+                    "application_type": "web"
+                }
+            },
+            "profile": {
+                "createdby": createdby
+            }
+        }
+
+        return RestUtil.execute_post(url, body, okta_headers)
+
+    def update_web_application(self, app_label, redirect_uris, app_id):
+        self.logger.debug("OktaAdmin.update_web_application")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/apps/{appid}".format(
+            base_url=self.okta_config["okta_org_name"],
+            appid=app_id)
+
+        app = self.get_applications_by_id(app_id)
+        app["label"] = app_label
+        app["settings"]["oauthClient"]["redirect_uris"] = [
+            redirect_uris
+        ]
+
+        return RestUtil.execute_put(url, app, okta_headers)
 
     def delete_application(self, app_id):
         self.logger.debug("OktaAdmin.delete_application(app_id)")
@@ -653,6 +910,39 @@ class OktaAdmin:
         url = "{base_url}/api/v1/apps/{appid}".format(
             base_url=self.okta_config["okta_org_name"],
             appid=app_id)
+
+        return RestUtil.execute_delete(url, body, okta_headers)
+
+    def delete_auth_server(self, auth_server_id):
+        self.logger.debug("OktaAdmin.delete_auth_server")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/authorizationServers/{auth_server_id}".format(
+            base_url=self.okta_config["okta_org_name"],
+            auth_server_id=auth_server_id)
+
+        body = {}
+
+        return RestUtil.execute_delete(url, body, okta_headers)
+
+    def delete_user_type(self, type_id):
+        self.logger.debug("OktaAdmin.delete_user_type")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/meta/types/user/{type_id}".format(
+            base_url=self.okta_config["okta_org_name"],
+            type_id=type_id)
+
+        body = {}
+
+        return RestUtil.execute_delete(url, body, okta_headers)
+
+    def delete_trusted_origin(self, origin_id):
+        self.logger.debug("OktaAdmin.delete_user_type")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/trustedOrigins/{origin_id}".format(
+            base_url=self.okta_config["okta_org_name"],
+            origin_id=origin_id)
+
+        body = {}
 
         return RestUtil.execute_delete(url, body, okta_headers)
 
@@ -675,7 +965,7 @@ class OktaAdmin:
         return RestUtil.execute_get(url, okta_headers)
 
     def get_applications_all(self):
-        self.logger.debug("OktaAdmin.get_applications_all(user_id)")
+        self.logger.debug("OktaAdmin.get_applications_all")
         okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
         url = "{base_url}/api/v1/apps/?limit=200".format(
             base_url=self.okta_config["okta_org_name"])
@@ -1048,7 +1338,7 @@ class OktaAdmin:
         okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
         url = "{base_url}/api/v1/idps".format(
             base_url=self.okta_config["okta_org_name"])
-        self.logger.debug(idp)
+
         return RestUtil.execute_post(url, idp, okta_headers)
 
     def update_idp(self, idp_id, idp):
