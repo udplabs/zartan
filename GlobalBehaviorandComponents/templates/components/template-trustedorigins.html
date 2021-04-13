@@ -1,0 +1,24 @@
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>View</th>
+                            <th>Delete</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% if trustedorigins is defined %}
+                            {% for trustedorigin in trustedorigins %}
+                                    <tr>
+                                        <td>{{ trustedorigin['name'] }}</td>
+                                        <td>
+                                            <a href="/edittrustedorigins?trustedoriginid={{ trustedorigin['id'] }}">View</a>
+                                        </td>
+                                        <td>
+                                         <a href="/deletetrustedorigins?trustedoriginid={{ trustedorigin['id'] }}">Delete</a>
+                                        </td>
+                                    </tr>
+                            {% endfor %}
+                        {% endif %}
+                        </tbody>
+                    </table>

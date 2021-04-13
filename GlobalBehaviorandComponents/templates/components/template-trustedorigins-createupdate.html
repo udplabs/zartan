@@ -1,0 +1,40 @@
+                    <div id="trustedorigins">
+                        <div class="form-group"><label for="trustedoriginname">Trusted Origin Name</label>
+                        <input class="form-control" id="trustedoriginname" type="text"></div>
+                        <div class="form-group"><label for="trustedoriginurl">Trusted Origin URL</label>
+                        <input class="form-control" id="trustedoriginurl" type="text"></div>
+                        <button class="btn btn-primary" type="button" onclick="create_trustedorigin();">Create Trusted Origins</button>
+                    </div>
+                    <div id="trustedoriginsudpate" style="display: none;">
+                        <div class="form-group"><label for="trustedoriginname2">Trusted Origin Name</label>
+                        <input class="form-control" id="trustedoriginname2" type="text" disabled></div>
+                        <div class="form-group"><label for="trustedoriginurl2">Trusted Origin URL</label>
+                        <input class="form-control" id="trustedoriginurl2" type="text"></div>
+                        <input id="trustedoriginid" type="hidden">
+                        <button class="btn btn-primary" type="button" onclick="update_trustedorigin();">Update Trusted Origins</button>
+                    </div>
+
+                    <script>
+                    function create_trustedorigin()
+                    {
+                        window.location.href = "/createtrustedoriginsfinal?trustedoriginname=" + $("#trustedoriginname").val() + "&trustedoriginurl=" + $("#trustedoriginurl").val();
+                    }
+
+                    function update_trustedorigin()
+                    {
+                        window.location.href = "/createtrustedoriginsfinal?trustedoriginname=" + $("#trustedoriginname2").val() + "&trustedoriginurl=" + $("#trustedoriginurl2").val()+ "&id=" + $("#trustedoriginid").val();
+                    }
+
+
+                    </script>
+
+                    {% if trustedorigin %}
+                            <script>
+                                $("#trustedorigins").hide();
+                                $("#trustedoriginsudpate").show();
+                                $("#trustedoriginname2").val("{{trustedorigin.name}}");
+                                $("#trustedoriginurl2").val("{{trustedorigin.origin}}");
+                                $("#trustedoriginid").val("{{trustedorigin.id}}");
+
+                            </script>
+                    {% endif %}
