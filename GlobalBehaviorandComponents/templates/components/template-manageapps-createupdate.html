@@ -113,18 +113,7 @@
 
                     function update_oidcapp()
                     {
-                        
-                        $.ajax({
-                            url:'/updateapps?oidcapplabel=' + $("#oidcapplabel").val() +'&oidcloginredirecturi='+$("#oidcloginredirecturi").val() + '&oidcclientid=' + $("#oidcclientid").val(),
-                            type: "GET",
-                            complete: function (response) {
-                                appresponse = JSON.parse(response.responseText);
-                            },
-                            error: function () {
-                                alert('Error During Creation Process');
-                            },
-                        });
-                        window.location.href = '/manageapps';
+                        window.location.href = '/updateapps?oidcapplabel=' + $("#oidcapplabel").val() +'&oidcloginredirecturi='+$("#oidcloginredirecturi").val() + '&oidcclientid=' + $("#oidcclientid").val();
                     }
 
                     </script>

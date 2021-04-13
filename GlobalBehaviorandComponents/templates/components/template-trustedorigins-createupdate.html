@@ -17,34 +17,12 @@
                     <script>
                     function create_trustedorigin()
                     {
-                        $.ajax({
-                            url:'/createtrustedoriginsfinal?trustedoriginname=' + $("#trustedoriginname").val() + '&trustedoriginurl=' + $("#trustedoriginurl").val(),
-                            type: "GET",
-                            complete: function (response) {
-                                appresponse = JSON.parse(response.responseText);
-                                $("#trustedoriginname2").val(appresponse.name);
-                                $("#trustedoriginurl2").val(appresponse.origin);
-                            },
-                            error: function () {
-                                alert('Error During Creation Process');
-                            },
-                        });
-                        window.location.href = "/managetrustedorigins";
+                        window.location.href = "/createtrustedoriginsfinal?trustedoriginname=" + $("#trustedoriginname").val() + "&trustedoriginurl=" + $("#trustedoriginurl").val();
                     }
 
                     function update_trustedorigin()
                     {
-                        $.ajax({
-                            url:'/createtrustedoriginsfinal?trustedoriginname=' + $("#trustedoriginname2").val() + '&trustedoriginurl=' + $("#trustedoriginurl2").val()+ '&id=' + $("#trustedoriginid").val(),
-                            type: "GET",
-                            complete: function (response) {
-                                appresponse = JSON.parse(response.responseText);
-                            },
-                            error: function () {
-                                alert('Error During Creation Process');
-                            },
-                        });
-                        window.location.href = "/managetrustedorigins";
+                        window.location.href = "/createtrustedoriginsfinal?trustedoriginname=" + $("#trustedoriginname2").val() + "&trustedoriginurl=" + $("#trustedoriginurl2").val()+ "&id=" + $("#trustedoriginid").val();
                     }
 
 

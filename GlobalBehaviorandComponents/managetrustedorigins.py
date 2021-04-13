@@ -105,9 +105,27 @@ def gbac_trustedorigins_create_final():
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     trustedoriginurl = request.args.get('trustedoriginurl')
     trustedoriginid = request.args.get('id')
+    trustedoriginname = request.args.get('trustedoriginname')
 
-    if trustedoriginid == "":
-        trustedorigin = okta_admin.create_trusted_origin(name=request.args.get('trustedoriginname') + "-" + user_info["sub"], origin=trustedoriginurl)
+    if trustedoriginid is None or trustedoriginid == "":
+        okta_admin.create_trusted_origin(name=trustedoriginname + "-" + user_info["sub"], origin=trustedoriginurl)
+        return redirect(url_for(
+            "gbac_managetrustedorigins_bp.gbac_trustedorigins",
+            _external=True,
+            _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"],
+            message="Trusted Origin Created"))
     else:
-        trustedorigin = okta_admin.update_trusted_origin(name=request.args.get('trustedoriginname'), origin=trustedoriginurl, id=trustedoriginid)
-    return trustedorigin
+        if trustedoriginurl:
+            okta_admin.update_trusted_origin(name=trustedoriginname, origin=trustedoriginurl, id=trustedoriginid)
+            return redirect(url_for(
+                "gbac_managetrustedorigins_bp.gbac_trustedorigins",
+                _external=True,
+                _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"],
+                message="Update Complete"))
+
+        else:
+            return redirect(url_for(
+                "gbac_managetrustedorigins_bp.gbac_trustedorigins",
+                _external=True,
+                _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"],
+                message="Missing Redirect URL"))

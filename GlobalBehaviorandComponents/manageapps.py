@@ -25,10 +25,8 @@ def gbac_apps():
     applist = okta_admin.get_applications_by_user_id(user_info["sub"])
     myapplist = []
     for app in applist:
-        if "profile" in app:
-            if "createdby" in app["profile"]:
-                if user_info["email"] in app["profile"]["createdby"]:
-                    myapplist.append(app)
+        if ("profile" in app) and ("createdby" in app["profile"]) and (user_info["email"] in app["profile"]["createdby"]):
+            myapplist.append(app)
 
     return render_template(
         "/manageapps.html",
@@ -100,8 +98,15 @@ def gbac_apps_update():
     oidcloginredirecturi = request.args.get('oidcloginredirecturi')
     oidcapplabel = request.args.get('oidcapplabel')
 
-    okta_admin.update_web_application(app_label=oidcapplabel, redirect_uris=oidcloginredirecturi, app_id=oidcclientid)
-    return ""
+    if oidcclientid != "" and oidcloginredirecturi != "" and oidcapplabel != "":
+        okta_admin.update_web_application(app_label=oidcapplabel, redirect_uris=oidcloginredirecturi, app_id=oidcclientid)
+        return redirect(url_for(
+            "gbac_manageapps_bp.gbac_apps",
+            _external=True,
+            _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"],
+            message="Application Updated"))
+    else:
+        return "", 500
 
 
 @gbac_manageapps_bp.route("/createclientcredentialapp")
