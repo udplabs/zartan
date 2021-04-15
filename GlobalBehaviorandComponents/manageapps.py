@@ -36,6 +36,28 @@ def gbac_apps():
         applist=myapplist)
 
 
+@gbac_manageapps_bp.route("/manageapis")
+@apply_remote_config
+@is_authenticated
+def gbac_apis():
+    logger.debug("gbac_apps()")
+    user_info = get_userinfo()
+    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
+
+    applist = okta_admin.get_applications_by_user_id(user_info["sub"])
+    myapplist = []
+    for app in applist:
+        if ("profile" in app) and ("createdby" in app["profile"]) and (user_info["email"] in app["profile"]["createdby"]):
+            myapplist.append(app)
+
+    return render_template(
+        "/manageapis.html",
+        templatename=get_app_vertical(),
+        user_info=get_userinfo(),
+        config=session[SESSION_INSTANCE_SETTINGS_KEY],
+        applist=myapplist)
+
+
 @gbac_manageapps_bp.route("/editapps")
 @apply_remote_config
 @is_authenticated
@@ -59,16 +81,54 @@ def gbac_apps_edit():
         return redirect(url_for("gbac_manageapps_bp.gbac_apps", _external=True, _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"]))
 
 
+@gbac_manageapps_bp.route("/editapis")
+@apply_remote_config
+@is_authenticated
+def gbac_apis_edit():
+    logger.debug("gbac_apps_edit()")
+    # user_info = get_userinfo()
+    app_id = request.args.get('appid')
+
+    if app_id:
+        okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
+        appinfo = okta_admin.get_applications_by_id(app_id)
+
+        return render_template(
+            "/manageapiscreateupdate.html",
+            templatename=get_app_vertical(),
+            user_info=get_userinfo(),
+            config=session[SESSION_INSTANCE_SETTINGS_KEY],
+            appid=app_id,
+            appinfo=appinfo)
+    else:
+        return redirect(url_for("gbac_manageapps_bp.gbac_apis", _external=True, _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"]))
+
+
 @gbac_manageapps_bp.route("/createapps")
 @apply_remote_config
 @is_authenticated
-def gbac_apps_create():
-    logger.debug("gbac_apps_create()")
+def gbac_apps_createApp():
+    logger.debug("gbac_apps_createApp()")
     # user_info = get_userinfo()
     # okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
 
     return render_template(
         "/manageappscreateupdate.html",
+        templatename=get_app_vertical(),
+        user_info=get_userinfo(),
+        config=session[SESSION_INSTANCE_SETTINGS_KEY])
+
+
+@gbac_manageapps_bp.route("/createapis")
+@apply_remote_config
+@is_authenticated
+def gbac_apps_createAPI():
+    logger.debug("gbac_apps_createAPI()")
+    # user_info = get_userinfo()
+    # okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
+
+    return render_template(
+        "/manageapiscreateupdate.html",
         templatename=get_app_vertical(),
         user_info=get_userinfo(),
         config=session[SESSION_INSTANCE_SETTINGS_KEY])
