@@ -1,0 +1,116 @@
+{% extends templatename+"/template.html" %}
+
+{% block header %}
+{% endblock %}
+
+
+{% block content %}
+ <section class="bg-light py-5">
+    <div class="container">
+        <div class="d-flex align-items-center mb-5">
+            <div class="icon-stack icon-stack-lg bg-primary text-white"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
+            <div class="ml-3">
+                <h2 class="mb-0">Applications</h2>
+            </div>
+        </div>
+        <div class="card border-bottom" style="min-height: 300px;">
+            <div class="card-body">
+                <div id="apiservicecreate">
+                    <div class="form-group"><label for="appname">API Name</label>
+                    <input class="form-control" id="appname" type="text"></div>
+                    <button class="btn btn-primary" type="button" onclick="show_apiserviceudpate();">Create API Service</button>
+                </div>
+                <div id="apiserviceudpate" style="display: none;"><br>
+                    <div class="form-group"><label for="applabel">Application Name</label>
+                    <input class="form-control" id="applabel" type="text"></div>
+                    <div class="form-group"><label for="clientid">Client ID</label>
+                    <input class="form-control" id="clientid" type="text"></div>
+                    <div class="form-group"><label for="clientsecret">Client Secret</label>
+                    <input class="form-control" id="clientsecret" type="text"></div>
+                    <button class="btn btn-primary" type="button" onclick="window.location.href = '/manageapis';">Complete</button>
+                    <br><br>
+                    
+                    <div class="sbp-preview-code">
+                        <!-- Code sample-->
+                        <ul class="nav nav-tabs" id="formsSolidTabs" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active mr-1" id="formsSolidHtmlTab" data-toggle="tab" href="#formsSolidHtml" role="tab" aria-controls="formsSolidHtml" aria-selected="true" style="
+    color: #eee !important;
+    background: #2f2f2f !important;
+    border: #2f2f2f !important;
+">
+                                   CURL
+                                </a>
+                            </li>
+  
+                        </ul>
+                        <!-- Tab panes-->
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="formsSolidHtml" role="tabpanel" aria-labelledby="formsSolidHtmlTab">
+                                 <pre class="  language-markup">
+                                    <code class="  language-markup">
+curl --request POST \
+--url {{config.issuer}} \
+--header 'accept: application/json' \
+--header 'authorization: Basic MG9he....' \
+--header 'cache-control: no-cache' \
+--header 'content-type: application/x-www-form-urlencoded' \
+--data 'grant_type=client_credentials&scope=api'
+                                    </code>
+                                </pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function show_apiservicecreate() {
+            $("#apiservicecreate").show();
+            $("#apiserviceudpate").hide();
+            $("#applabel").val("");
+            $("#clientid").val("");
+            $("#clientsecret").val("");
+        }
+
+        function show_apiserviceudpate() {
+            create_apiservice();
+            $("#apiserviceudpate").show();
+            $("#apiservicecreate").hide();
+        }
+
+        function create_apiservice()
+        {
+            $.ajax({
+                url:'/createclientcredentialapp?appname=' + $("#appname").val(),
+                type: "GET",
+                complete: function (response) {
+                    appresponse = JSON.parse(response.responseText);
+                    $("#applabel").val(appresponse.label);
+                    $("#clientid").val(appresponse.credentials.oauthClient.client_id);
+                    $("#clientsecret").val(appresponse.credentials.oauthClient.client_secret);
+                },
+                error: function () {
+                    alert('Error During Creation Process');
+                },
+            });
+        }
+        
+        </script>
+        {% if appinfo %}
+            {% if appinfo.settings.oauthClient.application_type == "service" %}
+                <script>
+                    $("#apiservicecreate").hide();
+                    $("#apiserviceudpate").show();
+                    $("#applabel").val("{{appinfo.label}}");
+                    $("#clientid").val("{{appinfo.credentials.oauthClient.client_id}}");
+                    $("#clientsecret").val("******************************");
+                </script>
+            {% endif %}
+        {% endif %}
+</section>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

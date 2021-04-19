@@ -50,44 +50,21 @@
                     </a>
                     <div class="collapse show" id="collapseDashboards" data-parent="#accordionSidenav">
                         <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
-                            <a class="nav-link" href="/{{ config.settings.app_template }}/adminhome">Home</a>
+                            <a class="nav-link" href="/{{ config.settings.app_template }}/developerhome">Home</a>
                             <a class="nav-link" href="/{{ config.settings.app_template }}/profile">Your Profile</a>
                         </nav>
                     </div>
                     <a class="nav-link" href="javascript:void(0);" data-toggle="collapse" data-target="#collapseTools" aria-expanded="true" aria-controls="collapseTools">
                         <div class="nav-link-icon"><i data-feather="tool"></i></div>
-                        API Management
+                        User Management
                         <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                     </a>
                     <div class="collapse show" id="collapseTools" data-parent="#accordionSidenav">
                         <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
                             <a class="nav-link" href="/manageuserscreateupdate">Create User</a>
                             <a class="nav-link" href="/manageusers">Basic Functions</a>
-                            <a class="nav-link" href="/{{ config.settings.app_template }}/users_advanced">Advanced Functions</a>
-                            <a class="nav-link" href="/linkedobjects">User Relationships</a>
-                            <a class="nav-link" href="/schemas">User Schemas</a>
                         </nav>
                     </div>
-                    <a class="nav-link" href="javascript:void(0);" data-toggle="collapse" data-target="#collapseKeys" aria-expanded="true" aria-controls="collapseKeys">
-                        <div class="nav-link-icon"><i data-feather="key"></i></div>
-                        User Keys
-                        <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                    </a>
-                    <div class="collapse show" id="collapseKeys" data-parent="#accordionSidenav">
-                        <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
-                            <a class="nav-link" href="/{{ config.settings.app_template }}/users_keysetup">Key Management</a>
-                        </nav>
-                    </div>
-                    <a class="nav-link" href="javascript:void(0);" data-toggle="collapse" data-target="#collapseIDPs" aria-expanded="true" aria-controls="collapseIDPs">
-                       <div class="nav-link-icon"><i data-feather="link"></i></div>
-                       IDP Management
-                       <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                   </a>
-                   <div class="collapse show" id="collapseIDPs" data-parent="#accordionSidenav">
-                       <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
-                           <a class="nav-link" href="/managesamlidps">Manage SAML IDPs</a>
-                       </nav>
-                   </div>
                    <a class="nav-link" href="javascript:void(0);" data-toggle="collapse" data-target="#collapseApps" aria-expanded="true" aria-controls="collapseApps">
                        <div class="nav-link-icon"><i data-feather="link"></i></div>
                        App Management
@@ -95,11 +72,23 @@
                    </a>
                    <div class="collapse show" id="collapseApps" data-parent="#accordionSidenav">
                        <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
+                           <a class="nav-link" href="/createapps">Create Applications</a>
                            <a class="nav-link" href="/manageapps">Manage Applications</a>
+                           <a class="nav-link" href="/createtrustedorigins">Create Trusted Origin</a>
                            <a class="nav-link" href="/managetrustedorigins">Manage Trusted Origins</a>
                        </nav>
                    </div>
-
+                 <a class="nav-link" href="javascript:void(0);" data-toggle="collapse" data-target="#collapseApis" aria-expanded="true" aria-controls="collapseApis">
+                       <div class="nav-link-icon"><i data-feather="link"></i></div>
+                       API Management
+                       <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                   </a>
+                   <div class="collapse show" id="collapseApis" data-parent="#accordionSidenav">
+                       <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
+                           <a class="nav-link" href="/createapis">Create API</a>
+                           <a class="nav-link" href="/manageapis">Manage API</a>
+                       </nav>
+                   </div>
                 </div>
             </div>
             <div class="sidenav-footer">
