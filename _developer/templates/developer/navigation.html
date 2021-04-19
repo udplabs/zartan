@@ -1,19 +1,34 @@
 <nav class="topnav navbar navbar-expand shadow navbar-light bg-white" id="sidenavAccordion">
     {% if config.settings.app_logo != "" %}
+<<<<<<< HEAD
         <a href="/{{ config.settings.app_template }}/adminhome"><img alt="Logo" src={{config.settings.app_logo}} border='0' style="max-height:50px;max-width:200px;height:auto;width:auto;"></a>
     {% else %}
         <a class="navbar-brand text-primary" href="/{{ config.settings.app_template }}/adminhome">{{config.settings.app_name}}</a><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><em data-feather="menu"></em></button>
     {% endif %}
     <button class="btn btn-icon btn-transparent-dark order-1 order-lg-0 mr-lg-2" id="sidebarToggle" href="#"><em data-feather="menu"></em></button>
+=======
+        <a href="/{{ config.settings.app_template }}/adminhome"><img src={{config.settings.app_logo}} border='0' style="max-height:50px;max-width:200px;height:auto;width:auto;"></a>
+    {% else %}
+        <a class="navbar-brand text-primary" href="/{{ config.settings.app_template }}/adminhome">{{config.settings.app_name}}</a><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><i data-feather="menu"></i></button>
+    {% endif %}
+    <button class="btn btn-icon btn-transparent-dark order-1 order-lg-0 mr-lg-2" id="sidebarToggle" href="#"><i data-feather="menu"></i></button>
+>>>>>>> Feature/developer templatebuild (#440)
     <ul class="navbar-nav align-items-center ml-auto">
         <li class="nav-item dropdown no-caret mr-3">
             <a class="nav-link dropdown-toggle" id="navbarDropdownDocs" href="javascript:void(0);" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <div class="d-inline d-md-none font-weight-500">Docs</div>
                 <div class="d-none d-md-inline font-weight-500">Documentation</div>
+<<<<<<< HEAD
                 <em class="fas fa-chevron-right dropdown-arrow"></em></a>
             <div class="dropdown-menu dropdown-menu-right py-0 o-hidden mr-n15 mr-lg-0 animated--fade-in-up" aria-labelledby="navbarDropdownDocs">
                 <a class="dropdown-item py-3" href="https://developer.okta.com/docs/" target="_blank">
                     <div class="icon-stack bg-primary-soft text-primary mr-4"><em data-feather="book"></em></div>
+=======
+                <i class="fas fa-chevron-right dropdown-arrow"></i></a>
+            <div class="dropdown-menu dropdown-menu-right py-0 o-hidden mr-n15 mr-lg-0 animated--fade-in-up" aria-labelledby="navbarDropdownDocs">
+                <a class="dropdown-item py-3" href="https://developer.okta.com/docs/" target="_blank">
+                    <div class="icon-stack bg-primary-soft text-primary mr-4"><i data-feather="book"></i></div>
+>>>>>>> Feature/developer templatebuild (#440)
                     <div>
                         <div class="small text-gray-500">Documentation</div>
                        Developer Documentation
@@ -31,8 +46,13 @@
                             </div>
                         </h6>
                         <div class="dropdown-divider"></div>
+<<<<<<< HEAD
                         <a class="dropdown-item" href="/{{ config.settings.app_template }}/profile"><div class="dropdown-item-icon"><em data-feather="settings"></em></div>Profile</a>
                         <a class="dropdown-item" href="/logout"><div class="dropdown-item-icon"><em data-feather="log-out"></em></div>Logout</a>
+=======
+                        <a class="dropdown-item" href="/{{ config.settings.app_template }}/profile"><div class="dropdown-item-icon"><i data-feather="settings"></i></div>Profile</a>
+                        <a class="dropdown-item" href="/logout"><div class="dropdown-item-icon"><i data-feather="log-out"></i></div>Logout</a>
+>>>>>>> Feature/developer templatebuild (#440)
                     </div>
         </li>
     </ul>
@@ -44,9 +64,15 @@
                 <div class="nav accordion" id="accordionSidenav">
                     <div class="sidenav-menu-heading">Core</div>
                     <a class="nav-link" href="javascript:void(0);" data-toggle="collapse" data-target="#collapseDashboards" aria-expanded="true" aria-controls="collapseDashboards">
+<<<<<<< HEAD
                         <div class="nav-link-icon"><em data-feather="activity"></em></div>
                         Dashboards
                         <div class="sidenav-collapse-arrow"><em class="fas fa-angle-down"></em></div>
+=======
+                        <div class="nav-link-icon"><i data-feather="activity"></i></div>
+                        Dashboards
+                        <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+>>>>>>> Feature/developer templatebuild (#440)
                     </a>
                     <div class="collapse show" id="collapseDashboards" data-parent="#accordionSidenav">
                         <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
@@ -55,9 +81,15 @@
                         </nav>
                     </div>
                     <a class="nav-link" href="javascript:void(0);" data-toggle="collapse" data-target="#collapseTools" aria-expanded="true" aria-controls="collapseTools">
+<<<<<<< HEAD
                         <div class="nav-link-icon"><em data-feather="tool"></em></div>
                         User Management
                         <div class="sidenav-collapse-arrow"><em class="fas fa-angle-down"></em></div>
+=======
+                        <div class="nav-link-icon"><i data-feather="tool"></i></div>
+                        User Management
+                        <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+>>>>>>> Feature/developer templatebuild (#440)
                     </a>
                     <div class="collapse show" id="collapseTools" data-parent="#accordionSidenav">
                         <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
@@ -66,9 +98,15 @@
                         </nav>
                     </div>
                    <a class="nav-link" href="javascript:void(0);" data-toggle="collapse" data-target="#collapseApps" aria-expanded="true" aria-controls="collapseApps">
+<<<<<<< HEAD
                        <div class="nav-link-icon"><em data-feather="link"></em></div>
                        App Management
                        <div class="sidenav-collapse-arrow"><em class="fas fa-angle-down"></em></div>
+=======
+                       <div class="nav-link-icon"><i data-feather="link"></i></div>
+                       App Management
+                       <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+>>>>>>> Feature/developer templatebuild (#440)
                    </a>
                    <div class="collapse show" id="collapseApps" data-parent="#accordionSidenav">
                        <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
@@ -79,9 +117,15 @@
                        </nav>
                    </div>
                  <a class="nav-link" href="javascript:void(0);" data-toggle="collapse" data-target="#collapseApis" aria-expanded="true" aria-controls="collapseApis">
+<<<<<<< HEAD
                        <div class="nav-link-icon"><em data-feather="link"></em></div>
                        API Management
                        <div class="sidenav-collapse-arrow"><em class="fas fa-angle-down"></em></div>
+=======
+                       <div class="nav-link-icon"><i data-feather="link"></i></div>
+                       API Management
+                       <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+>>>>>>> Feature/developer templatebuild (#440)
                    </a>
                    <div class="collapse show" id="collapseApis" data-parent="#accordionSidenav">
                        <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
