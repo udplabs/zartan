@@ -15,7 +15,7 @@
         </div>
         <div class="card border-bottom">
              <div class="card-header">
-                <button type="button" class="btn align-items-right btn-primary ml-auto" onclick="window.location.href = '/createapps';">Create App</button>
+                <button type="button" class="btn align-items-right btn-primary ml-auto" onclick="window.location.href = '/createapis';">Create API Service</button>
             </div>
             <div class="card-body">
                 <table class="table table-striped">
@@ -32,16 +32,16 @@
                     {% if applist is defined %}
                         {% for app in applist %}
                             {% set oauthinfo = app.settings.oauthClient%}
-                            {% if oauthinfo is defined and oauthinfo.application_type == 'web'%}
+                            {% if oauthinfo is defined and oauthinfo.application_type == 'service'%}
                                 <tr>
                                     <td>{{ app['label'] }}</td>
                                     <td>{{ oauthinfo.application_type }}</td>
                                     <td>{{ app['status'] }}</td>
                                     <td>
-                                        <a href="/editapps?appid={{ app['id'] }}">View</a>
+                                        <a href="/editapis?appid={{ app['id'] }}">View</a>
                                     </td>
                                     <td>
-                                     <a href="/deleteapps?appid={{ app['id'] }}">Delete</a>
+                                     <a href="/deleteapis?appid={{ app['id'] }}">Delete</a>
                                     </td>
                                 </tr>
                             {% endif %}

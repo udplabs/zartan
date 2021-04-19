@@ -1,0 +1,59 @@
+{% extends "developer/template.html" %}
+
+{% block content %}
+    <div class="container-fluid mt-5">
+        <div class="d-flex justify-content-between align-items-sm-center flex-column flex-sm-row mb-4">
+            <div class="mr-4 mb-3 mb-sm-0">
+                <h1 class="mb-0">Developer Portal</h1>
+            </div>
+        </div>
+        <div class="alert alert-primary border-0 mb-4 mt-5 px-md-5">
+            <div class="position-relative">
+                <div class="row align-items-center justify-content-between">
+                    <div class="col position-relative">
+                        <h2 class="text-primary">Welcome back, your Developer dashboard is ready!</h2>
+                        <p class="text-gray-700"></p>
+                    </div>
+                    <div class="col d-none d-md-block text-right pt-3"><img class="img-fluid mt-n5" src="https://cdn-zartan.s3.us-east-2.amazonaws.com/static/img/drawkit-content-man-alt.svg" style="max-width: 10rem;" /></div>
+                </div>
+            </div>
+        </div>
+        <div class="card-deck">
+            <div class="card mb-4">
+                <img class="card-img-top" src="https://cdn-zartan.s3.us-east-2.amazonaws.com/static/img/drawkit-content-man.svg" style="max-width: 18rem;display: block; margin-left: auto;margin-right: auto;" alt="..." />
+                <div class="card-body">
+                    <h5 class="card-title text-primary">See Your Profile</h5>
+                    <p class="card-text">View the base information Okta can provide!</p>
+                </div>
+                <a class="card-footer d-flex align-items-center justify-content-between" href="/{{ config.settings.app_template }}/profile">View Profile<i data-feather="arrow-right"></i></a>
+            </div>
+            <div class="card mb-4">
+                <img class="card-img-top" src="https://cdn-zartan.s3.us-east-2.amazonaws.com/static/img/drawkit-gamer-colour.svg" alt="..." style="max-width: 18rem;display: block; margin-left: auto;margin-right: auto;"/>
+                <div class="card-body">
+                    <h5 class="card-title text-primary">Create a New App</h5>
+                    <p class="card-text">Create a new App to connect to our API.</p>
+                </div>
+                <a class="card-footer d-flex align-items-center justify-content-between" href="/createapps">New App<i data-feather="arrow-right"></i></a>
+            </div>
+            <div class="card mb-4">
+                <img class="card-img-top" src="https://cdn-zartan.s3.us-east-2.amazonaws.com/static/img/drawkit-mobile-post-colour.svg" alt="..." style="max-width: 18rem;display: block; margin-left: auto;margin-right: auto;"/>
+                <div class="card-body">
+                    <h5 class="card-title text-primary">Create a New User in Okta</h5>
+                    <p class="card-text">Create a new user quickly and see what base information is required.</p>
+                </div>
+                <a class="card-footer d-flex align-items-center justify-content-between" href="/manageusercreateupdate">Create User!<i data-feather="arrow-right"></i></a>
+            </div>
+            <div class="card mb-4">
+                <img class="card-img-top" src="https://cdn-zartan.s3.us-east-2.amazonaws.com/static/img/drawkit-developer-woman.svg" alt="..." style="max-width: 18rem;display: block; margin-left: auto;margin-right: auto;" />
+                <div class="card-body">
+                    <h5 class="card-title text-primary">Test our API</h5>
+                    <p class="card-text">Click here to test the API</p>
+                </div>
+                <a class="card-footer d-flex align-items-center justify-content-between" href="/{{ config.settings.app_template }}/users_keysetup">Test API<i data-feather="arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

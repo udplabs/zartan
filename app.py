@@ -79,6 +79,10 @@ app.register_blueprint(gbac_manageapps_bp, url_prefix='/')
 from GlobalBehaviorandComponents.linkedobjects import gbac_lo_bp
 app.register_blueprint(gbac_lo_bp, url_prefix='/')
 
+from GlobalBehaviorandComponents.managetrustedorigins import gbac_managetrustedorigins_bp
+app.register_blueprint(gbac_managetrustedorigins_bp, url_prefix='/')
+
+
 # sample theme
 from _sample.views import sample_views_bp
 app.register_blueprint(sample_views_bp, url_prefix='/sample')
@@ -122,6 +126,10 @@ app.register_blueprint(ecommerce_views_bp, url_prefix='/ecommerce')
 # b2b theme
 from _b2b.views import b2b_views_bp
 app.register_blueprint(b2b_views_bp, url_prefix='/b2b')
+
+# developer theme
+from _developer.views import developer_views_bp
+app.register_blueprint(developer_views_bp, url_prefix='/developer')
 
 
 ##############################################
