@@ -754,7 +754,7 @@ class OktaAdmin:
             "name": name
             }
         return RestUtil.execute_post(url, body, okta_headers)
-    
+
     def get_user_types(self):
         self.logger.debug("OktaAdmin.create_user_type")
         okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
@@ -866,7 +866,7 @@ class OktaAdmin:
         }
 
         return RestUtil.execute_post(url, body, okta_headers)
-        
+
     def delete_application(self, app_id):
         self.logger.debug("OktaAdmin.delete_application(app_id)")
         okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
@@ -882,7 +882,7 @@ class OktaAdmin:
             appid=app_id)
 
         return RestUtil.execute_delete(url, body, okta_headers)
-    
+
     def delete_auth_server(self, auth_server_id):
         self.logger.debug("OktaAdmin.delete_auth_server")
         okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
@@ -893,7 +893,7 @@ class OktaAdmin:
         body = {}
 
         return RestUtil.execute_delete(url, body, okta_headers)
-    
+
     def delete_user_type(self, type_id):
         self.logger.debug("OktaAdmin.delete_user_type")
         okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
