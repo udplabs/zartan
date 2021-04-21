@@ -7,8 +7,9 @@ services:
     environment:
       - FLASK_DEBUG=1
       - FLASK_ENV=development
-      # Over write Zartan Setting (eg. 'admin', 'b2b', 'dealer', 'ecommerce', 'finance', 'healthcare', etc ) Details: https://bit.ly/2Vxo1BB
-      - APP_TEMPLATE=ecommerce
+      # (OPTIONAL) Over write Zartan Appliction Template settings.
+      #  eg. 'admin', 'b2b', 'dealer', 'ecommerce', 'finance', 'healthcare', etc. Details: https://bit.ly/2Vxo1BB
+      # - APP_TEMPLATE=ecommerce
     ports:
       - '8666:8666'
     volumes:
