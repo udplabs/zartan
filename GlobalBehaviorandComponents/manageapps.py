@@ -13,10 +13,8 @@ logger = logging.getLogger(__name__)
 # set blueprint
 gbac_manageapps_bp = Blueprint('gbac_manageapps_bp', __name__, template_folder='templates', static_folder='static', static_url_path='static')
 
-
 gbac_app = "gbac_manageapps_bp.gbac_apps"
 gbac_api = "gbac_manageapps_bp.gbac_apis"
-
 
 
 @gbac_manageapps_bp.route("/manageapps")
@@ -92,7 +90,6 @@ def gbac_apis_edit():
     logger.debug("gbac_apps_edit()")
     app_id = request.args.get('appid')
 
-
     if app_id:
         okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
         appinfo = okta_admin.get_applications_by_id(app_id)
@@ -107,7 +104,6 @@ def gbac_apis_edit():
     else:
 
         return redirect(url_for(gbac_apps, _external=True, _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"]))
-
 
 
 @gbac_manageapps_bp.route("/createapps")
