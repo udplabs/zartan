@@ -13,7 +13,8 @@ logger = logging.getLogger(__name__)
 # set blueprint
 gbac_manageapps_bp = Blueprint('gbac_manageapps_bp', __name__, template_folder='templates', static_folder='static', static_url_path='static')
 
-gbac_main = "gbac_manageapps_bp.gbac_apps"
+gbac_app = "gbac_manageapps_bp.gbac_apps"
+gbac_api = "gbac_manageapps_bp.gbac_apis"
 
 
 @gbac_manageapps_bp.route("/manageapps")
@@ -101,7 +102,8 @@ def gbac_apis_edit():
             appid=app_id,
             appinfo=appinfo)
     else:
-        return redirect(url_for(gbac_main, _external=True, _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"]))
+
+        return redirect(url_for(gbac_apps, _external=True, _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"]))
 
 
 @gbac_manageapps_bp.route("/createapps")
@@ -141,7 +143,24 @@ def gbac_apps_delete():
     message = "Application Deleted"
 
     return redirect(url_for(
-        gbac_main,
+        gbac_app,
+        _external=True,
+        _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"],
+        message=message))
+
+
+@gbac_manageapps_bp.route("/deleteapis")
+@apply_remote_config
+@is_authenticated
+def gbac_apis_delete():
+    logger.debug("gbac_apis_delete()")
+    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
+    app_id = request.args.get('appid')
+    okta_admin.delete_application(app_id)
+    message = "Application Deleted"
+
+    return redirect(url_for(
+        gbac_api,
         _external=True,
         _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"],
         message=message))
@@ -161,7 +180,7 @@ def gbac_apps_update():
     if oidcclientid != "" and oidcloginredirecturi != "" and oidcapplabel != "":
         okta_admin.update_web_application(app_label=oidcapplabel, redirect_uris=oidcloginredirecturi, app_id=oidcclientid)
         return redirect(url_for(
-            gbac_main,
+            gbac_app,
             _external=True,
             _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"],
             message="Application Updated"))
