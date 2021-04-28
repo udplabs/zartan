@@ -1,0 +1,93 @@
+{% extends templatename+"/template.html" %}
+
+{% block content %}
+        <section class="bg-light py-5">
+            <div class="container">
+                <div class="d-flex align-items-center mb-5">
+                    <div class="icon-stack icon-stack-lg bg-primary text-white"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
+                    <div class="ml-3">
+                        <h2 class="mb-0">Account</h2>
+                        <p class="lead mb-0">Key Setup</p>
+                    </div>
+                </div>
+                <div class="card border-bottom">
+                    <div class="card-body">
+                        <div class="separator-2"></div>
+                            <table class="table table-striped" aria-label="UserStatus">
+                                <thead>
+                                <tr>
+                                    <th id="Name"></a>>Name</th>
+                                    <th id="Email">Email</th>
+                                    <th id="UserStatus" style="text-align:center">User Status</th>
+                                    <th id="KeySetup" style="text-align:center">Key Setup</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for i in userlist %}
+                                     <tr>
+                                        <td>{{ i['profile']['firstName']}} {{ i['profile']['lastName']}}</td>
+                                        <td>{{ i['profile']['email']}}</td>
+                                        <td style="text-align:center">{{ i['status'] }}</td>
+                                        <td style="text-align:center"><a href="#" data-toggle="modal" data-target="#keycreate" onclick="adduserid('{{ i['id'] }}')"><em class="fa fa-key"></em></a></td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <script>
+            function adduserid(id) {
+                $("#userid").val(id);
+            };
+        </script>
+
+        <!-- Modal -->
+        <div class="modal fade" id="keycreate" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Key Setup</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    </div>
+                    <div class="modal-body">
+                           Factor Profile ID:<br />
+                           <input id="factorprofileid" type="text" class="form-control" ></input><br />
+                           Seed / Shared Secret:<br />
+                           <input id="seed" type="text" class="form-control" ></input>
+                           <input type="hidden" id="userid">
+                    </div>
+                    <div class="modal-footer"><button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button><button class="btn btn-primary" type="button" onclick="addkey()">Submit</button></div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+        function addkey() {
+            factorProfileId = $("#factorprofileid").val();
+            seed = $("#seed").val();
+            user_id = $("#userid").val();
+            $.ajax({
+                url:'/admin/addkey',
+                type: "GET",
+                data:{
+                    "factorProfileId": factorProfileId,
+                    "sharedSecret": seed,
+                    "userId": user_id
+                },
+                complete: function (response) {
+                    alert(response.responseText);
+                },
+                error: function () {
+                    alert('Bummer: there was an error!');
+                },
+            });
+            return false;
+        }
+        </script>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
