@@ -1,15 +1,13 @@
 <html lang="en">
     {% include '//components/template-header-meta-admin.html' %}
-    <script>
-        console.log(window.location.pathname);
-        if (window.location.pathname == "/login")
-        {
-            window.location.replace("/");
-        }
-    </script>
     <body class="nav-fixed">
         {% if user_info is defined %}
-            {% include 'developer/navigation.html' %}
+            {% include 'developer/navitemslogin.html' %}
+        {% else %}
+            {% include 'developer/navitems.html' %}
+            <script src="https://cdn-zartan.s3.us-east-2.amazonaws.com/static/js/okta-auth-js.min.js" type="text/javascript"></script>
+            <script src="https://global.oktacdn.com/okta-signin-widget/5.2.2/js/okta-sign-in.min.js" type="text/javascript"></script>
+            <link href="https://global.oktacdn.com/okta-signin-widget/5.2.2/css/okta-sign-in.min.css" type="text/css" rel="stylesheet"/>
         {% endif %}
             <div id="layoutSidenav_content">
                 <main style="height: 100%;">
@@ -17,9 +15,12 @@
                 </main>
             </div>
         </div>
+        {% include '//components/template-footer-scripts-admin.html' %}
         {% if user_info is defined %}
-            {% include '//components/template-footer-scripts-admin.html' %}
             {% include '//components/template-modal.html' %}
         {% endif %}
     </body>
 </html>
+
+
+

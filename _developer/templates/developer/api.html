@@ -1,0 +1,350 @@
+{% extends "developer/templatedocs.html" %}
+
+{% block content %}
+<section class="bg-gray-600 py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+           <div class="card card-collapsable">
+                <a class="card-header" href="#auth" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="auth">Authenticate
+                    <div class="card-collapsable-arrow">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </a>
+                <div class="collapse show" id="auth">
+                  <div class="card-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <h1>Client Credentials</h1><br>
+                            <div class="mb-3"><label for="clientkey">Client Key</label><input class="form-control" id="clientkey" type="text"></div>
+                            <div class="mb-3"><label for="clientsecret">Client Secret</label><input class="form-control" id="clientsecret" type="password"></div>
+                            <script>
+                                $("#clientkey").val(sessionStorage.getItem("clientid"));
+                                $("#clientsecret").val(sessionStorage.getItem("clientsecret"));
+                            </script>
+                        </div>
+                        <div class="col-6 border-left">
+                            <h1>Scope</h1><br>
+                            <div class="form-check">
+                                <input class="form-check-input" id="readscope" type="checkbox" value="">
+                                <label class="form-check-label" for="readscope">Read Data</label><br>
+                                <input class="form-check-input" id="writescope" type="checkbox" value="">
+                                <label class="form-check-label" for="writescope">Write Data</label>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-blue mb-2 mt-2" onclick="authapi()" type="button">Submit</button>
+                    <div class="border border-lg rounded d-none" id="apiresponse">
+                        <div class="bg-light p-4 small">
+                            API Token Response
+                        </div>
+                        <div class="p-4 border-bottom">
+                            <pre id="authresponse"></pre>
+                        </div>
+                    </div>
+                  </div>
+                  <script>
+                    function authapi() {
+                        var key = $("#clientkey").val();
+                        var secret = $("#clientsecret").val();
+                        var read = "";
+                        var write = ""
+                        if ($('#readscope').is(":checked"))
+                        {
+                            read = "read";
+                        }
+                        if ($('#writescope').is(":checked"))
+                        {
+                            console.log(write);
+                            write = "write";
+                        }
+
+                        scopes = read + " " + write;
+
+                        $.ajax({
+                            async: false,
+                            url:'/developer/authorize',
+                            type: "POST",
+                            data:{
+                                "secret": secret,
+                                "key": key,
+                                "scopes": scopes
+                            },
+                            complete: function (response) {
+                                $("#apiresponse").removeClass('d-none');
+                                var jsonObj = JSON.parse(response.responseText);
+                                var jsonPretty = JSON.stringify(jsonObj, null, '\t');
+                                $("#authresponse").text(jsonPretty);
+                                if (jsonObj.access_token)
+                                {
+                                    $("#headerinfo").text(jsonObj.access_token );
+                                    $("#headerinfo2").text(jsonObj.access_token );
+                                    $('.collapse').collapse();
+                                    $("#basicExampleModal").modal("show");
+                                    $("#ModalBody").text("Authorization Complete");
+                                }
+
+                            },
+                            error: function (response) {
+                                 $("#authresponse").text(response.responseText);
+                            },
+                        });
+                        return false;
+                    }
+                    </script>
+                </div>
+            </div>
+        </div>
+      </div>
+      <br><br>
+      <div class="row" id="anchorGetAll">
+          <div class="col-12">
+             <h1 class="text-white">Get All Tasks</h1>
+             <div class="text-white">Get all tasks.</div><br><br>
+          </div>
+          <div class="col-12">
+            <div class="border border-sm rounded" id="apiresponse">
+                <div class="bg-light p-4 small">
+                    <h4 class="border-bottom">Your API Call</h4>
+                    <pre>
+curl -X GET {{ request.url }}/tasks/
+-h Authorization: Bearer <span id="headerinfo"></span>
+                    </pre>
+                    <button class="btn btn-dark" onclick="calltasks()" type="button">Run Command</button>
+                    <script>
+                        function calltasks() {
+                            $.ajax({
+                                async: false,
+                                url:'/developer/api/proxy/',
+                                type: "POST",
+                                headers: {},
+                                data:{
+                                    Authorization: $("#headerinfo").text(),
+                                    url: "developer/api/tasks/",
+                                    key: $("#clientkey").val(),
+                                    secret: $("#clientsecret").val()
+                                },
+                                complete: function (response) {
+                                    var jsonObj = JSON.parse(response.responseText);
+                                    var jsonPretty = JSON.stringify(jsonObj, null, '\t');
+                                    $("#gettasks").text(jsonPretty);
+                                },
+                                error: function (response) {
+                                    $("#gettasks").text(response.responseText);
+                                },
+                            });
+                            return false;
+                        }
+                    </script>
+                </div>
+                <div class="p-4 bg-white border-bottom">
+                    <pre id="gettasks">
+
+                    </pre>
+                </div>
+            </div>
+          </div>
+      </div>
+      <br><br>
+      <div class="row" id="anchorGetTask">
+          <div class="col-12">
+             <h1 class="text-white">Get Task</h1>
+             <div class="text-white">Get single task based on ID.</div><br>
+             <div class="mb-3 text-white"><label for="taskid">Task ID</label>
+             <input class="form-control col-4" id="taskid" type="text"></div>
+
+          </div>
+          <div class="col-12">
+            <div class="border border-sm rounded" id="apiresponse">
+                <div class="bg-light p-4 small">
+                    <h4 class="border-bottom">Your API Call</h4>
+                    <pre>
+curl -X GET {{ request.url }}/tasks/
+-d "task_id=<span id="tidbody"></span>"
+-h Authorization: Bearer <span id="headerinfo2"></span>
+                    </pre>
+                    <button class="btn btn-dark" onclick="calltaskbyid()" type="button">Run Command</button>
+                    <script>
+                    jQuery('#taskid').on('input propertychange paste', function() {
+                         $("#tidbody").text($("#taskid").val())
+                    });
+                    function calltaskbyid() {
+                        $.ajax({
+                            async: false,
+                            url:'/developer/api/proxy/',
+                            type: "POST",
+                            headers: {},
+                            data:{
+                                Authorization:  $("#headerinfo").text(),
+                                url: "developer/api/task/",
+                                task_id:  $("#tidbody").text(),
+                                key: $("#clientkey").val(),
+                                secret: $("#clientsecret").val()
+                            },
+                            complete: function (response) {
+                                var jsonObj = JSON.parse(response.responseText);
+                                var jsonPretty = JSON.stringify(jsonObj, null, '\t');
+                                $("#gettaskbyid").text(jsonPretty);
+                            },
+                            error: function (response) {
+                                $("#gettaskbyid").text(response.responseText);
+                            },
+                        });
+                        return false;
+                    }
+                    </script>
+                </div>
+                <div class="p-4 bg-white border-bottom">
+                    <pre id="gettaskbyid">
+
+                    </pre>
+                </div>
+            </div>
+          </div>
+      </div>
+      <br><br>
+      <div class="row" id="anchorCreateTask">
+          <div class="col-12">
+             <h1 class="text-white">Create Task</h1>
+             <div class="text-white">Create single task.</div><br>
+             <div class="mb-3 text-white"><label for="tasktitle">Task Title</label>
+             <input class="form-control col-4" id="tasktitle" type="text"></div>
+             <div class="mb-3 text-white"><label for="taskdescription">Task Description</label>
+             <input class="form-control col-4" id="taskdescription" type="text"></div>
+          </div>
+          <div class="col-12">
+            <div class="border border-sm rounded" id="apiresponse">
+                <div class="bg-light p-4 small">
+                    <h4 class="border-bottom">Your API Call</h4>
+                    <pre>
+curl -X POST {{ request.url }}/tasks/
+-d "title=<span id="task_title"></span>&description=<span id="task_description"></span>"
+-h Authorization: Bearer <span id="headerinfo2"></span>
+                    </pre>
+                    <button class="btn btn-dark" onclick="createtask()" type="button">Run Command</button>
+                    <script>
+                    jQuery('#tasktitle').on('input propertychange paste', function() {
+                         $("#task_title").text($("#tasktitle").val())
+                    });
+                    jQuery('#taskdescription').on('input propertychange paste', function() {
+                         $("#task_description").text($("#taskdescription").val())
+                    });
+                    function createtask() {
+                        $.ajax({
+                            async: false,
+                            url:'/developer/api/proxy/',
+                            type: "POST",
+                            headers: {},
+                            data:{
+                                Authorization:  $("#headerinfo").text(),
+                                url: "developer/api/task/",
+                                description:  $("#task_description").text(),
+                                title:  $("#task_title").text(),
+                                key: $("#clientkey").val(),
+                                secret: $("#clientsecret").val()
+                            },
+                            complete: function (response) {
+                                var jsonObj = JSON.parse(response.responseText);
+                                var jsonPretty = JSON.stringify(jsonObj, null, '\t');
+                                $("#createtask").text(jsonPretty);
+                            },
+                            error: function (response) {
+                                $("#createtask").text(response.responseText);
+                            },
+                        });
+                        return false;
+                    }
+                    </script>
+                </div>
+                <div class="p-4 bg-white border-bottom">
+                    <pre id="createtask">
+
+                    </pre>
+                </div>
+            </div>
+          </div>
+      </div>
+      <br><br>
+      <div class="row" id="anchorUpdateTask">
+          <div class="col-12">
+             <h1 class="text-white">Update Task</h1>
+             <div class="text-white">Update a single task.</div><br>
+             <div class="mb-3 text-white"><label for="taskid2">Task ID</label>
+             <input class="form-control col-4" id="taskid2" type="text"></div>
+             <div class="mb-3 text-white"><label for="tasktitle2">Task Title</label>
+             <input class="form-control col-4" id="tasktitle2" type="text"></div>
+             <div class="mb-3 text-white"><label for="taskdescription2">Task Description</label>
+             <input class="form-control col-4" id="taskdescription2" type="text"></div>
+             <label class="text-white" for="taskdone2">Done</label>
+             <select class="form-control col-4" id="taskdone2">
+                <option selected>True</option>
+                <option>False</option>
+             </select><br>
+          </div>
+          <div class="col-12">
+            <div class="border border-sm rounded" id="apiresponse">
+                <div class="bg-light p-4 small">
+                    <h4 class="border-bottom">Your API Call</h4>
+                    <pre>
+curl -X PUT {{ request.url }}/tasks/
+-d "title=<span id="task_title2"></span>&description=<span id="task_description2"></span>&done=<span id="task_done2">True</span>&task_id=<span id="task_id2"></span>
+-h Authorization: Bearer <span id="headerinfo2"></span>
+                    </pre>
+                    <button class="btn btn-dark" onclick="updatetask()" type="button">Run Command</button>
+                    <script>
+                    jQuery('#tasktitle2').on('input propertychange paste', function() {
+                         $("#task_title2").text($("#tasktitle2").val())
+                    });
+                    jQuery('#taskdescription2').on('input propertychange paste', function() {
+                         $("#task_description2").text($("#taskdescription2").val())
+                    });
+                    jQuery('#taskdone2').on('input propertychange paste', function() {
+                         $("#task_done2").text($("#taskdone2").val())
+                    });
+                    jQuery('#taskid2').on('input propertychange paste', function() {
+                         $("#task_id2").text($("#taskid2").val())
+                    });
+                    function updatetask() {
+                        $.ajax({
+                            async: false,
+                            url:'/developer/api/proxy/',
+                            type: "POST",
+                            headers: {},
+                            data:{
+                                Authorization:  $("#headerinfo").text(),
+                                url: "developer/api/task/",
+                                description:  $("#task_description2").text(),
+                                task_id:  $("#task_id2").text(),
+                                title:  $("#task_title2").text(),
+                                done:  $("#task_done2").text(),
+                                key: $("#clientkey").val(),
+                                secret: $("#clientsecret").val()
+                            },
+                            complete: function (response) {
+                                var jsonObj = JSON.parse(response.responseText);
+                                var jsonPretty = JSON.stringify(jsonObj, null, '\t');
+                                $("#updatetask").text(jsonPretty);
+                            },
+                            error: function (response) {
+                                $("#updatetask").text(response.responseText);
+                            },
+                        });
+                        return false;
+                    }
+                    </script>
+                </div>
+                <div class="p-4 bg-white border-bottom">
+                    <pre id="updatetask">
+
+                    </pre>
+                </div>
+            </div>
+          </div>
+      </div>
+      <br><br>
+    </div>
+  </section>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

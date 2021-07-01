@@ -1,22 +1,28 @@
 <nav class="topnav navbar navbar-expand shadow navbar-light bg-white" id="sidenavAccordion">
     {% if config.settings.app_logo != "" %}
-        <a href="/{{ config.settings.app_template }}/adminhome"><img alt="Logo" src={{config.settings.app_logo}} border='0' style="max-height:50px;max-width:200px;height:auto;width:auto;"></a>
+        <a href="/{{ config.settings.app_template }}/profile"><img alt="Logo" src={{config.settings.app_logo}} border='0' style="max-height:50px;max-width:200px;height:auto;width:auto;"></a>
     {% else %}
-        <a class="navbar-brand text-primary" href="/{{ config.settings.app_template }}/adminhome">{{config.settings.app_name}}</a><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><em data-feather="menu"></em></button>
+        <a class="navbar-brand text-primary" href="/{{ config.settings.app_template }}/profile">{{config.settings.app_name}}</a><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><em data-feather="menu"></em></button>
     {% endif %}
     <button class="btn btn-icon btn-transparent-dark order-1 order-lg-0 mr-lg-2" id="sidebarToggle" href="#"><em data-feather="menu"></em></button>
     <ul class="navbar-nav align-items-center ml-auto">
         <li class="nav-item dropdown no-caret mr-3">
-            <a class="nav-link dropdown-toggle" id="navbarDropdownDocs" href="javascript:void(0);" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <div class="d-inline d-md-none font-weight-500">Docs</div>
-                <div class="d-none d-md-inline font-weight-500">Documentation</div>
+             <a class="nav-link dropdown-toggle" id="navbarDropdownDocs" href="javascript:void(0);" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <div class="d-none d-md-inline font-weight-500">Administration</div>
                 <em class="fas fa-chevron-right dropdown-arrow"></em></a>
             <div class="dropdown-menu dropdown-menu-right py-0 o-hidden mr-n15 mr-lg-0 animated--fade-in-up" aria-labelledby="navbarDropdownDocs">
-                <a class="dropdown-item py-3" href="https://developer.okta.com/docs/" target="_blank">
+                <a class="dropdown-item py-3" href="/profile">
+                    <div class="icon-stack bg-primary-soft text-primary mr-4"><em data-feather="settings"></em></div>
+                    <div>
+                       <div class="small text-gray-500">Application Management</div>
+                       Manage Users and Applications
+                    </div>
+                </a>
+                <a class="dropdown-item py-3" href="/developer/api">
                     <div class="icon-stack bg-primary-soft text-primary mr-4"><em data-feather="book"></em></div>
                     <div>
-                        <div class="small text-gray-500">Documentation</div>
-                       Developer Documentation
+                       <div class="small text-gray-500">Documentation</div>
+                       API Documentation and Testing
                     </div>
                 </a>
             </div>
@@ -62,33 +68,53 @@
                     <div class="collapse show" id="collapseTools" data-parent="#accordionSidenav">
                         <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
                             <a class="nav-link" href="/manageuserscreateupdate">Create User</a>
-                            <a class="nav-link" href="/manageusers">Basic Functions</a>
+                            <a class="nav-link" href="/manageusers">User Management</a>
+                            <a class="nav-link" href="/managesamlidps">Manage IDPs</a>
                         </nav>
                     </div>
-                   <a class="nav-link" href="javascript:void(0);" data-toggle="collapse" data-target="#collapseApps" aria-expanded="true" aria-controls="collapseApps">
+                    <a class="nav-link" href="javascript:void(0);" data-toggle="collapse" data-target="#collapseApps" aria-expanded="true" aria-controls="collapseApps">
                        <div class="nav-link-icon"><em data-feather="link"></em></div>
                        App Management
                        <div class="sidenav-collapse-arrow"><em class="fas fa-angle-down"></em></div>
-                   </a>
-                   <div class="collapse show" id="collapseApps" data-parent="#accordionSidenav">
+                    </a>
+                    <div class="collapse show" id="collapseApps" data-parent="#accordionSidenav">
                        <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
                            <a class="nav-link" href="/createapps">Create Applications</a>
                            <a class="nav-link" href="/manageapps">Manage Applications</a>
-                           <a class="nav-link" href="/createtrustedorigins">Create Trusted Origin</a>
-                           <a class="nav-link" href="/managetrustedorigins">Manage Trusted Origins</a>
                        </nav>
-                   </div>
-                 <a class="nav-link" href="javascript:void(0);" data-toggle="collapse" data-target="#collapseApis" aria-expanded="true" aria-controls="collapseApis">
+                    </div>
+                    <a class="nav-link" href="javascript:void(0);" data-toggle="collapse" data-target="#collapseApis" aria-expanded="true" aria-controls="collapseApis">
                        <div class="nav-link-icon"><em data-feather="link"></em></div>
                        API Management
                        <div class="sidenav-collapse-arrow"><em class="fas fa-angle-down"></em></div>
-                   </a>
-                   <div class="collapse show" id="collapseApis" data-parent="#accordionSidenav">
+                    </a>
+                    <div class="collapse show" id="collapseApis" data-parent="#accordionSidenav">
                        <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
                            <a class="nav-link" href="/createapis">Create API</a>
                            <a class="nav-link" href="/manageapis">Manage API</a>
                        </nav>
-                   </div>
+                    </div>
+                    <a class="nav-link" href="javascript:void(0);" data-toggle="collapse" data-target="#collapseApps" aria-expanded="true" aria-controls="collapseApps">
+                       <div class="nav-link-icon"><em data-feather="link"></em></div>
+                       Trust Management
+                       <div class="sidenav-collapse-arrow"><em class="fas fa-angle-down"></em></div>
+                    </a>
+                    <div class="collapse show" id="collapseApps" data-parent="#accordionSidenav">
+                       <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
+                           <a class="nav-link" href="/createtrustedorigins">Create Trusted Origin</a>
+                           <a class="nav-link" href="/managetrustedorigins">Manage Trusted Origins</a>
+                       </nav>
+                    </div>
+                    <a class="nav-link" href="javascript:void(0);" data-toggle="collapse" data-target="#collapsereport" aria-expanded="true" aria-controls="collapsereport">
+                       <div class="nav-link-icon"><em data-feather="link"></em></div>
+                       API Report
+                       <div class="sidenav-collapse-arrow"><em class="fas fa-angle-down"></em></div>
+                    </a>
+                    <div class="collapse show" id="collapsereport" data-parent="#accordionSidenav">
+                       <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
+                           <a class="nav-link" href="/developer/apireport">Call Report</a>
+                       </nav>
+                    </div>
                 </div>
             </div>
             <div class="sidenav-footer">
