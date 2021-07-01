@@ -1,0 +1,130 @@
+<nav class="topnav navbar navbar-expand shadow navbar-light bg-white" id="sidenavAccordion">
+    {% if config.settings.app_logo != "" %}
+        <a href="/{{ config.settings.app_template }}/adminhome"><img alt="Logo" src={{config.settings.app_logo}} border='0' style="max-height:50px;max-width:200px;height:auto;width:auto;"></a>
+    {% else %}
+        <a class="navbar-brand text-primary" href="/{{ config.settings.app_template }}/adminhome">{{config.settings.app_name}}</a><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><em data-feather="menu"></em></button>
+    {% endif %}
+    <button class="btn btn-icon btn-transparent-dark order-1 order-lg-0 mr-lg-2" id="sidebarToggle" href="#"><em data-feather="menu"></em></button>
+    <ul class="navbar-nav align-items-center ml-auto">
+        <li class="nav-item dropdown no-caret mr-3">
+           <a class="nav-link dropdown-toggle" id="navbarDropdownDocs" href="javascript:void(0);" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <div class="d-none d-md-inline font-weight-500">Administration</div>
+                <em class="fas fa-chevron-right dropdown-arrow"></em></a>
+            <div class="dropdown-menu dropdown-menu-right py-0 o-hidden mr-n15 mr-lg-0 animated--fade-in-up" aria-labelledby="navbarDropdownDocs">
+                <a class="dropdown-item py-3" href="/profile">
+                    <div class="icon-stack bg-primary-soft text-primary mr-4"><em data-feather="settings"></em></div>
+                    <div>
+                       <div class="small text-gray-500">Application Management</div>
+                       Manage Users and Applications
+                    </div>
+                </a>
+                <a class="dropdown-item py-3" href="/developer/api">
+                    <div class="icon-stack bg-primary-soft text-primary mr-4"><em data-feather="book"></em></div>
+                    <div>
+                       <div class="small text-gray-500">Documentation</div>
+                       API Documentation and Testing
+                    </div>
+                </a>
+            </div>
+        </li>
+        <li class="nav-item dropdown no-caret mr-3 dropdown-user">
+                    <a class="px-4 ml-lg-4 dropdown-toggle" href="javascript:void(0);" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Hi {{ user_info.name }}</a>
+                    <div class="dropdown-menu dropdown-menu-right border-0 shadow animated--fade-in-up" aria-labelledby="navbarDropdownUserImage">
+                        <h6 class="dropdown-header d-flex align-items-center">
+                            <div class="dropdown-user-details">
+                                <div class="dropdown-user-details-name">{{ user_info.name }}</div>
+                                <div class="dropdown-user-details-email">{{ user_info.email }}</div>
+                            </div>
+                        </h6>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="/{{ config.settings.app_template }}/profile"><div class="dropdown-item-icon"><em data-feather="settings"></em></div>Profile</a>
+                        <a class="dropdown-item" href="/logout"><div class="dropdown-item-icon"><em data-feather="log-out"></em></div>Logout</a>
+                    </div>
+        </li>
+    </ul>
+</nav>
+<div id="layoutSidenav">
+    <div id="layoutSidenav_nav">
+        <nav class="sidenav shadow-right sidenav-dark">
+            <div class="sidenav-menu">
+                <div class="nav accordion" id="accordionSidenav">
+                    <div class="sidenav-menu-heading">Enable Production</div>
+                    <div class="custom-control custom-switch" style="left: 15px;width: 30px">
+                        <input type="checkbox" class="custom-control-input" id="productionswitch">
+                        <label class="custom-control-label" for="productionswitch" onclick="isProductionReady()">Production</label>
+                        <style>
+                        .custom-control-input:checked ~ .custom-control-label::before {
+                          background-color: black;
+                          border-color: black;
+                        }
+                        .custom-control-input:hover ~ .custom-control-label::before {
+                          background-color: black;
+                          border-color: black;
+                        }
+                        .custom-control-input ~ .custom-control-label::before {
+                          background-color: gray;
+                          border-color: gray;
+                        }
+                        .custom-control-input ~ .custom-control-label::after {
+                          background-color: white;
+                          border-color: white;
+                        }
+                        </style>
+                        <script>
+                            function isProductionReady()
+                            {
+                                var ischecked =  $('#productionswitch').prop('checked');
+                                var production = "{{ user_info2['profile']['production'] }}";
+                                
+                                if (ischecked == true)
+                                {
+                                    $("section").removeClass("bg-danger");
+                                    $("section").addClass("bg-gray-600");
+                                }
+                                else if (ischecked == false && production == "True")
+                                {
+                                    $("section").removeClass("bg-gray-600");
+                                    $("section").addClass("bg-primary");
+                                }
+                                else 
+                                {
+                                    $("section").removeClass("bg-primary");
+                                    $("section").addClass("bg-gray-600");
+                                    $('#productionswitch').prop('checked', true);  
+                                    //alert("Please reach out to JMC Support to get enabled!")
+                                    $("#ModalBody").text("Please reach out to JMC Support to get enabled for Production!");
+                                    $("#basicExampleModal").modal("show");
+                                    
+                                }
+                                
+                                
+                            }
+                        </script>
+                        
+                    </div>
+                </div>
+                <div class="nav accordion" id="accordionSidenav">
+                    <div class="sidenav-menu-heading">API Documentation</div>
+                    <a class="nav-link" href="javascript:void(0);" aria-expanded="true" >
+                        <div class="nav-link-icon"><em data-feather="activity"></em></div>
+                        Tasks
+                        <div class="sidenav-collapse-arrow"><em class="fas fa-angle-down"></em></div>
+                    </a>
+                    <div class="" id="collapseDashboards" data-parent="#accordionSidenav">
+                        <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
+                            <a class="nav-link" href="#anchorGetAll">Get All Tasks</a>
+                            <a class="nav-link" href="#anchorGetTask">Get Task</a>
+                            <a class="nav-link" href="#anchorCreateTask">Create Task</a>
+                            <a class="nav-link" href="#anchorUpdateTask">Update Task</a>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <div class="sidenav-footer">
+                <div class="sidenav-footer-content">
+                    <div class="sidenav-footer-subtitle">Logged in as:</div>
+                    <div class="sidenav-footer-title">{{ user_info.name }}</div>
+                </div>
+            </div>
+        </nav>
+    </div>
