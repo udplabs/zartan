@@ -106,7 +106,6 @@ def developer_api():
     user_info = get_userinfo()
     user_info2 = okta_admin.get_user(user_info["sub"])
     production = user_info2["profile"][get_udp_ns_fieldname("production")]
-    logger.debug(production)
     return render_template(
         "developer/api.html",
         user_info=user_info,
