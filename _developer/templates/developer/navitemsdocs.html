@@ -1,8 +1,8 @@
 <nav class="topnav navbar navbar-expand shadow navbar-light bg-white" id="sidenavAccordion">
     {% if config.settings.app_logo != "" %}
-        <a href="/{{ config.settings.app_template }}/adminhome"><img alt="Logo" src={{config.settings.app_logo}} border='0' style="max-height:50px;max-width:200px;height:auto;width:auto;"></a>
+        <a href="/{{ config.settings.app_template }}/developerhome"><img alt="Logo" src={{config.settings.app_logo}} border='0' style="max-height:50px;max-width:200px;height:auto;width:auto;"></a>
     {% else %}
-        <a class="navbar-brand text-primary" href="/{{ config.settings.app_template }}/adminhome">{{config.settings.app_name}}</a><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><em data-feather="menu"></em></button>
+        <a class="navbar-brand text-primary" href="/{{ config.settings.app_template }}/developerhome">{{config.settings.app_name}}</a><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><em data-feather="menu"></em></button>
     {% endif %}
     <button class="btn btn-icon btn-transparent-dark order-1 order-lg-0 mr-lg-2" id="sidebarToggle" href="#"><em data-feather="menu"></em></button>
     <ul class="navbar-nav align-items-center ml-auto">
@@ -74,7 +74,7 @@
                             function isProductionReady()
                             {
                                 var ischecked =  $('#productionswitch').prop('checked');
-                                var production = "{{ user_info2['profile']['production'] }}";
+                                var production = "{{ production}}";
                                 
                                 if (ischecked == true)
                                 {
@@ -91,13 +91,9 @@
                                     $("section").removeClass("bg-primary");
                                     $("section").addClass("bg-gray-600");
                                     $('#productionswitch').prop('checked', true);  
-                                    //alert("Please reach out to JMC Support to get enabled!")
-                                    $("#ModalBody").text("Please reach out to JMC Support to get enabled for Production!");
+                                    $("#ModalBody").text("Please reach out to support to get enabled for Production!");
                                     $("#basicExampleModal").modal("show");
-                                    
                                 }
-                                
-                                
                             }
                         </script>
                         
