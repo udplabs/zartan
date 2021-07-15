@@ -5,7 +5,7 @@ import requests
 from flask import render_template, session, request
 from flask import jsonify, abort, url_for
 from flask import Blueprint
-from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical, apply_remote_config
+from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical, apply_remote_config, get_udp_ns_fieldname
 from utils.okta import TokenUtil, OktaUtil, OktaAdmin
 from utils.rest import RestUtil
 
@@ -105,10 +105,12 @@ def developer_api():
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     user_info = get_userinfo()
     user_info2 = okta_admin.get_user(user_info["sub"])
+    production = user_info2["profile"][get_udp_ns_fieldname("production")]
     return render_template(
         "developer/api.html",
         user_info=user_info,
         user_info2=user_info2,
+        production=production,
         config=session[SESSION_INSTANCE_SETTINGS_KEY])
 
 
