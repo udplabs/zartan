@@ -13,6 +13,7 @@ from utils.rest import RestUtil
 from device_detector import DeviceDetector
 
 from GlobalBehaviorandComponents.validation import is_authenticated, get_userinfo, gvalidation_bp_error, check_okta_api_token, check_zartan_config
+from GlobalBehaviorandComponents.mfaenrollment import get_enrolled_factors
 
 logger = logging.getLogger(__name__)
 
@@ -473,12 +474,15 @@ def streamingservice_device_complete():
 @is_authenticated
 def streamingservice_profile():
     logger.debug("streamingservice_profile()")
+    user_info = get_userinfo()
+    factors = get_enrolled_factors(user_info["sub"])
 
     return render_template(
         "streamingservice/profile.html",
         user_info=get_userinfo(),
         id_token=TokenUtil.get_id_token(request.cookies),
         access_token=TokenUtil.get_access_token(request.cookies),
+        factors=factors,
         config=session[SESSION_INSTANCE_SETTINGS_KEY])
 
 
