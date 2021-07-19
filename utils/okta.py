@@ -912,6 +912,39 @@ class OktaAdmin:
             appid=app_id)
 
         return RestUtil.execute_delete(url, body, okta_headers)
+    
+    def delete_auth_server(self, auth_server_id):
+        self.logger.debug("OktaAdmin.delete_auth_server")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/authorizationServers/{auth_server_id}".format(
+            base_url=self.okta_config["okta_org_name"],
+            auth_server_id=auth_server_id)
+
+        body = {}
+
+        return RestUtil.execute_delete(url, body, okta_headers)
+    
+    def delete_user_type(self, type_id):
+        self.logger.debug("OktaAdmin.delete_user_type")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/meta/types/user/{type_id}".format(
+            base_url=self.okta_config["okta_org_name"],
+            type_id=type_id)
+
+        body = {}
+
+        return RestUtil.execute_delete(url, body, okta_headers)
+
+    def delete_trusted_origin(self, origin_id):
+        self.logger.debug("OktaAdmin.delete_user_type")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/trustedOrigins/{origin_id}".format(
+            base_url=self.okta_config["okta_org_name"],
+            origin_id=origin_id)
+
+        body = {}
+
+        return RestUtil.execute_delete(url, body, okta_headers)
 
     def delete_auth_server(self, auth_server_id):
         self.logger.debug("OktaAdmin.delete_auth_server")

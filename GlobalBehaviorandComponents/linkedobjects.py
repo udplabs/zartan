@@ -22,7 +22,7 @@ def gbac_linkedobjects():
     user_info = get_userinfo()
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
 
-    schemas = okta_admin.get_user_schemas()
+    schemas = okta_admin.get_user_schemas_linkedobject()
     nfamily = ""
     logger.debug(schemas)
     if schemas:
@@ -62,7 +62,7 @@ def gbac_schemas():
     logger.debug("gbac_linkedobjects()")
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
 
-    schemas = okta_admin.get_user_schemas()
+    schemas = okta_admin.get_user_schemas_linkedobject()
 
     return render_template(
         "/manageschemas.html",
@@ -79,7 +79,7 @@ def gbac_newschemas():
     logger.debug("gbac_linkedobjects()")
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
 
-    schemas = okta_admin.get_user_schemas()
+    schemas = okta_admin.get_user_schemas_linkedobject()
     message = "Schema Created"
     return render_template(
         "/manageschemascreate.html",
@@ -104,7 +104,7 @@ def gbac_createschemas():
     aname = request.form.get('associatedfieldname')
     adesc = request.form.get('associateddescription')
 
-    okta_admin.create_schema(pname.lower(), ptitle, pdesc, aname.lower(), atitle, adesc)
+    okta_admin.create_schema_linkedobject(pname.lower(), ptitle, pdesc, aname.lower(), atitle, adesc)
 
     message = "Schema Created"
     return redirect(url_for("gbac_lo_bp.gbac_schemas", _external=True, _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"], message=message))

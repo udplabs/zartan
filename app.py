@@ -11,6 +11,8 @@ from utils.okta import OktaAuth, TokenUtil
 from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical, apply_remote_config
 from GlobalBehaviorandComponents.validation import gvalidation_bp_error, FROM_URI_KEY
 
+from utils.deployments.deploy_streamingservice import deploy_streamingservice
+
 ##############################################
 # Get default settings and generate client_secrets.json
 # Also set app config
@@ -151,6 +153,23 @@ def healthcheck():
     return "OK"
 
 
+@app.route('/createdeployment')
+@apply_remote_config
+def createdeployment():
+    app_template = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_template"]
+    subdomain=session[SESSION_INSTANCE_SETTINGS_KEY]["split_domain_parts"]["udp_subdomain"]
+    appname=session[SESSION_INSTANCE_SETTINGS_KEY]["split_domain_parts"]["udp_app_name"]
+    if app_template == "streamingservice":
+        deploy_streamingservice.runsetup(subdomain=subdomain,appname=appname)
+    return "OK"
+
+@app.route('/deletedeployment')
+@apply_remote_config
+def deletedeployment():
+    subdomain=session[SESSION_INSTANCE_SETTINGS_KEY]["split_domain_parts"]["udp_subdomain"]
+    appname=session[SESSION_INSTANCE_SETTINGS_KEY]["split_domain_parts"]["udp_app_name"]
+    deploy_streamingservice.deletesetup(subdomain=subdomain,appname=appname)
+    return "OK"
 """
    Set path to '/authorization-code/callback' because of backward compatibility with flask-oidc legacy config
 """

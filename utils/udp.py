@@ -38,14 +38,14 @@ def apply_remote_config(f):
             # Pull remote config here
             # map remote config to default_settings
             domain_parts = get_domain_parts_from_request()
-            # logger.debug("domain_parts: {0}".format(domain_parts))
+            logger.debug("domain_parts: {0}".format(domain_parts))
             map_config_to_default_settings(
                 get_remote_config(
                     domain_parts["udp_subdomain"],
                     domain_parts["udp_app_name"]))
         else:
             logger.info("Domain is already confgured")
-
+            
         return f(*args, **kws)
     return decorated_function
 
@@ -177,6 +177,29 @@ def get_remote_config(udp_subdomain, udp_app_name):
 
     return remote_config
 
+def set_remote_config(udp_subdomain, udp_app_name, udp_changes):
+    logger.debug("get_remote_config()")
+    remote_config = None
+
+    if(is_udp_config_valid(udp_config)):
+
+        json_headers["Authorization"] = "Bearer {0}".format(get_udp_oauth_access_token(udp_config))
+
+        remote_config_url = "{udp_config_url}/api/configs/{udp_subdomain}/{udp_app_name}".format(
+            udp_config_url=os.getenv("UDP_CONFIG_URL", ""),
+            udp_subdomain=udp_subdomain,
+            udp_app_name=udp_app_name)
+
+        if "http" in remote_config_url:
+            logger.debug("Pulling remote config from: {0}".format(remote_config_url))
+
+            remote_config = RestUtil.execute_post(url=remote_config_url, body=udp_changes, headers=json_headers)
+
+        logger.debug("config_json: {0}".format(json.dumps(remote_config, indent=4, sort_keys=True)))
+    else:
+        logger.warning("Invalid UDP Config, Skipping remote configuration...")
+
+    return remote_config
 
 def get_domain_parts_from_request():
     logger.debug("get_domain_parts_from_request()")

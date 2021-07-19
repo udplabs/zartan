@@ -473,34 +473,6 @@ def streamingservice_device_complete():
 @is_authenticated
 def streamingservice_profile():
     logger.debug("streamingservice_profile()")
-    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
-    schemas = okta_admin.get_user_schemas()
-
-    create_device_owner = True
-    create_streaming_owner = True
-
-    for schema in schemas:
-        if "device_owner" in schema["primary"]["name"]:
-            create_device_owner = False
-        if "streaming_owner" in schema["primary"]["name"]:
-            create_streaming_owner = False
-
-    if create_device_owner:
-        okta_admin.create_schema(
-            pname="device_owner",
-            ptitle="Device Owner",
-            pdesc="Device Owner",
-            aname="device", atitle="Device",
-            adesc="Device")
-
-    if create_streaming_owner:
-        okta_admin.create_schema(
-            pname="streaming_owner",
-            ptitle="Streaming Owner",
-            pdesc="Streaming Owner",
-            aname="streaming_member",
-            atitle="Streaming Member",
-            adesc="Streaming Member")
 
     return render_template(
         "streamingservice/profile.html",
@@ -518,7 +490,7 @@ def streamingservice_familymembers():
     user_info = get_userinfo()
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
 
-    schemas = okta_admin.get_user_schemas()
+    schemas = okta_admin.get_user_schemas_linkedobject()
     nfamily = ""
     logger.debug(schemas)
     if schemas:
@@ -639,7 +611,7 @@ def streamingservice_mydevices():
     user_info = get_userinfo()
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
 
-    schemas = okta_admin.get_user_schemas()
+    schemas = okta_admin.get_user_schemas_linkedobject()
     nfamily = ""
     logger.debug(schemas)
     if schemas:
