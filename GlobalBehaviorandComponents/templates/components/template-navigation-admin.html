@@ -52,12 +52,11 @@
                         <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
                             <a class="nav-link" href="/{{ config.settings.app_template }}/adminhome">Home</a>
                             <a class="nav-link" href="/{{ config.settings.app_template }}/profile">Your Profile</a>
-                            <a class="nav-link" href="/userapps">Your Apps</a>
                         </nav>
                     </div>
                     <a class="nav-link" href="javascript:void(0);" data-toggle="collapse" data-target="#collapseTools" aria-expanded="true" aria-controls="collapseTools">
                         <div class="nav-link-icon"><i data-feather="tool"></i></div>
-                        User Management
+                        API Management
                         <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                     </a>
                     <div class="collapse show" id="collapseTools" data-parent="#accordionSidenav">
@@ -69,7 +68,7 @@
                             <a class="nav-link" href="/schemas">User Schemas</a>
                         </nav>
                     </div>
-                     <a class="nav-link" href="javascript:void(0);" data-toggle="collapse" data-target="#collapseKeys" aria-expanded="true" aria-controls="collapseKeys">
+                    <a class="nav-link" href="javascript:void(0);" data-toggle="collapse" data-target="#collapseKeys" aria-expanded="true" aria-controls="collapseKeys">
                         <div class="nav-link-icon"><i data-feather="key"></i></div>
                         User Keys
                         <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
@@ -96,7 +95,8 @@
                    </a>
                    <div class="collapse show" id="collapseApps" data-parent="#accordionSidenav">
                        <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
-                           <a class="nav-link" href="/manageapps">Service API's</a>
+                           <a class="nav-link" href="/manageapps">Manage Applications</a>
+                           <a class="nav-link" href="/managetrustedorigins">Manage Trusted Origins</a>
                        </nav>
                    </div>
 

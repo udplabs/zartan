@@ -1,0 +1,65 @@
+{% extends templatename+"/template.html" %}
+
+{% block header %}
+{% endblock %}
+
+
+{% block content %}
+ <section class="bg-light py-5">
+    <div class="container">
+        <div class="d-flex align-items-center mb-5">
+            <div class="icon-stack icon-stack-lg bg-primary text-white"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
+            <div class="ml-3">
+                <h2 class="mb-0">Trusted Origins</h2>
+            </div>
+        </div>
+        <div class="card border-bottom" style="min-height: 300px;">
+            <div class="card-body">
+                <div id="trustedorigins">
+                    <div class="form-group"><label for="trustedoriginname">Trusted Origin Name</label>
+                    <input class="form-control" id="trustedoriginname" type="text"></div>
+                    <div class="form-group"><label for="trustedoriginurl">Trusted Origin URL</label>
+                    <input class="form-control" id="trustedoriginurl" type="text"></div>
+                    <button class="btn btn-primary" type="button" onclick="create_trustedorigin();">Create Trusted Origins</button>
+                </div>
+                <div id="trustedoriginsudpate" style="display: none;">
+                    <div class="form-group"><label for="trustedoriginname2">Trusted Origin Name</label>
+                    <input class="form-control" id="trustedoriginname2" type="text" disabled></div>
+                    <div class="form-group"><label for="trustedoriginurl2">Trusted Origin URL</label>
+                    <input class="form-control" id="trustedoriginurl2" type="text"></div>
+                    <input id="trustedoriginid" type="hidden">
+                    <button class="btn btn-primary" type="button" onclick="update_trustedorigin();">Update Trusted Origins</button>
+                </div>
+
+                <script>
+                function create_trustedorigin()
+                {
+                    window.location.href = "/createtrustedoriginsfinal?trustedoriginname=" + $("#trustedoriginname").val() + "&trustedoriginurl=" + $("#trustedoriginurl").val();
+                }
+
+                function update_trustedorigin()
+                {
+                    window.location.href = "/createtrustedoriginsfinal?trustedoriginname=" + $("#trustedoriginname2").val() + "&trustedoriginurl=" + $("#trustedoriginurl2").val()+ "&id=" + $("#trustedoriginid").val();
+                }
+
+
+                </script>
+
+                {% if trustedorigin %}
+                        <script>
+                            $("#trustedorigins").hide();
+                            $("#trustedoriginsudpate").show();
+                            $("#trustedoriginname2").val("{{trustedorigin.name}}");
+                            $("#trustedoriginurl2").val("{{trustedorigin.origin}}");
+                            $("#trustedoriginid").val("{{trustedorigin.id}}");
+
+                        </script>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

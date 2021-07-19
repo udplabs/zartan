@@ -13,13 +13,13 @@
                 <div class="card border-bottom">
                     <div class="card-body">
                         <div class="separator-2"></div>
-                            <table class="table table-striped">
+                            <table class="table table-striped" aria-label="UserStatus">
                                 <thead>
                                 <tr>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th style="text-align:center">User Status</th>
-                                    <th style="text-align:center">Key Setup</th>
+                                    <th id="Name"></a>>Name</th>
+                                    <th id="Email">Email</th>
+                                    <th id="UserStatus" style="text-align:center">User Status</th>
+                                    <th id="KeySetup" style="text-align:center">Key Setup</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -28,9 +28,7 @@
                                         <td>{{ i['profile']['firstName']}} {{ i['profile']['lastName']}}</td>
                                         <td>{{ i['profile']['email']}}</td>
                                         <td style="text-align:center">{{ i['status'] }}</td>
-                                        <td style="text-align:center"><a href="#" data-toggle="modal" data-target="#keycreate" onclick="adduserid('{{ i['id']}}')"><i class="fa fa-key"></i></a>
-                                        
-                                        </td>
+                                        <td style="text-align:center"><a href="#" data-toggle="modal" data-target="#keycreate" onclick="adduserid('{{ i['id'] }}')"><em class="fa fa-key"></em></a></td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -39,7 +37,7 @@
                 </div>
             </div>
         </section>
-        
+
         <script>
             function adduserid(id) {
                 $("#userid").val(id);
@@ -65,7 +63,7 @@
                 </div>
             </div>
         </div>
-        
+
         <script>
         function addkey() {
             factorProfileId = $("#factorprofileid").val();
@@ -74,11 +72,11 @@
             $.ajax({
                 url:'/admin/addkey',
                 type: "GET",
-                data:{                
+                data:{
                     "factorProfileId": factorProfileId,
                     "sharedSecret": seed,
                     "userId": user_id
-                },    
+                },
                 complete: function (response) {
                     alert(response.responseText);
                 },
