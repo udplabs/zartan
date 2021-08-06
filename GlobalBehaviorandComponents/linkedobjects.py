@@ -22,7 +22,11 @@ def gbac_linkedobjects():
     user_info = get_userinfo()
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
 
-    schemas = okta_admin.get_user_schemas()
+    try:
+        schemas = okta_admin.get_user_schemas()
+    except Exception:
+        schemas = ""
+
     nfamily = ""
     logger.debug(schemas)
     if schemas:
@@ -62,7 +66,10 @@ def gbac_schemas():
     logger.debug("gbac_linkedobjects()")
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
 
-    schemas = okta_admin.get_user_schemas()
+    try:
+        schemas = okta_admin.get_user_schemas()
+    except Exception:
+        schemas = ""
 
     return render_template(
         "/manageschemas.html",
@@ -79,8 +86,13 @@ def gbac_newschemas():
     logger.debug("gbac_linkedobjects()")
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
 
-    schemas = okta_admin.get_user_schemas()
-    message = "Schema Created"
+    try:
+        schemas = okta_admin.get_user_schemas()
+        message = "Schema Created"
+    except Exception:
+        schemas = ""
+        message = "Cannot Create Schema"
+
     return render_template(
         "/manageschemascreate.html",
         templatename=get_app_vertical(),
@@ -104,9 +116,12 @@ def gbac_createschemas():
     aname = request.form.get('associatedfieldname')
     adesc = request.form.get('associateddescription')
 
-    okta_admin.create_schema(pname.lower(), ptitle, pdesc, aname.lower(), atitle, adesc)
+    try:
+        okta_admin.create_schema(pname.lower(), ptitle, pdesc, aname.lower(), atitle, adesc)
+        message = "Schema Created"
+    except Exception:
+        message = "Cannot Create Schemas. Please contact your adminstrator."
 
-    message = "Schema Created"
     return redirect(url_for("gbac_lo_bp.gbac_schemas", _external=True, _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"], message=message))
 
 
