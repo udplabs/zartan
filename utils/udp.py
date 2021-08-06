@@ -224,6 +224,9 @@ def safe_assign_config_item(key, source_collection, target_collection):
             # ENV always overrides source config
             target_collection[key] = os.getenv(key.upper(), source_collection[key])
 
+        # if key == "redirect_uri":
+        #     target_collection[key] = os.getenv("OKTA_OIDC_REDIRECT_URI", "")
+
 
 def clear_session_setting():
     logger.debug("clear_session_setting()")

@@ -133,14 +133,16 @@ def ecommerce_registration_completion():
     user_data = {
         "profile": {}
     }
-
-    if "guestUserId" in request.form:
+    logger.debug(user_data)
+    logger.debug(request.form.get('guestUserId'))
+    guestUserID = request.form.get('guestUserId')
+    if guestUserID:
         user_data = okta_admin.get_user(request.form.get('guestUserId'))
 
     user_data["profile"]["email"] = request.form.get('email')
     user_data["profile"]["login"] = request.form.get('email')
-
-    logger.debug(user_data)
+    user_data["profile"]["firstName"] = "Guest"
+    user_data["profile"]["lastName"] = "User"
 
     if "id" in user_data:
         user_create_response = okta_admin.update_user(user_id=user_data["id"], user=user_data)
@@ -189,18 +191,18 @@ def ecommerce_registration_completion():
 def ecommerce_create_guest_account():
     logger.debug("ecommerce_create_guest_account()")
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
-    guest_user_id = str(uuid.uuid4())
+    guest_user_id = str(uuid.uuid4()).replace('-', '')
 
     user_data = {
         "profile": {
             "email": "{id}@guestuseraccount.com".format(id=guest_user_id),
-            "login": guest_user_id
+            "login": "{id}@guestuseraccount.com".format(id=guest_user_id),
+            "firstName": "Guest",
+            "lirstName": "User",
         }
     }
 
-    logger.debug(user_data)
     response = okta_admin.create_user(user=user_data)
-    logger.debug(response)
     return response
 
 
