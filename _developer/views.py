@@ -105,7 +105,12 @@ def developer_api():
     okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
     user_info = get_userinfo()
     user_info2 = okta_admin.get_user(user_info["sub"])
-    production = user_info2["profile"][get_udp_ns_fieldname("production")]
+
+    try:
+        production = user_info2["profile"][get_udp_ns_fieldname("production")]
+    except Exception:
+        logger.debug(user_info2)
+        production = "false"
     return render_template(
         "developer/api.html",
         user_info=user_info,

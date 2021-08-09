@@ -198,7 +198,7 @@ def ecommerce_create_guest_account():
             "email": "{id}@guestuseraccount.com".format(id=guest_user_id),
             "login": "{id}@guestuseraccount.com".format(id=guest_user_id),
             "firstName": "Guest",
-            "lirstName": "User",
+            "lastName": "User"
         }
     }
 
