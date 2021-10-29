@@ -9,6 +9,8 @@ from flask import Blueprint
 from utils.okta import OktaAuth, OktaAdmin, TokenUtil
 from utils.udp import apply_remote_config, clear_session_setting, SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical
 from utils.udp import clear_session_decorator
+from json import dumps
+
 
 from GlobalBehaviorandComponents.validation import get_userinfo, check_okta_api_token, check_zartan_config
 
@@ -98,7 +100,8 @@ def gbac_login():
             linkedin=linkedin,
             microsoft=microsoft,
             idp=idp,
-            idptype=idptype)
+            idptype=idptype,
+            dumps=dumps)
 
 
 @gbac_bp.route("/signup")
