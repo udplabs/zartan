@@ -121,7 +121,7 @@ Open up a terminal/shell then:
     NOTE: You may need to run as `pip3 install -r requirements.txt` if you have python 2.7 on your local instance along with python 3.x
 
 ---
-### Configure, initialize and apply Terraform for the vertical you want to use
+### Option 1/2 - Configure, initialize and apply Terraform for the vertical you want to use
 
 > ℹ️  Zartan is a collection of demos for different verticals. In addition to the `.tf` files in the `/terraform/{vertical}` folders, there are also vertical specific READMEs in `/docs/{vertical}`. __For readability, this documentation will perform all following steps as if we're in the `travelagency` vertical.__ If you're installing/setting up a different vertical, simply reference the folder and/or file for that vertical.
 
@@ -171,7 +171,7 @@ Open up a terminal/shell then:
 
 ---
 
-### Local environment variables
+### Option 2/2 - Declare local environment variables in a .env file for the vertical you want to use
 
 > NOTE: ℹ️ Optional, if you prefer to use your own SparkPost account the following [documentation](https://www.sparkpost.com/docs/getting-started/getting-started-sparkpost/) should help.
 
