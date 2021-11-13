@@ -103,6 +103,10 @@ app.register_blueprint(dealer_views_bp, url_prefix='/dealer')
 from _streamingservice.views import streamingservice_views_bp
 app.register_blueprint(streamingservice_views_bp, url_prefix='/streamingservice')
 
+# streaming service theme
+from _zartantv.views import zartantv_views_bp
+app.register_blueprint(zartantv_views_bp, url_prefix='/zartantv')
+
 # finance theme
 from _finance.views import finance_views_bp
 app.register_blueprint(finance_views_bp, url_prefix='/finance')

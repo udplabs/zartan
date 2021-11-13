@@ -199,7 +199,7 @@
         $.ajax({
             'async': false,
             'type': "POST",
-            'url': "/streamingservice/revoketoken",
+            'url': "/zartantv/revoketoken",
             'data': {
                 "token": window.sessionStorage["d_access_token"],
                 "tokenhint": "access_token"
@@ -215,7 +215,7 @@
         $.ajax({
             'async': false,
             'type': "POST",
-            'url': "/streamingservice/revoketoken",
+            'url': "/zartantv/revoketoken",
             'data': {
                 "token": window.sessionStorage["d_refresh_token"],
                 "tokenhint": "refresh_token"
@@ -233,7 +233,7 @@
         $.ajax({
             'async': false,
             'type': "GET",
-            'url': "/streamingservice/device",
+            'url': "/zartantv/device",
             'data': {},
             'success': function (data) {
                 response = data;
@@ -286,7 +286,7 @@
       $.ajax({
             'async': false,
             'type': "GET",
-            'url': "/streamingservice/token",
+            'url': "/zartantv/token",
             'data': {
                 "grant_type": "urn:ietf:params:oauth:grant-type:device_code",
                 "client_id": "{{client_id}}",
@@ -328,7 +328,7 @@
             $.ajax({
                 'async': false,
                 'type': "POST",
-                'url': "/streamingservice/token_check",
+                'url': "/zartantv/token_check",
                 'data': {
                     "access_token":  window.sessionStorage["d_access_token"],
                     "id_token":  window.sessionStorage["d_id_token"],
@@ -368,7 +368,7 @@
             $.ajax({
                 'async': false,
                 'type': "POST",
-                'url': "/streamingservice/token_check",
+                'url': "/zartantv/token_check",
                 'data': {
                     "access_token":  window.sessionStorage["d_access_token"],
                     "id_token":  window.sessionStorage["d_id_token"],

@@ -1,5 +1,5 @@
 resource "okta_trusted_origin" "localhost_http" {
-  name   = "zartan zstreamingservice"
-  origin = "http://zstreamingservice.local"
+  name   = "zartan zartantv"
+  origin = "http://zartantv.local"
   scopes = ["REDIRECT", "CORS"]
 }

@@ -99,7 +99,7 @@
                             }
                           },
                           clientId: "{{client_id}}",
-                          redirectUri: '{{request.url_root | replace("http://", "https://")  }}streamingservice/authorization-code/callback',
+                          redirectUri: '{{request.url_root | replace("http://", "https://")  }}zartantv/authorization-code/callback',
                           features: {
                             {% if idp %}
                               {% if idptype %}
@@ -116,7 +116,7 @@
                           {% if idp %}
                           {% if idptype %}
                           idpDiscovery: {
-                            requestContext: '{{request.url_root | replace("http://", "https://")  }}streamingservice/authorization-code/callback'
+                            requestContext: '{{request.url_root | replace("http://", "https://")  }}zartantv/authorization-code/callback'
                           },
                           {% endif %}
                           {% endif %}
