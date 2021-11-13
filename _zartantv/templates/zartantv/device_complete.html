@@ -1,0 +1,127 @@
+<html lang="en">
+    {% include '//components/template-header-meta.html' %}
+    <script src="https://cdn-zartan.s3.us-east-2.amazonaws.com/static/js/okta-auth-js.min.js" type="text/javascript"></script>
+    <script src="https://global.oktacdn.com/okta-signin-widget/5.2.2/js/okta-sign-in.min.js" type="text/javascript"></script>
+    <link href="https://global.oktacdn.com/okta-signin-widget/5.2.2/css/okta-sign-in.min.css" type="text/css" rel="stylesheet"/>
+    <body>
+        <div id="layoutDefault">
+            <div id="layoutDefault_content">
+                <main>
+                  <nav class="navbar navbar-marketing navbar-expand-lg bg-white navbar-light">
+                    <div class="container" style="height:98">
+                        {% if config.settings.app_logo != "" %}
+                             <a href="/index"><img src={{config.settings.app_logo}} border='0' style="max-height:100px;max-width:300px;height:auto;width:auto;"></a>
+                        {% else %}
+                             <a class="navbar-brand text-primary" href="/index">{{config.settings.app_name}}</a><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><i data-feather="menu"></i></button>
+                        {% endif %}
+                        <a href="#" class="btn btn-primary btn-lg id-open" style="float:right;">Device Flow Information</a>
+                    </div>
+                  </nav>
+                  <section class="main-container">
+                    <div class="container" >
+                      <div class="row">
+                        <div class="col-md-8 offset-md-2">
+                          <div class="main col-12">
+                            <div class="form-block center-block p-30 light-gray-bg border-clear">
+                              <br><br>
+                              <div class="card" id="codecard">
+                                <div class="card-header">Complete</div>
+                                <div class="card-body">
+                                  <div class="alert alert-primary" role="alert" id="codeinvalid">
+                                    Code Registered to Your Account. Enjoy!
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <br><br><br><br><br>
+                    <section class="toggle-deviceid">
+                        <div class="formwrap2 px-4" style="text-align:left">
+                            <div class="icon2-close pos-a" style="text-align:center">
+                                <br>
+                                <button class="btn btn-transparent-dark btn-icon" type="button">
+                                    <i data-feather="x" style="color:white;"></i>
+                                </button>
+                            </div>
+                            <b>Step 4 - Successful Login and Token Handoff:</b><br><br>
+                            Okta returns the ID Token, Access Token, and Refresh Token.<br><br>
+                            This information is stored using the <u>Device Code</u>.<br><br>
+                            The device itself is still polling the Device Authorization Endpoint with the <u>Device Code</u><br>
+                            waiting for the Tokens.<br><br>
+                            The Device Authorization Endpoint then returns the following:<br>
+                            ID Token, Access Token, Refresh Token.
+                            <pre><code id="deviceinfo">{{deviceinfo}}</code></pre>
+                        </div>
+                        <div class="toggle-bg2"></div>
+                    </section>
+                    <script>
+                      $( document ).ready(function() {
+                          console.log( "ready!" );
+                          $('.id-open').on('click', function() {
+                              $('.toggle-deviceid, .formwrap2, .toggle-bg2').addClass('active');
+                              $('.icon2-close').addClass('open');
+                          });
+
+                          $('.icon2-close').on('click', function() {
+                              $('.toggle-deviceid, .formwrap2, .toggle-bg2').removeClass('active');
+                              $('.icon2-close').removeClass('open');
+                          });
+                      });
+                    </script>
+                    <style>
+                      .toggle-deviceid {
+                        left: -9999px;
+                        position: fixed;
+                        top: 0;
+                        height: 100%;
+                        z-index: 9999;
+                        transition: left .6s ease-in-out;
+                      }
+
+                      .toggle-deviceid.active {
+                          left: 0;
+                      }
+
+                      .toggle-deviceid .formwrap img {
+                          width: 900px;
+                      }
+
+                      .formwrap2 {
+                        background-color: #989898;
+                        max-width: 900px;
+                        height: 100%;
+                        float: left;
+                        box-shadow: -1px 0px 12px rgba(0, 0, 0, 0.1);
+                        color: white;
+                      }
+
+                      pre, code {
+                        font-family: monospace, monospace;
+                      }
+
+                      pre {
+                      }
+
+                      pre > code {
+                        display: block;
+                        padding: 1rem;
+                        word-wrap: break-word;
+                        background:white;
+                        overflow-x:scroll;
+                      }
+
+                    </style>
+                  </section>
+                </main>
+            <div id="layoutDefault_footer">
+            </div>
+            {% with color="black" %}
+                {% include '//components/template-footer.html' %}
+            {% endwith %}
+        </div>
+        {% include '//components/template-footer-scripts.html' %}
+    </body>
+</html>
