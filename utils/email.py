@@ -29,17 +29,17 @@ class Email:
         url = "https://api.sendgrid.com/v3/mail/send"
 
         headers = {
-            "Authorization": "Bearer {apikey}".format(apikey=session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["sendgrid_api_key"]) ,
+            "Authorization": "Bearer {apikey}".format(apikey=session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["sendgrid_api_key"]),
             "Content-Type": "application/json"
         }
         body = {
             "personalizations": [
                 {
-                "to": [
-                    {
-                    "email": recipients[0]['address']
-                    }
-                ]
+                    "to": [
+                        {
+                            "email": recipients[0]['address']
+                        }
+                    ]
                 }
             ],
             "from": {
@@ -48,8 +48,8 @@ class Email:
             "subject": subject,
             "content": [
                 {
-                "type": "text/html",
-                "value": message
+                    "type": "text/html",
+                    "value": message
                 }
             ]
         }
