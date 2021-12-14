@@ -36,6 +36,8 @@ default_settings = {
         "aws_api_key": os.getenv("AWS_API_KEY", ""),
         "sparkpost_api_key": os.getenv("SPARKPOST_API_KEY", ""),
         "sparkpost_from_domain": os.getenv("SPARKPOST_FROM_DOMAIN", "recintodev.com"),
+        "sendgrid_api_key": os.getenv("SENDGRID_API_KEY", ""),
+        "sendgrid_from_domain": os.getenv("SENDGRID_FROM_DOMAIN", ""),
         "app_stepup_auth_clientid": os.getenv("APP_STEPUP_AUTH_CLIENTID", ""),
         "app_stepup_auth_clienturl": os.getenv("APP_STEPUP_AUTH_CLIENTURL", ""),
         "app_ecomm_products": os.getenv("APP_ECOMM_PRODUCTS", ""),

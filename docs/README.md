@@ -52,7 +52,7 @@ We've provided terraform files for easy configuration of the Okta Org. Specific 
 brew install terraform
 ```
 
-* Verify terraform is installed correctly by going to the command line/shell, and type the command `terraform version`.
+- Verify terraform is installed correctly by going to the command line/shell, and type the command `terraform version`.
 
 ```bash
 # sample output
@@ -65,6 +65,7 @@ Terraform v0.12.28
 ## Install
 
 Open up a terminal/shell then:
+
 1. Git [`clone`](https://git-scm.com/book/en/v2/Git-Basics-Getting-a-Git-Repository) this repo:
 
     ```bash
@@ -85,13 +86,13 @@ Open up a terminal/shell then:
     *(Python allows multiple versions to be installed; For Mac users, most likely you'll have both python 2.7 on your local instance along with python 3.x.)*
 
 4. Activate the `venv` environment: <a name="venv-activate"></a>.
-    * On Mac/Linux
+    - On Mac/Linux
 
     ```bash
     source venv/bin/activate
     ```
 
-    * On Windows:
+    - On Windows:
 
     ```bash
     .\venv\Scripts\activate.bat
@@ -121,6 +122,7 @@ Open up a terminal/shell then:
     NOTE: You may need to run as `pip3 install -r requirements.txt` if you have python 2.7 on your local instance along with python 3.x
 
 ---
+
 ### Configure, initialize and apply Terraform for the vertical you want to use
 
 > ℹ️  Zartan is a collection of demos for different verticals. In addition to the `.tf` files in the `/terraform/{vertical}` folders, there are also vertical specific READMEs in `/docs/{vertical}`. __For readability, this documentation will perform all following steps as if we're in the `travelagency` vertical.__ If you're installing/setting up a different vertical, simply reference the folder and/or file for that vertical.
@@ -165,7 +167,7 @@ Open up a terminal/shell then:
 
     > NOTE: The terraform script for `travelagency` generates: 1. an OIDC Client, 2. an Auth Server, and 3. adds CORS for http://localhost:8666.
 
-9.  Return to the root folder.
+9. Return to the root folder.
 
     > Your Org should be setup now so get out of `/terraform/travelagency` (go back to `/zartan` or "project root") to complete the rest of the steps.
 
@@ -173,7 +175,11 @@ Open up a terminal/shell then:
 
 ### Local environment variables
 
-> NOTE: ℹ️ Optional, if you prefer to use your own SparkPost account the following [documentation](https://www.sparkpost.com/docs/getting-started/getting-started-sparkpost/) should help.
+> NOTE: ℹ️ Optional
+>
+> If you prefer to use your own SparkPost account the following [documentation](https://www.sparkpost.com/docs/getting-started/getting-started-sparkpost/) should help.
+>
+> Sendgrid is supported as well. See [more information](https://docs.sendgrid.com/for-developers/sending-email/api-getting-started) on getting started with Sendgrid.
 
 Set up the `.env` file:
 
@@ -190,8 +196,10 @@ Set up the `.env` file:
     | AWS_API_KEY            | ℹ️ Mandatory. Get the value from this [Box folder](https://okta.box.com/s/56cnuhratuzjnhxo1odt11tmesjqv4o3) (Only accessible to Okta employees) |
     | SPARKPOST_API_KEY      | ℹ️ Mandatory. Get the value from this [Box folder](https://okta.box.com/s/56cnuhratuzjnhxo1odt11tmesjqv4o3) (Only accessible to Okta employees) |
     | SPARKPOST_FROM_DOMAIN  | ℹ️ Optional. You can use your own API KEY but SparkPost requires a registered domain. This Environment Variables overrides the default `"recintodev.com"`. |
+    | SENDGRID_API_KEY       | ℹ️ Optional. Bring your own Sendgrid account. |
+    | SENDGRID_FROM_DOMAIN   | ℹ️ Optional. You can use your own API KEY but Sendgrid requires a registered domain. |
 
-- Select which third party email services: `AWS Email` or `SparkPost` to use or bring your own SparkPost API KEY. [More details.](https://www.sparkpost.com/docs/getting-started/getting-started-sparkpost/)
+- Select which third party email services: `AWS Email` or `SparkPost` or `Sendgrid` to use or bring your own SparkPost or Sendgrid API KEY. [More details.](https://www.sparkpost.com/docs/getting-started/getting-started-sparkpost/)
 
     | Variable               | Value |
     | ---------------------- | ----- |
@@ -203,6 +211,13 @@ Set up the `.env` file:
     | ---------------------- | ----- |
     | SPARKPOST_API_KEY      | ℹ️ Mandatory. Get the value from this [Box folder](https://okta.box.com/s/56cnuhratuzjnhxo1odt11tmesjqv4o3) (Only accessible to Okta employees). |
     | SPARKPOST_FROM_DOMAIN  | ℹ️ Optional. You can use your own API KEY but SparkPost requires a registered domain. This Environment Variables overrides the default `"recintodev.com"`. |
+
+    > -or-
+
+    | Variable               | Value |
+    | ---------------------- | ----- |
+    | SENDGRID_API_KEY       | ℹ️ Mandatory. Your Sendgrid API key|
+    | SENDGRID_FROM_DOMAIN   | ℹ️ Optional. You can use your own API KEY but Sengrid requires a registered domain. |
 
 - (Optional) Provide values for the other variables. Refer to [this section](#env-variables-details) for details.
 
@@ -293,6 +308,15 @@ The `.env` file provides additional configuration depending on the functionality
     | -----------------         | ----- |
     | SPARKPOST_API_KEY         | ℹ️ Mandatory. Get the value from [Box](https://okta.box.com/s/56cnuhratuzjnhxo1odt11tmesjqv4o3) |
     | SPARKPOST_FROM_DOMAIN     | ℹ️ Optional. You can use your own API KEY but SparkPost requires a registered domain. This Environment Variables overrides the default `"recintodev.com"`. |
+
+    > -or-
+
+    **Sendgrid Email Service**
+
+    | Variable                  | Value |
+    | -----------------         | ----- |
+    | SENDGRID_API_KEY          | ℹ️ Mandatory. Bring your own Sendgrid account |
+    | SENDGRID_FROM_DOMAIN      | ℹ️ Optional. You can use your own API KEY but Sendgrid requires a registered domain. |
 
 - Flask Setting
 

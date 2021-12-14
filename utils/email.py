@@ -14,10 +14,46 @@ class Email:
 
         if len(session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["sparkpost_api_key"]) > 0:
             response = Email.send_mail_via_sparkpost(subject=subject, message=message, recipients=recipients)
-        else:
+        elif len(session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["aws_api_key"]) > 0:
             response = Email.send_mail_via_aws(subject=subject, message=message, recipients=recipients)
+        else:
+            response = Email.send_mail_via_sendgrid(subject=subject, message=message, recipients=recipients)
 
         Email.logger.debug(response)
+
+    @staticmethod
+    def send_mail_via_sendgrid(subject, message, recipients):
+        Email.logger.debug("send_mail_via_sendgrid()")
+        logging.debug(recipients)
+
+        url = "https://api.sendgrid.com/v3/mail/send"
+
+        headers = {
+            "Authorization": "Bearer {apikey}".format(apikey=session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["sendgrid_api_key"]),
+            "Content-Type": "application/json"
+        }
+        body = {
+            "personalizations": [
+                {
+                    "to": [
+                        {
+                            "email": recipients[0]['address']
+                        }
+                    ]
+                }
+            ],
+            "from": {
+                "email": "noreply@{domain}".format(domain=session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["sendgrid_from_domain"])
+            },
+            "subject": subject,
+            "content": [
+                {
+                    "type": "text/html",
+                    "value": message
+                }
+            ]
+        }
+        return RestUtil.execute_post(url, body, headers=headers)
 
     @staticmethod
     def send_mail_via_aws(subject, message, recipients):
