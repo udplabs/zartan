@@ -6,7 +6,7 @@ Contains all HCL that can be used for the local development.
 
 ## Pre-Requirements
 
-* Terraform 1.0.x+
+* Terraform v1.+
 
 ## Quick Start
 
