@@ -25,7 +25,9 @@ def is_authenticated(f):
         token = TokenUtil.get_access_token(request.cookies)
         # logger.debug("token: {0}".format(token))
 
-        if TokenUtil.is_valid_remote(token, session[SESSION_INSTANCE_SETTINGS_KEY]):
+        # TODO what do we do here for remote introspection? create separate client ID/secret just for that??
+        #if TokenUtil.is_valid_remote(token, session[SESSION_INSTANCE_SETTINGS_KEY]):
+        if TokenUtil.is_valid_local(token, session[SESSION_INSTANCE_SETTINGS_KEY]):
             return f(*args, **kws)
         else:
             logger.debug("Access Denied")
@@ -116,7 +118,9 @@ def get_userinfo():
     user_info = None
     session[SESSION_INSTANCE_SETTINGS_KEY][GET_NEW_TOKEN_URL] = ""
 
-    if TokenUtil.is_valid_remote(TokenUtil.get_access_token(request.cookies), session[SESSION_INSTANCE_SETTINGS_KEY]):
+    # TODO what do we do here for remote introspection? create separate client ID/secret just for that??
+    #if TokenUtil.is_valid_remote(TokenUtil.get_access_token(request.cookies), session[SESSION_INSTANCE_SETTINGS_KEY]):
+    if TokenUtil.is_valid_local(TokenUtil.get_access_token(request.cookies), session[SESSION_INSTANCE_SETTINGS_KEY]):
         logger.debug("valid")
         user_info = TokenUtil.get_claims_from_token(
             TokenUtil.get_id_token(request.cookies))
