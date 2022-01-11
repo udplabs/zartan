@@ -167,36 +167,64 @@
                         //state: '{{state}}',
                         //display: 'page',
                         //pkce: false,
-                        scopes: ['openid', 'profile', 'email'] },
-                        transformUsername: function (username, operation) {
-                          if (isNaN(username))
-                          {
-                           return username;
+                        scopes: ['openid', 'profile', 'email'],
+                        tokenManager: {
+                          storage: 'cookie'
+                        },
+                        storageManager: {
+                          token: {
+                            storageTypes: [
+                              'localStorage',
+                              'sessionStorage',
+                              'cookie'
+                            ],
+                            useMultipleCookies: false // puts each token in its own cookie
                           }
-                          else
-                          {
-                            nname = "";
-                            $.ajax({
-                                'async': false,
-                                'type': "GET",
-                                'url': "/get_username/" + username,
-                                'success': function (data) {
-                                   nname = data;
-                                }
-                              });
-                              console.log(nname);
-                              return nname;
-                          }
+                        }
+                      },
+                      transformUsername: function (username, operation) {
+                        if (isNaN(username))
+                        {
+                          return username;
+                        }
+                        else
+                        {
+                          nname = "";
+                          $.ajax({
+                              'async': false,
+                              'type': "GET",
+                              'url': "/get_username/" + username,
+                              'success': function (data) {
+                                  nname = data;
+                              }
+                            });
+                            console.log(nname);
+                            return nname;
+                        }
                       },
                     };
 
 
                     signInWidget = new OktaSignIn(signInWidgetConfig);
-                    signInWidget.showSignInAndRedirect({
+                    // signInWidget.showSignInAndRedirect({
+                    //   el: '#sign-in-widget'
+                    // }).catch(function(error) {
+                    //   // Handle error
+                    // });
+                    signInWidget.showSignInToGetTokens({
+                      // Assumes there is an empty element on the page with an id of 'osw-container'
                       el: '#sign-in-widget'
+                    }).then(function(tokens) {
+                      // Store tokens
+                      signInWidget.authClient.tokenManager.setTokens(tokens);
+                      // Remove widget
+                      signInWidget.remove();
+                      // Can now render in an authenticated state
+                      location.href = '/profile';
                     }).catch(function(error) {
                       // Handle error
-                    });
+                      console.log(error);
+                    })
                   </script>
                 </div>
               </div>

@@ -1,3 +1,4 @@
+<script src="https://global.oktacdn.com/okta-auth-js/5.10.0/okta-auth-js.min.js" type="text/javascript"></script>
 <script type="text/javascript">
 //<![CDATA[
 
@@ -9,33 +10,79 @@
     });
 
     $(document).ready(function() {
-        authClient.session.get()
-        .then(function (res) {
-            console.log(res);
-            // Session exists, show logged in state.
-            if (res.status === 'ACTIVE') {
-            console.log("Session Active");
 
-            $("#sessionId").val(res.id);
+        authClient.token.parseFromUrl()
+            .then(function(res) {
+                var state = res.state; // passed to getWithRedirect(), can be any string
 
-            var getNewTokenUrl = "{{config.get_new_token_url|safe}}";
-            var error = "{{error_message}}"
-            if (error == "" )
-                {
-                if (getNewTokenUrl != "" ) {
-                    location.href=getNewTokenUrl;
-                    }
-                }
-            }
-            else
-            {
-               console.log(error) ;
-            }
-        })
-        .catch(function(err) {
-            console.log("FAIL");
-            console.log(err);
+                // manage token or tokens
+                var tokens = res.tokens;
+
+                // Do something with tokens, such as
+                authClient.tokenManager.setTokens(tokens);
+            })
+            .catch(function(err) {
+                // handle OAuthError
         });
+
+        authClient.tokenManager.getTokens()
+            .then(({ accessToken, idToken }) => {
+                // handle tokens
+                authClient.token.verify(idToken)
+                    .then(function() {
+                        // ID token is valid
+                        // do nothing for now
+                    })
+                    .catch(function(err) {
+                        // ID token is invalid/missing
+                        authClient.session.get()
+                            .then(function(response) {
+                                console.log(response);
+                                // session exists
+                                if (response.status === 'ACTIVE') {
+                                    console.log("Session Active");
+                                    $("#sessionId").val(response.id);
+                                    authClient.token.getWithRedirect({
+                                        responseType: ['token', 'id_token']
+                                    })
+                                    .catch(function(err) {
+                                        console.log(err);
+                                    })
+                                }
+                            })
+                    })
+            })
+            .catch(function(err) {
+                // handle expired/invalid/empty tokens
+                console.log(err);
+            })
+        // authClient.session.get()
+        // .then(function (res) {
+        //     console.log(res);
+        //     // Session exists, show logged in state.
+        //     if (res.status === 'ACTIVE') {
+        //     console.log("Session Active");
+
+        //     $("#sessionId").val(res.id);
+
+        //     var getNewTokenUrl = "{{config.get_new_token_url|safe}}";
+        //     var error = "{{error_message}}"
+        //     if (error == "" )
+        //         {
+        //         if (getNewTokenUrl != "" ) {
+        //             location.href=getNewTokenUrl;
+        //             }
+        //         }
+        //     }
+        //     else
+        //     {
+        //        console.log(error) ;
+        //     }
+        // })
+        // .catch(function(err) {
+        //     console.log("FAIL");
+        //     console.log(err);
+        // });
     });
 //]]>
 </script>
