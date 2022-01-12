@@ -124,6 +124,7 @@ def get_userinfo():
         logger.debug("valid")
         user_info = TokenUtil.get_claims_from_token(
             TokenUtil.get_id_token(request.cookies))
+        logger.debug("Global Validation user_info: {0}".format(user_info))
     else:
         logger.debug("notvalid")
         session[SESSION_INSTANCE_SETTINGS_KEY][GET_NEW_TOKEN_URL] = get_oauth_authorize_url()

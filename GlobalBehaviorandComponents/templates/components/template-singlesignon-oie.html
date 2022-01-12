@@ -7,6 +7,7 @@
         clientId: "{{config.client_id}}",
         redirectUri: "{{config.redirect_uri}}",
         issuer: "{{config.issuer}}",
+        scopes: ['openid', 'profile', 'email'],
         tokenManager: {
             storage: 'cookie'
         },
@@ -24,22 +25,6 @@
 
     $(document).ready(function() {
 
-        authClient.token.parseFromUrl()
-            .then(function(res) {
-                var state = res.state; // passed to getWithRedirect(), can be any string
-
-                // manage token or tokens
-                var tokens = res.tokens;
-
-                // Do something with tokens, such as
-                authClient.tokenManager.setTokens(tokens);
-                console.log("Tokens stored");
-            })
-            .catch(function(err) {
-                // handle OAuthError
-                console.log(err);
-            });
-
         authClient.tokenManager.getTokens()
             .then(({ accessToken, idToken }) => {
                 // handle tokens
@@ -48,25 +33,30 @@
                         // ID token is valid
                         // do nothing for now
                         console.log("tokens are good...");
-                        
+
                     })
                     .catch(function(err) {
                         // ID token is invalid/missing
+
                         authClient.session.get()
-                            .then(function(response) {
-                                console.log(response);
+                            .then(function(session) {
                                 // session exists
-                                if (response.status === 'ACTIVE') {
+                                if (session.status == "ACTIVE") {
                                     console.log("Session Active");
-                                    $("#sessionId").val(response.id);
-                                    
-                                    authClient.token.getWithRedirect({
+                                    $("#sessionId").val(session.id);
+                                    authClient.token.getWithoutPrompt({
                                         responseType: ['token', 'id_token']
+                                    }).then(function(res) {
+                                        console.log("results", res);
+                                        var tokens = res.tokens;
+                                        console.log(tokens);
+                                        // Do something with tokens, such as
+                                        authClient.tokenManager.setTokens(tokens);
+                                        location.reload();
                                     })
                                     .catch(function(err) {
                                         console.log(err);
                                     })
-                                    //authClient.idx.handleInteractionCodeRedirect('http://localhost:8666/');
                                 }
                             })
                     })
@@ -75,35 +65,6 @@
                 // handle expired/invalid/empty tokens
                 console.log(err);
             })
-
-        // authClient.session.get()
-        // .then(function (response) {
-        //     console.log(response);
-        //     // Session exists, show logged in state.
-        //     if (response.status === 'ACTIVE') {
-        //         console.log("Session Active");
-        //         $("#sessionId").val(response.id);
-
-        //         // authClient.token.getWithRedirect({responseType: ['token', 'id_token']})
-        //         // .catch(function(err) {
-        //         //     console.log(err);
-        //         // })
-                
-        //         // var getNewTokenUrl = "{{config.get_new_token_url|safe}}";
-        //         // var error = "{{error_message}}"
-        //         // if (error == "" ) {
-        //         //     if (getNewTokenUrl != "" ) {
-        //         //         location.href = getNewTokenUrl;
-        //         //     }
-        //         // } else {
-        //         //     console.log(error);
-        //         // }
-        //     }
-        // })
-        // .catch(function(err) {
-        //     console.log("FAIL");
-        //     console.log(err);
-        // });
     });
 //]]>
 </script>
