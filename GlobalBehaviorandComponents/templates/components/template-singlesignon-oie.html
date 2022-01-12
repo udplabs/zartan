@@ -1,0 +1,109 @@
+<script src="https://global.oktacdn.com/okta-auth-js/5.10.0/okta-auth-js.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+//<![CDATA[
+
+    var authClient = new OktaAuth({
+        url: "{{config.okta_org_name}}",
+        clientId: "{{config.client_id}}",
+        redirectUri: "{{config.redirect_uri}}",
+        issuer: "{{config.issuer}}",
+        tokenManager: {
+            storage: 'cookie'
+        },
+        storageManager: {
+            token: {
+            storageTypes: [
+                'localStorage',
+                'sessionStorage',
+                'cookie'
+            ],
+            useMultipleCookies: false // puts each token in its own cookie
+            }
+        }
+    });
+
+    $(document).ready(function() {
+
+        authClient.token.parseFromUrl()
+            .then(function(res) {
+                var state = res.state; // passed to getWithRedirect(), can be any string
+
+                // manage token or tokens
+                var tokens = res.tokens;
+
+                // Do something with tokens, such as
+                authClient.tokenManager.setTokens(tokens);
+                console.log("Tokens stored");
+            })
+            .catch(function(err) {
+                // handle OAuthError
+                console.log(err);
+            });
+
+        authClient.tokenManager.getTokens()
+            .then(({ accessToken, idToken }) => {
+                // handle tokens
+                authClient.token.verify(idToken)
+                    .then(function() {
+                        // ID token is valid
+                        // do nothing for now
+                        console.log("tokens are good...");
+                        
+                    })
+                    .catch(function(err) {
+                        // ID token is invalid/missing
+                        authClient.session.get()
+                            .then(function(response) {
+                                console.log(response);
+                                // session exists
+                                if (response.status === 'ACTIVE') {
+                                    console.log("Session Active");
+                                    $("#sessionId").val(response.id);
+                                    
+                                    authClient.token.getWithRedirect({
+                                        responseType: ['token', 'id_token']
+                                    })
+                                    .catch(function(err) {
+                                        console.log(err);
+                                    })
+                                    //authClient.idx.handleInteractionCodeRedirect('http://localhost:8666/');
+                                }
+                            })
+                    })
+            })
+            .catch(function(err) {
+                // handle expired/invalid/empty tokens
+                console.log(err);
+            })
+
+        // authClient.session.get()
+        // .then(function (response) {
+        //     console.log(response);
+        //     // Session exists, show logged in state.
+        //     if (response.status === 'ACTIVE') {
+        //         console.log("Session Active");
+        //         $("#sessionId").val(response.id);
+
+        //         // authClient.token.getWithRedirect({responseType: ['token', 'id_token']})
+        //         // .catch(function(err) {
+        //         //     console.log(err);
+        //         // })
+                
+        //         // var getNewTokenUrl = "{{config.get_new_token_url|safe}}";
+        //         // var error = "{{error_message}}"
+        //         // if (error == "" ) {
+        //         //     if (getNewTokenUrl != "" ) {
+        //         //         location.href = getNewTokenUrl;
+        //         //     }
+        //         // } else {
+        //         //     console.log(error);
+        //         // }
+        //     }
+        // })
+        // .catch(function(err) {
+        //     console.log("FAIL");
+        //     console.log(err);
+        // });
+    });
+//]]>
+</script>

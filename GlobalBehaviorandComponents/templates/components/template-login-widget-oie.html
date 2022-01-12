@@ -123,20 +123,20 @@
                           'primaryauth.title': "Sign in to "+{{dumps(config.settings.app_name)|safe}}
                         }
                       },
-                      /* features: {
+                      features: {
                         {% if idp %}
                           {% if idptype %}
                         idpDiscovery:true,
                           {% endif %}
                         {% endif %}
-                        registration: true,                 // Enable self-service registration flow
-                        rememberMe: true,                   // Setting to false will remove the checkbox to save username
-                        multiOptionalFactorEnroll: true,  // Allow users to enroll in multiple optional factors before finishing the authentication flow.
-                        selfServiceUnlock: true,          // Will enable unlock in addition to forgotten password
-                        smsRecovery: true,                // Enable SMS-based account recovery
-                        callRecovery: true,               // Enable voice call-based account recovery
-                        webauthn: true                    // Enable Webauthn and disable Windows Hello
-                      }, */
+                        // registration: true,               // Enable self-service registration flow
+                        // rememberMe: true,                 // Setting to false will remove the checkbox to save username
+                        // multiOptionalFactorEnroll: true,  // Allow users to enroll in multiple optional factors before finishing the authentication flow.
+                        // selfServiceUnlock: true,          // Will enable unlock in addition to forgotten password
+                        // smsRecovery: true,                // Enable SMS-based account recovery
+                        // callRecovery: true,               // Enable voice call-based account recovery
+                        // webauthn: true                    // Enable Webauthn and disable Windows Hello
+                      },
                       {% if idp %}
                       {% if idptype %}
                       idpDiscovery: {
@@ -206,11 +206,6 @@
 
 
                     signInWidget = new OktaSignIn(signInWidgetConfig);
-                    // signInWidget.showSignInAndRedirect({
-                    //   el: '#sign-in-widget'
-                    // }).catch(function(error) {
-                    //   // Handle error
-                    // });
                     signInWidget.showSignInToGetTokens({
                       // Assumes there is an empty element on the page with an id of 'osw-container'
                       el: '#sign-in-widget'
@@ -220,7 +215,7 @@
                       // Remove widget
                       signInWidget.remove();
                       // Can now render in an authenticated state
-                      location.href = '/profile';
+                      location.href = '/';
                     }).catch(function(error) {
                       // Handle error
                       console.log(error);
