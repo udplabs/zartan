@@ -14,6 +14,7 @@ default_settings = {
     "client_id": os.getenv("OKTA_CLIENT_ID", ""),
     "client_secret": os.getenv("OKTA_CLIENT_SECRET", ""),
     "issuer": os.getenv("OKTA_ISSUER", ""),
+    "audience": os.getenv("OKTA_AUDIENCE", ""),
     "app_config": os.getenv("SITE_APP_CONFIG", "./well-known/default-settings"),
     "okta_org_name": os.getenv("OKTA_ORG_URL", ""),
     "redirect_uri": os.getenv("OKTA_OIDC_REDIRECT_URI", "http://yoursite/authorization-code/callback"),

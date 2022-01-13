@@ -1,3 +1,4 @@
+import asyncio
 import base64
 import json
 import logging
@@ -9,6 +10,7 @@ from cryptography import x509
 from cryptography.hazmat.backends import default_backend
 import xml.etree.ElementTree as ET
 
+from okta_jwt_verifier import BaseJWTVerifier
 
 class OktaAuth:
 
@@ -1590,6 +1592,22 @@ class TokenUtil:
             if introspect_result:
                 if "active" in introspect_result:
                     result = introspect_result["active"]
+
+        return result
+
+    @staticmethod
+    async def is_valid_local(token, app_config):
+        TokenUtil.logger.debug("is_valid_local")
+        result = False
+
+        if token:
+            jwt_verifier = BaseJWTVerifier(issuer=app_config['issuer'], audience=app_config['audience'])
+            introspect_result = await jwt_verifier.verify_access_token(token)
+            TokenUtil.logger.debug("introspect {0}".format(introspect_result))
+
+            if introspect_result:
+               if "active" in introspect_result:
+                   result = introspect_result["active"]
 
         return result
 
