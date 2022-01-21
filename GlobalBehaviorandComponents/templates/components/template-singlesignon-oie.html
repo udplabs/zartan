@@ -6,24 +6,24 @@
         url: "{{config.okta_org_name}}",
         clientId: "{{config.client_id}}",
         redirectUri: "{{config.redirect_uri}}",
-        issuer: "{{config.issuer}}"
+        issuer: "{{config.issuer}}",
+        scopes: ['openid', 'profile', 'email'],
+        tokenManager: {
+            storage: 'cookie'
+        },
+        storageManager: {
+            token: {
+            storageTypes: [
+                'localStorage',
+                'sessionStorage',
+                'cookie'
+            ],
+            useMultipleCookies: false // puts each token in its own cookie
+            }
+        }
     });
 
     $(document).ready(function() {
-
-        authClient.token.parseFromUrl()
-            .then(function(res) {
-                var state = res.state; // passed to getWithRedirect(), can be any string
-
-                // manage token or tokens
-                var tokens = res.tokens;
-
-                // Do something with tokens, such as
-                authClient.tokenManager.setTokens(tokens);
-            })
-            .catch(function(err) {
-                // handle OAuthError
-        });
 
         authClient.tokenManager.getTokens()
             .then(({ accessToken, idToken }) => {
@@ -32,18 +32,27 @@
                     .then(function() {
                         // ID token is valid
                         // do nothing for now
+                        console.log("tokens are good...");
+
                     })
                     .catch(function(err) {
                         // ID token is invalid/missing
+
                         authClient.session.get()
-                            .then(function(response) {
-                                console.log(response);
+                            .then(function(session) {
                                 // session exists
-                                if (response.status === 'ACTIVE') {
+                                if (session.status == "ACTIVE") {
                                     console.log("Session Active");
-                                    $("#sessionId").val(response.id);
-                                    authClient.token.getWithRedirect({
+                                    $("#sessionId").val(session.id);
+                                    authClient.token.getWithoutPrompt({
                                         responseType: ['token', 'id_token']
+                                    }).then(function(res) {
+                                        console.log("results", res);
+                                        var tokens = res.tokens;
+                                        console.log(tokens);
+                                        // Do something with tokens, such as
+                                        authClient.tokenManager.setTokens(tokens);
+                                        location.reload();
                                     })
                                     .catch(function(err) {
                                         console.log(err);

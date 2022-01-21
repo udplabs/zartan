@@ -9,6 +9,8 @@ from cryptography import x509
 from cryptography.hazmat.backends import default_backend
 import xml.etree.ElementTree as ET
 
+from okta_jwt_verifier import BaseJWTVerifier
+
 
 class OktaAuth:
 
@@ -1579,6 +1581,20 @@ class TokenUtil:
         return token
 
     @staticmethod
+    async def is_valid(token, app_config):
+        # TODO figure out if there's a client secret (remote introspection) or audience (local introspection)
+        client_secret = app_config['client_secret']
+        audience = app_config['audience']
+
+        if audience is not None:
+            return await TokenUtil.is_valid_local(token, app_config)
+
+        if client_secret is not None:
+            return TokenUtil.is_valid_remote(token, app_config)
+
+        return False
+
+    @staticmethod
     def is_valid_remote(token, app_config):
         TokenUtil.logger.debug("is_valid_remote")
         result = False
@@ -1586,6 +1602,22 @@ class TokenUtil:
         if token:
             okta_auth = OktaAuth(app_config)
             introspect_result = okta_auth.introspect(token)
+
+            if introspect_result:
+                if "active" in introspect_result:
+                    result = introspect_result["active"]
+
+        return result
+
+    @staticmethod
+    async def is_valid_local(token, app_config):
+        TokenUtil.logger.debug("is_valid_local")
+        result = False
+
+        if token:
+            jwt_verifier = BaseJWTVerifier(issuer=app_config['issuer'], audience=app_config['audience'])
+            introspect_result = await jwt_verifier.verify_access_token(token)
+            TokenUtil.logger.debug("introspect {0}".format(introspect_result))
 
             if introspect_result:
                 if "active" in introspect_result:

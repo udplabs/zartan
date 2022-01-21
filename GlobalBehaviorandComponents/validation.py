@@ -20,12 +20,11 @@ gvalidation_bp = Blueprint('gvalidation_bp', __name__, template_folder='template
 def is_authenticated(f):
     @wraps(f)
     def decorated_function(*args, **kws):
-        logger.debug("authenticated()")
-
-        token = TokenUtil.get_access_token(request.cookies)
+        logger.debug("is_authenticated()")
+        access_token = TokenUtil.get_access_token(request.cookies)
         # logger.debug("token: {0}".format(token))
 
-        if TokenUtil.is_valid_remote(token, session[SESSION_INSTANCE_SETTINGS_KEY]):
+        if TokenUtil.is_valid(access_token, session[SESSION_INSTANCE_SETTINGS_KEY]):
             return f(*args, **kws)
         else:
             logger.debug("Access Denied")
@@ -115,11 +114,13 @@ def get_userinfo():
     logger.debug("get_userinfo()")
     user_info = None
     session[SESSION_INSTANCE_SETTINGS_KEY][GET_NEW_TOKEN_URL] = ""
+    access_token = TokenUtil.get_access_token(request.cookies)
+    id_token = TokenUtil.get_id_token(request.cookies)
 
-    if TokenUtil.is_valid_remote(TokenUtil.get_access_token(request.cookies), session[SESSION_INSTANCE_SETTINGS_KEY]):
+    if TokenUtil.is_valid(access_token, session[SESSION_INSTANCE_SETTINGS_KEY]):
         logger.debug("valid")
-        user_info = TokenUtil.get_claims_from_token(
-            TokenUtil.get_id_token(request.cookies))
+        user_info = TokenUtil.get_claims_from_token(id_token)
+        logger.debug("Global Validation user_info: {0}".format(user_info))
     else:
         logger.debug("notvalid")
         session[SESSION_INSTANCE_SETTINGS_KEY][GET_NEW_TOKEN_URL] = get_oauth_authorize_url()
