@@ -1581,6 +1581,20 @@ class TokenUtil:
         return token
 
     @staticmethod
+    async def is_valid(token, app_config):
+        # TODO figure out if there's a client secret (remote introspection) or audience (local introspection)
+        client_secret = app_config['client_secret']
+        audience = app_config['audience']
+
+        if audience != None:
+            return await TokenUtil.is_valid_local(token, app_config)
+
+        if client_secret != None:
+            return TokenUtil.is_valid_remote(token, app_config)
+        
+        return False
+
+    @staticmethod
     def is_valid_remote(token, app_config):
         TokenUtil.logger.debug("is_valid_remote")
         result = False
