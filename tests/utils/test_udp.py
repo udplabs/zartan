@@ -9,13 +9,15 @@ class UdpTest(BaseZartanTest):
     GOOD_UDP_CONFIG = {
         "issuer": "https://udp.okta.com/oauth2/default",
         "client_id": "test_id",
-        "client_secret": "test_secret"
+        "client_secret": "",
+        "audience": "some audience"
     }
 
     BAD_UDP_CONFIG = {
         "issuer": "",
         "client_id": "",
-        "client_secret": None
+        "client_secret": None,
+        "audience": None
     }
 
     def setUp(self):
