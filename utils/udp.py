@@ -118,18 +118,18 @@ def map_config_to_default_settings(config, domain_parts):
     if config:
         # Check if audience is set otherwise force set it
         if "audience" in config and config["audience"] == "":
-                config["audience"] = "api://{subdomain}.{appname}.{domain}".format(
-                    subdomain=domain_parts["udp_subdomain"],
-                    appname=domain_parts["udp_app_name"],
-                    domain=domain_parts["remaining_domain"])
+            config["audience"] = "api://{subdomain}.{appname}.{domain}".format(
+                subdomain=domain_parts["udp_subdomain"],
+                appname=domain_parts["udp_app_name"],
+                domain=domain_parts["remaining_domain"])
 
-                logger.debug("audience: {0}".format(config["audience"]))
+            logger.debug("audience: {0}".format(config["audience"]))
         else:
             logger.warning("audience is not set in the config")
             config["audience"] = "api://{subdomain}.{appname}.{domain}".format(
-                    subdomain=domain_parts["udp_subdomain"],
-                    appname=domain_parts["udp_app_name"],
-                    domain=domain_parts["remaining_domain"])
+                subdomain=domain_parts["udp_subdomain"],
+                appname=domain_parts["udp_app_name"],
+                domain=domain_parts["remaining_domain"])
 
             logger.debug("audience: {0}".format(config["audience"]))
 
