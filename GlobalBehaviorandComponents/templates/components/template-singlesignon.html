@@ -56,33 +56,6 @@
                 // handle expired/invalid/empty tokens
                 console.log(err);
             })
-        // authClient.session.get()
-        // .then(function (res) {
-        //     console.log(res);
-        //     // Session exists, show logged in state.
-        //     if (res.status === 'ACTIVE') {
-        //     console.log("Session Active");
-
-        //     $("#sessionId").val(res.id);
-
-        //     var getNewTokenUrl = "{{config.get_new_token_url|safe}}";
-        //     var error = "{{error_message}}"
-        //     if (error == "" )
-        //         {
-        //         if (getNewTokenUrl != "" ) {
-        //             location.href=getNewTokenUrl;
-        //             }
-        //         }
-        //     }
-        //     else
-        //     {
-        //        console.log(error) ;
-        //     }
-        // })
-        // .catch(function(err) {
-        //     console.log("FAIL");
-        //     console.log(err);
-        // });
     });
 //]]>
 </script>
