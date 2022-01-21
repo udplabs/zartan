@@ -7,9 +7,11 @@ services:
     environment:
       - FLASK_DEBUG=1
       - FLASK_ENV=development
-      # (OPTIONAL) Over write Zartan Appliction Template settings.
-      #  eg. 'admin', 'b2b', 'dealer', 'ecommerce', 'finance', 'healthcare', etc. Details: https://bit.ly/2Vxo1BB
-      # - APP_TEMPLATE=ecommerce
+      # (OPTIONAL) Over write Zartan Appliction Template/Verticals settings.
+      #  eg. $ export APP_TEMPLATE=ecommerce
+      #      $ docker-compose up
+      #      Other application veriticals are: 'admin', 'b2b', 'dealer', 'ecommerce', 'finance', 'healthcare', etc. Details: https://bit.ly/2Vxo1BB
+      - APP_TEMPLATE=${APP_TEMPLATE}
     ports:
       - '8666:8666'
     volumes:
