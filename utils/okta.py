@@ -1,4 +1,3 @@
-import asyncio
 import base64
 import json
 import logging
@@ -11,6 +10,7 @@ from cryptography.hazmat.backends import default_backend
 import xml.etree.ElementTree as ET
 
 from okta_jwt_verifier import BaseJWTVerifier
+
 
 class OktaAuth:
 
@@ -1586,12 +1586,12 @@ class TokenUtil:
         client_secret = app_config['client_secret']
         audience = app_config['audience']
 
-        if audience != None:
+        if audience is not None:
             return await TokenUtil.is_valid_local(token, app_config)
 
-        if client_secret != None:
+        if client_secret is not None:
             return TokenUtil.is_valid_remote(token, app_config)
-        
+
         return False
 
     @staticmethod
@@ -1620,8 +1620,8 @@ class TokenUtil:
             TokenUtil.logger.debug("introspect {0}".format(introspect_result))
 
             if introspect_result:
-               if "active" in introspect_result:
-                   result = introspect_result["active"]
+                if "active" in introspect_result:
+                    result = introspect_result["active"]
 
         return result
 
