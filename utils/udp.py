@@ -42,7 +42,7 @@ def apply_remote_config(f):
             map_config_to_default_settings(
                 get_remote_config(
                     domain_parts["udp_subdomain"],
-                    domain_parts["udp_app_name"]))
+                    domain_parts["udp_app_name"]), domain_parts)
         else:
             logger.info("Domain is already confgured")
 
@@ -105,17 +105,34 @@ def is_udp_config_valid(config):
         logger.warning("UDP Config: 'client_id' not set")
         result = False
 
-    if not config["client_secret"]:
-        logger.warning("UDP Config: 'client_secret' not set")
+    if not config["client_secret"] and not config["audience"]:
+        logger.warning("UDP Config: 'client_secret' or 'audience' not set")
         result = False
 
     return result
 
 
-def map_config_to_default_settings(config):
+def map_config_to_default_settings(config, domain_parts):
     logger.debug("map_config_to_default_settings()")
 
     if config:
+        # Check if audience is set otherwise force set it
+        if "audience" in config and config["audience"] == "":
+            config["audience"] = "api://{subdomain}.{appname}.{domain}".format(
+                subdomain=domain_parts["udp_subdomain"],
+                appname=domain_parts["udp_app_name"],
+                domain=domain_parts["remaining_domain"])
+
+            logger.debug("audience: {0}".format(config["audience"]))
+        else:
+            logger.warning("audience is not set in the config")
+            config["audience"] = "api://{subdomain}.{appname}.{domain}".format(
+                subdomain=domain_parts["udp_subdomain"],
+                appname=domain_parts["udp_app_name"],
+                domain=domain_parts["remaining_domain"])
+
+            logger.debug("audience: {0}".format(config["audience"]))
+
         if "settings" in config:
             logger.debug("Applying Remote Config")
             instance_settings = session[SESSION_INSTANCE_SETTINGS_KEY]
@@ -135,6 +152,9 @@ def map_config_to_default_settings(config):
         else:
             logger.warning("Remote Config is Invalid: {0}".format(
                 json.dumps(config, indent=4, sort_keys=True)))
+
+        if not is_udp_config_valid(config):
+            logger.warning("Invalid UDP Config, Skipping remote configuration...")
     else:
         logger.info("No remote config, using default_settings and ENV")
 
@@ -143,37 +163,33 @@ def get_remote_config(udp_subdomain, udp_app_name):
     logger.debug("get_remote_config()")
     remote_config = None
 
-    if(is_udp_config_valid(udp_config)):
+    json_headers["Authorization"] = "Bearer {0}".format(get_udp_oauth_access_token(udp_config))
 
-        json_headers["Authorization"] = "Bearer {0}".format(get_udp_oauth_access_token(udp_config))
+    remote_config_url = "{udp_config_url}/api/configs/{udp_subdomain}/{udp_app_name}".format(
+        udp_config_url=os.getenv("UDP_CONFIG_URL", ""),
+        udp_subdomain=udp_subdomain,
+        udp_app_name=udp_app_name)
 
-        remote_config_url = "{udp_config_url}/api/configs/{udp_subdomain}/{udp_app_name}".format(
-            udp_config_url=os.getenv("UDP_CONFIG_URL", ""),
-            udp_subdomain=udp_subdomain,
-            udp_app_name=udp_app_name)
+    remote_api_token_url = "{udp_config_url}/api/subdomains/{udp_subdomain}".format(
+        udp_config_url=os.getenv("UDP_CONFIG_URL", ""),
+        udp_subdomain=udp_subdomain)
 
-        remote_api_token_url = "{udp_config_url}/api/subdomains/{udp_subdomain}".format(
-            udp_config_url=os.getenv("UDP_CONFIG_URL", ""),
-            udp_subdomain=udp_subdomain)
+    if "http" in remote_config_url:
+        logger.debug("Pulling remote config from: {0}".format(remote_config_url))
 
-        if "http" in remote_config_url:
-            logger.debug("Pulling remote config from: {0}".format(remote_config_url))
+        remote_config = RestUtil.execute_get(remote_config_url, json_headers)
+        # logger.debug("config_json: {0}".format(json.dumps(remote_config, indent=4, sort_keys=True)))
 
-            remote_config = RestUtil.execute_get(remote_config_url, json_headers)
-            # logger.debug("config_json: {0}".format(json.dumps(remote_config, indent=4, sort_keys=True)))
+    if "http" in remote_api_token_url:
+        logger.debug("Pulling remote config from: {0}".format(remote_api_token_url))
+        api_token_config = RestUtil.execute_get(remote_api_token_url, json_headers)
+        # logger.debug("config_json: {0}".format(json.dumps(api_token_config, indent=4, sort_keys=True)))
 
-        if "http" in remote_api_token_url:
-            logger.debug("Pulling remote config from: {0}".format(remote_api_token_url))
-            api_token_config = RestUtil.execute_get(remote_api_token_url, json_headers)
-            # logger.debug("config_json: {0}".format(json.dumps(api_token_config, indent=4, sort_keys=True)))
+        if remote_config:
+            if "okta_api_token" in api_token_config:
+                remote_config["okta_api_token"] = api_token_config["okta_api_token"]
 
-            if remote_config:
-                if "okta_api_token" in api_token_config:
-                    remote_config["okta_api_token"] = api_token_config["okta_api_token"]
-
-        logger.debug("config_json: {0}".format(json.dumps(remote_config, indent=4, sort_keys=True)))
-    else:
-        logger.warning("Invalid UDP Config, Skipping remote configuration...")
+    logger.debug("config_json: {0}".format(json.dumps(remote_config, indent=4, sort_keys=True)))
 
     return remote_config
 
@@ -202,6 +218,7 @@ def get_domain_parts_from_request():
 
     logger.debug("udp_subdomain: {0}".format(udp_subdomain))
     logger.debug("udp_app_name: {0}".format(udp_app_name))
+    logger.debug("remaining_domain: {0}".format(remaining_domain))
 
     split_domain_parts = {
         "udp_subdomain": udp_subdomain,

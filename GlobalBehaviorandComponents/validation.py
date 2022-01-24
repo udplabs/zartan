@@ -72,7 +72,7 @@ def check_zartan_config(f):
             error_message_list = ["The following configuration issue were found:<br /><ul>"]
 
             zartan_config = session[SESSION_INSTANCE_SETTINGS_KEY]
-            # logger.debug("zartan_config: {0}".format(zartan_config))
+            logger.debug("zartan_config: {0}".format(zartan_config))
 
             if zartan_config:
                 check_if_set_in_config(zartan_config, error_message_list)
@@ -102,11 +102,12 @@ def check_if_set_in_config(config_settings, error_message_list):
     logger.debug("check_if_set_in_config()")
 
     for key, value in config_settings.items():
-        if key in config_settings:
-            if not value:
+        if key != "client_secret":
+            if key in config_settings:
+                if not value:
+                    error_message_list.append("<li>'{attribute}' is not set in the config.</li>".format(attribute=key))
+            else:
                 error_message_list.append("<li>'{attribute}' is not set in the config.</li>".format(attribute=key))
-        else:
-            error_message_list.append("<li>'{attribute}' is not set in the config.</li>".format(attribute=key))
 
 
 # Get User Information from OIDC
