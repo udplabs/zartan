@@ -41,8 +41,7 @@ def gbac_main():
         templatename=get_app_vertical(),
         appurl=appurl,
         user_info=get_userinfo(),
-        config=session[SESSION_INSTANCE_SETTINGS_KEY], state=str(uuid.uuid4()),
-        dumps=dumps)
+        config=session[SESSION_INSTANCE_SETTINGS_KEY], state=str(uuid.uuid4()))
 
 
 @gbac_bp.route("/clear_session")
@@ -102,8 +101,7 @@ def gbac_login():
             linkedin=linkedin,
             microsoft=microsoft,
             idp=idp,
-            idptype=idptype,
-            dumps=dumps)
+            idptype=idptype)
 
 
 @gbac_bp.route("/signup")
