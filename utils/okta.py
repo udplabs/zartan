@@ -1586,14 +1586,14 @@ class TokenUtil:
         TokenUtil.logger.debug("is_valid")
         client_secret = app_config['client_secret']
         audience = app_config['audience']
-        reseult = False
+        result = False
 
         if client_secret is not None:
-            reseult = TokenUtil.is_valid_remote(token, app_config)
+            result = TokenUtil.is_valid_remote(token, app_config)
         elif audience is not None:
-            reseult = TokenUtil.is_valid_local(token, app_config)
+            result = TokenUtil.is_valid_local(token, app_config)
 
-        return reseult
+        return result
 
     @staticmethod
     def is_valid_remote(token, app_config):
