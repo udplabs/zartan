@@ -42,12 +42,16 @@
                                 if (response.status === 'ACTIVE') {
                                     console.log("Session Active");
                                     $("#sessionId").val(response.id);
-                                    authClient.token.getWithRedirect({
-                                        responseType: ['token', 'id_token']
-                                    })
-                                    .catch(function(err) {
-                                        console.log(err);
-                                    })
+
+                                    var getNewTokenUrl = "{{config.get_new_token_url|safe}}";
+                                    var error = "{{error_message}}"
+                                    if (error == "" ) {
+                                        if (getNewTokenUrl != "" ) {
+                                            location.href=getNewTokenUrl;
+                                        }
+                                    } else {
+                                       console.log(error) ;
+                                    }
                                 }
                             })
                     })
