@@ -52,6 +52,7 @@ def clear_session():
     return redirect(url_for("gbac_bp.gbac_main", _external="True", _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"]))
 
 
+# This checks and applies a remote config, then caches if available
 @gbac_bp.route("/login")
 @apply_remote_config
 def gbac_login():
