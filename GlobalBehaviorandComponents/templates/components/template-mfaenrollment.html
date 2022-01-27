@@ -90,7 +90,7 @@
         </div>
 
 
-        <!-- Commented out since this is redundant. ALL MFA enrollments work without this.-->        
+        <!-- Commented out since this is redundant. ALL MFA enrollments work without this. -->        
         <!-- security question -->
         <!-- 
         <div class="form-group" id="_mfaEnrollWebAuthn">
@@ -100,7 +100,7 @@
           </button>
           -->
 
-          <script>
+        <script>
           function registerWebauthn()
           {
             webauthnresponse = JSON.parse($("#_mfaWebAuthnResponse").val());
@@ -183,8 +183,8 @@
           function strToBin(str) {
             return Uint8Array.from(atob(this.base64UrlSafeToBase64(str)), c => c.charCodeAt(0));
           };
-          </script>
-        </div>
+        </script>
+    
 
         <div class="form-group" id="_mfaEnrollStatusForm">
           <span id="_mfaEnrollStatusMessage"></span>
