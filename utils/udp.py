@@ -14,6 +14,8 @@ SESSION_IS_CONFIGURED_KEY = "is_configured_remotely"
 SESSION_IS_APITOKEN_VALID_KEY = "is_apitoken_valid"
 SESSION_IS_CONFIG_VALID_KEY = "is_config_valid"
 
+SETTINGS_ESCAPE_KEYS = ["app_name"]
+
 logger = logging.getLogger(__name__)
 
 json_headers = {
