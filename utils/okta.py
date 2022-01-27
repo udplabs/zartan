@@ -3,6 +3,7 @@ import json
 import logging
 import secrets
 import hashlib
+import asyncio
 
 from utils.rest import RestUtil
 from cryptography import x509
@@ -1526,7 +1527,6 @@ class TokenUtil:
 
         okta_token_cookie[TokenUtil.ID_TOKEN_KEY] = {
             TokenUtil.ID_TOKEN_KEY: id_token,
-            "claims": id_token_claims,
             "expiresAt": id_token_claims["exp"],
             "scopes": access_token_claims["scp"],  # Grab scopes from the access token
             "authorizeUrl": "{iss}/v1/authorize".format(iss=id_token_claims["iss"]),
@@ -1581,18 +1581,18 @@ class TokenUtil:
         return token
 
     @staticmethod
-    async def is_valid(token, app_config):
-        # TODO figure out if there's a client secret (remote introspection) or audience (local introspection)
+    def is_valid(token, app_config):
+        TokenUtil.logger.debug("is_valid")
         client_secret = app_config['client_secret']
         audience = app_config['audience']
-
-        if audience is not None:
-            return await TokenUtil.is_valid_local(token, app_config)
+        result = False
 
         if client_secret is not None:
-            return TokenUtil.is_valid_remote(token, app_config)
+            result = TokenUtil.is_valid_remote(token, app_config)
+        elif audience is not None:
+            result = TokenUtil.is_valid_local(token, app_config)
 
-        return False
+        return result
 
     @staticmethod
     def is_valid_remote(token, app_config):
@@ -1610,13 +1610,16 @@ class TokenUtil:
         return result
 
     @staticmethod
-    async def is_valid_local(token, app_config):
+    def is_valid_local(token, app_config):
         TokenUtil.logger.debug("is_valid_local")
         result = False
 
         if token:
             jwt_verifier = BaseJWTVerifier(issuer=app_config['issuer'], audience=app_config['audience'])
-            introspect_result = await jwt_verifier.verify_access_token(token)
+
+            loop = asyncio.get_event_loop()
+            introspect_result = jwt_verifier.verify_access_token(token)
+            loop.run_until_complete(introspect_result)
             TokenUtil.logger.debug("introspect {0}".format(introspect_result))
 
             if introspect_result:
