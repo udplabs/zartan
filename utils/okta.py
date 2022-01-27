@@ -1527,7 +1527,6 @@ class TokenUtil:
 
         okta_token_cookie[TokenUtil.ID_TOKEN_KEY] = {
             TokenUtil.ID_TOKEN_KEY: id_token,
-
             "expiresAt": id_token_claims["exp"],
             "scopes": access_token_claims["scp"],  # Grab scopes from the access token
             "authorizeUrl": "{iss}/v1/authorize".format(iss=id_token_claims["iss"]),

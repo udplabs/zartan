@@ -245,12 +245,9 @@ def safe_assign_config_item(key, source_collection, target_collection):
 
         if key == "redirect_uri":
             target_collection[key] = os.getenv("OKTA_OIDC_REDIRECT_URI", "")
-<<<<<<< HEAD
 
         if key in SETTINGS_ESCAPE_KEYS:
             target_collection[key] = target_collection[key].replace('"', '\\"')
-=======
->>>>>>> Bug/fix endless auth loop (#476)
 
 
 def clear_session_setting():
