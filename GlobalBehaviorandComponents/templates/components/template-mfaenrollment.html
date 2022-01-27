@@ -13,8 +13,8 @@
         </table>
     </div>
     <div class="card-footer">
-      <button type="button" id="_mfaAddFactorButton" class="btn btn-primary mr-2 my-1" disabled>
-        Add a new factor (Disabled)
+      <button type="button" id="_mfaAddFactorButton" class="btn btn-primary mr-2 my-1">
+        Add a new factor
       </button>
     </div>
 </div>
@@ -89,12 +89,17 @@
           </button>
         </div>
 
+
+        <!-- Commented out since this is redundant. ALL MFA enrollments work without this.-->        
         <!-- security question -->
+        <!-- 
         <div class="form-group" id="_mfaEnrollWebAuthn">
           <input type="hidden" id="_mfaWebAuthnResponse"/>
           <button type="button" id="_mfaEnrollWebAuthn" onclick="registerWebauthn()" class="btn btn-primary mr-2 my-1">
             Submit
           </button>
+          -->
+
           <script>
           function registerWebauthn()
           {
