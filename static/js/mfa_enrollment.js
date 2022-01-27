@@ -9,15 +9,7 @@ $("#_mfaFinishEnrollButton").hide();
 _hideAllEnrollForms();
 
 // click handlers for the add/delete buttons
-//$(".clickable.editable").click(_editFactorClickHandler);
 $(".clickable.deleteable").click(_deleteFactorClickHandler);
-
-// function _editFactorClickHandler(event) {
-//     var user_id = $("#userId").val();
-//     var factor_id = $(this).data("id");
-//     console.log("Clicked settings icon with factor id " + factor_id);
-//     event.preventDefault();
-// }
 
 function _deleteFactorClickHandler(event) {
     var user_id = $("#userId").val();
@@ -171,7 +163,6 @@ function _factorEnrollListOnChange() {
     switch (factorName) {
         case "Okta Verify":
         case "Okta Verify Push":
-            //$("#_mfaEnrollPushForm").show();
             _enrollPushFactor();
             break;
         case "Google Authenticator":
@@ -194,7 +185,6 @@ function _factorEnrollListOnChange() {
         case "Security Question":
             _getAvailableQuestions();
             $("#_mfaEnrollQuestionForm").show();
-            //$("#_mfaEnrollAnswer").focus();
             break;
         case "Web Authn":
             _enrollWebAuthn();
