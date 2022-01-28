@@ -14,6 +14,8 @@ SESSION_IS_CONFIGURED_KEY = "is_configured_remotely"
 SESSION_IS_APITOKEN_VALID_KEY = "is_apitoken_valid"
 SESSION_IS_CONFIG_VALID_KEY = "is_config_valid"
 
+SETTINGS_ESCAPE_KEYS = ["app_name"]
+
 logger = logging.getLogger(__name__)
 
 json_headers = {
@@ -243,6 +245,9 @@ def safe_assign_config_item(key, source_collection, target_collection):
 
         if key == "redirect_uri":
             target_collection[key] = os.getenv("OKTA_OIDC_REDIRECT_URI", "")
+
+        if key in SETTINGS_ESCAPE_KEYS:
+            target_collection[key] = target_collection[key].replace('"', '\\"')
 
 
 def clear_session_setting():
