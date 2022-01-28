@@ -13,8 +13,8 @@
         </table>
     </div>
     <div class="card-footer">
-      <button type="button" id="_mfaAddFactorButton" class="btn btn-primary mr-2 my-1" disabled>
-        Add a new factor (Disabled)
+      <button type="button" id="_mfaAddFactorButton" class="btn btn-primary mr-2 my-1">
+        Add a new factor
       </button>
     </div>
 </div>
@@ -89,10 +89,10 @@
           </button>
         </div>
 
-        <!-- security question -->
-        <div class="form-group" id="_mfaEnrollWebAuthn">
+        <!-- WebAuthN -->
+        <div class="form-group" id="_mfaEnrollWebAuthnForm">
           <input type="hidden" id="_mfaWebAuthnResponse"/>
-          <button type="button" id="_mfaEnrollWebAuthn" onclick="registerWebauthn()" class="btn btn-primary mr-2 my-1">
+          <button type="button" id="_mfaEnrollWebAuthnButton" onclick="registerWebauthn()" class="btn btn-primary mr-2 my-1">
             Submit
           </button>
           <script>
@@ -139,7 +139,7 @@
                       else
                       {
                          $("#_mfaEnrollStatusMessage").text("Enrollment Complete");
-                         $("#_mfaEnrollWebAuthn").hide();
+                         $("#_mfaEnrollWebAuthnForm").hide();
                       }
                       _finishEnrollment();
                   },
@@ -196,5 +196,4 @@
   </div>
 </div>
 
-<script type="text/javascript" src="https://cdn-zartan.s3.us-east-2.amazonaws.com/static/js/mfa_enrollment.js"></script>
-
+<script type="text/javascript" src="/static/js/mfa_enrollment.js"></script>
