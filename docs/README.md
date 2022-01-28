@@ -262,79 +262,80 @@ The `.env` file provides additional configuration depending on the functionality
 
 ### Variables common to all verticals
 
-- Okta Setting
+#### Okta Setting
 
-    | Variable               | Value | Example |
-    | ---------------------- | ----- | ------- |
-    | OKTA_CLIENT_ID         | {{client_id}}     | |
-    | OKTA_CLIENT_SECRET     | {{client_secret}} | |
-    | OKTA_ISSUER            | {{issuer_uri}} | |
-    | OKTA_ORG_URL           | {{org_url}} | |
-    | OKTA_OIDC_REDIRECT_URI | http://localhost:8666/authorization-code/callback | |
-    | OKTA_API_TOKEN         | {{ssws token}} | |
+  | Variable               | Value | Example |
+  | ---------------------- | ----- | ------- |
+  | OKTA_CLIENT_ID         | {{client_id}}     | |
+  | OKTA_CLIENT_SECRET     | {{client_secret}} | |
+  | OKTA_ISSUER            | {{issuer_uri}} | |
+  | OKTA_ORG_URL           | {{org_url}} | |
+  | OKTA_OIDC_REDIRECT_URI | http://localhost:8666/authorization-code/callback | |
+  | OKTA_API_TOKEN         | {{ssws token}} | |
 
-- Zartan Setting
 
-    | Variable            | Value | Default/Example |
-    | ------------------- | ----- | ------- |
-    | APP_TEMPLATE        | Enter the specific value based on the [vertical](#vertical-specific-variables) | |
-    | APP_LOGINMETHOD     | the login UX, widget, custom or redirect | standard-widget
-    | APP_NAME            | some app name prominently displayed | |
-    | APP_SLOGAN          | some slogan | |
-    | APP_SUBSLOGAN       | some subtitle | |
-    | APP_LOGO            | url to some logo | |
-    | APP_FAVICON         | url to some favicon | |
-    | APP_BANNER_1        | url to some banner image | |
-    | APP_PRIMARY_COLOR   | some primary color | #0061f2 |
-    | APP_SECONDARY_COLOR | some secondary color | #6900c7 |
-    | APP_SUCCESS_COLOR   | some "success" status color | #00ac69 |
-    | APP_INFO_COLOR      | some "info" status color | #00cfd5 |
-    | APP_WARNING_COLOR   | some "warning" status color | #f4a100 |
-    | APP_DANGER_COLOR    | some "error" status color |#e81500 |
+#### Zartan Setting
 
-- Third Party Service Setting
+  | Variable            | Value | Default/Example |
+  | ------------------- | ----- | ------- |
+  | APP_TEMPLATE        | Enter the specific value based on the [vertical](#vertical-specific-variables) | |
+  | APP_LOGINMETHOD     | The login UX, widget, custom or redirect | Options: `standard-widget`, `passwordless-widget`,`custom-widget`
+  | APP_NAME            | some app name prominently displayed | |
+  | APP_SLOGAN          | some slogan | |
+  | APP_SUBSLOGAN       | some subtitle | |
+  | APP_LOGO            | url to some logo | |
+  | APP_FAVICON         | url to some favicon | |
+  | APP_BANNER_1        | url to some banner image | |
+  | APP_PRIMARY_COLOR   | some primary color | #0061f2 |
+  | APP_SECONDARY_COLOR | some secondary color | #6900c7 |
+  | APP_SUCCESS_COLOR   | some "success" status color | #00ac69 |
+  | APP_INFO_COLOR      | some "info" status color | #00cfd5 |
+  | APP_WARNING_COLOR   | some "warning" status color | #f4a100 |
+  | APP_DANGER_COLOR    | some "error" status color |#e81500 |
 
-    **AWS Email Service**
+#### Third Party Service Setting
 
-    | Variable                  | Value |
-    | -----------------         | ----- |
-    | AWS_API_KEY               | ℹ️ Mandatory. Get the value from [Box](https://okta.box.com/s/56cnuhratuzjnhxo1odt11tmesjqv4o3) |
+  **AWS Email Service**
 
-    > -or-
+  | Variable                  | Value |
+  | -----------------         | ----- |
+  | AWS_API_KEY               | ℹ️ Mandatory. Get the value from [Box](https://okta.box.com/s/56cnuhratuzjnhxo1odt11tmesjqv4o3) |
 
-    **SparkPost Email Service**
+  > -or-
 
-    | Variable                  | Value |
-    | -----------------         | ----- |
-    | SPARKPOST_API_KEY         | ℹ️ Mandatory. Get the value from [Box](https://okta.box.com/s/56cnuhratuzjnhxo1odt11tmesjqv4o3) |
-    | SPARKPOST_FROM_DOMAIN     | ℹ️ Optional. You can use your own API KEY but SparkPost requires a registered domain. This Environment Variables overrides the default `"recintodev.com"`. |
+  **SparkPost Email Service**
 
-    > -or-
+  | Variable                  | Value |
+  | -----------------         | ----- |
+  | SPARKPOST_API_KEY         | ℹ️ Mandatory. Get the value from [Box](https://okta.box.com/s/56cnuhratuzjnhxo1odt11tmesjqv4o3) |
+  | SPARKPOST_FROM_DOMAIN     | ℹ️ Optional. You can use your own API KEY but SparkPost requires a registered domain. This Environment Variables overrides the default `"recintodev.com"`. |
 
-    **Sendgrid Email Service**
+  > -or-
 
-    | Variable                  | Value |
-    | -----------------         | ----- |
-    | SENDGRID_API_KEY          | ℹ️ Mandatory. Bring your own Sendgrid account |
-    | SENDGRID_FROM_DOMAIN      | ℹ️ Optional. You can use your own API KEY but Sendgrid requires a registered domain. |
+  **Sendgrid Email Service**
+
+  | Variable                  | Value |
+  | -----------------         | ----- |
+  | SENDGRID_API_KEY          | ℹ️ Mandatory. Bring your own Sendgrid account |
+  | SENDGRID_FROM_DOMAIN      | ℹ️ Optional. You can use your own API KEY but Sendgrid requires a registered domain. |
 
 - Flask Setting
 
-    | Variable   | Value |
-    | ---------- | ----- |
-    | SECRET_KEY | some random guid |
-    | APP_SCHEME | http or https depending if you have an ssl cert|
+  | Variable   | Value |
+  | ---------- | ----- |
+  | SECRET_KEY | some random guid |
+  | APP_SCHEME | http or https depending if you have an ssl cert|
 
 - Unused for local installation
 
-    > NOTE: ℹ️ You can ignore these as they are for UDP and not applicable when running locally
+  > NOTE: ℹ️ You can ignore these as they are for UDP and not applicable when running locally
 
-    | Variable          |
-    | ----------------- |
-    | UDP_CONFIG_URL    |
-    | UDP_ISSUER        |
-    | UDP_CLIENT_ID     |
-    | UDP_CLIENT_SECRET |
+  | Variable          |
+  | ----------------- |
+  | UDP_CONFIG_URL    |
+  | UDP_ISSUER        |
+  | UDP_CLIENT_ID     |
+  | UDP_CLIENT_SECRET |
 
 ---
 
