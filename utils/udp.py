@@ -235,6 +235,7 @@ def get_domain_parts_from_request():
 
 def safe_assign_config_item(key, source_collection, target_collection):
     if key in source_collection:
+
         # map sub dicts
         if isinstance(source_collection[key], dict):
             for sub_key, value in source_collection[key].items():
@@ -242,9 +243,6 @@ def safe_assign_config_item(key, source_collection, target_collection):
         else:
             # ENV always overrides source config
             target_collection[key] = os.getenv(key.upper(), source_collection[key])
-
-        if key == "redirect_uri":
-            target_collection[key] = os.getenv("OKTA_OIDC_REDIRECT_URI", "")
 
         if key in SETTINGS_ESCAPE_KEYS:
             target_collection[key] = target_collection[key].replace('"', '\\"')
