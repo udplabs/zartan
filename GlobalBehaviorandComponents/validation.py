@@ -115,15 +115,14 @@ def get_userinfo():
     logger.debug("get_userinfo()")
     user_info = None
     session[SESSION_INSTANCE_SETTINGS_KEY][GET_NEW_TOKEN_URL] = ""
-    access_token = TokenUtil.get_access_token(request.cookies)
     id_token = TokenUtil.get_id_token(request.cookies)
 
-    if TokenUtil.is_valid(access_token, session[SESSION_INSTANCE_SETTINGS_KEY]):
-        logger.debug("valid")
+    if TokenUtil.is_valid(id_token, session[SESSION_INSTANCE_SETTINGS_KEY]):
+        logger.debug("id_token Is valid")
         user_info = TokenUtil.get_claims_from_token(id_token)
         logger.debug("Global Validation user_info: {0}".format(user_info))
     else:
-        logger.debug("notvalid")
+        logger.debug("id_token Is Not valid")
         session[SESSION_INSTANCE_SETTINGS_KEY][GET_NEW_TOKEN_URL] = get_oauth_authorize_url()
     return user_info
 

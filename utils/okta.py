@@ -10,7 +10,9 @@ from cryptography import x509
 from cryptography.hazmat.backends import default_backend
 import xml.etree.ElementTree as ET
 
-from okta_jwt_verifier import BaseJWTVerifier
+# Async version from official Okta
+from okta_jwt_verifier import IDTokenVerifier
+from okta_jwt_verifier.exceptions import JWTValidationException, JWTInvalidConfigException, JWKException
 
 
 class OktaAuth:
@@ -1587,9 +1589,9 @@ class TokenUtil:
         audience = app_config['audience']
         result = False
 
-        if client_secret is not None:
+        if client_secret not in (None, ""):
             result = TokenUtil.is_valid_remote(token, app_config)
-        elif audience is not None:
+        elif audience not in (None, ""):
             result = TokenUtil.is_valid_local(token, app_config)
 
         return result
@@ -1609,22 +1611,28 @@ class TokenUtil:
 
         return result
 
+    # This is an attempt to use Oktas JWT Verifyer but the verifyer is async and having trouble returning the results from it
     @staticmethod
     def is_valid_local(token, app_config):
         TokenUtil.logger.debug("is_valid_local")
         result = False
 
         if token:
-            jwt_verifier = BaseJWTVerifier(issuer=app_config['issuer'], audience=app_config['audience'])
-
-            loop = asyncio.get_event_loop()
-            introspect_result = jwt_verifier.verify_access_token(token)
-            loop.run_until_complete(introspect_result)
-            TokenUtil.logger.debug("introspect {0}".format(introspect_result))
-
-            if introspect_result:
-                if "active" in introspect_result:
-                    result = introspect_result["active"]
+            TokenUtil.logger.debug("issuer: {} client_id: {} audience: {} token: {}".format(
+                app_config['issuer'],
+                app_config['client_id'],
+                app_config['audience'],
+                token))
+            jwt_verifier = IDTokenVerifier(issuer=app_config['issuer'], client_id=app_config['client_id'], audience=app_config['audience'])
+            try:
+                asyncio.run(jwt_verifier.verify(token))
+                result = True
+            except JWTValidationException as e:
+                TokenUtil.logger.debug("JWT Validation Failed: {}".format(e))
+            except JWTInvalidConfigException as e:
+                TokenUtil.logger.debug("JWT Invalid Configuration: {}".format(e))
+            except JWKException as e:
+                TokenUtil.logger.debug("JWK failed: {}".format(e))
 
         return result
 
