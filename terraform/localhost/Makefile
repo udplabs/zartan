@@ -4,7 +4,7 @@
 .DEFAULT_GOAL := help
 
 ROOT_PATH := $(abspath $(dir $(lastword $(MAKEFILE_LIST)))/../..)
-ZARTAN_VERTICALS := admin credit dealer developer ecommerce finance healthcare hospitality streamingservice travelagency
+ZARTAN_VERTICALS := admin credit dealer developer ecommerce finance healthcare healthcare-oie hospitality streamingservice travelagency
 ZARTAN_TF_TARGET := admin
 
 REQUIRED_TOOLS := terraform jq
@@ -36,27 +36,27 @@ validate: format ## Validate HCL script files.
 	@echo "Looping through verticals: "
 	for veriticals in ${ZARTAN_VERTICALS}; do \
 		pushd $$veriticals; \
-		echo "###"; \
+		echo "### Start ###"; \
 		echo "#Validating: ${PWD}"; \
-		echo "###"; \
-		terraform init && terraform validate || exit 1; \
+		TF_IN_AUTOMATION=1 terraform init -backend=false && terraform validate || exit 1; \
+		echo "### End ###"; \
 		popd; \
 	done
 
 .PHONY: format
 format: ## Format HCL script files.
 	@echo "+ $@"
-	@terraform fmt -recursive
+	TF_IN_AUTOMATION=1 terraform fmt -recursive
 
 .PHONY: apply
 apply: clean-tfstate ## Apply single vertical. default: ZARTAN_TF_TARGET=admin. !WARNING: Creates a tfstate file!
 	@echo "+ $@"
 	pushd ${ZARTAN_TF_TARGET} || exit 1; \
-	terraform -version; \
-	terraform init; \
-	terraform plan -var-file=${ZARTAN_TF_TARGET}.tfvars -out=${ZARTAN_TF_TARGET}.tfplan; \
-	terraform apply -auto-approve "${ZARTAN_TF_TARGET}.tfplan"; \
-	terraform destroy -var-file=${ZARTAN_TF_TARGET}.tfvars -auto-approve; \
+	TF_IN_AUTOMATION=1 terraform -version; \
+	TF_IN_AUTOMATION=1 terraform init; \
+	TF_IN_AUTOMATION=1 terraform plan -var-file=${ZARTAN_TF_TARGET}.tfvars -out=${ZARTAN_TF_TARGET}.tfplan; \
+	TF_IN_AUTOMATION=1 terraform apply -auto-approve "${ZARTAN_TF_TARGET}.tfplan"; \
+	TF_IN_AUTOMATION=1 terraform destroy -var-file=${ZARTAN_TF_TARGET}.tfvars -auto-approve; \
 	popd; \
 
 .PHONY: test
@@ -66,8 +66,11 @@ test: clean-tfstate validate ## Run complete terraform init & plan subcommand on
 	for veriticals in ${ZARTAN_VERTICALS}; do \
 		pushd $$veriticals; \
 		terraform -version; \
+		echo "### Start ###"; \
+		echo "#Testing: ${PWD}"; \
 		TF_IN_AUTOMATION=1 terraform init; \
 		TF_IN_AUTOMATION=1 terraform plan -var-file=$$veriticals.tfvars -out=$$veriticals.tfplan; \
+		echo "### End ###"; \
 		popd; \
 	done
 
