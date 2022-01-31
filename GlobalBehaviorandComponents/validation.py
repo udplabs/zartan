@@ -21,10 +21,9 @@ def is_authenticated(f):
     @wraps(f)
     def decorated_function(*args, **kws):
         logger.debug("is_authenticated()")
-        access_token = TokenUtil.get_access_token(request.cookies)
-        # logger.debug("token: {0}".format(token))
 
-        if TokenUtil.is_valid(access_token, session[SESSION_INSTANCE_SETTINGS_KEY]):
+        id_token = TokenUtil.get_id_token(request.cookies)
+        if TokenUtil.is_valid(id_token, session[SESSION_INSTANCE_SETTINGS_KEY]):
             return f(*args, **kws)
         else:
             logger.debug("Access Denied")
