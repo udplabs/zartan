@@ -58,7 +58,7 @@ def healthcareoie_profile():
         is_evident_validated = user["profile"][get_udp_ns_fieldname("is_evident_validated")]
 
     return render_template(
-        "healthcare/profile.html",
+        "healthcareoie/profile.html",
         id_token=TokenUtil.get_id_token(request.cookies),
         access_token=TokenUtil.get_access_token(request.cookies),
         user_info=get_userinfo(),
@@ -102,7 +102,7 @@ def healthcareoie_accept_terms():
 def healthcareoie_account():
     logger.debug("healthcareoie_account")
     return render_template(
-        "healthcare/account.html",
+        "healthcareoie/account.html",
         user_info=get_userinfo(),
         config=session[SESSION_INSTANCE_SETTINGS_KEY])
 
@@ -123,7 +123,7 @@ def healthcareoie_schedule():
         gender = user["profile"][get_udp_ns_fieldname("gender")]
 
     return render_template(
-        "healthcare/schedule.html",
+        "healthcareoie/schedule.html",
         id_token=TokenUtil.get_id_token(request.cookies),
         access_token=TokenUtil.get_access_token(request.cookies),
         user_info=get_userinfo(),
@@ -271,7 +271,7 @@ def healthcareoie_clear_consent(userid):
 def healthcareoie_healthrecord():
     logger.debug("healthcareoie_healthrecord")
     return render_template(
-        "healthcare/healthrecord.html",
+        "healthcareoie/healthrecord.html",
         user_info=get_userinfo(),
         config=session[SESSION_INSTANCE_SETTINGS_KEY])
 
@@ -327,7 +327,7 @@ def healthcareoie_healthins():
                     claims.append(claimEntry)
 
     return render_template(
-        "healthcare/healthins.html",
+        "healthcareoie/healthins.html",
         user_info=get_userinfo(),
         patient_name=name,
         medication_info=medications,
@@ -394,7 +394,7 @@ def _get_smart(request):
     smart_config = {
         'app_id': session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_ins_fhir_clientid"],
         'api_base': session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_ins_fhir_api_base"],
-        'redirect_uri': request.url_root + "healthcare/smartfhir_callback",
+        'redirect_uri': request.url_root + "healthcareoie/smartfhir_callback",
         'scope': 'launch/patient patient/Patient.read patient/MedicationRequest.read patient/Claim.read skip_patient_selection'
     }
     sessionId = session.get('fhir_session_id')
