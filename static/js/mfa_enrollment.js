@@ -5,6 +5,7 @@ $("#_mfaEnrollVerifyButton").click(_verifyEnrollOTPClickHandler);
 $("#_mfaEnrollQuestionButton").click(_enrollQuestionClickHandler);
 $("#_mfaFinishEnrollButton").click(_finishEnrollClickHandler);
 $("#_mfaAddFactorButton").click(_mfaAddFactorClickHandler);
+$("#_mfaEnrollWebAuthnButton").click(_enrollWebAuthnClickHandler);
 $("#_mfaFinishEnrollButton").hide();
 _hideAllEnrollForms();
 
@@ -121,7 +122,7 @@ function _setupFactorList(factors) {
             factor.sortOrder = 50;
         }
         else if (factorType == "webauthn") {
-            factor.factorName = "Web Authn";
+            factor.factorName = "Security Key or Biometric Authenticator";
             factor.sortOrder = 60;
         }
         else
@@ -186,12 +187,123 @@ function _factorEnrollListOnChange() {
             _getAvailableQuestions();
             $("#_mfaEnrollQuestionForm").show();
             break;
-        case "Web Authn":
+        case "Security Key or Biometric Authenticator":
             _enrollWebAuthn();
             $("#_mfaEnrollWebAuthnForm").show();
             break;
     }
 }
+
+/**
+ * WebAuthn authenticators
+*/
+// start the enrollment process
+function _enrollWebAuthn() {
+    var user_id = $("#userId").val();
+    var factorType = $("#_mfaFactorType").val();
+    var provider = $("#_mfaProvider").val();
+    var payload = {
+        "user_id": user_id,
+        "factor_type": factorType,
+        "provider": provider
+    };
+
+    $.ajax({
+        url: "/enroll_webauthn",
+        type: "POST",
+        contentType: "application/json; charset=utf-8",
+        data: JSON.stringify(payload),
+        success: data => {
+            var webauthnresponse = JSON.parse(data);
+            console.log(webauthnresponse);
+            $("#_mfaWebAuthnResponse").val(data);
+        },
+        error: function(xhr, status, error) {
+            logMessage("Status: " + status + ", message: " + error);
+        }
+    });
+}
+
+// activate the authenticator
+function _enrollWebAuthnClickHandler() {
+    webauthnresponse = JSON.parse($("#_mfaWebAuthnResponse").val());
+    user_id = webauthnresponse._embedded.activation.user.id;
+    factor_id = webauthnresponse.id;
+    // Convert activation object's challenge and user id from string to binary
+    webauthnresponse._embedded.activation.challenge = strToBin(webauthnresponse._embedded.activation.challenge);
+    webauthnresponse._embedded.activation.user.id = strToBin(webauthnresponse._embedded.activation.user.id);
+
+    // navigator.credentials is a global object on WebAuthn-supported clients, used to access WebAuthn API
+    //console.log(webauthnresponse._embedded.activation);
+    navigator.credentials.create({
+      publicKey: webauthnresponse._embedded.activation
+    })
+    .then(function (newCredential) {
+      // Get attestation and clientData from callback result, convert from binary to string
+      var attestation = binToStr(newCredential.response.attestationObject);
+      var clientData = binToStr(newCredential.response.clientDataJSON);
+      //console.log(attestation);
+      //console.log(clientData);
+      var payload = {
+          "attestation": attestation,
+          "clientData": clientData,
+          "user_id": user_id,
+          "factor_id": factor_id
+      };
+      console.log(payload);
+      $.ajax({
+          url: "/activate_webauthn",
+          type: "POST",
+          contentType: "application/json; charset=utf-8",
+          data: JSON.stringify(payload),
+          success: data => {
+              var webauthnresponse = JSON.parse(data);
+              if (webauthnresponse.hasOwnProperty('errorSummary')) {
+                $("#_mfaEnrollStatusMessage").text(webauthnresponse.errorSummary);
+              } else {
+                 $("#_mfaEnrollStatusMessage").text("Enrollment Complete");
+                 $("#_mfaEnrollWebAuthnForm").hide();
+              }
+              _finishEnrollment();
+          },
+          error: function(xhr, status, error) {
+               $("#_mfaEnrollStatusMessage").text("Status: " + status + ", message: " + error);
+              _finishEnrollment();
+          }
+      });
+    }).catch(function (err) {
+        // TODO actually catch the error that's happening here instead of bailing out
+        $("#_mfaEnrollStatusMessage").text("Status: Machine already registered:");
+        _finishEnrollment();
+        console.log(err);
+    });
+}
+
+// WebAuthn helper functions
+function getStringHash(str) {
+    let hash = 5381;
+    let i = str.length;
+
+    while (i) {
+        hash = (hash * 33) ^ str.charCodeAt(--i);
+    }
+    return hash >>> 0;
+}
+
+function base64UrlSafeToBase64(str) {
+    return str.replace(new RegExp('_', 'g'), '/').replace(new RegExp('-', 'g'), '+');
+}
+
+function binToStr(bin) {
+    return btoa(new Uint8Array(bin).reduce((s, byte) => s + String.fromCharCode(byte), ''));
+}
+
+function strToBin(str) {
+    return Uint8Array.from(atob(this.base64UrlSafeToBase64(str)), c => c.charCodeAt(0));
+}
+/**
+ * END WebAuthn authenticators
+*/
 
 function _enrollPushFactor() {
     var user_id = $("#userId").val();
@@ -219,32 +331,6 @@ function _enrollPushFactor() {
 
             // start polling for a response
             setTimeout(_pollForPushEnrollment, 3000);
-        },
-        error: function(xhr, status, error) {
-            logMessage("Status: " + status + ", message: " + error);
-        }
-    });
-}
-
-function _enrollWebAuthn() {
-    var user_id = $("#userId").val();
-    var factorType = $("#_mfaFactorType").val();
-    var provider = $("#_mfaProvider").val();
-    var payload = {
-        "user_id": user_id,
-        "factor_type": factorType,
-        "provider": provider
-    };
-
-    $.ajax({
-        url: "/enroll_webauthn",
-        type: "POST",
-        contentType: "application/json; charset=utf-8",
-        data: JSON.stringify(payload),
-        success: data => {
-            var webauthnresponse = JSON.parse(data);
-            console.log(webauthnresponse);
-            $("#_mfaWebAuthnResponse").val(data);
         },
         error: function(xhr, status, error) {
             logMessage("Status: " + status + ", message: " + error);
