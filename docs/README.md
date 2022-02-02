@@ -99,18 +99,22 @@ Open up a terminal/shell then:
     ```
 
     > ℹ️  NOTE: You'll notice that venv has "activated" when there is a `(venv)` in your command prompt:
-    > * Mac/Linux:
+    >
+    > - Mac/Linux:
+    >
     > ```bash
     > #zsh
     > user@macbook zartan % source venv/bin/activate
     > (venv) user@macbook zartan %
     > ```
     >
-    > * Windows:
-    > ```
+    > - Windows:
+    >
+    > ```bash
     > C:\temp123> .\venv\Scripts\activate.bat
     > (venv) C:\temp123>
     > ```
+    >
     > __As best practice, ALWAYS run inside venv. For more information on why you'd want to do this, read up on `venv` [here](https://docs.python.org/3/tutorial/venv.html)__.
 
 5. Install dependencies
@@ -193,6 +197,8 @@ Set up the `.env` file:
     | OKTA_ORG_URL           | Your org url. e.g. `https://dev-13485.oktapreview.com` |
     | OKTA_OIDC_REDIRECT_URI | Use `http://localhost:8666/authorization-code/callback` as this was set by Terraform.
     | OKTA_API_TOKEN         | Provide an okta SSWS key |
+    | OKTA_SIW_VERSION       | What version of the Okta sign-in widget to use. Defaults to 5.16.1 |
+    | OKTA_AUTH_JS_VERSION   | What version of the Okta AuthJS library to use. Defaults to 5.11.0 |
     | AWS_API_KEY            | ℹ️ Mandatory. Get the value from this [Box folder](https://okta.box.com/s/56cnuhratuzjnhxo1odt11tmesjqv4o3) (Only accessible to Okta employees) |
     | SPARKPOST_API_KEY      | ℹ️ Mandatory. Get the value from this [Box folder](https://okta.box.com/s/56cnuhratuzjnhxo1odt11tmesjqv4o3) (Only accessible to Okta employees) |
     | SPARKPOST_FROM_DOMAIN  | ℹ️ Optional. You can use your own API KEY but SparkPost requires a registered domain. This Environment Variables overrides the default `"recintodev.com"`. |
@@ -262,19 +268,20 @@ The `.env` file provides additional configuration depending on the functionality
 
 ### Variables common to all verticals
 
-#### Okta Setting
+### Okta Setting
 
   | Variable               | Value | Example |
   | ---------------------- | ----- | ------- |
   | OKTA_CLIENT_ID         | {{client_id}}     | |
   | OKTA_CLIENT_SECRET     | {{client_secret}} | |
-  | OKTA_ISSUER            | {{issuer_uri}} | |
-  | OKTA_ORG_URL           | {{org_url}} | |
-  | OKTA_OIDC_REDIRECT_URI | http://localhost:8666/authorization-code/callback | |
+  | OKTA_ISSUER            | {{issuer_uri}} | https://ORGNAME.okta.com/oauth2/default |
+  | OKTA_ORG_URL           | {{org_url}} | https://ORGNAME.okta.com |
+  | OKTA_OIDC_REDIRECT_URI | {{redirect_uri}} | http://localhost:8666/authorization-code/callback |
   | OKTA_API_TOKEN         | {{ssws token}} | |
+  | OKTA_SIW_VERSION       | What version of the Okta sign-in widget to use | 5.16.1 |
+  | OKTA_AUTH_JS_VERSION   | What version of the Okta AuthJS library to use | 5.11.0 |
 
-
-#### Zartan Setting
+### Zartan Setting
 
   | Variable            | Value | Default/Example |
   | ------------------- | ----- | ------- |
@@ -293,9 +300,9 @@ The `.env` file provides additional configuration depending on the functionality
   | APP_WARNING_COLOR   | some "warning" status color | #f4a100 |
   | APP_DANGER_COLOR    | some "error" status color |#e81500 |
 
-#### Third Party Service Setting
+### Third Party Service Setting
 
-  **AWS Email Service**
+#### AWS Email Service
 
   | Variable                  | Value |
   | -----------------         | ----- |
@@ -303,7 +310,7 @@ The `.env` file provides additional configuration depending on the functionality
 
   > -or-
 
-  **SparkPost Email Service**
+#### SparkPost Email Service
 
   | Variable                  | Value |
   | -----------------         | ----- |
@@ -312,21 +319,21 @@ The `.env` file provides additional configuration depending on the functionality
 
   > -or-
 
-  **Sendgrid Email Service**
+#### Sendgrid Email Service
 
   | Variable                  | Value |
   | -----------------         | ----- |
   | SENDGRID_API_KEY          | ℹ️ Mandatory. Bring your own Sendgrid account |
   | SENDGRID_FROM_DOMAIN      | ℹ️ Optional. You can use your own API KEY but Sendgrid requires a registered domain. |
 
-- Flask Setting
+#### Flask Setting
 
   | Variable   | Value |
   | ---------- | ----- |
   | SECRET_KEY | some random guid |
-  | APP_SCHEME | http or https depending if you have an ssl cert|
+  | APP_SCHEME | http or https depending if you have an ssl cert |
 
-- Unused for local installation
+#### Unused for local installation
 
   > NOTE: ℹ️ You can ignore these as they are for UDP and not applicable when running locally
 
