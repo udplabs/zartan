@@ -1,18 +1,17 @@
-<script src="https://global.oktacdn.com/okta-auth-js/5.10.0/okta-auth-js.min.js" type="text/javascript"></script>
 <script type="text/javascript">
-//<![CDATA[
+    //<![CDATA[
 
     var authClient = new OktaAuth({
-        url: "{{config.okta_org_name}}",
-        clientId: "{{config.client_id}}",
-        redirectUri: "{{config.redirect_uri}}",
-        issuer: "{{config.issuer}}"
+        url: "{{ config.okta_org_name }}",
+        clientId: "{{ config.client_id }}",
+        redirectUri: "{{ config.redirect_uri }}",
+        issuer: "{{ config.issuer }}"
     });
 
-    $(document).ready(function() {
+    $(document).ready(function () {
 
         authClient.token.parseFromUrl()
-            .then(function(res) {
+            .then(function (res) {
                 var state = res.state; // passed to getWithRedirect(), can be any string
 
                 // manage token or tokens
@@ -21,22 +20,22 @@
                 // Do something with tokens, such as
                 authClient.tokenManager.setTokens(tokens);
             })
-            .catch(function(err) {
+            .catch(function (err) {
                 // handle OAuthError
-        });
+            });
 
         authClient.tokenManager.getTokens()
             .then(({ accessToken, idToken }) => {
                 // handle tokens
                 authClient.token.verify(idToken)
-                    .then(function() {
+                    .then(function () {
                         // ID token is valid
                         // do nothing for now
                     })
-                    .catch(function(err) {
+                    .catch(function (err) {
                         // ID token is invalid/missing
                         authClient.session.get()
-                            .then(function(response) {
+                            .then(function (response) {
                                 console.log(response);
                                 // session exists
                                 if (response.status === 'ACTIVE') {
@@ -45,18 +44,18 @@
 
                                     var getNewTokenUrl = "{{config.get_new_token_url|safe}}";
                                     var error = "{{error_message}}"
-                                    if (error == "" ) {
-                                        if (getNewTokenUrl != "" ) {
-                                            location.href=getNewTokenUrl;
+                                    if (error == "") {
+                                        if (getNewTokenUrl != "") {
+                                            location.href = getNewTokenUrl;
                                         }
                                     } else {
-                                       console.log(error) ;
+                                        console.log(error);
                                     }
                                 }
                             })
                     })
             })
-            .catch(function(err) {
+            .catch(function (err) {
                 // handle expired/invalid/empty tokens
                 console.log(err);
             })
