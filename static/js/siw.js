@@ -11,7 +11,7 @@ function lookupAltUsername(username, operation) {
     if (isNaN(username)) {
       return username;
     } else {
-      nname = "";
+      var nname = "";
       $.ajax({
           'async': false,
           'type': "GET",
