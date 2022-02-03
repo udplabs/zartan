@@ -3,19 +3,15 @@
 {% block header %}
 {% endblock %}
 
+
 {% block content %}
-<style type="text/css">
-.dropdown-item {
-        font-size: 11px;
-}
-</style>  
-{% if config.settings.app_loginmethod == 'passwordless-widget' %}
-        {% include '/components/template-login-widget-pwless.html' %}
-{% elif config.settings.app_loginmethod == 'oie-widget' %}
-        {% include '/components/template-login-widget-oie.html' %}
-{% else %}
-        {% include '/components/template-login-widget.html' %}
-{% endif %}
+        {% if config.settings.app_loginmethod == 'passwordless-widget' %}
+                {% include '/components/template-login-widget-pwless.html' %}
+        {% elif config.settings.app_loginmethod == 'oie-widget' %}
+                {% include '/components/template-login-widget-oie.html' %}
+        {% else %}
+                {% include '/components/template-login-widget.html' %}
+        {% endif %}
 {% endblock %}
 
 {% block footer %}
