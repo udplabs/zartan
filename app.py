@@ -2,6 +2,7 @@ import os
 import json
 import logging
 import logging.config
+import re
 
 from flask import Flask, send_from_directory, render_template
 from flask import request, session, make_response, redirect
@@ -223,14 +224,20 @@ def get_post_login_landing_page_url():
     app_landing_page_url = ""
 
     # Pull from Config
-    hosturl = request.host_url.replace("http://", "{0}://".format(session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"]))
+    app_scheme = session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"]
+    landingurl = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_post_login_landing_url"]
 
-    if session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_post_login_landing_url"]:
-        app_landing_page_url = hosturl + "{app_template}/{landing_page}".format(
-            app_template=session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_template"],
-            landing_page=session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_post_login_landing_url"],)
+    # if the configured value is a full URL, then use it, don't try to build one
+    if re.match(r"^http[s]?://", landingurl):
+        app_landing_page_url = landingurl
     else:
-        app_landing_page_url = hosturl + "profile"
+        # original code
+        hosturl = request.host_url.replace("http://", "{0}://".format(app_scheme))
+        #app_template = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_template"]
+        landing_page = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_post_login_landing_url"]
+        app_landing_page_url = "{host}{landing_page}".format(
+            host=hosturl,
+            landing_page=landing_page)
 
     # Check for from_uri key, this always overrides the config
     if FROM_URI_KEY in session:
