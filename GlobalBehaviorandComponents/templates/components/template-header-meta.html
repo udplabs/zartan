@@ -19,6 +19,29 @@
     <script src="https://global.oktacdn.com/okta-signin-widget/{{ config.okta_siw_version }}/js/okta-sign-in.min.js" type="text/javascript"></script>
     <link href="https://global.oktacdn.com/okta-signin-widget/{{ config.okta_siw_version }}/css/okta-sign-in.min.css" type="text/css" rel="stylesheet"/>
     
+    <script type="text/javascript">
+      // global config for Okta authjs and SIW authParams
+      var authClientConfig = {
+        clientId: "{{config.client_id}}",
+        redirectUri: "{{config.redirect_uri}}",
+        issuer: "{{config.issuer}}",
+        scopes: ['openid', 'profile', 'email'],
+        tokenManager: {
+            storage: 'cookie'
+        },
+        storageManager: {
+            token: {
+                storageTypes: [
+                    'localStorage',
+                    'sessionStorage',
+                    'cookie'
+                ],
+                useMultipleCookies: false // puts each token in its own cookie
+            }
+        }
+      };
+    </script>
+
     <!-- SIW helper functions -->
     <script src="/static/js/siw.js" type="text/javascript"></script>
 
