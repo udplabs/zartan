@@ -49,7 +49,7 @@
                                         console.log(tokens);
                                         // Do something with tokens, such as
                                         authClient.tokenManager.setTokens(tokens);
-                                        location.reload();
+                                        location.href = '/login';
                                     })
                                         .catch(function (err) {
                                             console.log(err);
