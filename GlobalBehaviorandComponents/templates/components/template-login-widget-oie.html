@@ -61,7 +61,6 @@
                   authParams: {
                     issuer: "{{config.issuer}}",
                     scopes: ['openid', 'profile', 'email'],
-                    state: "{{config.settings.app_post_login_landing_url}}",
                     tokenManager: {
                       storage: 'cookie'
                     },
@@ -89,7 +88,7 @@
                   // Remove widget
                   signInWidget.remove();
                   // Can now render in an authenticated state
-                  location.href = signInWidgetConfig.authParams.state;
+                  location.href = "{{config.settings.app_post_login_landing_url}}";
                 }).catch(function(error) {
                   // Handle error
                   console.log(error);
