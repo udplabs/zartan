@@ -1,7 +1,5 @@
 {% with navitems=mynavitems %}
-    {% if config.settings.app_loginmethod == 'oie-widget' %}
-        {% include '//components/template-singlesignon-oie.html' %}
-    {% else %}
+    {% if config.settings.app_loginmethod == 'standard-widget' %}
         {% include '//components/template-singlesignon.html' %}
     {% endif %}
     

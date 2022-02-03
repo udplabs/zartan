@@ -43,11 +43,11 @@
               <script type="text/javascript">
                 console.log("Starting");
                 signInWidgetConfig = {
-                  baseUrl: "{{config.okta_org_name}}",
                   logo: "{{config.settings.app_logo}}",
                   clientId: "{{config.client_id}}",
                   redirectUri: "{{config.redirect_uri}}",
                   useInteractionCodeFlow: true,
+                  authParams: authClientConfig,
                   language: function () {
                     newlang = $("#language").val();
                     console.log(newlang);
@@ -56,23 +56,6 @@
                   i18n: {
                     en: {
                       'primaryauth.title': "Sign in to {{config.settings.app_name|safe}}"
-                    }
-                  },
-                  authParams: {
-                    issuer: "{{config.issuer}}",
-                    scopes: ['openid', 'profile', 'email'],
-                    tokenManager: {
-                      storage: 'cookie'
-                    },
-                    storageManager: {
-                      token: {
-                        storageTypes: [
-                          'localStorage',
-                          'sessionStorage',
-                          'cookie'
-                        ],
-                        useMultipleCookies: false // puts each token in its own cookie
-                      }
                     }
                   },
                   transformUsername: lookupAltUsername
@@ -99,6 +82,5 @@
         </div>
         </div>
     </div>
-
 </section>
 <!-- page-wrapper end -->
