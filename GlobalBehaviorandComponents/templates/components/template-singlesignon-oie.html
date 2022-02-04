@@ -22,46 +22,54 @@
     });
 
     $(document).ready(function () {
-        authClient.tokenManager.getTokens()
-            .then(({ accessToken, idToken }) => {
+        authClient.tokenManager.get("idToken")
+            .then(function(idToken) {
                 // handle tokens
+                console.log("Got idToken", idToken);
                 authClient.token.verify(idToken)
                     .then(function () {
                         // ID token is valid
                         // do nothing for now
-                        console.log("tokens are good...");
-
+                        console.log("tokens are good...nothing to see here");
                     })
                     .catch(function (err) {
                         // ID token is invalid/missing
-
+                        console.log("idToken didn't verify. Invalid or expired (but present)...");
                         authClient.session.get()
                             .then(function (session) {
                                 // session exists
                                 if (session.status == "ACTIVE") {
-                                    console.log("Session Active");
+                                    console.log("Session active. Do SSO.");
                                     $("#sessionId").val(session.id);
+                                    
+                                    {% if config.settings.app_loginmethod == 'hosted-widget' %}
+                                    var getNewTokenUrl = "{{config.get_new_token_url|safe}}";
+                                    location.href = getNewTokenUrl;
+                                    {% else %}
                                     authClient.token.getWithoutPrompt({
                                         responseType: ['token', 'id_token']
                                     }).then(function (res) {
                                         console.log("results", res);
                                         var tokens = res.tokens;
-                                        console.log(tokens);
+                                        console.log("Got new tokens", tokens);
                                         // Do something with tokens, such as
                                         authClient.tokenManager.setTokens(tokens);
                                         location.href = '/login';
                                     })
-                                        .catch(function (err) {
+                                    .catch(function (err) {
                                             console.log(err);
-                                        })
+                                    });
+                                    {% endif %}
                                 }
-                            })
-                    })
+                            });
+                    });
             })
             .catch(function (err) {
                 // handle expired/invalid/empty tokens
+                console.log("Tokens missing, definitely not logged in");
                 console.log(err);
-            })
+                //location.href = '/login';
+            });
     });
 //]]>
 </script>
