@@ -1,10 +1,4 @@
 {% with navitems=mynavitems %}
-    {% if config.settings.app_loginmethod == 'oie-widget' %}
-        {% include '//components/template-singlesignon-oie.html' %}
-    {% elif config.settings.app_loginmethod == 'standard-widget' %}
-        {% include '//components/template-singlesignon.html' %}
-    {% endif %}
-    
     {% if config.settings.app_loginmethod == 'custom-widget' %}
         <!--custom header widget-->
         {% include '//components/template-navigation-custom-login.html' %}
