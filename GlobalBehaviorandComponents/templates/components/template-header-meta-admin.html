@@ -10,12 +10,18 @@
     <script src="https://cdn-zartan.s3.us-east-2.amazonaws.com/static/js/feather.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn-zartan.s3.us-east-2.amazonaws.com/static/js/jquery.min.js"></script>
     
-    {% if config.settings.app_loginmethod == 'standard-widget' or config.settings.app_loginmethod == 'oie-widget' %}
     <script src="https://global.oktacdn.com/okta-auth-js/{{ config.okta_auth_js_version }}/okta-auth-js.min.js" type="text/javascript"></script>
+    {% if config.settings.app_loginmethod == 'standard-widget' or config.settings.app_loginmethod == 'oie-widget' %}
     <script src="https://global.oktacdn.com/okta-signin-widget/{{ config.okta_siw_version }}/js/okta-sign-in.min.js" type="text/javascript"></script>
     <link href="https://global.oktacdn.com/okta-signin-widget/{{ config.okta_siw_version }}/css/okta-sign-in.min.css" type="text/css" rel="stylesheet"/>
     <!-- SIW helper functions -->
     <script src="/static/js/siw.js" type="text/javascript"></script>
+    {% endif %}
+    
+    {% if config.settings.app_loginmethod == 'oie-widget' or config.settings.app_loginmethod == 'hosted-widget' %}
+        {% include '//components/template-singlesignon-oie.html' %}
+    {% elif config.settings.app_loginmethod == 'standard-widget' %}
+        {% include '//components/template-singlesignon.html' %}
     {% endif %}
     
     <!-- Global site tag (gtag.js) - Google Analytics -->
