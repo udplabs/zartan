@@ -2,7 +2,7 @@ variable "org_name" {}
 variable "api_token" {}
 variable "base_url" {}
 variable "demo_app_name" { default = "streamingservice" }
-variable "udp_subdomain" { default = "local_zartan" }
+variable "udp_subdomain" { default = "local" }
 
 locals {
   app_domain       = "${var.udp_subdomain}.${var.demo_app_name}.unidemo.info"
@@ -26,6 +26,10 @@ resource "okta_app_oauth" "streamingservice" {
     "https://${local.app_domain}/authorization-code/callback",
     "http://localhost:8666/authorization-code/callback"
   ]
+  post_logout_redirect_uris = [
+    "https://${local.app_domain}/index",
+    "http://localhost:8666/index"
+  ]
   response_types = ["code"]
   consent_method = "TRUSTED"
   issuer_mode    = "ORG_URL"
@@ -38,6 +42,10 @@ resource "okta_app_oauth" "networktv" {
   redirect_uris = [
     "https://${local.app_domain}/streamingservice/authorization-code/callback",
     "http://localhost:8666/authorization-code/callback"
+  ]
+  post_logout_redirect_uris = [
+    "https://${local.app_domain}/index",
+    "http://localhost:8666/index"
   ]
   response_types = ["code"]
   consent_method = "TRUSTED"
