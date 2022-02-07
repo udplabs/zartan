@@ -119,6 +119,7 @@ app.register_blueprint(credit_views_bp, url_prefix='/credit')
 from _healthcare.views import healthcare_views_bp
 app.register_blueprint(healthcare_views_bp, url_prefix='/healthcare')
 
+# healthcare OIE theme
 from _healthcareoie.views import healthcareoie_views_bp
 app.register_blueprint(healthcareoie_views_bp, url_prefix='/healthcareoie')
 
