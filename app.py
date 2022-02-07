@@ -230,9 +230,8 @@ def get_post_login_landing_page_url():
     if re.match(r"^http[s]?://", landingurl):
         app_landing_page_url = landingurl
     else:
-        hosturl = request.host_url.replace("http://", "{0}://".format(app_scheme))
         landing_page = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_post_login_landing_url"]
-        app_landing_page_url = "{0}{1}".format(hosturl, landing_page)
+        app_landing_page_url = "{0}{1}".format(request.host_url, landing_page)
 
     # Check for from_uri key, this always overrides the config
     if FROM_URI_KEY in session:
