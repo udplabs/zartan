@@ -223,7 +223,6 @@ def get_post_login_landing_page_url():
     app_landing_page_url = ""
 
     # Pull from Config
-    app_scheme = session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"]
     landingurl = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_post_login_landing_url"]
 
     # if the configured value is a full URL, then use it, don't try to build one
