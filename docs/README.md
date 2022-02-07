@@ -198,7 +198,10 @@ Set up the `.env` file:
     | OKTA_OIDC_REDIRECT_URI | Use `http://localhost:8666/authorization-code/callback` as this was set by Terraform.
     | OKTA_API_TOKEN         | Provide an okta SSWS key |
     | OKTA_SIW_VERSION       | What version of the Okta sign-in widget to use. Defaults to 5.16.1 |
+    | OKTA_SIW_HASH          | A SHA384 hash of the SIW Javascript file contents. Defaults to sha384-a2yCLiNNwZ2BjqZF19qFKM2XWAuGKREPL8S3FckTr8+S4JDdpNqPehJUjVfNHf5a |
     | OKTA_AUTH_JS_VERSION   | What version of the Okta AuthJS library to use. Defaults to 5.11.0 |
+    | OKTA_AUTH_JS_HASH      | A SHA384 hash of the AuthJS Javascript file contents. Defaults to sha384-Wk5gwb+o8f4psT7pFZVAGgGprt1nIg88L4BOLYnaIe3fvxdS+5u7xP/n8xuqMWFr |
+
     | AWS_API_KEY            | ℹ️ Mandatory. Get the value from this [Box folder](https://okta.box.com/s/56cnuhratuzjnhxo1odt11tmesjqv4o3) (Only accessible to Okta employees) |
     | SPARKPOST_API_KEY      | ℹ️ Mandatory. Get the value from this [Box folder](https://okta.box.com/s/56cnuhratuzjnhxo1odt11tmesjqv4o3) (Only accessible to Okta employees) |
     | SPARKPOST_FROM_DOMAIN  | ℹ️ Optional. You can use your own API KEY but SparkPost requires a registered domain. This Environment Variables overrides the default `"recintodev.com"`. |
@@ -279,7 +282,9 @@ The `.env` file provides additional configuration depending on the functionality
   | OKTA_OIDC_REDIRECT_URI | {{redirect_uri}} | http://localhost:8666/authorization-code/callback |
   | OKTA_API_TOKEN         | {{ssws token}} | |
   | OKTA_SIW_VERSION       | What version of the Okta sign-in widget to use | 5.16.1 |
+  | OKTA_SIW_HASH          | A SHA384 hash of the SIW Javascript file contents. | sha384-a2yCLiNNwZ2BjqZF19qFKM2XWAuGKREPL8S3FckTr8+S4JDdpNqPehJUjVfNHf5a |
   | OKTA_AUTH_JS_VERSION   | What version of the Okta AuthJS library to use | 5.11.0 |
+  | OKTA_AUTH_JS_HASH      | A SHA384 hash of the AuthJS Javascript file contents. | sha384-Wk5gwb+o8f4psT7pFZVAGgGprt1nIg88L4BOLYnaIe3fvxdS+5u7xP/n8xuqMWFr |
 
 ### Zartan Setting
 
