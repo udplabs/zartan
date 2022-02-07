@@ -117,15 +117,15 @@ def gbac_logout():
     id_token = TokenUtil.get_id_token(request.cookies)
     claims = TokenUtil.get_claims_from_token(id_token)
     issuer = claims["iss"]
-
+    
     redirect_url = "{iss}/v1/logout?id_token_hint={id_token}&post_logout_redirect_uri={post_logout_redirect_uri}"
     redirect_path = url_for("gbac_bp.gbac_main", _external="True", _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"])
     redirect_url = redirect_url.format(
         iss=issuer,
-        id_token=id_token,
+        id_token=id_token, 
         post_logout_redirect_uri=redirect_path
     )
-
+    
     response = make_response(redirect(redirect_url))
     response.set_cookie(TokenUtil.OKTA_TOKEN_COOKIE_KEY, "")
     return response
