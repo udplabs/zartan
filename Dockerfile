@@ -9,7 +9,7 @@ RUN apk --no-cache add \
         python3-dev \
         libffi-dev \
         openssl-dev \
-    && pip3 install -r requirements.txt
+    && pip3 install --no-cache-dir -r requirements/dev.txt
 
 ENTRYPOINT ["python3"]
 CMD ["app.py"]
