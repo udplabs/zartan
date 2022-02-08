@@ -20,7 +20,9 @@ logger = logging.getLogger(__name__)
 streamingservice_views_bp = Blueprint('streamingservice_views_bp', __name__, template_folder='templates', static_folder='static', static_url_path='static')
 
 
-@streamingservice_views_bp.route("/devicepage")
+# //TODO: Remove and use Device Auth Flow instead, it is OOTB@streamingservice_views_bp.route("/devicepage")
+# //TODO: Remove AWS Resource tied to the custom approached
+# //TODO: Update documentation to reflect the new approach
 @apply_remote_config
 def streamingservice_devicepage():
     logger.debug("streamingservice_devicepage()")

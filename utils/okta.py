@@ -1792,6 +1792,7 @@ class IDPUtil:
         return cert
 
 
+# //TODO: Streaming Services (SS) uses this class. Once SS is use the Device Auth Flow this class can be removed.
 class PKCE:
     logger = logging.getLogger(__name__)
     """Simple module to generate PKCE code verifier and code challenge.
