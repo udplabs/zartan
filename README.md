@@ -304,6 +304,7 @@ OKTA_API_TOKEN="00iq*******7NHYULle5"
 ...
 
 # Start the container(app) in the background (eg. '-d' flag). NOTE: Will take awhile since container needs to be built.
+
 $ docker-compose up -d
 
 # Navigate http://localhost:8666 with your favorite browser (eg. macOS default Chrome)
@@ -317,9 +318,15 @@ $ docker-compose down
 
 # Rebuild and start container, if you happen to update requirements.txt.
 $ docker-compose up --build
+
+# (Optional) Development commands for pytest. Assuming container is running in daemon mode.
+$ docker-compose exec web pytest
+
+# (Optional) Development commands for flake8. Assuming container is running in daemon mode.
+$ docker-compose exec web flake8
 ```
 
-## Authors
+## Original Authors
 * [Shawn Recinto](https://github.com/srecinto)
 * [Dan Zadik](https://github.com/dzadikdev)
 * [Bhanchand Prasad](https://github.com/bhanchand)
