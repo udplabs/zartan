@@ -1,4 +1,5 @@
 <!--Do Not Remove any parts of this document unless you expect to not use out of the box behaviours-->
+<!-- <!DOCTYPE html> -->
 <html lang="en">
 {% include '//components/template-header-meta.html' %}
 <script type="text/javascript" src="/static/js/jquery.qrcode.min.js"></script>
@@ -22,7 +23,7 @@
               <div class="col-md-6">
                 <div class="card" style="background: none;">
                   <div class="card-body" style="color:white;">
-                    <H1>Active Your Device</H1>
+                    <h1>Active Your Device</h1>
                     In order for The application to work please do one of the following:<br>
                     <br> 1. Go to this website,
                     <a id="verificationuri" href="#" target="_blank"></a>, or use the qr code on your computer or mobile devices.
@@ -35,7 +36,7 @@
               <div class="col-md-6" style="border-left: 2px solid gray;">
                 <div class="card" style="background: none;">
                   <div class="card-body" style="text-align: center;"><br><br><br><br>
-                    <H1>Activation Code</H1><br><br>
+                    <h1>Activation Code</h1><br><br>
                     <div id="codebox" style="display: flex;flex-direction: row;place-content: center;flex: 1 1 0%;">
                     </div>
                     <br><br>
@@ -54,7 +55,7 @@
             <div class="icon-close pos-a" style="text-align:center">
               <br>
               <button class="btn btn-transparent-dark btn-icon" type="button">
-                <i data-feather="x" style="color:white;"></i>
+                <span data-feather="x" style="color:white;"></span>
               </button>
             </div>
             <br><br>
@@ -78,13 +79,19 @@
             <div class="icon2-close pos-a" style="text-align:center">
               <br>
               <button class="btn btn-transparent-dark btn-icon" type="button">
-                <i data-feather="x" style="color:white;"></i>
+                <span data-feather="x" style="color:white;"></span>
               </button>
             </div>
-            <b>STEP 1 - Device Information from Host:</b><br><br> Device information is requested by Device Authorization Endpoint and then stored locally.<br><br> Device Authorization Endpoint also stores device information tied to the <u>User Code</u>            for use during the registration process.<br><br> User code is displayed to user for registration.<br><br>
+            <strong>STEP 1 - Device Information from Host:</strong><br><br>
+            Device information is requested by Device Authorization Endpoint and then stored locally.<br><br>
+            Device Authorization Endpoint also stores device information tied to the <u>User Code</u>
+            for use during the registration process.<br><br>
+            User code is displayed to user for registration.<br><br>
             <pre><code id="deviceinfo"> No Device Information. Yet!</code></pre>
             <br><br>
-            <b>STEP 5 - Retrieve Token from Device Authorization Endpoint:</b><br><br> The Device polls an API to retrive tokens using the <u>Device Code</u>.<br><br> Tokens are stored locally for validation on a scheduled basis or on startup of the device.<br><br>
+            <strong>STEP 5 - Retrieve Token from Device Authorization Endpoint:</strong><br><br>
+            The Device polls an API to retrive tokens using the <u>Device Code</u>.<br><br>
+            Tokens are stored locally for validation on a scheduled basis or on startup of the device.<br><br>
             <pre><code id="deviceinfo2"></code></pre>
           </div>
           <div class="toggle-bg2"></div>
