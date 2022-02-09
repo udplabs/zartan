@@ -3,7 +3,6 @@ import logging
 from os import access
 import random
 import string
-from tkinter.messagebox import NO
 import uuid
 import json
 
