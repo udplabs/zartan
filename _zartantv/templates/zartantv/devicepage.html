@@ -1,5 +1,5 @@
 <!--Do Not Remove any parts of this document unless you expect to not use out of the box behaviours-->
-<!-- <!DOCTYPE html> -->
+<!DOCTYPE html>
 <html lang="en">
 {% include '//components/template-header-meta.html' %}
 <script type="text/javascript" src="/static/js/jquery.qrcode.min.js"></script>
@@ -8,99 +8,111 @@
 
 <body>
   <div class="main" id="main">
-    <a href="#" class="btn btn-primary btn-lg cta-open">TV Controls</a>
-    <a href="#" class="btn btn-primary btn-lg id-open">Device Flow Information</a>
-    <div class="background" id="background">
-      <div class="tv" id="tv">
-        <a href="/index"><img src={{config.settings.app_logo}} style="max-height:100px;max-width:300px;height:auto;width:auto;margin: 250 0 0 450;position:absolute;" onerror="this.style.display='none'"></a>
-        <div class="appbar" id="appbar">
-          <button class="action-button shadow animate blue" id="btnTVPower">{{appname}}</button>
-        </div>
-        <div class="getcode" id="getcode" style="display:none">
-          <div class="topbar" id="topbar">
-            <br>
-            <div class="row">
-              <div class="col-md-6">
-                <div class="card" style="background: none;">
-                  <div class="card-body" style="color:white;">
-                    <h1>Active Your Device</h1>
-                    In order for The application to work please do one of the following:<br>
-                    <br> 1. Go to this website,
-                    <a id="verificationuri" href="#" target="_blank"></a>, or use the qr code on your computer or mobile devices.
-                    <br><br>
-                    <div id="qrcode" style="text-align: -webkit-center;"></div>
-                    <br> 2. When promopted enter the Activation Code located on the right of the screen.<br> 3. Your device is now Active!
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6" style="border-left: 2px solid gray;">
-                <div class="card" style="background: none;">
-                  <div class="card-body" style="text-align: center;"><br><br><br><br>
-                    <h1>Activation Code</h1><br><br>
-                    <div id="codebox" style="display: flex;flex-direction: row;place-content: center;flex: 1 1 0%;">
-                    </div>
-                    <br><br>
-                    <a href="#" class="actionbtn" onclick="closecode()">Cancel</a> <a href="#" class="actionbtn" style="float:right;" onclick="getcode()">Get New Code</a>
-                  </div>
-                </div>
-              </div>
-            </div>
+
+    <div class="row">
+      <div class="col-lg-4">
+        <a href="#" class="btn btn-primary btn-lg id-open">Device Flow Information</a>
+      </div>
+      <div class="col-lg-6"></div>
+      <div class="col-lg-2">
+        <a href="#" class="btn btn-primary btn-lg cta-open">TV Controls</a>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="tv">
+          <div id="tv" class="tvscreen" style="display: none;">
+            <iframe src="https://streamable.com/e/imsnba?autoplay=1"></iframe>
           </div>
-        </div>
-        <div class="getcode" id="codecomplete" style="display:none">
-          <iframe id="tv" src="https://streamable.com/e/imsnba?autoplay=1" width="1184px" height="666" frameborder="0"></iframe>
-        </div>
-        <section class="toggle-form">
-          <div class="formwrap px-4" style="text-align:center">
-            <div class="icon-close pos-a" style="text-align:center">
-              <br>
-              <button class="btn btn-transparent-dark btn-icon" type="button">
+          <section class="toggle-form">
+            <div class="formwrap px-4" style="text-align:center">
+              <div class="icon-close pos-a" style="text-align:center">
+                <br>
+                <button class="btn btn-transparent-dark btn-icon" type="button">
                 <span data-feather="x" style="color:white;"></span>
               </button>
-            </div>
-            <br><br>
-            <button class="btn btn-primary" id="btnRebootTV">TV Reboot</button>
-            <br><br>
-            <button class="btn btn-primary" id="btnRemoveTokens">Remove<br>TV Tokens</button>
-            <br><br>
-            <button class="btn btn-primary" id="btnRevokeAccess">Revoke<br>Device Access</button>
-            <br><br>
-            <!-- <button class="btn btn-primary" onClick="revokeTokens()">Revoke<br>Access Token<br>and<br>Refresh
-              Token</button>
-            <br><br> -->
-            <button class="btn btn-primary" id="btnShowIDToken" type="button" data-toggle="modal" data-target="#tokenmodal">View<br>ID Token</button>
-            <br><br>
-            <button class="btn btn-primary" id="btnShowAccessToken" type="button" data-toggle="modal" data-target="#tokenmodal">View<br>Access Token</button>
-          </div>
-          <div class="toggle-bg"></div>
-        </section>
-        <section class="toggle-deviceid">
-          <div class="formwrap2 px-4" style="text-align:left">
-            <div class="icon2-close pos-a" style="text-align:center">
-              <br>
-              <button class="btn btn-transparent-dark btn-icon" type="button">
-                <span data-feather="x" style="color:white;"></span>
+              </div>
+              <br><br>
+              <button class="btn btn-primary" id="btnRebootTV">TV Reboot</button>
+              <br><br>
+              <button class="btn btn-primary" id="btnRemoveTokens">Remove<br>TV Tokens</button>
+              <br><br>
+              <button class="btn btn-primary" id="btnRevokeAccess">Revoke<br>Device Access</button>
+              <br><br>
+              <button class="btn btn-primary" id="btnShowIDToken" type="button" data-toggle="modal" data-target="#tokenmodal">
+                View<br>ID Token
+              </button>
+              <br><br>
+              <button class="btn btn-primary" id="btnShowAccessToken" type="button" data-toggle="modal" data-target="#tokenmodal">
+                View<br>Access Token
               </button>
             </div>
-            <strong>STEP 1 - Device Information from Host:</strong><br><br>
-            Device information is requested by Device Authorization Endpoint and then stored locally.<br><br>
-            Device Authorization Endpoint also stores device information tied to the <u>User Code</u>
-            for use during the registration process.<br><br>
-            User code is displayed to user for registration.<br><br>
-            <pre><code id="deviceinfo"> No Device Information. Yet!</code></pre>
-            <br><br>
-            <strong>STEP 5 - Retrieve Token from Device Authorization Endpoint:</strong><br><br>
-            The Device polls an API to retrive tokens using the <u>Device Code</u>.<br><br>
-            Tokens are stored locally for validation on a scheduled basis or on startup of the device.<br><br>
-            <pre><code id="deviceinfo2"></code></pre>
+            <div class="toggle-bg"></div>
+          </section>
+          <section class="toggle-deviceid">
+            <div class="formwrap2 px-4" style="text-align:left">
+              <div class="icon2-close pos-a" style="text-align:center">
+                <br>
+                <button class="btn btn-transparent-dark btn-icon" type="button">
+                <span data-feather="x" style="color:white;"></span>
+              </button>
+              </div>
+              <strong>STEP 1 - Device Information from Host:</strong><br><br> Device information is requested by Device Authorization Endpoint and then stored locally.<br><br> Device Authorization Endpoint also stores device information tied to the
+              <u>User Code</u> for use during the registration process.<br><br> User code is displayed to user for registration.<br><br>
+              <pre><code id="deviceinfo"> No Device Information. Yet!</code></pre>
+              <br><br>
+              <strong>STEP 2 - Retrieve Token from Device Authorization Endpoint:</strong><br><br> The Device polls an API to retrive tokens using the <u>Device Code</u>.<br><br> Tokens are stored locally for validation on a scheduled basis or on startup
+              of the device.<br><br>
+              <pre><code id="deviceinfo2"></code></pre>
+            </div>
+            <div class="toggle-bg2"></div>
+          </section>
+          <div class="appbar" id="appbar">
+            <button class="action-button shadow animate blue" id="btnTVPower">{{appname}}</button>
           </div>
-          <div class="toggle-bg2"></div>
-        </section>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  {% include '//components/template-footer-scripts.html' %}
+
+  <div class="modal" id="getcode" tabindex="-1" role="dialog" aria-labelledby="Activate Your Device" style="display: none;" aria-hidden="true">
+    <div class="topbar" id="topbar">
+      <br>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card" style="background: none;">
+            <div class="card-body" style="color:white;">
+              <h1>Active Your Device</h1>
+              In order for The application to work please do one of the following:
+              <ol>
+                <li>
+                  Go to this website, <a id="verificationuri" href="#" target="_blank"></a>,
+                  or use the qr code on your computer or mobile devices.
+                  <div id="qrcode" style="text-align: -webkit-center;"></div>
+                </li>
+                <li>When promopted enter the Activation Code located on the right of the screen.</li>
+                <li>Your device is now Active!</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6" style="border-left: 2px solid gray;">
+          <div class="card" style="background: none;">
+            <div class="card-body" style="text-align: center;"><br><br><br><br>
+              <h1>Activation Code</h1><br><br>
+              <div id="codebox" style="display: flex;flex-direction: row;place-content: center;flex: 1 1 0%;"></div>
+              <br><br>
+              <a id="btnCancelGetCode" href="#" class="actionbtn">Cancel</a> <a id="btnGetCode" href="#" class="actionbtn" style="float:right;">Get New Code</a>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-  {% include '//components/template-footer-scripts.html' %}
-
 
   <div class="modal fade" id="tokenmodal" tabindex="-1" role="dialog" aria-labelledby="Token" style="display: none;" aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">

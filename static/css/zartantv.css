@@ -41,7 +41,7 @@ a:active {
 
 html,
 body {
-  height: 100%;
+  height: 100vh;
   background-color: #b8c6db;
 }
 
@@ -60,9 +60,6 @@ code {
   font-family: monospace, monospace;
 }
 
-
-/* pre {} */
-
 pre>code {
   display: block;
   padding: 1rem;
@@ -76,48 +73,44 @@ div.card-body img {
 }
 
 .main {
-  width: 1200;
-  height: 800;
+  width: 1200px;
+  height: 100vh;
+  margin: 10px auto 0 auto;
 }
 
 .tv {
-  width: 100%;
-  height: 100%;
-  background-image: url("https://pngimg.com/uploads/tv/tv_PNG39232.png");
-  background-repeat: no-repeat;
-  background-position: 50% 50%;
+  margin: 10px auto 0 auto;
+  height: 90vh;
+  background-image: url("https://images.unsplash.com/photo-1579546929518-9e396f3cc809?ixlib=rb-1.2.1&w=1000&q=80"), 
+    url("https://pngimg.com/uploads/tv/tv_PNG39232.png");
+  background-repeat: no-repeat, no-repeat;
+  background-position: 50% calc(50% - 35px), 50% 50%;
+  background-size: 1185px 675px, 1200px 755px;
 }
 
-.background {
-  /*background-image: url("https://i.pinimg.com/originals/e8/c2/49/e8c249fe6e69f3b9b5bf30b8bdec9f95.jpg");*/
-  background-image: url("https://images.unsplash.com/photo-1579546929518-9e396f3cc809?ixlib=rb-1.2.1&w=1000&q=80");
-  /*background-image: url("https://media.idownloadblog.com/wp-content/uploads/2015/11/Apple-TV-China-4608x2880-wallpaper.png");*/
-  width: 100%;
-  height: 100%;
-  background-size: 1185px 675px;
-  background-repeat: no-repeat;
-  background-position: 50% calc(50% - 35px);
+.tvscreen {
+  padding: 2px 0px;
+}
+
+.tvscreen iframe {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  width: 1200px;
+  height: calc(1200px * 0.5625);
 }
 
 .appbar {
-  width: 1184px;
-  height: 150px;
-  /*background-color: #000000;*/
   background-color: rgba(255, 255, 255, 0.5);
-  margin-left: 8;
-  margin-top: 548;
-  position: absolute;
+  position: relative;
+  top: 535px;
   text-align: center;
+  margin-left: 7px;
+  margin-right: 8px;
 }
 
-.getcode {
-  width: 1184px;
-  height: 665px;
-  /* background-color: #000000; */
-  background-color: 000000;
-  margin-left: 8;
-  margin-top: 31;
-  position: absolute;
+#getcode {
+  background-color: #000000;
 }
 
 .codebox {
@@ -162,7 +155,7 @@ div.card-body img {
   right: -9999px;
   position: fixed;
   top: 0;
-  height: 100%;
+  height: 100vh;
   z-index: 9999;
   transition: right .6s ease-in-out;
 }
@@ -178,7 +171,7 @@ div.card-body img {
 .formwrap {
   background-color: #989898;
   max-width: 620px;
-  height: 100%;
+  height: 100vh;
   float: right;
   box-shadow: -1px 0px 12px rgba(0, 0, 0, 0.1);
 }
@@ -187,7 +180,7 @@ div.card-body img {
   left: -9999px;
   position: fixed;
   top: 0;
-  height: 100%;
+  height: 100vh;
   z-index: 9999;
   transition: left .6s ease-in-out;
 }
@@ -203,7 +196,7 @@ div.card-body img {
 .formwrap2 {
   background-color: #989898;
   max-width: 900px;
-  height: 100%;
+  height: 100vh;
   float: left;
   box-shadow: -1px 0px 12px rgba(0, 0, 0, 0.1);
   color: white;

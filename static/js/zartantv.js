@@ -32,11 +32,19 @@ $(document).ready(function() {
   $("#btnTVPower").on("click", getDeviceAuthorization);
   $("#btnRemoveTokens").on("click", removeTokens);
   $("#btnRevokeAccess").on("click", revokeDeviceAccess);
-  $("#btnShowIDToken").on("click", showidtoken);
-  $("#btnShowAccessToken").on("click", showaccesstoken);
-  $("#").on("click", );
-  $("#").on("click", );
-  $("#").on("click", );
+
+  $("#btnShowIDToken").on("click", {
+    token_type_hint: "d_id_token",
+    token_name: "ID Token"
+  }, showDecodedJwt);
+
+  $("#btnShowAccessToken").on("click", {
+    token_type_hint: "d_access_token",
+    token_name: "Access Token"
+  }, showDecodedJwt);
+
+  $("#btnGetCode").on("click", getcode);
+  $("#btnCancelGetCode").on("click", closecode);
 });
 
 function getDeviceAuthorization() {
@@ -61,7 +69,7 @@ function getDeviceAuthorization() {
   $("#deviceinfo").html(JSON.stringify(response, null, 4));
   $("#codebox").html(codestring);
   $("#appbar").hide();
-  $("#getcode").show();
+  $("#getcode").modal("show");
   $("#qrcode").empty();
 
   weblink = response.verification_uri_complete;
@@ -73,17 +81,12 @@ function getDeviceAuthorization() {
 
   var poll = new pollify(getToken, response.expires_in, response.interval)
     .then(function() {
-      setTimeout(function() {
-        var poll2 = pollForVerifyToken()
-          .then(function() {
-            // Polling done, now do something else!
-          }).catch(function() {
-            // Polling timed out, handle the error!
-          });
-      }, 3000);
-
-    }).catch(function() {
-      // Polling timed out, handle the error!
+      // polling finished, finish the device registration
+      completeRegistration();
+      showTV();
+    })
+    .catch(function() {
+      // polling timed out. do something?
     });
 }
 
@@ -108,9 +111,6 @@ function getToken() {
     window.sessionStorage["d_id_token"] = response.id_token;
     window.sessionStorage["d_refresh_token"] = response.refresh_token;
     window.sessionStorage["device_code"] = device_code;
-    completeRegistration();
-    $("#getcode").hide();
-    $("#codecomplete").show();
     $("#deviceinfo2").html(JSON.stringify(response, null, 4));
     return true;
   } else {
@@ -172,9 +172,7 @@ function verifyToken() {
     return false;
   } else {
     console.log("Device Not Found or Session Expired");
-    $("#appbar").show();
-    $("#getcode").hide();
-    $("#codecomplete").hide();
+    hideTV();
     return true;
   }
 }
@@ -223,35 +221,36 @@ function load_tokens() {
 function showTV() {
   console.log("show tv");
   $("#appbar").hide();
-  $("#getcode").hide();
-  $("#codecomplete").show();
+  $("#getcode").modal("hide");
+  $("#tv").show();
   var poll3 = pollForVerifyToken();
 }
 
 function hideTV() {
   $("#appbar").show();
-  $("#getcode").hide();
-  $("#codecomplete").hide();
-  var poll3 = pollForVerifyToken();
+  $("#getcode").modal("hide");
+  $("#tv").hide();
 }
 
 function pollForVerifyToken() {
   return new pollify(verifyToken, 43200, 5).then(function() {}).catch(function() {});
 }
 
-function showidtoken() {
-  var decoded = jwt_decode(window.sessionStorage["d_id_token"]);
-  $("#tokentitle").text("ID Token");
-  var jsonbody = JSON.stringify(decoded, null, 4)
-  $("#tokenbody").text(jsonbody);
-}
+function showDecodedJwt(event) {
+  var token_type = event.data.token_type_hint
+  var token_name = event.data.token_name;
+  var token = window.sessionStorage[token_type];
+  console.log("Token type", token_type);
+  console.log("Token name", token_name);
 
-function showaccesstoken() {
-  var decoded = jwt_decode(window.sessionStorage["d_access_token"]);
-  $("#tokentitle").text("Access Token");
-  var jsonbody = JSON.stringify(decoded, null, 4)
-  console.log(jsonbody);
-  $("#tokenbody").text(jsonbody);
+  $("#tokentitle").text(token_name);
+  try {
+    var decoded = jwt_decode(token);
+    var jsonbody = JSON.stringify(decoded, null, 4)
+    $("#tokenbody").text(jsonbody);
+  } catch {
+    $("#tokenbody").text("Problem decoding token");
+  }
 }
 
 function removeTokens() {
@@ -278,46 +277,10 @@ function revokeDeviceAccess() {
   console.log(response);
 }
 
-// function revokeTokens() {
-//   revokeAccessToken();
-//   revokeRefreshToken();
-// }
-
-// function revokeAccessToken() {
-//   $.ajax({
-//     'async': false,
-//     'type': "POST",
-//     'url': "/zartantv/revoketoken",
-//     'data': {
-//       "token": window.sessionStorage["d_access_token"],
-//       "tokenhint": "access_token"
-//     },
-//     'success': function(data) {
-//       response = data;
-//     }
-//   });
-//   console.log(response);
-// }
-
-// function revokeRefreshToken() {
-//   $.ajax({
-//     'async': false,
-//     'type': "POST",
-//     'url': "/zartantv/revoketoken",
-//     'data': {
-//       "token": window.sessionStorage["d_refresh_token"],
-//       "tokenhint": "refresh_token"
-//     },
-//     'success': function(data) {
-//       response = data;
-//     }
-//   });
-//   console.log(response);
-// }
-
 function closecode() {
   $("#appbar").show();
-  $("#getcode").hide();
+  $("#getcode").modal("hide");
+  // TODO cancel the polling for authorization when the cancel button is clicked?
 }
 
 // The polling function
