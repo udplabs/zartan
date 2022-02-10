@@ -1,20 +1,14 @@
-from distutils.command.config import config
 import logging
-from os import access
-import random
-import string
-import uuid
-import json
-
 
 # import functions
-from flask import jsonify, render_template, session, request, json
+from flask import jsonify, render_template, session, request
 from flask import Blueprint, url_for, redirect
-from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical, get_udp_ns_fieldname, apply_remote_config
-from utils.okta import TokenUtil, OktaAdmin, OktaAuth, OktaUtil, PKCE
+from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_udp_ns_fieldname, apply_remote_config
+from utils.okta import TokenUtil, OktaAdmin, OktaAuth, OktaUtil
 from utils.rest import RestUtil
 
-from GlobalBehaviorandComponents.validation import is_authenticated, get_userinfo, gvalidation_bp_error, check_okta_api_token, check_zartan_config
+from GlobalBehaviorandComponents.validation import is_authenticated, get_userinfo
+# , gvalidation_bp_error, check_okta_api_token, check_zartan_config
 
 logger = logging.getLogger(__name__)
 
@@ -54,7 +48,6 @@ def zartantv_devicepage():
 @apply_remote_config
 def zartantv_deviceauthorization():
     logger.debug("zartantv_deviceauthorization()")
-    #device_id = PKCE.generate_code_verifier(64)
     issuer = get_issuer()
     client_id = get_device_client_id()
     client_secret = get_device_client_secret()
@@ -155,7 +148,7 @@ def zartantv_verify_token():
         refresh_token = body["refresh_token"]
         device_code = body["device_code"]
 
-        # we need the ID token because we're using 
+        # we need the ID token because we're using
         # user profile storage to fake a backend DB
         # that stores user -> device mappings
         devices = get_authorized_devices(id_token)
@@ -178,7 +171,7 @@ def zartantv_verify_token():
         else:
             logger.debug("a device was found, but not in the list?")
             response = "false"
-        
+
         return response
 
     except Exception as e:
@@ -214,8 +207,7 @@ def is_token_valid(token, token_type_hint):
     client_secret = get_device_client_secret()
     introspect_response = okta_auth.introspect_with_clientid(token, token_type_hint, client_id, client_secret)
     logger.debug("introspect_response: {0}".format(introspect_response))
-    #return introspect_response
-    return introspect_response["active"] == True
+    return introspect_response["active"] is True
 
 
 def get_issuer():
@@ -250,7 +242,7 @@ def get_authtoken(refresh_token, scopes, headers=None):
 
     body = {}
     return RestUtil.execute_post(url, body, okta_headers)
-    
+
 
 @zartantv_views_bp.route("/revoketoken", methods=["POST"])
 @apply_remote_config
@@ -263,8 +255,6 @@ def zartantv_revoketoken():
     token = request.form["token"]
     logger.debug("****** Revoking token {0}".format(token))
     okta_auth.revoke_token_with_clientid(token, "refresh_token", client_id, client_secret)
-    #status = is_token_valid(token, "refresh_token")
-    #logger.debug("In revoke token... {0}".format(status))
     return "Completed"
 
 
