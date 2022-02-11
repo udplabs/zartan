@@ -95,6 +95,7 @@ function getDeviceAuthorization() {
 function getToken() {
   var device_code = window.localStorage.getItem("device_code");
   console.log("getToken()", device_code);
+  var response = {};
   $.ajax({
     async: false,
     type: "GET",
@@ -147,7 +148,7 @@ function completeRegistration() {
 function verifyToken() {
   console.log("verifyToken()");
   var newtokens = "";
-  payload = {
+  var payload = {
     "access_token": window.sessionStorage["d_access_token"],
     "id_token": window.sessionStorage["d_id_token"],
     "refresh_token": window.sessionStorage["d_refresh_token"],
@@ -186,7 +187,7 @@ function loadTokens() {
   var newtokens = "";
   if (refresh_token != "") {
     console.log("Check Current Tokens");
-    payload = {
+    var payload = {
       "access_token": window.sessionStorage["d_access_token"],
       "id_token": window.sessionStorage["d_id_token"],
       "refresh_token": window.sessionStorage["d_refresh_token"],

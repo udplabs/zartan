@@ -134,7 +134,7 @@ div.card-body img {
   display: inline-block;
   cursor: pointer;
   color: #ffffff;
-  font-family: Verdana;
+  font-family: Verdana, sans-serif;
   font-size: 12px;
   padding: 12px 80px;
   text-decoration: none;

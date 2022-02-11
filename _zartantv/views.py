@@ -1,12 +1,10 @@
 import logging
 
-# import functions
 from flask import jsonify, render_template, session, request
 from flask import Blueprint, url_for, redirect
 from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_udp_ns_fieldname, apply_remote_config
 from utils.okta import TokenUtil, OktaAdmin, OktaAuth, OktaUtil
 from utils.rest import RestUtil
-
 from GlobalBehaviorandComponents.validation import is_authenticated, get_userinfo
 
 logger = logging.getLogger(__name__)
