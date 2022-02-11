@@ -1,4 +1,5 @@
 import logging
+from tokenize import Token
 
 from flask import jsonify, render_template, session, request
 from flask import Blueprint, url_for, redirect
@@ -6,37 +7,12 @@ from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_udp_ns_fieldname, apply
 from utils.okta import TokenUtil, OktaAdmin, OktaAuth, OktaUtil
 from utils.rest import RestUtil
 from GlobalBehaviorandComponents.validation import is_authenticated, get_userinfo
+from GlobalBehaviorandComponents.mfaenrollment import get_enrolled_factors
 
 logger = logging.getLogger(__name__)
 
 # set blueprint
 zartantv_views_bp = Blueprint('zartantv_views_bp', __name__, template_folder='templates', static_folder='static', static_url_path='static')
-
-
-@zartantv_views_bp.route("/devicepage")
-@apply_remote_config
-def zartantv_devicepage():
-    logger.debug("zartantv_devicepage()")
-    app_config = session[SESSION_INSTANCE_SETTINGS_KEY]
-    client_id = get_device_client_id()
-    appname = app_config["settings"]["app_deviceflow_appname"]
-
-    id_token = ""
-    access_token = ""
-    refresh_token = ""
-    reset_tokens = "false"
-
-    return render_template(
-        "zartantv/devicepage.html",
-        user_info=get_userinfo(),
-        id_token=id_token,
-        access_token=access_token,
-        refresh_token=refresh_token,
-        reset_tokens=reset_tokens,
-        client_id=client_id,
-        appname=appname,
-        config=app_config
-    )
 
 
 # Step 1.
@@ -255,6 +231,20 @@ def zartantv_revoketoken():
     return "Completed"
 
 
+@zartantv_views_bp.route("/devicepage")
+@apply_remote_config
+def zartantv_devicepage():
+    logger.debug("zartantv_devicepage()")
+    app_config = session[SESSION_INSTANCE_SETTINGS_KEY]
+    appname = app_config["settings"]["app_deviceflow_appname"]
+
+    return render_template(
+        "zartantv/devicepage.html",
+        appname=appname,
+        config=app_config
+    )
+
+
 # Required for Login Landing Page
 @zartantv_views_bp.route("/profile")
 @apply_remote_config
@@ -262,9 +252,15 @@ def zartantv_revoketoken():
 def zartantv_profile():
     logger.debug("zartantv_profile()")
     app_config = session[SESSION_INSTANCE_SETTINGS_KEY]
+    okta_admin = OktaAdmin(app_config)
+    user_id = get_userinfo()["sub"]
+    user = okta_admin.get_user(user_id)
+    factors = get_enrolled_factors(user_id)
+
     return render_template(
         "zartantv/profile.html",
-        user_info=get_userinfo(),
+        user_info=user,
+        factors=factors,
         id_token=TokenUtil.get_id_token(request.cookies),
         access_token=TokenUtil.get_access_token(request.cookies),
         config=app_config
@@ -277,9 +273,8 @@ def zartantv_profile():
 def zartantv_mydevices():
     logger.debug("zartantv_mydevices()")
     app_config = session[SESSION_INSTANCE_SETTINGS_KEY]
-    user_info = get_userinfo()
-    user_id = user_info["sub"]
     okta_admin = OktaAdmin(app_config)
+    user_id = user_id = get_userinfo()["sub"]
     client_id = get_device_client_id()
     user_app_profile = okta_admin.get_user_application_by_client_id(user_id, client_id)
     device_fieldname = get_udp_ns_fieldname("authorized_devices")
@@ -295,7 +290,6 @@ def zartantv_mydevices():
 
     return render_template(
         "zartantv/mydevices.html",
-        user_info=get_userinfo(),
         devices=devices,
         config=app_config
     )
@@ -307,10 +301,9 @@ def zartantv_mydevices():
 def zartantv_removedevice():
     logger.debug("zartantv_removedevice()")
     app_config = session[SESSION_INSTANCE_SETTINGS_KEY]
-    user_info = get_userinfo()
-    user_id = user_info["sub"]
-    device_id = request.args.get('device_id')
     okta_admin = OktaAdmin(app_config)
+    user_id = get_userinfo()["sub"]
+    device_id = request.args.get("device_id")
     client_id = get_device_client_id()
     user_app_profile = okta_admin.get_user_application_by_client_id(user_id, client_id)
     device_fieldname = get_udp_ns_fieldname("authorized_devices")
