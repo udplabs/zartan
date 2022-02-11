@@ -5,6 +5,7 @@
 <script type="text/javascript" src="/static/js/jquery.qrcode.min.js"></script>
 <script type="text/javascript" src="/static/js/zartantv.js"></script>
 <link href="/static/css/zartantv.css" rel="stylesheet" type="text/css">
+<title>Zartan Network TV Device</title>
 
 <body>
   <div class="main" id="main">
@@ -23,7 +24,7 @@
       <div class="col-md-12">
         <div class="tv">
           <div id="tv" class="tvscreen" style="display: none;">
-            <iframe src="https://streamable.com/e/imsnba?autoplay=1"></iframe>
+            <iframe src="https://streamable.com/e/imsnba?autoplay=1" title="TV display screen"></iframe>
           </div>
           <section class="toggle-form">
             <div class="formwrap px-4" style="text-align:center">
@@ -58,12 +59,16 @@
                 <span data-feather="x" style="color:white;"></span>
               </button>
               </div>
-              <strong>STEP 1 - Device Information from Host:</strong><br><br> Device information is requested by Device Authorization Endpoint and then stored locally.<br><br> Device Authorization Endpoint also stores device information tied to the
-              <u>User Code</u> for use during the registration process.<br><br> User code is displayed to user for registration.<br><br>
+              <strong>STEP 1 - Device Information from Host:</strong><br><br>
+              Device information is requested by Device Authorization Endpoint and then stored locally.<br><br>
+              Device Authorization Endpoint also stores device information tied to the <strong class="underline">User Code</strong> for use
+              during the registration process.<br><br>
+              User code is displayed to user for registration.<br><br>
               <pre><code id="deviceinfo"> No Device Information. Yet!</code></pre>
               <br><br>
-              <strong>STEP 2 - Retrieve Token from Device Authorization Endpoint:</strong><br><br> The Device polls an API to retrive tokens using the <u>Device Code</u>.<br><br> Tokens are stored locally for validation on a scheduled basis or on startup
-              of the device.<br><br>
+              <strong>STEP 2 - Retrieve Token from Device Authorization Endpoint:</strong><br><br>
+              The Device polls an API to retrive tokens using the <strong class="underline">Device Code</strong>.<br><br>
+              Tokens are stored locally for validation on a scheduled basis or on startup of the device.<br><br>
               <pre><code id="deviceinfo2"></code></pre>
             </div>
             <div class="toggle-bg2"></div>
@@ -90,7 +95,8 @@
               In order for The application to work please do one of the following:
               <ol>
                 <li>
-                  Go to this website, <a id="verificationuri" href="#" target="_blank"></a>,
+                  Go to this website,
+                  <a id="verificationuri" href="#" target="_blank"></a><br>
                   or use the qr code on your computer or mobile devices.
                   <div id="qrcode" style="text-align: -webkit-center;"></div>
                 </li>

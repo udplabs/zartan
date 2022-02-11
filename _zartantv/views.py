@@ -8,7 +8,6 @@ from utils.okta import TokenUtil, OktaAdmin, OktaAuth, OktaUtil
 from utils.rest import RestUtil
 
 from GlobalBehaviorandComponents.validation import is_authenticated, get_userinfo
-# , gvalidation_bp_error, check_okta_api_token, check_zartan_config
 
 logger = logging.getLogger(__name__)
 

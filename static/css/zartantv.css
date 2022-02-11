@@ -57,7 +57,7 @@ body {
 
 pre,
 code {
-  font-family: monospace, monospace;
+  font-family: monospace;
 }
 
 pre>code {
@@ -236,4 +236,8 @@ div.card-body img {
 
 .action-button:focus {
   outline: none;
+}
+
+.underline {
+  text-decoration: underline;
 }
