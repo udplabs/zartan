@@ -271,6 +271,7 @@ function removeTokens() {
 }
 
 function revokeDeviceAccess() {
+  var response = {};
   $.ajax({
     async: false,
     type: "POST",
