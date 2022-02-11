@@ -1,10 +1,10 @@
 <!-- load authjs regardless of which signin method we're using -->
 <script src="https://global.oktacdn.com/okta-auth-js/{{config.okta_auth_js_version}}/okta-auth-js.min.js"
-    type="text/javascript" crossorigin="anonymous" integrity="{{config.okta_auth_js_hash}}"></script>
+    type="text/javascript"></script>
 
 {% if config.settings.app_loginmethod == 'oie-widget' or config.settings.app_loginmethod == 'standard-widget' %}
 <script src="https://global.oktacdn.com/okta-signin-widget/{{config.okta_siw_version}}/js/okta-sign-in.min.js"
-    type="text/javascript" crossorigin="anonymous" integrity="{{config.okta_siw_hash}}"></script>
+    type="text/javascript"></script>
 <link href="https://global.oktacdn.com/okta-signin-widget/{{config.okta_siw_version}}/css/okta-sign-in.min.css"
     type="text/css" rel="stylesheet" />
 

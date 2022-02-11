@@ -315,9 +315,7 @@ OKTA_ORG_URL="https://udp-narisak-a59.oktapreview.com"
 OKTA_OIDC_REDIRECT_URI="http://localhost:8666/authorization-code/callback"
 OKTA_API_TOKEN="00iq*******7NHYULle5"
 OKTA_SIW_VERSION="Defaults to v5.16.1"
-OKTA_SIW_HASH="Default to sha384-a2yCLiNNwZ2BjqZF19qFKM2XWAuGKREPL8S3FckTr8+S4JDdpNqPehJUjVfNHf5a"
 OKTA_AUTH_JS_VERSION="Defaults to v5.11.0"
-OKTA_AUTH_JS_HASH="Default to sha384-Wk5gwb+o8f4psT7pFZVAGgGprt1nIg88L4BOLYnaIe3fvxdS+5u7xP/n8xuqMWFr"
 ...
 
 # Start the container(app) in the background (eg. '-d' flag). NOTE: Will take a
