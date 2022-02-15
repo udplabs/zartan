@@ -331,7 +331,7 @@ $ docker-compose exec web flake8
 * [Dan Zadik](https://github.com/dzadikdev)
 * [Bhanchand Prasad](https://github.com/bhanchand)
 
-<!--- DO NOT TOUCH BELOW, AUTO GENERATED --
+<!--- DO NOT TOUCH BELOW, AUTO GENERATED -->
 
 ## Contributors ✨
 
