@@ -151,7 +151,7 @@ def serve_static_html(filename):
 
 @app.route('/healthcheck')
 def healthcheck():
-    return "OK"
+    return "OK", 200
 
 
 """
