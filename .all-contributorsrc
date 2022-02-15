@@ -1,17 +1,114 @@
 {
-  "files": ["README.md"],
+  "projectName": "zartan",
+  "projectOwner": "udplabs",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
   "imageSize": 100,
-  "contributorsPerLine": 7,
-  "contributorsSortAlphabetically": false,
-  "badgeTemplate": "[![All Contributors](https://img.shields.io/badge/all_contributors-<%= contributors.length %>-orange.svg?style=flat-square)](#contributors)",
-  "contributorTemplate": "<a href=\"<%= contributor.profile %>\"><img src=\"<%= contributor.avatar_url %>\" width=\"<%= options.imageSize %>px;\" alt=\"\"/><br /><sub><b><%= contributor.name %></b></sub></a>",
-  "types": {
-    "custom": {
-      "symbol": "🔭",
-      "description": "A custom contribution type.",
-      "link": "[<%= symbol %>](<%= url %> \"<%= description %>\"),"
+  "commit": false,
+  "commitConvention": "none",
+  "contributors": [
+    {
+      "login": "srecinto",
+      "name": "Shawn Recinto",
+      "avatar_url": "https://avatars.githubusercontent.com/u/2954123?v=4",
+      "profile": "https://github.com/srecinto",
+      "contributions": [
+        "code",
+        "projectManagement",
+        "test"
+      ]
+    },
+    {
+      "login": "noinarisak",
+      "name": "Noi Narisak",
+      "avatar_url": "https://avatars.githubusercontent.com/u/341437?v=4",
+      "profile": "https://noinarisak.github.io/til",
+      "contributions": [
+        "code",
+        "projectManagement",
+        "doc",
+        "infra"
+      ]
+    },
+    {
+      "login": "bhanchand",
+      "name": "bhanchand",
+      "avatar_url": "https://avatars.githubusercontent.com/u/18057642?v=4",
+      "profile": "https://github.com/bhanchand",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "jpf",
+      "name": "Joël Franusic",
+      "avatar_url": "https://avatars.githubusercontent.com/u/41538?v=4",
+      "profile": "http://joel.franusic.com",
+      "contributions": [
+        "doc",
+        "code"
+      ]
+    },
+    {
+      "login": "anushrav",
+      "name": "Anushrav Vatsa",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22229475?v=4",
+      "profile": "https://github.com/anushrav",
+      "contributions": [
+        "code",
+        "bug"
+      ]
+    },
+    {
+      "login": "dancinnamon-okta",
+      "name": "dancinnamon-okta",
+      "avatar_url": "https://avatars.githubusercontent.com/u/42472957?v=4",
+      "profile": "https://github.com/dancinnamon-okta",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "mdwallick",
+      "name": "Mike Wallick",
+      "avatar_url": "https://avatars.githubusercontent.com/u/28658181?v=4",
+      "profile": "https://wallick.net",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "RyAndrew",
+      "name": "Andrew Ry",
+      "avatar_url": "https://avatars.githubusercontent.com/u/3945391?v=4",
+      "profile": "http://2xod.com/",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "dzadikdev",
+      "name": "dzadikdev",
+      "avatar_url": "https://avatars.githubusercontent.com/u/57756515?v=4",
+      "profile": "https://github.com/dzadikdev",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "zeekhoo",
+      "name": "Zee Khoo",
+      "avatar_url": "https://avatars.githubusercontent.com/u/10700898?v=4",
+      "profile": "https://github.com/zeekhoo",
+      "contributions": [
+        "doc",
+        "code",
+        "bug"
+      ]
     }
-  },
-  "skipCi": "true",
-  "contributors": []
+  ],
+  "contributorsPerLine": 7
 }
