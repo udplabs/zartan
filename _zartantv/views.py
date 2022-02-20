@@ -1,5 +1,4 @@
 import logging
-from tokenize import Token
 
 from flask import jsonify, render_template, session, request
 from flask import Blueprint, url_for, redirect
