@@ -1,11 +1,13 @@
 <!-- load authjs regardless of which signin method we're using -->
-<script src="https://global.oktacdn.com/okta-auth-js/{{config.okta_auth_js_version}}/okta-auth-js.min.js"
-    type="text/javascript"></script>
+<script src="https://global.oktacdn.com/okta-auth-js/6.2.0/okta-auth-js.min.js" 
+    integrity="sha384-I+lU0LOzLIpf8VkHvdHRvvz/EQOJEgFE1Q1WMELga93KhthZncW/pczmRqp3hImK"
+    crossorigin="anonymous"></script>
 
 {% if config.settings.app_loginmethod == 'oie-widget' or config.settings.app_loginmethod == 'standard-widget' %}
-<script src="https://global.oktacdn.com/okta-signin-widget/{{config.okta_siw_version}}/js/okta-sign-in.min.js"
-    type="text/javascript"></script>
-<link href="https://global.oktacdn.com/okta-signin-widget/{{config.okta_siw_version}}/css/okta-sign-in.min.css"
+<script src="https://global.oktacdn.com/okta-signin-widget/6.1.2/js/okta-sign-in.min.js" 
+    integrity="sha384-4zOVHXDoZuCOwZYtHJ30v2xLM8r34xjxl29ol8IDtc0buUrIBedEzTaKM9TDXkPv" 
+    crossorigin="anonymous"></script>
+<link href="https://global.oktacdn.com/okta-signin-widget/6.1.2/css/okta-sign-in.min.css"
     type="text/css" rel="stylesheet" />
 
 <!-- SIW helper functions -->
