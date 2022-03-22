@@ -8,4 +8,4 @@ class AppTest(BaseZartanTest):
         self.logger.info("test_healthcheck()")
         result = healthcheck()
         self.logger.debug("result: {0}".format(result))
-        self.assertEqual("OK", result)
+        self.assertEqual(("OK", 200), result)
