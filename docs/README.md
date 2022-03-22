@@ -281,6 +281,8 @@ The `.env` file provides additional configuration depending on the functionality
   | APP_TEMPLATE        | Enter the specific value based on the [vertical](#vertical-specific-variables) | |
   | APP_LOGINMETHOD     | The login UX, widget, custom or redirect | Options: `standard-widget`, `passwordless-widget`,`custom-widget`
   | APP_NAME            | some app name prominently displayed | |
+  | APP_POST_LOGIN_LANDING_URL | local page to redirect to after login | profile |
+  | APP_POST_LOGIN_OVERRIDE_LANDING_URL | absolute URL to redirect to after login | https://okta.com |
   | APP_SLOGAN          | some slogan | |
   | APP_SUBSLOGAN       | some subtitle | |
   | APP_LOGO            | url to some logo | |

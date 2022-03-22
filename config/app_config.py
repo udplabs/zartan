@@ -21,6 +21,7 @@ default_settings = {
     "settings": {
         "app_template": os.getenv("APP_TEMPLATE", "sample"),
         "app_post_login_landing_url": os.getenv("APP_POST_LOGIN_LANDING_URL", "profile"),
+        "app_post_login_override_landing_url": os.getenv("APP_POST_LOGIN_OVERRIDE_LANDING_URL", ""),
         "app_loginmethod": os.getenv("APP_LOGINMETHOD", "standard-widget"),
         "app_name": os.getenv("APP_NAME", "Sample App"),
         "app_slogan": os.getenv("APP_SLOGAN", ""),
