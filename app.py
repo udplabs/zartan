@@ -220,16 +220,14 @@ def oidc_callback_handler():
 
 def get_post_login_landing_page_url():
     logger.debug("get_post_login_landing_page_url()")
-    app_landing_page_url = ""
-
-    # Pull from Config
-    landingurl = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_post_login_landing_url"]
+    session_settings = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]
+    app_landing_page_override_url = session_settings["app_post_login_override_landing_url"]
 
     # if the configured value is a full URL, then use it, don't try to build one
-    if re.match(r"^http[s]?://", landingurl):
-        app_landing_page_url = landingurl
+    if re.match(r"^http[s]?://", app_landing_page_override_url):
+        app_landing_page_url = app_landing_page_override_url
     else:
-        landing_page = session[SESSION_INSTANCE_SETTINGS_KEY]["settings"]["app_post_login_landing_url"]
+        landing_page = session_settings["app_post_login_landing_url"]
         app_landing_page_url = "{0}{1}".format(request.host_url, landing_page)
 
     # Check for from_uri key, this always overrides the config
