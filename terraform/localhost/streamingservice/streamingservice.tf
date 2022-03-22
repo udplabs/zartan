@@ -36,6 +36,9 @@ resource "okta_app_oauth" "streamingservice" {
     "https://${local.app_domain}/authorization-code/callback",
     "http://localhost:8666/authorization-code/callback"
   ]
+  post_logout_redirect_uris = [
+    "http://localhost:8666/index"
+  ]
   response_types = ["code"]
   consent_method = "TRUSTED"
   issuer_mode    = "ORG_URL"
