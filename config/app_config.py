@@ -18,8 +18,6 @@ default_settings = {
     "app_config": os.getenv("SITE_APP_CONFIG", "./well-known/default-settings"),
     "okta_org_name": os.getenv("OKTA_ORG_URL", ""),
     "okta_api_token": os.getenv("OKTA_API_TOKEN", ""),
-    "okta_siw_version": os.getenv("OKTA_SIW_VERSION", "5.16.1"),
-    "okta_auth_js_version": os.getenv("OKTA_AUTH_JS_VERSION", "5.11.0"),
     "redirect_uri": os.getenv("OKTA_OIDC_REDIRECT_URI", "http://yoursite/authorization-code/callback"),
     "settings": {
         "app_template": os.getenv("APP_TEMPLATE", "sample"),

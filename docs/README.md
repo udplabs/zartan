@@ -197,8 +197,6 @@ Set up the `.env` file:
     | OKTA_ORG_URL           | Your org url. e.g. `https://dev-13485.oktapreview.com` |
     | OKTA_OIDC_REDIRECT_URI | Use `http://localhost:8666/authorization-code/callback` as this was set by Terraform.
     | OKTA_API_TOKEN         | Provide an okta SSWS key |
-    | OKTA_SIW_VERSION       | What version of the Okta sign-in widget to use. Defaults to 5.16.1 |
-    | OKTA_AUTH_JS_VERSION   | What version of the Okta AuthJS library to use. Defaults to 5.11.0 |
 
     | AWS_API_KEY            | ℹ️ Mandatory. Get the value from this [Box folder](https://okta.box.com/s/56cnuhratuzjnhxo1odt11tmesjqv4o3) (Only accessible to Okta employees) |
     | SPARKPOST_API_KEY      | ℹ️ Mandatory. Get the value from this [Box folder](https://okta.box.com/s/56cnuhratuzjnhxo1odt11tmesjqv4o3) (Only accessible to Okta employees) |
@@ -279,8 +277,6 @@ The `.env` file provides additional configuration depending on the functionality
   | OKTA_ORG_URL           | {{org_url}} | https://ORGNAME.okta.com |
   | OKTA_OIDC_REDIRECT_URI | {{redirect_uri}} | http://localhost:8666/authorization-code/callback |
   | OKTA_API_TOKEN         | {{ssws token}} | |
-  | OKTA_SIW_VERSION       | What version of the Okta sign-in widget to use | 5.16.1 |
-  | OKTA_AUTH_JS_VERSION   | What version of the Okta AuthJS library to use | 5.11.0 |
 
 ### Zartan Setting
 
