@@ -43,6 +43,9 @@ resource "okta_app_oauth" "credit" {
     "https://${local.app_domain}/authorization-code/callback",
     "http://localhost:8666/authorization-code/callback"
   ]
+  post_logout_redirect_uris = [
+    "http://localhost:8666/index"
+  ]
   login_uri      = "https://${local.app_domain}/"
   response_types = ["code"]
   consent_method = "TRUSTED"
