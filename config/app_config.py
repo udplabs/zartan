@@ -17,6 +17,7 @@ default_settings = {
     "audience": os.getenv("OKTA_AUDIENCE", ""),
     "app_config": os.getenv("SITE_APP_CONFIG", "./well-known/default-settings"),
     "okta_org_name": os.getenv("OKTA_ORG_URL", ""),
+    "okta_api_token": os.getenv("OKTA_API_TOKEN", ""),
     "redirect_uri": os.getenv("OKTA_OIDC_REDIRECT_URI", "http://yoursite/authorization-code/callback"),
     "settings": {
         "app_template": os.getenv("APP_TEMPLATE", "sample"),
@@ -48,7 +49,6 @@ default_settings = {
         "app_ins_fhir_clientid": os.getenv("APP_INS_FHIR_CLIENTID", "0oa3gvkmdRb5n52e91d6"),
         "app_ins_fhir_api_base": os.getenv("APP_INS_FHIR_API_BASE", "https://7zj8l72c27.execute-api.us-east-1.amazonaws.com/prd")
     },
-    "okta_api_token": os.getenv("OKTA_API_TOKEN", ""),
     "app_secret_key": os.getenv("SECRET_KEY", ""),
     "app_scheme": os.getenv("APP_SCHEME", "https"),
     "app_version": get_app_version(),
