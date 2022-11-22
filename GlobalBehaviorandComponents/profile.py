@@ -2,10 +2,10 @@ import logging
 import uuid
 
 # import functions
-from flask import render_template, session, request, redirect
+from flask import render_template, session, request, redirect, url_for
 from flask import Blueprint
 from utils.udp import SESSION_INSTANCE_SETTINGS_KEY, get_app_vertical, apply_remote_config
-from utils.okta import TokenUtil, OktaAuth
+from utils.okta import TokenUtil, OktaAuth, OktaAdmin
 
 from GlobalBehaviorandComponents.mfaenrollment import get_enrolled_factors
 from GlobalBehaviorandComponents.validation import is_authenticated, get_userinfo, FROM_URI_KEY
@@ -43,13 +43,36 @@ def profile_bp():
         return redirect(oauth_authorize_url)
     else:
         user_info = get_userinfo()
-        factors = get_enrolled_factors(user_info["sub"])
+        user_id = user_info["sub"]
+        client_id = session[SESSION_INSTANCE_SETTINGS_KEY]["client_id"]
+        factors = get_enrolled_factors(user_id)
+        okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
+        user_client_grants = okta_admin.get_user_client_grants(user_id, client_id)
 
         return render_template(
             "/profile.html",
             templatename=get_app_vertical(),
             id_token=TokenUtil.get_id_token(request.cookies),
+            grants=user_client_grants,
             factors=factors,
             access_token=TokenUtil.get_access_token(request.cookies),
             user_info=get_userinfo(),
             config=session[SESSION_INSTANCE_SETTINGS_KEY])
+
+
+@gbac_profile_bp.route("/revoke-grants")
+@apply_remote_config
+@is_authenticated
+def revoke_grants():
+    logger.debug("revoke_grants()")
+    user_info = get_userinfo()
+    user_id = user_info["sub"]
+    client_id = session[SESSION_INSTANCE_SETTINGS_KEY]["client_id"]
+    okta_admin = OktaAdmin(session[SESSION_INSTANCE_SETTINGS_KEY])
+    # revoke all grants for this client ID
+    okta_admin.revoke_user_client_grants(user_id, client_id)
+    return redirect(
+        url_for(
+            "gbac_bp.gbac_logout",
+            _external="True",
+            _scheme=session[SESSION_INSTANCE_SETTINGS_KEY]["app_scheme"]))

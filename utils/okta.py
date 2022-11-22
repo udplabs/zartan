@@ -418,6 +418,58 @@ class OktaAdmin:
 
         return RestUtil.execute_get(url, okta_headers)
 
+    def get_user_client_grants(self, user_id, client_id):
+        self.logger.debug("get_user_client_grants()")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/users/{user_id}/clients/{client_id}/grants?expand=scope".format(
+            base_url=self.okta_config["okta_org_name"],
+            user_id=user_id,
+            client_id=client_id)
+        return RestUtil.execute_get(url, okta_headers)
+
+    def revoke_user_client_grants(self, user_id, client_id):
+        self.logger.debug("revoke_user_client_grants()")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/users/{user_id}/clients/{client_id}/grants?expand=scope".format(
+            base_url=self.okta_config["okta_org_name"],
+            user_id=user_id,
+            client_id=client_id)
+        return RestUtil.execute_delete(url=url, body=None, headers=okta_headers)
+
+    def get_user_grants(self, user_id):
+        self.logger.debug("get_user_grants()")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/users/{user_id}/grants?expand=scope".format(
+            base_url=self.okta_config["okta_org_name"],
+            user_id=user_id)
+        return RestUtil.execute_get(url, okta_headers)
+
+    def revoke_all_user_grants(self, user_id):
+        self.logger.debug("revoke_all_user_grants()")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/users/{user_id}/grants".format(
+            base_url=self.okta_config["okta_org_name"],
+            user_id=user_id)
+        return RestUtil.execute_delete(url=url, body=None, headers=okta_headers)
+
+    def get_grant(self, user_id, grant_id):
+        self.logger.debug("get_grant()")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/users/{user_id}/grants/{grant_id}?expand=scope".format(
+            base_url=self.okta_config["okta_org_name"],
+            user_id=user_id,
+            grant_id=grant_id)
+        return RestUtil.execute_get(url, okta_headers)
+
+    def revoke_grant(self, user_id, grant_id):
+        self.logger.debug("revoke_grant()")
+        okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
+        url = "{base_url}/api/v1/users/{user_id}/grants/{grant_id}?expand=scope".format(
+            base_url=self.okta_config["okta_org_name"],
+            user_id=user_id,
+            grant_id=grant_id)
+        return RestUtil.execute_delete(url=url, body=None, headers=okta_headers)
+
     def create_user(self, user, activate_user=False):
         self.logger.debug("OktaAdmin.create_user(user)")
         okta_headers = OktaUtil.get_protected_okta_headers(self.okta_config)
