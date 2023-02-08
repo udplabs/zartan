@@ -1,7 +1,7 @@
 Flask>=1.1.2
 requests>=2.23.0
 python-dotenv==0.13.0
-cryptography==3.3.2
+cryptography==39.0.1
 isodate>=0.5
 cachetools>=4.2.1
 okta-jwt-verifier>=0.2.3
